@@ -2,10 +2,8 @@ Werkzeug==0.9.4
 args==0.1.0
 backports.ssl-match-hostname==3.4.0.2
 beautifulsoup4==4.3.2
-bitly-api==0.3
 bleach==1.4
 clint==0.3.4
-disqus-python==0.4.2
 feedparser==5.1.3
 geopy==0.97
 html5lib==1.0b3
