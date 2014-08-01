@@ -1,0 +1,31 @@
+{% extends "../base.html" %}
+
+{% block body %}
+
+    <div class="jumbotron">
+      <h3>You are a member of {{ results[0].full_state_name }}'s {{ ordinal(results[0].district) }} Congressional District</h3>
+      <h4>Follow and tweet at your Representatives!</h4>
+
+    </br>
+
+      <div class="row-fluid">
+        {% for rep in results %}
+          <div class="span4">
+            <img class="img-polaroid" src="{{ static_url(rep.portrait_path)}}">
+            <h4> Rep. {{ rep.first_name }} {{ rep.last_name }} ({{ rep.party }})</h4>
+            
+            {% if rep.twitter %}
+            <a href="https://twitter.com/{{ rep.ftv.twitter }}" class="twitter-follow-button" data-show-count="false" data-lang="en" data-size="large">Follow @{{ rep.twitter }} </a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+            {% else %}
+            <h5>No Twitter account?!</h5>
+            {% end %}
+          </div>
+        {% end %}
+      </div> <!-- row-fluid -->
+    </div> <!-- jumbotron -->
+
+{% end %}
+
+
+

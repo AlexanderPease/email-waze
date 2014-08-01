@@ -1,0 +1,52 @@
+{% extends "../base.html" %}
+
+{% block body %}
+      <div class="jumbotron">
+        <h1>Tweet @ Congress</h1>
+        </br>
+
+        {{ err }}
+        {{ msg }}
+        {% if err is 'zip_code' %}
+          <p class="lead text-error">Sorry, '{{ msg }}' is not viable a ZIP code!</p>
+          <form action="/" method="get" class="form-search">
+            <input type="text" class="input-medium search-query" name="zip_code" placeholder="Ex: 03840"/>
+            <button type="submit" class="btn btn-primary">Find!</button>
+          </form>
+        {% elif err is 'multiple_districts' %}
+          <p class="lead text-error">Hmmm, your ZIP code includes multiple districts. Try your home address</p>
+          <form action="/" method="get" class="form-search">
+            <input type="text" class="input-large search-query" name="address" width="300px" placeholder="Ex: 22 Bayridge Road, Greenland NH"/>
+            <button type="submit" class="btn btn-primary">Find!</button>
+          </form>
+        {% elif err is 'bad_address' %}
+          <p class="lead text-error">Google Maps couldn't find you! Try again?</p>
+          <form action="/" method="get" class="form-search">
+            <input type="text" class="input-large search-query" name="address" width="300px" placeholder="Ex: 22 Bayridge Road, Greenland NH"/>
+            <button type="submit" class="btn btn-primary">Find!</button>
+          </form>
+        {% else %}  
+          <p class="lead">Just input your ZIP code to follow your Congressional Representatives on Twitter</p>
+          <form action="/" method="get" class="form-search">
+            <input type="text" class="input-medium search-query" name="zip_code" placeholder="Ex: 03840"/>
+            <button type="submit" class="btn btn-primary">Find!</button>
+          </form>
+        {% end %}
+      </div>
+
+      <hr>
+
+      <div class="row-fluid marketing">
+        <div class="span6">
+          <h4>Representative Democracy...</h4>
+          <p>Is best served by a continuous, unfiltered dialogue between citizens and their representatives.</p>
+        </div>
+
+        <div class="span6">
+          <h4>Social networks...</h4>
+          <p>Such as Twitter are perfectly made to facilitate this discussion on a daily basis.</p>
+        </div>
+        
+        <h3 id="dead_simple">We're just making it dead simple.</h3>
+      </div>
+{% end %}

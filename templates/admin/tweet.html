@@ -1,0 +1,47 @@
+{% extends "../base.html" %}
+
+{% block body %}
+  {% if msg %}
+    <h4>{{ msg }}</h4>
+  {% end %}
+
+  {% if err %}
+    {{ err }}</br>
+  {% end %}
+
+  {% if form %}
+    <h4>Complete the tweet!</h4>
+
+    <div id="tweet_beginning">
+      {{ tweet_beginning }}...
+    </div>
+    <form method="POST" action="">
+      <div class="fieldWrapper">
+          <textarea name="tweet_text" id="id_tweet_text" rows="4" class="field span8">{{ form['tweet_text'] }}</textarea>
+      </div>
+      <span id="tweet_counter"></span>
+      </br>
+      <button type="submit" class="btn btn-primary">Tweet</button>
+    </form>
+
+    <h4>Suggested info</h4>
+    Question: <a href="{{ vote['url'] }}" target="_blank">{{ vote['question'] }}</a></br>
+    Roll ID: {{ vote['roll_id'] }}</br>
+
+    {% if 'bill_id' in vote.keys() %}
+      Bill ID: {{ vote['bill_id'] }}</br>
+    {% end %}
+    Chamber: {{ vote['chamber'].capitalize() }}</br>
+    Voted at: {{ vote['voted_at'] }}</br>
+    Result: {{ vote['result'] }}</br>
+
+    </br>
+    Or, see the <a href="/admin/database" target="_blank">FTV database</a>
+        
+  {% end %}
+
+{% end %}
+
+{% block javascript %}
+    {% include "tweet_counter.html" %}
+{% end %}

@@ -1,0 +1,48 @@
+{% extends "../base.html" %}
+
+{% block body %}
+	
+	<h4>Administrative Dashboard</h4>
+
+    {% if msg %}
+      <p class="text-success">{{ msg }}</p>
+    {% end %}
+
+    {% if err %}
+      <p class="text-success">{{ err }}</p>
+    {% end %}
+
+	<ul>
+		<li>
+	    	<a href="/admin/votes">Search Votes</a>
+	  	</li>
+	  	<li>
+	    	<a href="/admin/tweet_no_vote">Tweet (w/out voting info)</a>
+	  	</li>
+
+	  	<li>
+	    	<a href="/admin/database">FTV Accounts Database</a>
+	  	</li>
+	  	<ul>
+	  		<li>
+	    		<a href="/admin/database?show_twitter=true">Just FTV Twitter Accounts</a>
+	  		</li>
+		</ul>
+	</ul>
+
+	<h4>Recent Tweets</h4>
+
+	{% for t in tweets %}
+		@{{ t['admin'] }} for {{ len(t['tweeted']) }} FTV accounts ({{ t['datetime'].date() }}):
+		</br>
+		{% if 'tweet_template' in t.keys() %}
+			"{{ t['tweet_template'] }}"
+		{% elif 'tweet' in t.keys() %}
+			"{{ t['tweet'] }}"
+		{% elif 'tweet' in t.keys() %}
+			error reading tweet in db
+		{% end %}
+		</br></br>
+	{% end %}
+
+{% end %}

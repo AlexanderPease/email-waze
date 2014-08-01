@@ -1,0 +1,27 @@
+<script>
+    $(document).ready(function() {  
+      // Track changes in tweet text box
+      tweet_counter();
+      $('#id_tweet_text').on('input', function () {
+        tweet_counter();
+      });
+
+    }); //$(document).ready();
+
+    function tweet_counter() {
+      max_length = 140;
+      //tweet_beginning = $("#tweet_beginning")
+      tweet_beginning = 30; // hardcoded because actual text doesn't match potential length
+      tweet_input = $('#id_tweet_text').val();
+      char_remaining = max_length - tweet_input.length - tweet_beginning;
+      $('#tweet_counter').text(char_remaining + " characters left");
+      
+      // styling
+      if (char_remaining < 0) {
+        $('#tweet_counter').css("color", "red");
+      }
+      else{
+        $('#tweet_counter').css("color", "black");
+      }
+    }
+  </script>

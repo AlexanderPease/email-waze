@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FollowTheVote.org</title>
+
+  <!-- jQuery -->
+  <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+  <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+  <!-- Bootstrap --> 
+  <link href="{{ static_url("css/bootstrap.min.css") }}" rel="stylesheet" media="screen">
+  <script src="{{ static_url("js/bootstrap.min.js") }}"></script>
+  <!-- Custom CSS for Twitter Congress -->
+  <link href="{{ static_url("css/twittercongress.css") }}" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+  <div class="container-narrow">
+
+      {% block header %}
+      <div class="masthead">
+        <ul class="nav nav-pills pull-right">
+          <li class="active"><a href="#">Home</a></li>
+          <li><a href="mailto:admin@followthevote.org">Contact</a></li>
+          {% if current_user in settings.get('staff')%}
+            <li><a href="/admin">Admin for @{{ current_user }}</a></li>
+          {% end %}
+        </ul>
+        <h3 class="muted">FollowTheVote.org</h3>
+      </div>
+
+      <hr>
+      {% end %}
+
+      {% block body %}
+
+      {% end %}
+      
+      {% block footer %}
+      <hr>
+      <div class="footer">
+        <a href="http://sunlightfoundation.com">
+          <img id="footer_logo" src="{{ static_url("img/sunlight_logo.gif") }}" alt="Powered by the Sunlight Foundation">
+        </a>
+      </div>
+      {% end %}
+
+    </div> <!-- /container -->
+
+    {% block javascript %}{% end %}
+
+  </body>
+</html>
