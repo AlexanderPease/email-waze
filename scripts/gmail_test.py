@@ -1,19 +1,25 @@
+import sys, os
+try: 
+    sys.path.insert(0, '/Users/AlexanderPease/git/email-waze')
+    import settings
+except:
+    pass
+from db import profiledb
+
 import httplib2
 #import logging
+from email.utils import parseaddr
 
 from googleapiclient.discovery import build
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.file import Storage
 from oauth2client.tools import run
-
-"""Get a list of Messages from the user's mailbox.
-"""
-
 from googleapiclient import errors
 
 
 def ListMessagesMatchingQuery(service, user_id, query=''):
-  """List all Messages of the user's mailbox matching the query.
+  """
+  List all Messages of the user's mailbox matching the query.
 
   Args:
     service: Authorized Gmail API service instance.
@@ -46,7 +52,8 @@ def ListMessagesMatchingQuery(service, user_id, query=''):
 
 
 def GetMessage(service, user_id, msg_id):
-  """Get a Message with given ID.
+  """
+  Get a Message with given ID.
 
   Args:
   	service: Authorized Gmail API service instance.
@@ -59,16 +66,53 @@ def GetMessage(service, user_id, msg_id):
   """
   try:
     message = service.users().messages().get(userId=user_id, id=msg_id).execute()
-
-    #print 'Message snippet: %s' % message['snippet']
-
     return message
   except errors.HttpError, error:
     print 'An error occurred: %s' % error
 
+def GetMessageHeader(msg):
+  """
+  Gets the email header info from a GMail message dict
 
-def authorize_service():
-	"""Logs into GMail. From GMail API tutorial. 
+  Args:
+  	msg: A message dict returned by GetMessage(). 
+
+  Returns:
+    A dict containing email header info
+  """
+  try: 
+  	headers = msg['payload']['headers']
+  except:
+  	print 'Message passed to GetMessageHeader has no headers'
+  	return
+
+  header_list = ['Delivered-To', 'Return-Path', 'From', 'To', 'Cc']
+  info = {}
+  
+  for header in headers:
+  	if header['name'] in header_list:
+  		info[header['name']] = header['value']
+
+  return info
+
+'''
+def CleanMessageHeader(msg_header):
+	  """
+	  Cleans the message header dict from GetMessageHeader 
+	  so that fields can be saved to database
+
+	  Args:
+	  	msg_header: A message header dict returned by GetMessageHeader(). 
+
+	  Returns:
+	    The argument, with modifications
+	  """
+'''
+
+
+def AuthorizeService():
+	"""
+	Logs into GMail. From GMail API tutorial. 
 
 	Returns:
 		service: Authorized Gmail API service instance.
@@ -99,28 +143,26 @@ def authorize_service():
 	service = build('gmail', 'v1', http=http)
 	return service
 
-	'''
-	# Retrieve a page of threads
-	threads = gmail_service.users().threads().list(userId='me').execute()
-
-	# Print ID for each thread
-	if threads['threads']:
-	  for thread in threads['threads']:
-	    print 'Thread ID: %s' % (thread['id'])
-
-	return gmail_service
-	'''
 
 def main():
 	print 'starting'
-	gmail_service = authorize_service()
+	gmail_service = AuthorizeService()
 	print 'have service'
-	messages = ListMessagesMatchingQuery(gmail_service, "me")
-	print len(messages)
-	msg = GetMessage(gmail_service, "me", messages[0]['id'])
+	messages = ListMessagesMatchingQuery(gmail_service, 'me')
 	
-	for k in msg.keys():
-		print k 
+	# Iterate through all messages and save email addresses to database
+	for msg_info in messages:
+		msg = GetMessage(gmail_service, 'me', msg_info['id'])
+		header = GetMessageHeader(msg)
+		#header = CleanMessageHeader(header)
+		if 'From' in header.keys():
+			print parseaddr(header['From']) # Allows local emails addresses unfortunately
+		else:
+			print header
+
+
+
+
 
 
 if __name__ == "__main__":
