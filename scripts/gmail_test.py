@@ -1,4 +1,5 @@
 import httplib2
+#import logging
 
 from googleapiclient.discovery import build
 from oauth2client.client import flow_from_clientsecrets
@@ -27,8 +28,8 @@ def ListMessagesMatchingQuery(service, user_id, query=''):
     appropriate ID to get the details of a Message.
   """
   try:
-    response = service.users().messages().list(userId=user_id,
-                                               q=query).execute()
+    response = service.users().messages().list(userId=user_id, q=query).execute()
+
     messages = []
     if 'messages' in response:
       messages.extend(response['messages'])
@@ -43,7 +44,35 @@ def ListMessagesMatchingQuery(service, user_id, query=''):
   except errors.HttpError, error:
     print 'An error occurred: %s' % error
 
-def tutorial_script():
+
+def GetMessage(service, user_id, msg_id):
+  """Get a Message with given ID.
+
+  Args:
+  	service: Authorized Gmail API service instance.
+    user_id: User's email address. The special value "me"
+    can be used to indicate the authenticated user.
+    msg_id: The ID of the Message required.
+
+  Returns:
+    A Message.
+  """
+  try:
+    message = service.users().messages().get(userId=user_id, id=msg_id).execute()
+
+    #print 'Message snippet: %s' % message['snippet']
+
+    return message
+  except errors.HttpError, error:
+    print 'An error occurred: %s' % error
+
+
+def authorize_service():
+	"""Logs into GMail. From GMail API tutorial. 
+
+	Returns:
+		service: Authorized Gmail API service instance.
+	"""
 	# Path to the client_secret.json file downloaded from the Developer Console
 	CLIENT_SECRET_FILE = 'local/client_secret_181358812254-8kl613h65ce75p2jvtuh64hibcfu1nch.apps.googleusercontent.com.json'
 
@@ -67,22 +96,32 @@ def tutorial_script():
 	http = credentials.authorize(http)
 
 	# Build the Gmail service from discovery
-	gmail_service = build('gmail', 'v1', http=http)
+	service = build('gmail', 'v1', http=http)
+	return service
 
+	'''
 	# Retrieve a page of threads
 	threads = gmail_service.users().threads().list(userId='me').execute()
 
 	# Print ID for each thread
 	if threads['threads']:
 	  for thread in threads['threads']:
-	    pass #print 'Thread ID: %s' % (thread['id'])
+	    print 'Thread ID: %s' % (thread['id'])
 
 	return gmail_service
+	'''
 
 def main():
-	gmail_service = tutorial_script()
+	print 'starting'
+	gmail_service = authorize_service()
+	print 'have service'
 	messages = ListMessagesMatchingQuery(gmail_service, "me")
-	print messages
+	print len(messages)
+	msg = GetMessage(gmail_service, "me", messages[0]['id'])
+	
+	for k in msg.keys():
+		print k 
+
 
 if __name__ == "__main__":
     main()
