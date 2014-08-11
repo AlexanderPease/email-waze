@@ -34,6 +34,8 @@ class Profile(Document):
 			return '<Empty Field>'
 	'''
 
+
+	""" TODO: Write rules to ignore certain emails """
 	@classmethod
 	def add_from_gmail_message_header(cls, msg_header):
 		"""

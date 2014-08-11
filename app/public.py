@@ -1,9 +1,6 @@
-import app.basic
-from db.politiciandb import Politician
-from sunlight import congress 
-from geopy import geocoders
-import re
-import ui_methods 
+import app.basic, settings
+import logging
+from db.profiledb import Profile
 
 
 ########################
@@ -11,7 +8,14 @@ import ui_methods
 ########################
 class Index(app.basic.BaseHandler):
   def get(self):
-    name = self.get_argument('name', '')
-    results = Profile.objects.get_all(name__icontains=name)
+    name = self.get_argument('search', '')
+    if name:
+        results = Profile.objects(name__icontains=name) # case-insensitive contains
+    else:
+        results = None
 
-    return self.render('public/index.html')
+    return self.render('public/index.html', results=results)
+
+
+
+

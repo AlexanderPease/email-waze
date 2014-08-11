@@ -13,7 +13,7 @@ import templates
 import app.basic
 import app.public
 import app.admin
-import app.twitter
+import app.googleauth
 
 #import newrelic.agent I also deleted newrelic.ini. Need to re-add if we want 
 #path = os.path.join(settings.get("project_root"), 'newrelic.ini')
@@ -33,10 +33,10 @@ class Application(tornado.web.Application):
     }
 
     handlers = [
-      # Twitter auth
-      (r"/auth/twitter/?", app.twitter.Auth),
-      (r"/twitter", app.twitter.Twitter),
-      (r"/auth/logout/?", app.twitter.LogOut),
+      # Google auth
+      (r"/auth/google/?", app.googleauth.Auth),
+      (r"/auth/google/return/?", app.googleauth.AuthReturn),
+      (r"/auth/logout/?", app.googleauth.LogOut),
 
       # Admin
       (r"/admin", app.admin.AdminHome),

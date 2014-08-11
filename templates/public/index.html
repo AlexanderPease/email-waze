@@ -1,15 +1,23 @@
 {% extends "../base.html" %}
 
 {% block body %}
-      <div class="jumbotron">
-        <h1>Ansatz</h1>
-        </br>
+  <div>
+    <a href="/auth/google">Login</a>
 
-        {{ err }}
-        {{ msg }}
-          <form action="/" method="get" class="form-search">
-            <input type="text" class="input-medium search-query" name="zip_code" placeholder="Ex: 03840"/>
-            <button type="submit" class="btn btn-primary">Find!</button>
-          </form>
-      </div>
+    <h3>Search for someones email address</h3>
+    </br>
+
+    {{ err }}
+    {{ msg }}
+      <form action="/" method="get" class="form-search">
+        <input type="text" class="input-medium search-query" name="search" placeholder="Ex: Alexander Pease"/>
+        <button type="submit" class="btn btn-primary">Search</button>
+      </form>
+
+      {% if results %}
+        {% for r in results %}
+          {{ r.name }} {{ r.email }}</br>
+        {% end %}
+      {% end %}
+  </div>
 {% end %}

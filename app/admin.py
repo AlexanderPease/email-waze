@@ -26,5 +26,6 @@ class DB_Profiles(app.basic.BaseHandler):
     #  self.redirect('/')
     #else:
     p = Profile.objects
+    
     return self.render('admin/db_profiles.html', profiles=p)
 
