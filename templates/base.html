@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>FollowTheVote.org</title>
+  <title>Ansatz</title>
 
   <!-- jQuery -->
   <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
@@ -16,34 +16,12 @@
 
 <body>
   <div class="container-narrow">
-
-      {% block header %}
-      <div class="masthead">
-        <ul class="nav nav-pills pull-right">
-          <li class="active"><a href="#">Home</a></li>
-          <li><a href="mailto:admin@followthevote.org">Contact</a></li>
-          {% if current_user in settings.get('staff')%}
-            <li><a href="/admin">Admin for @{{ current_user }}</a></li>
-          {% end %}
-        </ul>
-        <h3 class="muted">FollowTheVote.org</h3>
-      </div>
-
-      <hr>
-      {% end %}
-
-      {% block body %}
-
-      {% end %}
       
-      {% block footer %}
-      <hr>
-      <div class="footer">
-        <a href="http://sunlightfoundation.com">
-          <img id="footer_logo" src="{{ static_url("img/sunlight_logo.gif") }}" alt="Powered by the Sunlight Foundation">
-        </a>
-      </div>
-      {% end %}
+      {% block header %}{% end %}
+
+      {% block body %}{% end %}
+      
+      {% block footer %}{% end %}
 
     </div> <!-- /container -->
 

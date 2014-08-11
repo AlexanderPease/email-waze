@@ -4,11 +4,11 @@ try:
     import settings
 except:
     pass
-from db import profiledb
+from db.profiledb import Profile
 
 import httplib2
-#import logging
-from email.utils import parseaddr
+import logging
+logging.getLogger().setLevel(logging.INFO)
 
 from googleapiclient.discovery import build
 from oauth2client.client import flow_from_clientsecrets
@@ -87,27 +87,13 @@ def GetMessageHeader(msg):
   	return
 
   header_list = ['Delivered-To', 'Return-Path', 'From', 'To', 'Cc']
-  info = {}
-  
+  msg_header = {}
+
   for header in headers:
   	if header['name'] in header_list:
-  		info[header['name']] = header['value']
+  		msg_header[header['name']] = header['value']
 
-  return info
-
-'''
-def CleanMessageHeader(msg_header):
-	  """
-	  Cleans the message header dict from GetMessageHeader 
-	  so that fields can be saved to database
-
-	  Args:
-	  	msg_header: A message header dict returned by GetMessageHeader(). 
-
-	  Returns:
-	    The argument, with modifications
-	  """
-'''
+  return msg_header
 
 
 def AuthorizeService():
@@ -143,23 +129,22 @@ def AuthorizeService():
 	service = build('gmail', 'v1', http=http)
 	return service
 
-
 def main():
-	print 'starting'
+	logging.info("Retrieving Gmail service...")
 	gmail_service = AuthorizeService()
-	print 'have service'
+	logging.info("Authorized Gmail service, retriving all messages...")
 	messages = ListMessagesMatchingQuery(gmail_service, 'me')
 	
 	# Iterate through all messages and save email addresses to database
-	for msg_info in messages:
+	total_num = len(messages)
+	counter = 5150
+	for msg_info in messages[counter:-1]:
+		logging.info("Adding message of id: %s (%s of %s total)" % (msg_info['id'], counter, total_num))
 		msg = GetMessage(gmail_service, 'me', msg_info['id'])
 		header = GetMessageHeader(msg)
-		#header = CleanMessageHeader(header)
-		if 'From' in header.keys():
-			print parseaddr(header['From']) # Allows local emails addresses unfortunately
-		else:
-			print header
-
+		Profile.add_from_gmail_message_header(header) # adds to database
+		counter = counter + 1
+		
 
 
 
