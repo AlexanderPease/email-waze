@@ -24,7 +24,7 @@ class BaseHandler(tornado.web.RequestHandler):
   def render(self, template, **kwargs):
     # add any variables we want available to all templates
     kwargs['user_obj'] = None
-    kwargs['user_obj'] = userdb.get_user_by_screen_name(self.current_user)
+    #kwargs['user_obj'] = userdb.get_user_by_screen_name(self.current_user)
     kwargs['current_user_can'] = self.current_user_can 
     kwargs['settings'] = settings 
     kwargs['body_location_class'] = ""

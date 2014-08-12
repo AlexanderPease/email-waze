@@ -1,70 +1,50 @@
-from mongo import db
-
-# For update_twitter
-import tweepy
 import settings
-import urllib2
+from mongoengine import *
+import logging
 
-"""
-{
-  'user': { 
-    'id_str':'', 
-    'auth_type': '', 
-    'username': '', 
-    'fullname': '', 
-    'screen_name': '', 
-    'profile_image_url_https': '', 
-    'profile_image_url': '', 
-    'is_blacklisted': False 
-    },
-  'access_token': { 'secret': '', 'user_id': '', 'screen_name': '', 'key': '' },
-  'email_address': '',
-  'role': '',
-  'tags':[],
-  "disqus_token_type": "Bearer",
-  "disqus_access_token": "",
-  "disqus_expires_in": 0,
-  "disqus_refresh_token": "",
-  "disqus_username": "",
-  "disqus_user_id": 0,
-  'yammer' {
-    'access_token': {
-      'token'
-    }
-    lots of other stuff
-  }
-  'in_usvnetwork': False
-}
+mongo_database = settings.get('mongo_database')
+connect('user', host=mongo_database['host'])
 
-"""
+class User(Document):
+	# Everything comes from Google OAuth2
+	google_credentials = StringField(required=True) # Saved by OAuth2Credentials.to_json()
+	email = EmailField(required=True) 
+	name = StringField(required=True)
 
-''' Returns all users '''
-def find_all():
-  return db.user_info.find()
+	#def __str__(self):
+	#	return self.name + ' <' + self.email + '>'
 
-def get_user_by_id_str(id_str):
-  return db.user_info.find_one({'user.id_str': id_str})
+	'''
+	def email(self):
+		return self.email
 
-def get_user_by_screen_name(screen_name):
-  return db.user_info.find_one({'user.screen_name': screen_name})
+	
+	def name(self):
+		if self.name:
+			return self.name
+		else:
+			return '<Empty Field>'
+	'''
 
-def get_user_by_email(email_address):
-  return db.user_info.find_one({'email_address':email_address})
-  
-def get_disqus_users():
-  return db.user_info.find({'disqus': { '$exists': 'true' }})
-  
-def get_newsletter_recipients():
-  return list(db.user_info.find({'wants_daily_email': True}))
+	def google_oauth2_credentials(self):
+		""" Returns instance of OAuth2Credentials """ 
+		try:
+			return self.google_credentials.from_json()
+		except:
+			logging.warning("Could not return Google OAuth2 Credentials")
+			return None
 
-def create_new_user(user, access_token):
-  print 'create new user'
-  return db.user_info.update({'user.id_str': user['id_str']}, {'user':user, 'access_token':access_token, 'email_address':'', 'role':''}, upsert=True)
+	"""
+	def get_service(self):
+		credentials = self.google_oauth2_credentials()
+		http = httplib2.Http()
+	    http = credentials.authorize(http)
+	    service = build('gmail', 'v1', http=http)
+	    user_info = service.people().get(userId='me').execute()
+	"""
+		
 
-def save_user(user):
-  print 'save user'
-  return db.user_info.update({'user.id_str': user['user']['id_str']}, user)
 
-def get_user_count():
-  return db.user_info.count()
+		
+
 

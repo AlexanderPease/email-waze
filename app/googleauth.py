@@ -1,9 +1,20 @@
 import app.basic
-import settings
+import settings, logging, httplib2
 
-#from db import userdb
+from db.userdb import User
 from oauth2client.client import OAuth2WebServerFlow
-OAUTH_SCOPE = 'https://www.googleapis.com/auth/gmail.modify'
+
+OAUTH_SCOPE = ('https://www.googleapis.com/auth/gmail.modify '
+              'https://www.googleapis.com/auth/userinfo.email '
+              'https://www.googleapis.com/auth/userinfo.profile') 
+              #'https://www.googleapis.com/auth/plus.profile.emails.read '
+              #'https://www.googleapis.com/auth/plus.me')
+
+from googleapiclient.discovery import build
+from oauth2client.client import flow_from_clientsecrets
+from oauth2client.file import Storage
+from oauth2client.tools import run
+from googleapiclient import errors
 
 ####################
 ### AUTH VIA GOOGLE
@@ -11,14 +22,13 @@ OAUTH_SCOPE = 'https://www.googleapis.com/auth/gmail.modify'
 ####################
 class Auth(app.basic.BaseHandler):
   def get(self):
-    # All read/write operations except immediate, permanent deletion of threads and messages, bypassing Trash.
+    logging.info('Entered Auth')
     flow = OAuth2WebServerFlow(client_id=settings.get('google_client_id'),
                            client_secret=settings.get('google_client_secret'),
                            scope=OAUTH_SCOPE,
                            redirect_uri='http://localhost:8001/auth/google/return')
     auth_uri = flow.step1_get_authorize_url()
-
-    """ Add cookies """
+    #Add cookies?
     return self.redirect(auth_uri)
 
 ##############################
@@ -27,15 +37,56 @@ class Auth(app.basic.BaseHandler):
 ##############################
 class AuthReturn(app.basic.BaseHandler):
   def get(self):
+    logging.info('Entered AuthReturn')
     oauth_code = self.get_argument('code', '')
-    print oauth_code
-
     flow = OAuth2WebServerFlow(client_id=settings.get('google_client_id'),
                            client_secret=settings.get('google_client_secret'),
                            scope=OAUTH_SCOPE,
                            redirect_uri='http://localhost:8001/auth/google/return')
     credentials = flow.step2_exchange(oauth_code)
+    if credentials is None or credentials.invalid:
+      logging.warning('Credentials DNE or invalid')
+      return self.redirect('/')
+    
+    # To get user's name and email address, build and query Google + service
+    http = httplib2.Http()
+    http = credentials.authorize(http)
+    service = build('oauth2', 'v2', http=http)
+    user_info = service.userinfo().get().execute()
+    """ 
+    The above two lines can also be accomplished using GPlus API 
+    service = build('plus', 'v1', http=http)
+    user_info = service.people().get(userId='me').execute()
+    """
+    try:
+      name = user_info['name']
+      email = user_info['email']     
+    except:
+      logging.info('No name or email for authenticating user')
+
+    # Save credentials to user database
+    try:
+      user = User.objects.get(email__exact=email)
+    except:
+      user = None
+    if user:
+      user.google_credentials = credentials.to_json()
+      user.name = name
+      user.email = email
+      user.save()
+      logging.info("Prexisting user %s is now logged in" % user.email)
+    else:
+      user = User(google_credentials=credentials.to_json(),
+                  email=email,
+                  name=name)
+      user.save()
+      logging.info('Saved new user %s' % user.email)
+
     return self.redirect('/')
+
+    
+
+
     """ Twitter
     consumer_key = settings.get('twitter_consumer_key')
     consumer_secret = settings.get('twitter_consumer_secret')
@@ -97,6 +148,8 @@ class AuthReturn(app.basic.BaseHandler):
 
     return self.redirect(bounce_to)
     """
+
+
 
 ###########################
 ### LOG USER OUT OF ACCOUNT
