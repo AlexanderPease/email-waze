@@ -14,7 +14,6 @@ import httplib2
 
 from googleapiclient.discovery import build
 from oauth2client.client import flow_from_clientsecrets
-from oauth2client.client import OAuth2Credentials
 from oauth2client.file import Storage
 from oauth2client.tools import run
 from googleapiclient import errors
@@ -136,7 +135,7 @@ def AuthorizeService():
 	return service
 
 def main():
-	user = User.objects.get(email="alexander@usv.com")
+	user = User.objects.get(email="me@alexanderpease.com")
 	gmail.Job(user)
 
 	"""

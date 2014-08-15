@@ -12,6 +12,7 @@ from googleapiclient import errors
 def ListMessagesMatchingQuery(service, user_id, query=''):
   """
   List all Messages of the user's mailbox matching the query.
+  Observed (but not documented) as in reverse chronological order
 
   Args:
     service: Authorized Gmail API service instance.
@@ -118,10 +119,6 @@ def Job(user):
         msg = GetMessage(gmail_service, 'me', msg_info['id'])
         header = GetMessageHeader(msg)
         if header:
-          try:
-            print header['Date']
-          except:
-            pass
           Profile.add_from_gmail_message_header(header) # adds to database
       except:
         logging.warning("gmail Job crashed out, saving partial job completion")

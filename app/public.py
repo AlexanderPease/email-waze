@@ -13,8 +13,8 @@ class Index(app.basic.BaseHandler):
         results = Profile.objects(name__icontains=name) # case-insensitive contains
     else:
         results = None
-
     return self.render('public/index.html', results=results)
+
 
 
 

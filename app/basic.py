@@ -22,10 +22,9 @@ class BaseHandler(tornado.web.RequestHandler):
     }
                 
   def render(self, template, **kwargs):
-    # add any variables we want available to all templates
+    # add any variables or functions we want available in all templates
     kwargs['user_obj'] = None
-    #kwargs['user_obj'] = userdb.get_user_by_screen_name(self.current_user)
-    kwargs['current_user_can'] = self.current_user_can 
+    kwargs['email_obscure'] = self.email_obscure 
     kwargs['settings'] = settings 
     kwargs['body_location_class'] = ""
     
@@ -60,6 +59,24 @@ class BaseHandler(tornado.web.RequestHandler):
                    text_body = text_body,
                    tag = None)
     message.send()
+
+  def email_obscure(self, email):
+    """
+    Obscures an email address
+
+    Args: 
+      email: A string, ex: testcase@alexanderpease.com
+
+    Returns
+      A string , ex: t*******@alexanderpease.com
+      """
+    first_letter = email[0]
+    string_split = email.split('@')
+    obscured = ""
+    while len(obscured) < len(string_split[0])-1:
+      obscured = obscured + "*"
+
+    return first_letter + obscured + "@" + string_split[1]
       
   ''' Optional HTML body supercedes plain text body in SendGrid API'''
   '''
@@ -83,18 +100,3 @@ class BaseHandler(tornado.web.RequestHandler):
           verify=False
         )
     '''
-
-  # Not currentl used. OLD from usv app
-  def current_user_can(self, capability):
-    """
-    Tests whether a user can do a certain thing.
-    """
-    result = False
-    u = userdb.get_user_by_screen_name(self.current_user)
-    if u and 'role' in u.keys():
-      try:
-        if capability in settings.get('%s_capabilities' % u['role']):
-          result = True
-      except:
-        result = False
-    return result
