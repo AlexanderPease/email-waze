@@ -5,13 +5,16 @@ try:
 except:
     pass
 from db.profiledb import Profile
+from db.userdb import User
+from app import gmail
 
-import httplib2
 import logging
 logging.getLogger().setLevel(logging.INFO)
+import httplib2
 
 from googleapiclient.discovery import build
 from oauth2client.client import flow_from_clientsecrets
+from oauth2client.client import OAuth2Credentials
 from oauth2client.file import Storage
 from oauth2client.tools import run
 from googleapiclient import errors
@@ -39,6 +42,8 @@ def ListMessagesMatchingQuery(service, user_id, query=''):
     messages = []
     if 'messages' in response:
       messages.extend(response['messages'])
+
+    return messages
 
     while 'nextPageToken' in response:
       page_token = response['nextPageToken']
@@ -86,7 +91,7 @@ def GetMessageHeader(msg):
   	logging.warning('Message passed to GetMessageHeader has no headers')
   	return None
 
-  header_list = ['Delivered-To', 'Return-Path', 'From', 'To', 'Cc']
+  header_list = ['Delivered-To', 'Return-Path', 'From', 'To', 'Cc', 'Date']
   msg_header = {}
 
   for header in headers:
@@ -112,12 +117,10 @@ def AuthorizeService():
 
 	# Location of the credentials storage file
 	STORAGE = Storage('gmail.storage')
-	print STORAGE
 
 	# Start the OAuth flow to retrieve credentials
 	flow = flow_from_clientsecrets(CLIENT_SECRET_FILE, scope=OAUTH_SCOPE)
 	http = httplib2.Http()
-	print http
 
 	# Try to retrieve credentials from storage or run the flow to generate them
 	credentials = STORAGE.get()
@@ -133,23 +136,29 @@ def AuthorizeService():
 	return service
 
 def main():
+	user = User.objects.get(email="alexander@usv.com")
+	gmail.Job(user)
+
+	"""
 	logging.info("Retrieving Gmail service...")
 	gmail_service = AuthorizeService()
 	logging.info("Authorized Gmail service, retrieving all messages...")
-	return
 
 	messages = ListMessagesMatchingQuery(gmail_service, 'me')
-	
+
 	# Iterate through all messages and save email addresses to database
 	total_num = len(messages)
-	counter = 6133
+	counter = 0
 	for msg_info in messages[counter:-1]:
 		logging.info("Adding message of id: %s (%s of %s total)" % (msg_info['id'], counter, total_num))
 		msg = GetMessage(gmail_service, 'me', msg_info['id'])
 		header = GetMessageHeader(msg)
-		if header:
-			Profile.add_from_gmail_message_header(header) # adds to database
+		if 'Date' in header.keys():
+			print header['Date'] 
+		else:
+			print header#Profile.add_from_gmail_message_header(header) # adds to database
 		counter = counter + 1
+	"""
 		
 
 

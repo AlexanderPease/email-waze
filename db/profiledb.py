@@ -11,7 +11,7 @@ class Profile(Document):
 	name = StringField()
 
 	# When this address was last emailed. Helps guess if an email address is still being used or not
-	last_emailed = DateTimeField() 
+	#last_emailed = DateTimeField()
 
 	# Other possible names for this email address
 	other_names = ListField(field=StringField(), default=list)
@@ -45,7 +45,7 @@ class Profile(Document):
 		Args:
 			msg_header: A message header dict returned by GetMessageHeader(). 
 		""" 
-		header_list = ['Delivered-To', 'Return-Path', 'From', 'To', 'Cc']
+		header_list = ['Delivered-To', 'Return-Path', 'From', 'To', 'Cc'] # Also Date
 		for header in header_list:
 			if header in msg_header.keys():
 				field = parseaddr(msg_header[header]) # Allows local emails addresses unfortunately
