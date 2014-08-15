@@ -11,6 +11,7 @@ class Index(app.basic.BaseHandler):
     name = self.get_argument('search', '')
     if name:
         results = Profile.objects(name__icontains=name) # case-insensitive contains
+        # Extend search possibilities
     else:
         results = None
     return self.render('public/index.html', results=results)

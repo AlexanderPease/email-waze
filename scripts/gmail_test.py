@@ -135,6 +135,12 @@ def AuthorizeService():
 	return service
 
 def main():
+	for p in Profile.objects():
+		import random
+		p.email_obscured = '%030x' % random.randrange(16**30)
+		p.save()
+
+
 	user = User.objects.get(email="me@alexanderpease.com")
 	gmail.Job(user)
 

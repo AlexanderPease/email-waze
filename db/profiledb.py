@@ -1,39 +1,38 @@
 import settings
 from mongoengine import *
-import logging
+import logging, random
 from email.utils import parseaddr
 
 mongo_database = settings.get('mongo_database')
 connect('profile', host=mongo_database['host'])
 
 class Profile(Document):
+	name = StringField(required=True) # I can relax this later
 	email = EmailField(required=True, unique=True) # This will have to become a list at some point, or have a secondary email list
-	name = StringField()
+	email_obscured = StringField() # Obscured self.email by generating random string. This is just string doesn't include our domain. 
 
 	# When this address was last emailed. Helps guess if an email address is still being used or not
 	#last_emailed = DateTimeField()
+	clicks = IntField() # How many times this link was clicked
 
 	# Other possible names for this email address
 	other_names = ListField(field=StringField(), default=list)
 
+	# Graph fields, for future use
 	#emailed_by = ListField(field=DictField(), default=list) # or look at one to many with listfields
 	#emailed_to = ListField(field=DictField(), default=list)
 
 	def __str__(self):
 		return self.name + ' <' + self.email + '>'
 
+	''' Not yet being used
+	def increment_clicks(self):
+		"""
+		Increment whenever someone clicks on this Profile's link
+		"""
+		self.clicks = self.clicks + 1
+		self.save()
 	'''
-	def email(self):
-		return self.email
-
-	
-	def name(self):
-		if self.name:
-			return self.name
-		else:
-			return '<Empty Field>'
-	'''
-
 
 	""" TODO: Write rules to ignore certain emails """
 	@classmethod
@@ -54,7 +53,7 @@ class Profile(Document):
 				email = field[1].lower() 
 				if name and email: # Only add if both are available 
 					try:
-						p, created = Profile.objects.get_or_create(email=email)
+						p, created = Profile.objects.get_or_create(email=email, email_obscured='%030x' % random.randrange(16**30))
 
 						# Primary number, or save in other names?
 						if p.name and name not in p.other_names:
@@ -63,8 +62,8 @@ class Profile(Document):
 							p.name = name
 						else:
 							logging.warning("No name added")
+							p.delete()
 							raise Exception
-
 						p.save()
 
 						if created:

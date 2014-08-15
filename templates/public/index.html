@@ -1,31 +1,33 @@
 {% extends "../base.html" %}
 
 {% block body %}
-  <div>
-    <a href="/auth/google">Login</a>
+  <div class="row">
+    <div class="col-md-6">
+      <a href="/auth/google">Login</a>
 
-    {{ err }}
-    {{ msg }}
-      <form class="form-inline" action="/" method="get" class="form-search">
-        <div class="form-group">
-          <input type="text" class="form-control" name="search" placeholder="Ex: Alexander Pease"/>
-        </div>
-        <button type="submit" class="btn btn-primary">Search</button>
-      </form>
+      {{ err }}
+      {{ msg }}
+        <form class="form-inline" action="/" method="get" class="form-search">
+          <div class="form-group">
+            <input type="text" class="form-control" name="search" placeholder="Ex: Alexander Pease"/>
+          </div>
+          <button type="submit" class="btn btn-primary">Search</button>
+        </form>
 
-      {% if results %}
-      <table class="table table-striped">
-        <tr>
-          <th>Name</th>
-          <th>Email (Click link to send email even if partially obscured)</th>
-        </tr>
-        {% for r in results %}
+        {% if results %}
+        <table class="table table-striped">
           <tr>
-            <td>{{ r.name }}</td>
-            <td><a href="mailto:testing@emailwaze.com">{{ email_obscure(r.email) }}</a></td>
+            <th>Name</th>
+            <th>Email (Click link to send email even if partially obscured)</th>
           </tr>
+          {% for r in results %}
+            <tr>
+              <td>{{ r.name }}</td>
+              <td><a href="mailto:testing@emailwaze.com">{{ email_obscure(r.email) }}</a></td>
+            </tr>
+          {% end %}
+        </table>
         {% end %}
-      </table>
-      {% end %}
-  </div>
+    </div><!--col-md-6-->
+  </div><!--row-->
 {% end %}
