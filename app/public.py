@@ -10,7 +10,7 @@ class Index(app.basic.BaseHandler):
   def get(self):
     name = self.get_argument('search', '')
     if name:
-        results = Profile.objects(name__icontains=name) # case-insensitive contains
+        results = Profile.objects(name__icontains=name).order_by('name') # case-insensitive contains
         # Extend search possibilities
     else:
         results = None

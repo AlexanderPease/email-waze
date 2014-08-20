@@ -23,7 +23,7 @@
           {% for r in results %}
             <tr>
               <td>{{ r.name }}</td>
-              <td><a href="mailto:testing@emailwaze.com">{{ email_obscure(r.email) }}</a></td>
+              <td><a href="mailto:{{ r.email_obscured }}@ansatz.me">{{ email_obscure(r.email) }}</a></td>
             </tr>
           {% end %}
         </table>
