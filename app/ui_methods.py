@@ -29,3 +29,21 @@ def ordinal(numb):
             else:
                 suffix = 'th'
     return str(numb)+ suffix
+
+def email_obscure(self, email):
+    """
+    Obscures an email address
+
+    Args: 
+      email: A string, ex: testcase@alexanderpease.com
+
+    Returns
+      A string , ex: t*******@alexanderpease.com
+      """
+    first_letter = email[0]
+    string_split = email.split('@')
+    obscured = ""
+    while len(obscured) < len(string_split[0])-1:
+      obscured = obscured + "*"
+
+    return first_letter + obscured + "@" + string_split[1]

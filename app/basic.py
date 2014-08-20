@@ -5,9 +5,7 @@ import simplejson as json
 import os
 import httplib
 import logging
-from postmark import PMMail
-
-from db import userdb
+#from postmark import PMMail
 
 class BaseHandler(tornado.web.RequestHandler):
   def __init__(self, *args, **kwargs):
@@ -24,7 +22,6 @@ class BaseHandler(tornado.web.RequestHandler):
   def render(self, template, **kwargs):
     # add any variables or functions we want available in all templates
     kwargs['user_obj'] = None
-    kwargs['email_obscure'] = self.email_obscure 
     kwargs['settings'] = settings 
     kwargs['body_location_class'] = ""
     
@@ -50,7 +47,22 @@ class BaseHandler(tornado.web.RequestHandler):
       results[arg[0]] = arg[1][0] 
     return results
 
+  def send_email(self):
+    recipient = 'alexander@usv.com'
+
+    request_url = 'https://api.mailgun.net/v2/{0}/messages'.format(settings.get('domain_name'))
+    request = requests.post(request_url, auth=('api', settings.get('mailgun_api_key')), data={
+        'from': 'hello@example.com',
+        'to': recipient,
+        'subject': 'Hello',
+        'text': 'Hello from Mailgun'
+    })
+
+    if request.status_code is not '200':
+      logging.warning('Email not sent successfully')
+
   ''' Sends email using PostMark'''
+  '''
   def send_email(self, to, subject, text_body, sender="postmark@followthevote.org",):
     message = PMMail(api_key = settings.get('postmark_api_key'),
                    sender = sender,
@@ -59,24 +71,7 @@ class BaseHandler(tornado.web.RequestHandler):
                    text_body = text_body,
                    tag = None)
     message.send()
-
-  def email_obscure(self, email):
-    """
-    Obscures an email address
-
-    Args: 
-      email: A string, ex: testcase@alexanderpease.com
-
-    Returns
-      A string , ex: t*******@alexanderpease.com
-      """
-    first_letter = email[0]
-    string_split = email.split('@')
-    obscured = ""
-    while len(obscured) < len(string_split[0])-1:
-      obscured = obscured + "*"
-
-    return first_letter + obscured + "@" + string_split[1]
+  '''
       
   ''' Optional HTML body supercedes plain text body in SendGrid API'''
   '''

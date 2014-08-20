@@ -10,9 +10,7 @@ import logging
 import settings 
 import templates
 
-import app.basic
-import app.public
-import app.admin
+import app.basic, app.public, app.admin, app.email
 import app.googleauth
 
 #import newrelic.agent I also deleted newrelic.ini. Need to re-add if we want 
@@ -33,6 +31,9 @@ class Application(tornado.web.Application):
     }
 
     handlers = [
+      # Email handling
+      (r"/email/forward", app.email.Forward),
+
       # Google auth
       (r"/auth/google/?", app.googleauth.Auth),
       (r"/auth/google/return/?", app.googleauth.AuthReturn),
