@@ -16,7 +16,8 @@ class Forward(app.basic.BaseHandler):
 		print sender
 		subject = self.get_argument('subject', 'falalal')
 		print subject
-		print 'sender and subject above'
+		print 'sender and subject above']
+		to_address = self.get_argument('to', 'falalal22')
 
 
 		
