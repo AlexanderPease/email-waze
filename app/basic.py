@@ -55,6 +55,7 @@ class BaseHandler(tornado.web.RequestHandler):
     logging.info(to_address)
 
     request_url = 'https://api.mailgun.net/v2/{0}/messages'.format(settings.get('domain_name'))
+    logging.info(request_url)
     request = requests.post(request_url, auth=('api', settings.get('mailgun_api_key')), data={
         'from': from_address,
         'to': to_address,

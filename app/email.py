@@ -42,8 +42,8 @@ class Forward(app.basic.BaseHandler):
 
 		try:
 			logging.info('going into sending email')
-			self.send_mail(to_address=p.email,
-						from_address=from_address,
+			self.send_mail(from_address=from_address,
+						to_address=p.email,
 						subject=subject,
 						html_text=body)
 		except:
