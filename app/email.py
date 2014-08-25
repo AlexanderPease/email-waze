@@ -11,13 +11,14 @@ class Forward(app.basic.BaseHandler):
 	Sent to this webhook by Mailgun API
 	"""
 	def post(self):
-		print 'received email'
-		sender = self.get_argument('sender','fialed')
-		print sender
-		subject = self.get_argument('subject', 'falalal')
-		print subject
-		print 'sender and subject above'
-		to_address = self.get_argument('to', 'falalal22')
+		logging.info('Parsing email from Mailgun API...')
+		sender = self.get_argument('sender','no sender')
+		logging.info(sender)
+		subject = self.get_argument('subject', 'no subject')
+		logging.info(subject)
+		to_address = self.get_argument('to', 'no to')
+		logging.info(to_address)
+		logging.info(self.request)
 
 
 		
