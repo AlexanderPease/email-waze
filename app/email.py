@@ -11,11 +11,15 @@ class Forward(app.basic.BaseHandler):
 	Sent to this webhook by Mailgun API
 	"""
 	def post(self):
-		print 'YESESESESESES'
-		print self.get_argument('sender','fialed')
-		print self.get_argument('subject', 'falalal')
+		print 'received email'
+		sender = self.get_argument('sender','fialed')
+		print sender
+		subject = self.get_argument('subject', 'falalal')
+		print subject
+		print 'sender and subject above'
 
-		to_address = '????'
+
+		
 		try:
 			p = Profile.objects.get(email_obscured=to_address)
 		except:
