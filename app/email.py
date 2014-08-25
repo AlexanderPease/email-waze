@@ -18,7 +18,7 @@ class Forward(app.basic.BaseHandler):
 		logging.info(subject)
 		to_address = self.get_argument('to', 'no to')
 		logging.info(to_address)
-		logging.info(self.request)
+		logging.info(self.request.arguments)
 
 
 		
