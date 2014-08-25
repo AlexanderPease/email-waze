@@ -12,33 +12,35 @@ class Forward(app.basic.BaseHandler):
 	"""
 	def post(self):
 		logging.info('Parsing email from Mailgun API...')
-		from_address = self.get_argument('sender','')
-		logging.info("from %s" % from_address)
 		
-		to_address = self.get_argument('recipient', '')
-		logging.info("recipient %s" % to_address)
-
+		### Add error handling if one of these required fields can't be found
+		from_address = self.get_argument('From','')
+		if not from_address:
+			from_address = self.get_argument('sender','')
+		logging.info("From: %s" % from_address)
+		
 		to_address = self.get_argument('To', '')
+		if not to_address:
+			to_address = self.get_argument('recipient', '')
 		logging.info("To: %s" % to_address)
 		
-		subject = self.get_argument('subject', '')
-		logging.info("subject %s" % subject)
+		subject = self.get_argument('Subject', '')
+		logging.info("Subject: %s" % subject)
 
-		body = self.get_argument('body', '')
+		body = self.get_argument('body-html', '')
+		if not body:
+			body = self.get_argument('body-plain', '')
 		logging.info("body %s" % body)
-
-		body_plain = self.get_argument('body-plain', '')
-		logging.info("body-plain %s" % body_plain)
 
 		date = self.get_argument('Date', '')
 		logging.info("date %s" % date)
 		
-		logging.info(self.request.arguments)
-
-
-		
 		try:
 			p = Profile.objects.get(email_obscured=to_address)
+			self.send_mail(to_address=to_address,
+						from_address=from_address,
+						subject=subject,
+						html_text=body)
 		except:
 			logging.warning('Could not find profile for email sent to %s' % to_address)
 
