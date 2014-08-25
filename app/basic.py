@@ -50,6 +50,8 @@ class BaseHandler(tornado.web.RequestHandler):
   def send_email(self, from_address, to_address, subject, html_text, cc=None):
     from_address = 'test@ansatz.me'
     to_address = 'alexander@usv.com'
+    logging.info(from_address)
+    logging.info(to_address)
 
     request_url = 'https://api.mailgun.net/v2/{0}/messages'.format(settings.get('domain_name'))
     request = requests.post(request_url, auth=('api', settings.get('mailgun_api_key')), data={
@@ -59,6 +61,8 @@ class BaseHandler(tornado.web.RequestHandler):
         'subject': subject,
         'html': html_text
     })
+
+    logging.info(request)
 
     if request.status_code is not '200':
       logging.warning('Email not sent successfully. Status code %s' % request.status_code)
