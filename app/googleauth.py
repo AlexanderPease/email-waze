@@ -26,7 +26,7 @@ class Auth(app.basic.BaseHandler):
     flow = OAuth2WebServerFlow(client_id=settings.get('google_client_id'),
                            client_secret=settings.get('google_client_secret'),
                            scope=OAUTH_SCOPE,
-                           redirect_uri='http://%s/auth/google/return' % settings.get('domain_name'), 
+                           redirect_uri=redirect_uri(), 
                            access_type='offline',
                            approval_prompt='force') # Needed for refresh tokens
     auth_uri = flow.step1_get_authorize_url()
@@ -41,10 +41,13 @@ class AuthReturn(app.basic.BaseHandler):
   def get(self):
     logging.info('Entered AuthReturn')
     oauth_code = self.get_argument('code', '')
+
+    
+
     flow = OAuth2WebServerFlow(client_id=settings.get('google_client_id'),
                            client_secret=settings.get('google_client_secret'),
                            scope=OAUTH_SCOPE,
-                           redirect_uri='http://%s/auth/google/return' % settings.get('domain_name'),
+                           redirect_uri=redirect_uri(),
                            access_type='offline',
                            approval_prompt='force') # Needed for refresh tokens
     credentials = flow.step2_exchange(oauth_code)
@@ -154,8 +157,6 @@ class AuthReturn(app.basic.BaseHandler):
     return self.redirect(bounce_to)
     """
 
-
-
 ###########################
 ### LOG USER OUT OF ACCOUNT
 ### /auth/logout
@@ -164,3 +165,14 @@ class LogOut(app.basic.BaseHandler):
   def get(self):
     self.clear_all_cookies()
     self.redirect('/')
+
+
+def redirect_uri():
+  """
+  Both Auth and AuthReturn need redirect_uri
+  """
+  if settings.get('environment') == "prod":
+    return 'http://%s/auth/google/return' % settings.get('domain_name')
+  else:
+    return 'http://localhost:8001/auth/google/return'
+    
