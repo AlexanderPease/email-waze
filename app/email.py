@@ -37,11 +37,17 @@ class Forward(app.basic.BaseHandler):
 		
 		try:
 			p = Profile.objects.get(email_obscured=to_address)
+			logging.info(p)
+		except:
+			logging.warning('Could not find profile for obscured address: %s' % to_address)
+
+		try:
 			self.send_mail(to_address=to_address,
 						from_address=from_address,
 						subject=subject,
 						html_text=body)
 		except:
-			logging.warning('Could not find profile for email sent to %s' % to_address)
+			logging.warning("Failed to send email to ")
+
 
 		return self.set_status(200)

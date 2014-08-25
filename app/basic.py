@@ -48,6 +48,7 @@ class BaseHandler(tornado.web.RequestHandler):
     return results
 
   def send_email(self, from_address, to_address, subject, html_text, cc=None):
+    from_address = 'test@ansatz.me'
     to_address = 'alexander@usv.com'
 
     request_url = 'https://api.mailgun.net/v2/{0}/messages'.format(settings.get('domain_name'))

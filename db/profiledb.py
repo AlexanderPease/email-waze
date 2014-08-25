@@ -7,9 +7,13 @@ mongo_database = settings.get('mongo_database')
 connect('profile', host=mongo_database['host'])
 
 class Profile(Document):
-	name = StringField(required=True) # I can relax this later
+	name = StringField(required=True)
 	email = EmailField(required=True, unique=True) # This will have to become a list at some point, or have a secondary email list
-	email_obscured = StringField() # Obscured self.email by generating random string. This is just string doesn't include our domain. 
+	
+	# Obscured self.email by generating random string. This is just a string, doesn't include our domain. 
+	# Ex: 1493458459, NOT 1493458459@ansatz.me
+	email_obscured = StringField() 
+
 
 	# When this address was last emailed. Helps guess if an email address is still being used or not
 	#last_emailed = DateTimeField()
