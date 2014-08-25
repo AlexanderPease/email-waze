@@ -12,12 +12,27 @@ class Forward(app.basic.BaseHandler):
 	"""
 	def post(self):
 		logging.info('Parsing email from Mailgun API...')
-		sender = self.get_argument('sender','no sender')
-		logging.info(sender)
-		subject = self.get_argument('subject', 'no subject')
-		logging.info(subject)
-		to_address = self.get_argument('to', 'no to')
-		logging.info(to_address)
+		from_address = self.get_argument('sender','')
+		logging.info("from %s" % from_address)
+		
+		to_address = self.get_argument('recipient', '')
+		logging.info("recipient %s" % to_address)
+
+		to_address = self.get_argument('To', '')
+		logging.info("To: %s" % to_address)
+		
+		subject = self.get_argument('subject', '')
+		logging.info("subject %s" % subject)
+
+		body = self.get_argument('body', '')
+		logging.info("body %s" % body)
+
+		body_plain = self.get_argument('body-plain', '')
+		logging.info("body-plain %s" % body_plain)
+
+		date = self.get_argument('Date', '')
+		logging.info("date %s" % date)
+		
 		logging.info(self.request.arguments)
 
 
