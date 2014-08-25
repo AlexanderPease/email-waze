@@ -60,7 +60,8 @@ class BaseHandler(tornado.web.RequestHandler):
     })
 
     if request.status_code is not '200':
-      logging.warning('Email not sent successfully')
+      logging.warning('Email not sent successfully. Status code %s' % request.status_code)
+      logging.warning(request)
 
   ''' Sends email using PostMark'''
   '''

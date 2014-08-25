@@ -12,6 +12,8 @@ class Forward(app.basic.BaseHandler):
 	"""
 	def post(self):
 		print 'YESESESESESES'
+		print self.get_argument('sender','fialed')
+		print self.get_argument('subject', 'falalal')
 
 		to_address = '????'
 		try:

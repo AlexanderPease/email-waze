@@ -8,11 +8,7 @@ from db.profiledb import Profile
 ########################
 class Index(app.basic.BaseHandler):
   def get(self):
-    print 'sending email'
-    self.send_email('alexander@usv.com', 'me@alexanderpease.com', 'test', 'test_body')
-    print 'sent'
-
-
+    #self.send_email('me@alexanderpease.com', to_address='alexander@usv.com', 'test', 'test_body')
 
     name = self.get_argument('search', '')
     if name:
