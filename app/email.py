@@ -37,6 +37,7 @@ class Forward(app.basic.BaseHandler):
 		
 		try:
 			to_address_string = to_address.split('@')[0] # Splits out "@ansatz.me"
+			logging.info("Searching database for email_obscured=%s" % to_address_string)
 			p = Profile.objects.get(email_obscured=to_address_string)
 			logging.info(p)
 		except:
