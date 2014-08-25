@@ -8,12 +8,6 @@ from db.profiledb import Profile
 ########################
 class Index(app.basic.BaseHandler):
   def get(self):
-    self.send_email(from_address='postmaster@ansatz.me',
-    				to_address="alexander@usv.com",
-    				subject="boring",
-    				html_text="boringbody")
-
-
     name = self.get_argument('search', '')
     if name:
         results = Profile.objects(name__icontains=name).order_by('name') # case-insensitive contains

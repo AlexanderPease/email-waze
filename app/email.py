@@ -25,12 +25,6 @@ class Forward(app.basic.BaseHandler):
 		if not body:
 			body = self.get_argument('body-plain', '')
 		date = self.get_argument('Date', '')
-
-		logging.info("To: %s" % to_address)
-		logging.info("From: %s" % from_address)
-		logging.info("Subject: %s" % subject)
-		logging.info("Body: %s" % body)
-		logging.info("Date: %s" % date)
 		
 		try:
 			to_address_string = to_address.split('@')[0] # Splits out "@ansatz.me"
@@ -41,12 +35,17 @@ class Forward(app.basic.BaseHandler):
 			return self.set_status(406) # Mailgun knows it failed but won't retry
 
 		try:
-			logging.info('going into sending email')
 			self.send_mail(from_address=from_address,
 						to_address=p.email,
 						subject=subject,
 						html_text=body)
+			logging.info('Sent email from %s to obscured %s' % (from_address, p.email))
 		except:
-			logging.warning("Failed to send email to %s" % p.email)
+			logging.warning("Failed to send email below:")
+			logging.warning("To: %s" % to_address)
+			logging.warning("From: %s" % from_address)
+			logging.warning("Subject: %s" % subject)
+			logging.warning("Body: %s" % body)
+			logging.warning("Date: %s" % date)
 
 		return self.set_status(200)
