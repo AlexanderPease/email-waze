@@ -41,9 +41,7 @@ class Forward(app.basic.BaseHandler):
 			return self.set_status(406) # Mailgun knows it failed but won't retry
 
 		try:
-			logging.info('trying')
-			logging.info(p.email)
-			logging.info(type(p.email))
+			logging.info('going into sending email')
 			self.send_mail(to_address=p.email,
 						from_address=from_address,
 						subject=subject,

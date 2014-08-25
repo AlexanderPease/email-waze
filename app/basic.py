@@ -48,7 +48,8 @@ class BaseHandler(tornado.web.RequestHandler):
     return results
 
   def send_email(self, from_address, to_address, subject, html_text, cc=None):
-    from_address = 'test@ansatz.me'
+    logging.info('sending email')
+    from_address = 'postmaster@ansatz.me'
     to_address = 'alexander@usv.com'
     logging.info(from_address)
     logging.info(to_address)
