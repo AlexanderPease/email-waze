@@ -30,7 +30,7 @@ def ordinal(numb):
                 suffix = 'th'
     return str(numb)+ suffix
 
-def email_obscure(self, email):
+def email_obscure(email):
     """
     Obscures an email address
 
