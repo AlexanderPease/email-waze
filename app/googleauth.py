@@ -26,7 +26,7 @@ class Auth(app.basic.BaseHandler):
     flow = OAuth2WebServerFlow(client_id=settings.get('google_client_id'),
                            client_secret=settings.get('google_client_secret'),
                            scope=OAUTH_SCOPE,
-                           redirect_uri='http://localhost:8001/auth/google/return', 
+                           redirect_uri='http://%s/auth/google/return' % settings.get('domain_name'), 
                            access_type='offline',
                            approval_prompt='force') # Needed for refresh tokens
     auth_uri = flow.step1_get_authorize_url()
@@ -44,7 +44,7 @@ class AuthReturn(app.basic.BaseHandler):
     flow = OAuth2WebServerFlow(client_id=settings.get('google_client_id'),
                            client_secret=settings.get('google_client_secret'),
                            scope=OAUTH_SCOPE,
-                           redirect_uri='http://localhost:8001/auth/google/return',
+                           redirect_uri='http://%s/auth/google/return' % settings.get('domain_name'),
                            access_type='offline',
                            approval_prompt='force') # Needed for refresh tokens
     credentials = flow.step2_exchange(oauth_code)
