@@ -37,18 +37,17 @@ class Forward(app.basic.BaseHandler):
 		
 		try:
 			to_address_string = to_address.split('@')[0] # Splits out "@ansatz.me"
-			p = Profile.objects.get(email_obscured=to_address)
+			p = Profile.objects.get(email_obscured=to_address_string)
 			logging.info(p)
 		except:
 			logging.warning('Could not find profile for obscured address: %s' % to_address)
 
 		try:
-			self.send_mail(to_address=to_address,
+			self.send_mail(to_address=p.email,
 						from_address=from_address,
 						subject=subject,
 						html_text=body)
 		except:
-			logging.warning("Failed to send email to ")
-
+			logging.warning("Failed to send email to %s" % p.email)
 
 		return self.set_status(200)
