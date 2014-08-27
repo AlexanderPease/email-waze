@@ -7,7 +7,18 @@
       {{ msg }}
 
       {% if not current_user %}
-        <a href="/auth/google">Login</a>
+        <h2>Welcome to Ansatz!</h2>
+
+        <p>
+          Ansatz is a simple way to find someone's email address while still respecting their privacy. 
+          </br></br>
+          It works like this:</br>
+          If I search the database for "Alexander Pease" at "Union Square Ventures", I'll find an entry for 
+          "a********@usv.com". Ansatz lets me send him an email directly to his inbox while still keeping his address private.
+        </p>
+
+        To find someone, <a href="/auth/google">login w/ your Gmail account</a>
+
       {% else %}
         Welcome {{ get_current_user_name() }}
 
