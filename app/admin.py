@@ -12,7 +12,7 @@ from db.profiledb import Profile
 class AdminHome(app.basic.BaseHandler):
   @tornado.web.authenticated
   def get(self):
-    return self.render('admin/admin_home.html', tweets=tweets, msg=msg, err=err)
+    return self.render('admin/admin_home.html')
 
 
 ###########################
