@@ -23,6 +23,8 @@ from googleapiclient import errors
 class Auth(app.basic.BaseHandler):
   def get(self):
     logging.info('Entered Auth')
+    logging.info(settings.get('google_client_id'))
+    logging.info(settings.get('google_client_secret'))
     flow = OAuth2WebServerFlow(client_id=settings.get('google_client_id'),
                            client_secret=settings.get('google_client_secret'),
                            scope=OAUTH_SCOPE,
