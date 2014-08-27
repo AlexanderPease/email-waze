@@ -24,7 +24,7 @@ class Application(tornado.web.Application):
 
     app_settings = {
       "cookie_secret" : "change_me",
-      "login_url": "/auth/twitter",
+      "login_url": "/auth/google",
       "debug": debug,
       "static_path" : os.path.join(os.path.dirname(__file__), "static"),
       "template_path" : os.path.join(os.path.dirname(__file__), "templates"),

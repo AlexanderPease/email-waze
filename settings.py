@@ -61,7 +61,7 @@ default_options = {
   'sendgrid_secret': os.environ.get("SENDGRID_SECRET"),
 
   'staff':[
-    "AlexanderPease",
+    "alexander@usv.com",
   ],
 
   # define the various roles and what capabilities they support
