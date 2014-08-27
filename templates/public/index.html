@@ -3,10 +3,14 @@
 {% block body %}
   <div class="row">
     <div class="col-md-6">
-      <a href="/auth/google">Login</a>
-
       {{ err }}
       {{ msg }}
+
+      {% if not current_user %}
+        <a href="/auth/google">Login</a>
+      {% else %}
+        Welcome {{ get_current_user_name() }}
+
         <form class="form-inline" action="/" method="get" class="form-search">
           <div class="form-group">
             <input type="text" class="form-control" name="search" placeholder="Ex: Alexander Pease"/>
@@ -30,6 +34,7 @@
           {% end %}
         </table>
         {% end %}
+      {% end %}
     </div><!--col-md-6-->
   </div><!--row-->
 {% end %}

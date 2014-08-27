@@ -23,6 +23,7 @@ class BaseHandler(tornado.web.RequestHandler):
     # add any variables or functions we want available in all templates
     kwargs['user_obj'] = None
     kwargs['settings'] = settings 
+    kwargs['get_current_user_name'] = self.get_current_user_name
     kwargs['body_location_class'] = ""
     
     if 'msg' not in kwargs.keys():
@@ -34,9 +35,17 @@ class BaseHandler(tornado.web.RequestHandler):
       kwargs['body_location_class'] = "home"
   
     super(BaseHandler, self).render(template, **kwargs)
-    
+  
   def get_current_user(self):
-    return self.get_secure_cookie("username")
+    """
+    Function that controls self.current_user (Tornado handles this on back end)
+    Use the user's email as the identifying property
+    """
+    return self.get_secure_cookie("user_email")
+
+  def get_current_user_name(self):
+    return self.get_secure_cookie("user_name")
+
 
   ''' Get all arguments and returns in dict form.
       This is difficult because each v is a list, even if only single v for each k'''

@@ -30,7 +30,6 @@ class Auth(app.basic.BaseHandler):
                            access_type='offline',
                            approval_prompt='force') # Needed for refresh tokens
     auth_uri = flow.step1_get_authorize_url()
-    # Add cookies?
     return self.redirect(auth_uri)
 
 ##############################
@@ -89,6 +88,10 @@ class AuthReturn(app.basic.BaseHandler):
                   name=name)
       user.save()
       logging.info('Saved new user %s' % user.email)
+
+    # Set cookies
+    self.set_secure_cookie('user_email', user.email)
+    self.set_secure_cookie('user_name', user.name)
 
     return self.redirect('/')
 
