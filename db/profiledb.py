@@ -38,6 +38,14 @@ class Profile(Document):
 		self.save()
 	'''
 
+	def get_domain(self):
+		"""
+		Returns just the domain name of the email address
+		Ex: reply.craigslist.com from foo@reply.craigslist.com
+		"""
+		return self.email.split('@')[1]
+
+
 	""" TODO: Write rules to ignore certain emails """
 	@classmethod
 	def add_from_gmail_message_header(cls, msg_header):
