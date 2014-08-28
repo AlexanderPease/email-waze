@@ -51,5 +51,6 @@ class Forward(app.basic.BaseHandler):
 			logging.warning("Reply-To: %s" % reply_to)
 			logging.warning("Subject: %s" % subject)
 			logging.warning("Date: %s" % date)
+			return self.set_status(406) # Mailgun knows it failed but won't retry
 
 		return self.set_status(200)
