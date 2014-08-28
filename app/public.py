@@ -13,6 +13,8 @@ class Index(app.basic.BaseHandler):
 
     if name or domain:
         results = Profile.objects(name__icontains=name, email__icontains=domain).order_by('name') # case-insensitive contains
+        if not results:
+        	results = 'empty' # this is passed into to alert user that no results were returned
     else:
         results = None
     return self.render('public/index.html', results=results, email_obscure=ui_methods.email_obscure)

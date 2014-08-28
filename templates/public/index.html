@@ -21,7 +21,11 @@
         To find someone, <a href="/auth/google">login w/ your Gmail account</a>
 
       {% else %}
-        Welcome {{ get_current_user_name() }}
+        Welcome {{ current_user_name() }} 
+
+        {% if current_user_staff() %}
+          <a href="/admin">admin</a>
+        {% end %}
 
         <form class="form-horizontal" action="/" method="GET">
           <div class="form-group">
@@ -46,20 +50,30 @@
         </form>
 
         {% if results %}
-        <table class="table table-striped">
-          <tr>
-            <th>Name</th>
-            <th>Email Him/Her Directly Through Ansatz!</th>
-          </tr>
-          {% for r in results %}
-            <tr>
-              <td>{{ r.name }} ({{ email_obscure(r.email) }})</td>
-              <td><a href="mailto:{{ r.email_obscured }}@ansatz.me" target="_blank">{{ r.email_obscured }}@ansatz.me</a></td>
-            </tr>
+          {% if results is 'empty' %}
+            No results found, try another search!
+          {% else %}
+
+            <table class="table table-striped">
+              <tr>
+                <th>Name</th>
+                <th>Email Him/Her Directly Through Ansatz!</th>
+              </tr>
+              {% for r in results %}
+                <tr>
+                  <td>{{ r.name }} ({{ email_obscure(r.email) }})</td>
+                  <td><a href="mailto:{{ r.email_obscured }}@ansatz.me" target="_blank">{{ r.email_obscured }}@ansatz.me</a></td>
+                </tr>
+              {% end %}
+            </table>
           {% end %}
-        </table>
         {% end %}
-      {% end %}
+
+
+      {% end %} <!--current user-->
     </div><!--col-md-6-->
   </div><!--row-->
+{% end %}
+
+{% block javascript %}
 {% end %}

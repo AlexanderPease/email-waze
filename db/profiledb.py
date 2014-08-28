@@ -7,12 +7,12 @@ mongo_database = settings.get('mongo_database')
 connect('profile', host=mongo_database['host'])
 
 class Profile(Document):
-	name = StringField(required=True)
+	name = StringField() 
 	email = EmailField(required=True, unique=True) # This will have to become a list at some point, or have a secondary email list
 	
 	# Obscured self.email by generating random string. This is just a string, doesn't include our domain. 
 	# Ex: 1493458459, NOT 1493458459@ansatz.me
-	email_obscured = StringField() 
+	email_obscured = StringField(unique=True) 
 
 
 	# When this address was last emailed. Helps guess if an email address is still being used or not
@@ -45,8 +45,6 @@ class Profile(Document):
 		"""
 		return self.email.split('@')[1]
 
-
-	""" TODO: Write rules to ignore certain emails """
 	@classmethod
 	def add_from_gmail_message_header(cls, msg_header):
 		"""
@@ -64,10 +62,31 @@ class Profile(Document):
 				name = field[0]
 				email = field[1].lower() 
 				if name and email: # Only add if both are available 
-					try:
-						p, created = Profile.objects.get_or_create(email=email, email_obscured='%030x' % random.randrange(16**30))
 
-						# Primary number, or save in other names?
+					# Add the email to database
+					try:
+						p, created = Profile.objects.get_or_create(name=name, email=email)
+						
+						# A new email address was added
+						if p and created:
+							p.email_obscured = '%030x' % random.randrange(16**30)
+							p.save()
+							# Brief set of rules to ignore certain emails
+							if 'reply' in p.email or 'info' in p.get_domain() or len(p.email) > 40:
+								p.delete()
+								logging.info("%s did not pass tests, not added to database" % email)
+							else:
+								logging.info('Added to database: %s %s' % (p.name, p.email))
+
+						# Attempted to add existing email address
+						elif p and not created:
+							logging.info('%s already exists, no change to database' % p)
+						else:
+							logging.warning("p DNE?!")
+							raise Exception
+
+						
+						''' # Primary name, or save in other names?
 						if p.name and name not in p.other_names:
 							p.other_names = p.other_names.extend(name)
 						elif not p.name:
@@ -76,12 +95,9 @@ class Profile(Document):
 							logging.warning("No name added")
 							p.delete()
 							raise Exception
-						p.save()
-
-						if created:
-							logging.info('Added to database: %s %s' % (p.name, p.email))
+						'''
 					except:
-						logging.warning("Couldn't add email address: %s %s" % (name, email))
+						logging.warning("Couldn't add email address: %s <%s>" % (name, email))
 
 
 			else:

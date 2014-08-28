@@ -90,9 +90,9 @@ def GetMessageHeader(msg):
 
 
 FAIL_THRESHOLD = 10
-def Job(user):
+def GmailJob(user):
   """
-  Updates database with a logged in users contacts
+  Updates database with a signed up user's contacts
 
   Args: user is a User profile object
   """

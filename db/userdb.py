@@ -17,17 +17,15 @@ class User(Document):
 	def __str__(self):
 		return self.name + ' <' + self.email + '>'
 
-	'''
-	def email(self):
-		return self.email
-
-	
-	def name(self):
-		if self.name:
-			return self.name
+	def if_gmail_job(self):
+		"""
+		Returns if this User's Gmail has been scraped AT ALL
+		"""
+		if 'last_job' in self.gmail_job.keys():
+			return True
 		else:
-			return '<Empty Field>'
-	'''
+			return False
+
 
 	def get_service(self, service_type='gmail', version='v1'):
 		"""
@@ -38,7 +36,6 @@ class User(Document):
 		"""
 		try:
 			credentials = OAuth2Credentials.new_from_json(self.google_credentials)
-			print self.google_credentials
 			http = httplib2.Http()
 			http = credentials.authorize(http)
 			return build(service_type, version, http=http)
