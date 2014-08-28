@@ -40,8 +40,12 @@ class Forward(app.basic.BaseHandler):
             from_address = 'Ansatz.me <postmaster@ansatz.me>'
             to_address = 'me@alexanderpease.com'
 
+            logging.info(type(body))
+            body = "This is a test </br>" + body
+
             request = self.send_email(from_address=from_address,
                         to_address=p.email,
+                        reply_to=reply_to,
                         subject=subject,
                         html_text=body)
             if not request: # send_email returns None if failed
