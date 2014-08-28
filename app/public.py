@@ -12,9 +12,6 @@ class Index(app.basic.BaseHandler):
     domain = self.get_argument('domain', '')
 
     if name or domain:
-        
-    	print name
-    	print domain
         results = Profile.objects(name__icontains=name, email__icontains=domain).order_by('name') # case-insensitive contains
     else:
         results = None
