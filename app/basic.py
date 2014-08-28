@@ -68,15 +68,14 @@ class BaseHandler(tornado.web.RequestHandler):
       results[arg[0]] = arg[1][0] 
     return results
 
-  def send_email(self, from_address, to_address, subject, html_text, cc=None):
-    from_address = 'Ansatz.me <postmaster@ansatz.me>'
-    to_address = 'alexander@usv.com'
-
+  def send_email(self, from_address, to_address, subject, html_text, cc=None, bcc=None, reply_to=None):
     request_url = 'https://api.mailgun.net/v2/{0}/messages'.format(settings.get('domain_name'))
     request = requests.post(request_url, auth=('api', settings.get('mailgun_api_key')), data={
         'from': from_address,
         'to': to_address,
         'cc': cc,
+        'bcc': bcc,
+        'h:Reply-To': reply_to, 
         'subject': subject,
         'html': html_text
     })

@@ -35,8 +35,13 @@ class Forward(app.basic.BaseHandler):
 			return self.set_status(406) # Mailgun knows it failed but won't retry
 
 		try:
+			reply_to = from_address # User who sent the email is now the reply-to address
+			from_address = 'Ansatz.me <postmaster@ansatz.me>'
+			to_address = 'me@alexanderpease.com'
+
 			self.send_mail(from_address=from_address,
 						to_address=p.email,
+						reply_to=reply_to,
 						subject=subject,
 						html_text=body)
 			logging.info('Sent email from %s to obscured %s' % (from_address, p.email))
