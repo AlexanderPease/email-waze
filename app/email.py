@@ -36,10 +36,10 @@ class Forward(app.basic.BaseHandler):
 
 		try:
 			reply_to = from_address # User who sent the email is now the reply-to address
-			from_address = 'Ansatz.me <postmaster@ansatz.me>'
+			from_address = 'postmaster@ansatz.me'
 			to_address = 'me@alexanderpease.com'
 
-			logging.info('about to send email')
+			logging.info('entering send_email')
 			self.send_mail(from_address=from_address,
 						to_address=p.email,
 						subject=subject,
