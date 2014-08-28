@@ -76,9 +76,9 @@ class BaseHandler(tornado.web.RequestHandler):
     from_address = 'Ansatz.me <postmaster@ansatz.me>'
     to_address = 'me@alexanderpease.com'
 
+    return 
 
-
-    
+    """
     request_url = 'https://api.mailgun.net/v2/{0}/messages'.format(settings.get('domain_name'))
     request = requests.post(request_url, auth=('api', settings.get('mailgun_api_key')), data={
         'from': from_address,
@@ -95,6 +95,7 @@ class BaseHandler(tornado.web.RequestHandler):
     else:
       logging.warning('Email not sent successfully. Status code %s' % request.status_code)
       logging.warning(request)
+    """
 
   ''' Sends email using PostMark'''
   '''

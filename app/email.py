@@ -35,7 +35,7 @@ class Forward(app.basic.BaseHandler):
 			return self.set_status(406) # Mailgun knows it failed but won't retry
 
 		try:
-
+			# kung fu
 
 			logging.info('entering send_email')
 			self.send_mail(from_address=from_address,
@@ -47,7 +47,7 @@ class Forward(app.basic.BaseHandler):
 			logging.warning("Failed to send email below:")
 			logging.warning("To: %s" % to_address)
 			logging.warning("From: %s" % from_address)
-			logging.warning("Reply-To: %s" % reply_to)
+			#logging.warning("Reply-To: %s" % reply_to)
 			logging.warning("Subject: %s" % subject)
 			logging.warning("Date: %s" % date)
 			return self.set_status(406) # Mailgun knows it failed but won't retry
