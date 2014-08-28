@@ -72,7 +72,7 @@ class Profile(Document):
 							p.email_obscured = '%030x' % random.randrange(16**30)
 							p.save()
 							# Brief set of rules to ignore certain emails
-							if 'reply' in p.email or 'info' in p.get_domain() or len(p.email) > 40:
+							if 'reply' in p.email or 'info' in p.get_domain() or len(p.email) > 40 or 'ansatz.me' in p.get_domain():
 								p.delete()
 								logging.info("%s did not pass tests, not added to database" % email)
 							else:
