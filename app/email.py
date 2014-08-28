@@ -41,7 +41,6 @@ class Forward(app.basic.BaseHandler):
 
 			self.send_mail(from_address=from_address,
 						to_address=p.email,
-						reply_to=reply_to,
 						subject=subject,
 						html_text=body)
 			logging.info('Sent email from %s to obscured %s' % (from_address, p.email))
@@ -49,8 +48,8 @@ class Forward(app.basic.BaseHandler):
 			logging.warning("Failed to send email below:")
 			logging.warning("To: %s" % to_address)
 			logging.warning("From: %s" % from_address)
+			logging.warning("Reply-To: %s" % reply_to)
 			logging.warning("Subject: %s" % subject)
-			logging.warning("Body: %s" % body)
 			logging.warning("Date: %s" % date)
 
 		return self.set_status(200)
