@@ -22,7 +22,7 @@
 
       {% else %}
         Welcome {{ get_current_user_name() }}
-        
+
         <form class="form-horizontal" action="/" method="GET">
           <div class="form-group">
             <label for="inputEmail3" class="col-sm-2 control-label">Name</label>
@@ -49,14 +49,12 @@
         <table class="table table-striped">
           <tr>
             <th>Name</th>
-            <th>Email (Click link to send email even if partially obscured)</th>
+            <th>Email Him/Her Directly Through Ansatz!</th>
           </tr>
           {% for r in results %}
             <tr>
-              <td>{{ r.name }}</td>
-              <td>
-                <a href="mailto:{{ r.email_obscured }}@ansatz.me" target="_blank">{{ email_obscure(r.email) }}</a>
-              </td>
+              <td>{{ r.name }} ({{ email_obscure(r.email) }})</td>
+              <td><a href="mailto:{{ r.email_obscured }}@ansatz.me" target="_blank">{{ r.email_obscured }}@ansatz.me</a></td>
             </tr>
           {% end %}
         </table>
