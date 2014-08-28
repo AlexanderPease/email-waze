@@ -35,12 +35,10 @@ class Forward(app.basic.BaseHandler):
             return self.set_status(406) # Mailgun knows it failed but won't retry
 
         try:
-            logging.info(from_address)
-
             # Add intro message
             intro_msg = '''%s found your email using <a href="http://www.ansatz.com">Ansatz.com</a>. 
                         We always obscure your actual email address, which is why this email is passed through us.
-                        If you'd like to respond to %s directly just hit Reply.</br></br></br>''' % (from_address, from_address)
+                        If you'd like to respond to %s directly just hit Reply.<br/><br/>''' % (from_address, from_address)
             body = intro_msg + body
 
             # Switch from to reply-to address
