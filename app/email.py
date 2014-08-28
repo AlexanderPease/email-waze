@@ -39,6 +39,7 @@ class Forward(app.basic.BaseHandler):
 			from_address = 'Ansatz.me <postmaster@ansatz.me>'
 			to_address = 'me@alexanderpease.com'
 
+			logging.info('about to send email')
 			self.send_mail(from_address=from_address,
 						to_address=p.email,
 						subject=subject,
