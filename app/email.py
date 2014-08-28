@@ -38,11 +38,14 @@ class Forward(app.basic.BaseHandler):
 			# kung fu
 
 			logging.info('entering send_email')
-			self.send_email(from_address=from_address,
+			request = self.send_email(from_address=from_address,
 						to_address=p.email,
 						subject=subject,
 						html_text=body)
-			logging.info('Sent email from %s to obscured %s' % (from_address, p.email))
+			if not request: # send_email returns None if failed
+				return self.set_status(406) # Mailgun knows it failed but won't retry
+			else:
+				logging.info('Sent email from %s to obscured %s' % (from_address, p.email))
 		except:
 			logging.warning("Failed to send email below:")
 			logging.warning("To: %s" % to_address)

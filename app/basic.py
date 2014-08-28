@@ -69,16 +69,6 @@ class BaseHandler(tornado.web.RequestHandler):
     return results
 
   def send_email(self, from_address, to_address, subject, html_text, cc=None, bcc=None, reply_to=None):
-    
-    logging.info('entered send_email')
-
-    reply_to = from_address # User who sent the email is now the reply-to address
-    from_address = 'Ansatz.me <postmaster@ansatz.me>'
-    to_address = 'me@alexanderpease.com'
-
-    return 
-
-    """
     request_url = 'https://api.mailgun.net/v2/{0}/messages'.format(settings.get('domain_name'))
     request = requests.post(request_url, auth=('api', settings.get('mailgun_api_key')), data={
         'from': from_address,
@@ -92,10 +82,11 @@ class BaseHandler(tornado.web.RequestHandler):
 
     if request.status_code is 200:
       logging.info('Email to %s sent successfully' % to_address)
+      return request
     else:
       logging.warning('Email not sent successfully. Status code %s' % request.status_code)
       logging.warning(request)
-    """
+      return None
 
   ''' Sends email using PostMark'''
   '''
