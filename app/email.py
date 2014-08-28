@@ -36,6 +36,10 @@ class Forward(app.basic.BaseHandler):
 
 		try:
 			# kung fu
+			logging.info(from_address)
+			logging.info(p.email)
+			logging.info(subject)
+			logging.info(body)
 
 			logging.info('entering send_email')
 			self.send_mail(from_address=from_address,
