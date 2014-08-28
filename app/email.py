@@ -44,7 +44,6 @@ class Forward(app.basic.BaseHandler):
             # Switch from to reply-to address
             reply_to = from_address # User who sent the email is now the reply-to address
             from_address = 'Ansatz.me <postmaster@ansatz.me>'
-            to_address = 'me@alexanderpease.com'
 
             request = self.send_email(from_address=from_address,
                         to_address=p.email,
