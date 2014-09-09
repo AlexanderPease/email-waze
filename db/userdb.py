@@ -10,6 +10,7 @@ connect('user', host=mongo_database['host'])
 class User(Document):
 	# Everything comes from Google OAuth2
 	google_credentials = StringField(required=True) # Saved by OAuth2Credentials.to_json()
+	google_credentials_scope = StringField(required=True) # Save OAUTH_SCOPE for each user, in case this evolves
 	gmail_job = DictField() # Tracks when Gmail was last scraped
 	email = EmailField(required=True) 
 	name = StringField(required=True)
@@ -42,6 +43,7 @@ class User(Document):
 		except:
 			logging.error('Could not return Google service object for return User %s' % self)
 			return
+
 	    
 	
 		

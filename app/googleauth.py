@@ -81,6 +81,7 @@ class AuthReturn(app.basic.BaseHandler):
       user = None
     if user:
       user.google_credentials = credentials.to_json()
+      user.google_credentials_scope = OAUTH_SCOPE
       user.name = name
       user.email = email
       user.save()
