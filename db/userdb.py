@@ -1,8 +1,12 @@
 import settings
 from mongoengine import *
 import httplib2, logging
-from googleapiclient.discovery import build
+
+# Google API OAUTH2 dependencies
 from oauth2client.client import OAuth2Credentials
+from googleapiclient.discovery import build 
+import gdata.gauth 
+import gdata.contacts.client
 
 mongo_database = settings.get('mongo_database')
 connect('user', host=mongo_database['host'])
@@ -41,8 +45,26 @@ class User(Document):
 			http = credentials.authorize(http)
 			return build(service_type, version, http=http)
 		except:
-			logging.error('Could not return Google service object for return User %s' % self)
+			logging.error('Could not return Google Discovery APIs service object for User "%s"' % self)
 			return
+
+	def get_gd_client(self):
+		"""
+		Returns client for Google Data APIs. Currently returns for Contacts API only
+		Uses same google_credentials as get_service() for GMail and newer Google APIs
+
+		Args: 
+			service_type: Default 'contacts'
+		"""
+		try:
+			credentials = OAuth2Credentials.new_from_json(self.google_credentials)
+			auth2token = gdata.gauth.OAuth2TokenFromCredentials(credentials)
+			gd_client = gdata.contacts.client.ContactsClient(source='<var>Ansatz/var>')
+			gd_client = auth2token.authorize(gd_client)
+			return gd_client
+		except:
+			logging.error('Could not return Google Data APIs client for User "%s"' % self)
+			return	
 
 	    
 	
