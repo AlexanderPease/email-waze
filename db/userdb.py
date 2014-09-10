@@ -11,11 +11,21 @@ import gdata.contacts.client
 mongo_database = settings.get('mongo_database')
 connect('user', host=mongo_database['host'])
 
+class GmailJobField(EmbeddedDocument):
+	last_job = DateTimeField()
+	success = BooleanField()
+	fail_date = DateTimeField() # if success is True, this field is None
+
+
 class User(Document):
 	# Everything comes from Google OAuth2
 	google_credentials = StringField(required=True) # Saved by OAuth2Credentials.to_json()
 	google_credentials_scope = StringField(required=True) # Save OAUTH_SCOPE for each user, in case this evolves
-	gmail_job = DictField() # Tracks when Gmail was last scraped
+	
+	# Track status of updates run on this user
+	gmail_job = EmbeddedDocumentField(GmailJobField)# Tracks when Gmail was last scraped
+	google_contacts_job = DateTimeField() # Tracks when Contacts were last scraped
+
 	email = EmailField(required=True) 
 	name = StringField(required=True)
 

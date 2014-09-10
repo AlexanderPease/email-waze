@@ -92,7 +92,9 @@ def GetMessageHeader(msg):
 FAIL_THRESHOLD = 10
 def GmailJob(user):
   """
-  Updates database with a signed up user's contacts
+  Updates database with a signed up user's contacts by going through every
+  single email in the inbox and adding new addresses to the database.
+  This is the original scraping method used. 
 
   Args: user is a User profile object
   """
