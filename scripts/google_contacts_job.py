@@ -11,7 +11,7 @@ import logging
 logging.getLogger().setLevel(logging.INFO)
 
 def main():
-	ContactsJob(User.objects.get(email="me@alexanderpease.com"))
+	ContactsJob(User.objects.get(email="alexander@usv.com"))
 	return
 
 

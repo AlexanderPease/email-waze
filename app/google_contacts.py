@@ -9,9 +9,12 @@ import logging
 
 def ContactsJob(user):
   gd_client= user.get_gd_client()
-  logging.info(type(gd_client))
 
-  feed = gd_client.GetContacts()
+  # GetContacts defaults to retunr 25 contacts, so extend query first
+  query = gdata.contacts.client.ContactsQuery()
+  query.max_results = 99999 # crazy high number to get all contacts
+  feed = gd_client.GetContacts(q=query)
+
   for i, entry in enumerate(feed.entry):
     try:
       print '\n%s %s' % (i+1, entry.name.full_name.text)
