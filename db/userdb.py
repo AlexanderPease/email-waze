@@ -36,7 +36,7 @@ class User(Document):
 		"""
 		Returns if this User's Gmail has been scraped AT ALL
 		"""
-		if 'last_job' in self.gmail_job.keys():
+		if self.gmail_job.last_job:
 			return True
 		else:
 			return False

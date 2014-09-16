@@ -14,6 +14,7 @@ def main():
 	for u in User.objects():
 		# Run jobs on all users that are brand new
 		if not u.if_gmail_job():
+			logging.info("Starting GmailJob for %s" % u)
 			GmailJob(u)
 if __name__ == "__main__":
 		main()
