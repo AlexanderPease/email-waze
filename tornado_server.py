@@ -42,6 +42,8 @@ class Application(tornado.web.Application):
       # Admin
       (r"/admin", app.admin.AdminHome),
       (r"/admin/db_profiles", app.admin.DB_Profiles),
+      (r"/admin/db_users", app.admin.DB_Users),
+
 
       # Public
       (r'/$', app.public.Index),
