@@ -17,10 +17,6 @@ googleapiclient==1.2
 hashlib==20081119
 html5lib==1.0b3
 httplib2==0.9
-iron-cache==0.3.1
-iron-celery==0.4.3
-iron-core==1.1.2
-iron-mq==0.5
 kombu==3.0.23
 logging==0.4.9.6
 mongoengine==0.8.7
@@ -39,10 +35,7 @@ selenium==2.40.0
 simplejson==3.6.0
 six==1.8.0
 slugify==0.0.1
-splinter==0.6.0
-sunlight==1.2.1
 tornado==3.2
-tweepy==2.2
 uritemplate==0.6
 urllib3==1.9
 wsgiref==0.1.2
