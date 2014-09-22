@@ -33,9 +33,6 @@ def ListMessagesMatchingQuery(service, user_id, query=''):
         if 'messages' in response:
             messages.extend(response['messages'])
 
-        # DEBUG
-        return messages
-
         while 'nextPageToken' in response:
             page_token = response['nextPageToken']
             response = service.users().messages().list(userId=user_id, q=query,
