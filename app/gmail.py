@@ -144,14 +144,15 @@ def GmailJob(user):
                         break 
 
                 user.gmail_job = {'last_job': datetime.datetime.now(),
-                                                    'fail_date': date,
-                                                    'success': False}
+                                    'fail_date': date,
+                                    'success': False}
                 user.save()
                 return
 
         # Save completed job specs to user.gmail_job
         user.gmail_job = {'last_job': datetime.datetime.now(),
-                                            'success': True}
+                            'fail_date': None,
+                            'success': True}
         user.save()
         return
 
