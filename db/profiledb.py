@@ -53,6 +53,12 @@ class Profile(Document):
         """
         Creates a new Profile in database (if DNE) and goes through
         all necessary error checking, cleaning, and creation of derivative fields
+
+        Args:
+            Name and email strings
+
+        Returns:
+            True if a new Profile document was added to database.
         """
         try:
             p, created = Profile.objects.get_or_create(
@@ -66,6 +72,7 @@ class Profile(Document):
                     logging.info("%s did not pass tests, not added to database" % email)
                 else:
                     logging.info('Added to database: %s %s' % (p.name, p.email))
+                    return True
 
             # Attempted to add existing email address
             elif p and not created:
@@ -93,11 +100,14 @@ class Profile(Document):
     @classmethod
     def add_from_gmail_message_header(cls, msg_header):
         """
-        Takes a message header from GetMessageHeader() and 
+        Takes a dict message header from GetMessageHeader() and 
         adds to/creates entries in Profile database if necessary
 
         Args:
             msg_header: A message header dict returned by GetMessageHeader(). 
+
+        Returns:
+            True if a new Profile document was added to database.
         """ 
         header_list = ['Delivered-To', 'Return-Path', 'From', 'To', 'Cc'] # Also Date
         for header in header_list:
@@ -107,7 +117,7 @@ class Profile(Document):
                 name = field[0]
                 email = field[1].lower() 
                 if name and email: # Only add if both are available 
-                    Profile.add_new(name=name, email=email)
+                    return Profile.add_new(name=name, email=email)
             else:
                 logging.debug('No %s field in header (output in line below)' % header)
                 logging.debug(msg_header)

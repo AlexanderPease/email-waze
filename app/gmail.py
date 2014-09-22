@@ -118,18 +118,22 @@ def GmailJob(user):
         total_num = len(messages)
         counter = 0
         fail_counter = 0
+        added = 0
         for msg_info in messages:
-            logging.info("Adding message of id: %s (%s of %s total)" % (msg_info['id'], counter, total_num))
+            logging.info("Checking message of id: %s (%s of %s total)" % (msg_info['id'], counter, total_num))
             try:
                 msg = GetMessage(gmail_service, 'me', msg_info['id'])
                 header = GetMessageHeader(msg)
                 if header:
-                    Profile.add_from_gmail_message_header(header) # adds to database
+                    result = Profile.add_from_gmail_message_header(header) # adds to database
+                    if result:
+                        added = added + 1
             except:
                 logging.warning("gmail Job crashed out, saving partial job completion")
                 fail_counter = fail_counter + 1
 
             counter = counter + 1
+            logging.info('%s Profiles added by %s' % (added, user))
             
             # If FAIL_THRESHOLD number of messages have failed, save and exit the partial job
             if fail_counter >= FAIL_THRESHOLD:

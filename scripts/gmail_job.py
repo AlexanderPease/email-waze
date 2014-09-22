@@ -11,7 +11,7 @@ import logging
 logging.getLogger().setLevel(logging.INFO)
 
 def main():
-	for u in User.objects(email='alice@rre.com'):
+	for u in User.objects(email='thomas.jc.smyth@gmail.com'):
 		# Run jobs on all users that are brand new
 		if not u.if_gmail_job():
 			logging.info("Starting GmailJob for %s" % u)
