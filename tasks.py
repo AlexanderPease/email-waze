@@ -8,7 +8,7 @@ from scripts.gmail_job import main as gmail_job
 celery = celery.Celery('tasks', 
     broker=settings.get('rabbitmq_bigwig_url'))
 
-
+@celery.task
 def add(x, y):
     return x + y
 
