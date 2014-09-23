@@ -1,8 +1,8 @@
 {% extends "../base.html" %}
 
 {% block body %}
-	
-	<h4>Administrative Dashboard</h4>
+  
+  <h4>Administrative Dashboard</h4>
 
     {% if msg %}
       <p class="text-success">{{ msg }}</p>
@@ -12,11 +12,9 @@
       <p class="text-success">{{ err }}</p>
     {% end %}
 
-	<ul>
-		<li>
-	    	<a href="/admin/db_profiles">Profiles Database</a>
-	  	</li>
-	</ul>
-
+  <ul>
+    <li><a href="/admin/db_profiles">Profiles Database</a></li>
+    <li><a href="/admin/db_users">Users Database</a></li>
+  </ul>
 
 {% end %}

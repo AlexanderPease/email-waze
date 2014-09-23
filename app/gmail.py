@@ -65,7 +65,7 @@ def GetMessage(service, user_id, msg_id):
 
 def GetMessageHeader(msg):
     """
-    Gets the email header info from a GMail message dict
+    Gets the email header info from a Gmail message dict
 
     Args:
         msg: A message dict returned by GetMessage(). 
