@@ -105,6 +105,7 @@ def GmailJob(user):
     gmail_service = user.get_service('gmail')
     if gmail_service:
         # What messages to search through?
+        '''TODO: if GmailJob has been run on user before, only do recent emails'''
         q = ''
 
         logging.info("Authorized Gmail service, retrieving all unseen messages...")
@@ -126,7 +127,7 @@ def GmailJob(user):
                     if result:
                         added = added + 1
             except:
-                logging.warning("gmail Job crashed out, saving partial job completion")
+                logging.warning("GmailJob crashed out, saving partial job completion")
                 fail_counter = fail_counter + 1
 
             counter = counter + 1

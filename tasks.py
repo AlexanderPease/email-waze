@@ -26,9 +26,9 @@ def run_google_contacts_job():
 @celery_worker.task
 def run_gmail_job():
     logging.info("Celery worker starting tasks.run_gmail_job()")
-    for u in User.objects(email='thomas.jc.smyth@gmail.com'):
+    for u in User.objects():
         # Run jobs on all users that are brand new
-        #if not u.if_gmail_job():
-        logging.info("Starting GmailJob for %s" % u)
-        GmailJob(u)
+        if not u.gmail_job.success:
+            logging.info("Starting GmailJob for %s" % u)
+            GmailJob(u)
     logging.info("Celery worker finished tasks.run_gmail_job()")

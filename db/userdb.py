@@ -14,7 +14,11 @@ connect('user', host=mongo_database['host'])
 class GmailJobField(EmbeddedDocument):
     last_job = DateTimeField()
     success = BooleanField()
-    fail_date = DateTimeField() # if success is True, this field is None
+
+    # If success is True, this field is None
+    # If a job failed, this saves the date of the last successful email
+    # Start the next job by searching Gmail for emails newer than this date
+    fail_date = DateTimeField() 
 
 
 class User(Document):
@@ -22,9 +26,11 @@ class User(Document):
     google_credentials = StringField(required=True) # Saved by OAuth2Credentials.to_json()
     google_credentials_scope = StringField(required=True) # Save OAUTH_SCOPE for each user, in case this evolves
     
-    # Track status of updates run on this user
-    gmail_job = EmbeddedDocumentField(GmailJobField)# Tracks when Gmail was last scraped
-    google_contacts_job = DateTimeField() # Tracks when Contacts were last scraped
+    ### Track status of updates/jobs run on this user
+    # Tracks when Gmail was last scraped
+    gmail_job = EmbeddedDocumentField(GmailJobField)
+    # Tracks when Google Contacts was last scraped
+    google_contacts_job = DateTimeField() 
 
     email = EmailField(required=True) 
     name = StringField(required=True)
@@ -32,15 +38,24 @@ class User(Document):
     def __str__(self):
         return self.name + ' <' + self.email + '>'
 
-    def if_gmail_job(self):
+    def gmail_job_start_date(self):
         """
-        Returns if this User's Gmail has been scraped AT ALL
+        Returns None if this User's Gmail account has never been scraped. 
+        Or else returns what date to start the next Gmail. 
         """
-        if self.gmail_job.last_job:
-            return True
+        if self.gmail_job.success is True:
+            if self.last_job:
+                return self.last_job
+            else:
+                raise Exception
+        elif self.gmail_job.success is False:
+            if self.fail_date:
+                return self.fail_date
+            else:
+                raise Exception
+        # GmailJob() has not been run on this user yet
         else:
-            return False
-
+            return None
 
     def get_service(self, service_type='gmail', version='v1'):
         """
