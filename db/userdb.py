@@ -44,13 +44,13 @@ class User(Document):
         Or else returns what date to start the next Gmail. 
         """
         if self.gmail_job.success is True:
-            if self.last_job:
-                return self.last_job
+            if self.gmail_job.last_job:
+                return self.gmail_job.last_job
             else:
                 raise Exception
         elif self.gmail_job.success is False:
-            if self.fail_date:
-                return self.fail_date
+            if self.gmail_job.fail_date:
+                return self.gmail_job.fail_date
             else:
                 raise Exception
         # GmailJob() has not been run on this user yet

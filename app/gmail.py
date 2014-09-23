@@ -104,13 +104,17 @@ def GmailJob(user):
 
     gmail_service = user.get_service('gmail')
     if gmail_service:
-        # What messages to search through?
-        '''TODO: if GmailJob has been run on user before, only do recent emails'''
-        q = ''
+        # Determine start date of messages to search through. If job has
+        # not been run before, query is blank (for all messages)
+        start_date = user.gmail_job_start_date()
+        if start_date:
+            q = 'after:' + start_date.strftime('%Y/%m/%d')
+        else:
+            q = ''
 
         logging.info("Authorized Gmail service, retrieving all unseen messages...")
         messages = ListMessagesMatchingQuery(service=gmail_service, user_id='me', query=q)
-    
+
         # Iterate through all messages and save email addresses to database
         # This is a best effort script
         total_num = len(messages)
