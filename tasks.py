@@ -9,11 +9,11 @@ from scripts.google_contacts_job import main as google_contacts_job
 from db.userdb import User
 from app.gmail import GmailJob
 
-celery_worker = Celery('tasks', 
+app = Celery('tasks', 
     broker=settings.get('rabbitmq_bigwig_url'),
     backend='amqp')
 
-@celery_worker.task
+@app.task
 def add(x, y):
     return x + y
 
@@ -23,7 +23,7 @@ def run_google_contacts_job():
     google_contacts_job()
     logging.info("Celery worker finished tasks.run_google_contacts_job()")
 
-@celery_worker.task
+@app.task
 def run_gmail_job():
     logging.info("Celery worker starting tasks.run_gmail_job()")
 

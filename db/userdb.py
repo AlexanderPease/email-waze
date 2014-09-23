@@ -12,7 +12,9 @@ mongo_database = settings.get('mongo_database')
 connect('user', host=mongo_database['host'])
 
 class GmailJobField(EmbeddedDocument):
+    # Date that the last job was executed
     last_job = DateTimeField()
+    # Whether the last job was successfully terminated or gracefully stopped
     success = BooleanField()
 
     # If success is True, this field is None
@@ -23,8 +25,10 @@ class GmailJobField(EmbeddedDocument):
 
 class User(Document):
     # Everything comes from Google OAuth2
-    google_credentials = StringField(required=True) # Saved by OAuth2Credentials.to_json()
-    google_credentials_scope = StringField(required=True) # Save OAUTH_SCOPE for each user, in case this evolves
+    # Saved by OAuth2Credentials.to_json()
+    google_credentials = StringField(required=True)
+    # Save OAUTH_SCOPE for each user, in case this evolves
+    google_credentials_scope = StringField(required=True) 
     
     ### Track status of updates/jobs run on this user
     # Tracks when Gmail was last scraped

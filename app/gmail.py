@@ -8,6 +8,9 @@ from oauth2client.file import Storage
 from oauth2client.tools import run
 from googleapiclient import errors
 
+import time
+import timeout_decorator
+
 
 def ListMessagesMatchingQuery(service, user_id, query=''):
     """
@@ -35,8 +38,9 @@ def ListMessagesMatchingQuery(service, user_id, query=''):
 
         while 'nextPageToken' in response:
             page_token = response['nextPageToken']
-            response = service.users().messages().list(userId=user_id, q=query,
-                                                                                 pageToken=page_token).execute()
+            response = service.users().messages().list(userId=user_id, 
+                                                    q=query,
+                                                    pageToken=page_token).execute()
             messages.extend(response['messages'])
 
         return messages
@@ -44,6 +48,7 @@ def ListMessagesMatchingQuery(service, user_id, query=''):
         logging.warning('An error occurred: %s' % error)
 
 
+@timeout_decorator(30) # Give Google 30 seconds to respond
 def GetMessage(service, user_id, msg_id):
     """
     Get a Message with given ID.
@@ -58,7 +63,9 @@ def GetMessage(service, user_id, msg_id):
         A Message.
     """
     try:
+        logging.debug('getting message from service.users().messages().get()')
         message = service.users().messages().get(userId=user_id, id=msg_id).execute()
+        logging.debug('service.users().messages().get() returns %s' % message)
         return message
     except errors.HttpError, error:
         logging.warning('An error occurred: %s' % error)
@@ -131,7 +138,7 @@ def GmailJob(user):
                     if result:
                         added = added + 1
             except:
-                logging.warning("GmailJob crashed out, saving partial job completion")
+                logging.warning("Exception raised in GmailJob, incrementing fail_counter")
                 fail_counter = fail_counter + 1
 
             counter = counter + 1
