@@ -138,7 +138,7 @@ def GmailJob(user):
                     if result:
                         added = added + 1
             except:
-                logging.warning("Exception raised in GmailJob, incrementing fail_counter")
+                logging.warning("Exception raised in GmailJob, incrementing fail_counter to %s" % fail_counter)
                 fail_counter = fail_counter + 1
 
             counter = counter + 1
