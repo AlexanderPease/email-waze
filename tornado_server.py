@@ -10,8 +10,7 @@ import logging
 import settings 
 import templates
 
-import app.basic, app.public, app.admin, app.email
-import app.googleauth
+import app.basic, app.public, app.admin, app.email, app.googleauth, app.api
 
 #import newrelic.agent I also deleted newrelic.ini. Need to re-add if we want 
 #path = os.path.join(settings.get("project_root"), 'newrelic.ini')
@@ -31,6 +30,9 @@ class Application(tornado.web.Application):
     }
 
     handlers = [
+      # API
+      (r"/api/profilesearch", app.api.ProfileSearch),
+
       # Email handling
       (r"/email/forward", app.email.Forward),
 
@@ -43,7 +45,6 @@ class Application(tornado.web.Application):
       (r"/admin", app.admin.AdminHome),
       (r"/admin/db_profiles", app.admin.DB_Profiles),
       (r"/admin/db_users", app.admin.DB_Users),
-
 
       # Public
       (r'/$', app.public.Index),

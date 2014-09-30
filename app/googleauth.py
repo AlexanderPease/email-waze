@@ -86,9 +86,9 @@ class AuthReturn(app.basic.BaseHandler):
             logging.info("Prexisting user %s is now logged in" % user.email)
         else:
             user = User(google_credentials=credentials.to_json(),
-                                    google_credentials_scope=OAUTH_SCOPE,
-                                    email=email,
-                                    name=name)
+                        google_credentials_scope=OAUTH_SCOPE,
+                        email=email,
+                        name=name)
             user.save()
             logging.info('Saved new user %s' % user.email)
 
