@@ -15,8 +15,8 @@ class AdminHome(app.basic.BaseHandler):
     def get(self):
 
         profiles = Profile.objects
-        for p in profiles:
-            p.set_burner_by_algo()
+        #for p in profiles:
+            #p.set_burner_by_algo()
 
         return self.render('admin/admin_home.html')
 
