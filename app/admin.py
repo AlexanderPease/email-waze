@@ -13,6 +13,11 @@ from db.userdb import User
 class AdminHome(app.basic.BaseHandler):
     @tornado.web.authenticated
     def get(self):
+
+        profiles = Profile.objects
+        for p in profiles:
+            p.set_burner_by_algo()
+
         return self.render('admin/admin_home.html')
 
 
@@ -29,6 +34,7 @@ class DB_Profiles(app.basic.BaseHandler):
             p = Profile.objects
             return self.render('admin/db_profiles.html', profiles=p)
 
+
 ###########################
 ### ASCII view of database
 ### /admin/db_profiles
@@ -41,4 +47,3 @@ class DB_Users(app.basic.BaseHandler):
         else:
             u = User.objects
             return self.render('admin/db_users.html', users=u)
-

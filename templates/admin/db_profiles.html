@@ -4,13 +4,13 @@
     <tr>
       <th>Email</th>
       <th>Name</th>
-      <th>Obscured Email String</th>
+      <th>Ansatz Email</th>
     </tr>
     {% for p in profiles %}
       <tr>
         <td>{{ p.email }}</td>
         <td>{{ p.name }}</td>
-        <td>{{ p.email_obscured }}</td>
+        <td>{{ p.burner }}</td>
       </tr>
     {% end %}
   </table>
