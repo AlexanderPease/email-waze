@@ -36,9 +36,13 @@ class Forward(app.basic.BaseHandler):
 
         try:
             # Add intro message
-            intro_msg = '''%s found your email using <a href="http://www.ansatz.com">Ansatz.com</a>. 
-                        We always obscure your actual email address, which is why this email is passed through us.
-                        If you'd like to respond to %s directly just hit Reply.<br/><br/>''' % (from_address, from_address)
+            intro_msg = '''%s found you on <a href="http://www.ansatz.com">Ansatz.com</a>. 
+                        We never give away your real email address, but instead
+                        let people find a "public" email address that you can 
+                        delete or change the permissions for 
+                        <a href="http://ansatz.com">here</a>.
+                        If you'd like to respond to %s directly just hit 
+                        Reply.<br/><br/>''' % (from_address, from_address)
             body = intro_msg + body
 
             # Switch from to reply-to address
