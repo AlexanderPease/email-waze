@@ -37,13 +37,18 @@ class Profile(Document):
     #emailed_to = ListField(field=DictField(), default=list)
 
     
+    """
     def __init__(self, *args, **kwargs):
-        Document.__init__(self, *args, **kwargs)
+        #Document.__init__(self, *args, **kwargs)
+        logging.info(self)
+        print 'inited'
 
         try:
             self.burner = kwargs['burner']
         except:
             self.set_burner_by_algo()
+    """
+
 
     def __str__(self):
         return self.name + ' <' + self.email + '>'
@@ -95,12 +100,16 @@ class Profile(Document):
             flag = 1
             while flag:
                 try:
+                    logging.info("Attempting to add burner: %s" % burner)
                     self.burner = burner
                     self.save()
+                    logging.info("Burner saved")
                     flag = False # Exit loop
-                except Exception:
+                except Exception as e:
+                    logging.info(e)
                     burner = burner + str(flag)
                     flag = flag + 1
+                    flag = False
 
 
     @classmethod
@@ -128,7 +137,7 @@ class Profile(Document):
                 else:
                     p.set_burner_by_algo()
                     logging.info('Added to database: %s %s' % (p.name, p.email))
-                    return True
+                    return p
 
             # Attempted to add existing email address
             elif p and not created:

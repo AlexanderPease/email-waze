@@ -13,17 +13,20 @@ from db.userdb import User
 class AdminHome(app.basic.BaseHandler):
     @tornado.web.authenticated
     def get(self):
+        p = Profile(name='foo', email='foo@test.com')
+        logging.info(p)
+        logging.info(p.burner)
 
-        profiles = Profile.objects.distinct("burner")
-        print len(profiles)
-        profiles = Profile.objects
-        print len(profiles)
-        Profile.ensure_index("burner")
+        #p2 = Profile(name='foo', email='foo@test.com')
+        #logging.info(p2)
+        #logging.info(p2.burner)
 
-        #profiles = Profile.objects()
-        #for p in profiles:
-        #    p.set_burner_by_algo()
+        p.save()
+        #p2.save()
 
+        p.delete()
+        #p2.delete()
+        
         return self.render('admin/admin_home.html')
 
 
