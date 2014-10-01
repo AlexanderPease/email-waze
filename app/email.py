@@ -28,7 +28,7 @@ class Forward(app.basic.BaseHandler):
         
         try:
             to_address_string = to_address.split('@')[0] # Splits out "@ansatz.me"
-            p = Profile.objects.get(email_obscured=to_address_string)
+            p = Profile.objects.get(burner=to_address_string)
             logging.info("Found profile for %s " % p)
         except:
             logging.warning('Could not find profile for obscured address: %s' % to_address)

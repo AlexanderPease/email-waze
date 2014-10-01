@@ -57,12 +57,12 @@
             <table class="table table-striped">
               <tr>
                 <th>Profile</th>
-                <th>Email Him/Her Directly Through Ansatz!</th>
+                <th>Public Email Address</th>
               </tr>
               {% for r in results %}
                 <tr>
-                  <td>{{ r.name }} ({{ email_obscure(r.email) }})</td>
-                  <td><a href="mailto:{{ r.email_obscured }}@ansatz.me" target="_blank">{{ r.email_obscured }}@ansatz.me</a></td>
+                  <td>{{ r.name }} ({{ email_obscure(r) }})</td>
+                  <td><a href="mailto:{{ r.burner }}@ansatz.me" target="_blank">{{ r.burner }}@ansatz.me</a></td>
                 </tr>
               {% end %}
             </table>

@@ -17,7 +17,8 @@ class Index(app.basic.BaseHandler):
         	results = 'empty' # this is passed into to alert user that no results were returned
     else:
         results = None
-    return self.render('public/index.html', results=results, email_obscure=ui_methods.email_obscure)
+    #return self.render('public/index.html', results=results, email_obscure=ui_methods.email_obscure)
+    return self.render('public/index.html', results=results, email_obscure=Profile.get_domain)
 
 
 
