@@ -23,7 +23,7 @@ mongoengine==0.8.7
 oauth2==1.5.211
 oauth2client==1.2
 oauthlib==0.6.1
-pymongo==2.6.3
+pymongo==2.7.2
 python-dateutil==2.2
 python-gflags==2.0
 python-postmark==0.3.2

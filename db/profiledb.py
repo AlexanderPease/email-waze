@@ -13,11 +13,11 @@ class Profile(Document):
 
     # Obscured self.email by generating random string. This is just a string, doesn't include our domain. 
     # Ex: 1493458459, NOT 1493458459@ansatz.me
-    email_obscured = StringField(unique=True) 
+    #email_obscured = StringField(unique=True) 
 
     # A pass through email that is publicly displayed. 
     # Using term "burner" despite it being a constant in v1
-    burner = StringField(unique=True)
+    burner = StringField(unique=True, required=False)
     #meta = {
     #    'indexes': [
     #        {'fields': ['burner'], 'sparse': True, 'unique': True},
@@ -36,18 +36,19 @@ class Profile(Document):
     #emailed_by = ListField(field=DictField(), default=list) # or look at one to many with listfields
     #emailed_to = ListField(field=DictField(), default=list)
 
-    
-    """
     def __init__(self, *args, **kwargs):
-        #Document.__init__(self, *args, **kwargs)
-        logging.info(self)
-        print 'inited'
+        # Set default burner...
+        if 'burner' not in kwargs.keys():
+            kwargs['burner'] = 'default'
+            burner_flag = True
+        else:
+            burner_flag = False
 
-        try:
-            self.burner = kwargs['burner']
-        except:
-            self.set_burner_by_algo()
-    """
+        Document.__init__(self, *args, **kwargs)
+
+        # ...so I can modify burner to real value after instantiation
+        if burner_flag:
+            self.set_burner_by_algo(overwrite=True)
 
 
     def __str__(self):
@@ -109,7 +110,6 @@ class Profile(Document):
                     logging.info(e)
                     burner = burner + str(flag)
                     flag = flag + 1
-                    flag = False
 
 
     @classmethod
