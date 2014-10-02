@@ -14,9 +14,15 @@
         <td>{{ u.email }}</td>
         <td>{{ u.name }}</td>
         <td>{{ u.google_contacts_job }}</td>
-        <td>{{ u.gmail_job.last_job }}</td>
-        <td>{{ u.gmail_job.success }}</td>
-        <td>{{ u.gmail_job.fail_date }}</td>
+        {% if u.gmail_job %}
+          <td>{{ u.gmail_job.last_job }}</td>
+          <td>{{ u.gmail_job.success }}</td>
+          <td>{{ u.gmail_job.fail_date }}</td>
+        {% else %}
+            <td>None</td>
+            <td>None</td>
+            <td>None</td>
+        {% end %}
       </tr>
     {% end %}
   </table>

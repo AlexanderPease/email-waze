@@ -48,7 +48,7 @@ def ListMessagesMatchingQuery(service, user_id, query=''):
         logging.warning('An error occurred: %s' % error)
 
 
-@timeout_decorator(30) # Give Google 30 seconds to respond
+@timeout_decorator.timeout(30) # Give Google 30 seconds to respond
 def GetMessage(service, user_id, msg_id):
     """
     Get a Message with given ID.

@@ -8,22 +8,26 @@ mongo_database = settings.get('mongo_database')
 connect('profile', host=mongo_database['host'])
 
 class Profile(Document):
-    name = StringField() 
+    # Email is the unique key. Search and create based on email. 
     email = EmailField(required=True, unique=True) # This will have to become a list at some point, or have a secondary email list
 
-    # Obscured self.email by generating random string. This is just a string, doesn't include our domain. 
-    # Ex: 1493458459, NOT 1493458459@ansatz.me
-    #email_obscured = StringField(unique=True) 
+    # Name, ex. Alexander Pease
+    name = StringField() 
 
     # A pass through email that is publicly displayed. 
     # Using term "burner" despite it being a constant in v1
-    burner = StringField(unique=True, required=False)
-    #meta = {
-    #    'indexes': [
-    #        {'fields': ['burner'], 'sparse': True, 'unique': True},
-    #    ]
-    #}
+    # meta dict allows you to init self.burner as null, also have multiple nulls
+    burner = StringField()
+    meta = {
+        'indexes': [
+            {'fields': ['burner'], 'sparse': True, 'unique': True},
+        ]
+    }
 
+    # Obscured self.email by generating random string. 
+    # This is just a string, doesn't include our domain. 
+    # Ex: 1493458459, NOT 1493458459@ansatz.me
+    #email_obscured = StringField(unique=True) 
 
     # When this address was last emailed. Helps guess if an email address is still being used or not
     #last_emailed = DateTimeField()
@@ -35,7 +39,7 @@ class Profile(Document):
     # Graph fields, for future use
     #emailed_by = ListField(field=DictField(), default=list) # or look at one to many with listfields
     #emailed_to = ListField(field=DictField(), default=list)
-
+    """
     def __init__(self, *args, **kwargs):
         # Set default burner...
         if 'burner' not in kwargs.keys():
@@ -47,9 +51,9 @@ class Profile(Document):
         Document.__init__(self, *args, **kwargs)
 
         # ...so I can modify burner to real value after instantiation
-        if burner_flag:
+        if self and burner_flag:
             self.set_burner_by_algo(overwrite=True)
-
+    """
 
     def __str__(self):
         return self.name + ' <' + self.email + '>'
@@ -101,10 +105,10 @@ class Profile(Document):
             flag = 1
             while flag:
                 try:
-                    logging.info("Attempting to add burner: %s" % burner)
+                    logging.info("Attempting to programatically add burner: %s" % burner)
                     self.burner = burner
                     self.save()
-                    logging.info("Burner saved")
+                    logging.info("Added burner: %s" % burner)
                     flag = False # Exit loop
                 except Exception as e:
                     logging.info(e)
@@ -116,7 +120,8 @@ class Profile(Document):
     def add_new(cls, name, email):
         """
         Creates a new Profile in database (if DNE) and goes through
-        all necessary error checking, cleaning, and creation of derivative fields
+        all necessary error checking, cleaning, and creation of derivative fields.
+        This is effectively __init__ for Profile class. 
 
         Args:
             Name and email strings
@@ -125,17 +130,18 @@ class Profile(Document):
             The Profile instance if successfully created
         """
         try:
-            p, created = Profile.objects.get_or_create(
-                            name = name, 
-                            email = email, 
-                            email_obscured = '%030x' % random.randrange(16**30))
+            # Email is the unique key
+            p, created = Profile.objects.get_or_create(email=email) 
+
             if p and created:
                 # Brief set of rules to ignore certain emails
                 if 'reply' in p.email or 'info' in p.get_domain() or len(p.email) > 40 or 'ansatz.me' in p.get_domain():
                     p.delete()
                     logging.info("%s did not pass tests, not added to database" % email)
                 else:
+                    p.name = name
                     p.set_burner_by_algo()
+                    p.save()
                     logging.info('Added to database: %s %s' % (p.name, p.email))
                     return p
 
