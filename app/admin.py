@@ -14,16 +14,10 @@ class AdminHome(app.basic.BaseHandler):
     @tornado.web.authenticated
     def get(self):
 
-        profiles = Profile.objects.distinct("burner")
-        print len(profiles)
-        profiles = Profile.objects
-        print len(profiles)
-        Profile.ensure_index("burner")
-
-        #profiles = Profile.objects()
-        #for p in profiles:
-        #    p.set_burner_by_algo()
-
+        #p = Profile.add_new(name='Shaina Conners', email='shainaconners@gmail.com')
+        #if p:
+        #    p.delete()
+        
         return self.render('admin/admin_home.html')
 
 
