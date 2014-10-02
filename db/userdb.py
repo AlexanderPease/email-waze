@@ -24,6 +24,10 @@ class GmailJobField(EmbeddedDocument):
 
 
 class User(Document):
+    # Email is the unique key and the username
+    email = EmailField(required=True, unique=True) 
+    name = StringField(required=True)
+
     # Everything comes from Google OAuth2
     # Saved by OAuth2Credentials.to_json()
     google_credentials = StringField(required=True)
@@ -35,9 +39,6 @@ class User(Document):
     gmail_job = EmbeddedDocumentField(GmailJobField)
     # Tracks when Google Contacts was last scraped
     google_contacts_job = DateTimeField() 
-
-    email = EmailField(required=True) 
-    name = StringField(required=True)
 
     def __str__(self):
         return self.name + ' <' + self.email + '>'
