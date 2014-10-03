@@ -10,7 +10,8 @@ import logging
 import settings 
 import templates
 
-import app.basic, app.public, app.admin, app.email, app.googleauth, app.api
+import app.basic, app.public, app.admin, app.email
+import app.googleauth, app.api, app.user
 
 #import newrelic.agent I also deleted newrelic.ini. Need to re-add if we want 
 #path = os.path.join(settings.get("project_root"), 'newrelic.ini')
@@ -40,6 +41,9 @@ class Application(tornado.web.Application):
       (r"/auth/google/?", app.googleauth.Auth),
       (r"/auth/google/return/?", app.googleauth.AuthReturn),
       (r"/auth/logout/?", app.googleauth.LogOut),
+
+      # User pages
+      (r"/user/(?P<username>[A-z-+0-9@.]+)/settings/?", app.user.UserSettings),
 
       # Admin
       (r"/admin", app.admin.AdminHome),
