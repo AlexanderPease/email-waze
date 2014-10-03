@@ -100,7 +100,7 @@ class BaseHandler(tornado.web.RequestHandler):
         self.write_api_response(data, 200, "OK")
 
 
-    def error(self, status_code, status_txt, data=None):
+    def api_error(self, status_code, status_txt, data=None):
         """
         Return an api error in the proper output format
         """
