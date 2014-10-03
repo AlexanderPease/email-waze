@@ -20,6 +20,18 @@ class ProfileSearch(app.basic.BaseHandler):
         return self.api_response(data=None)
 
 
+########################
+### ProfileSearch
+### /api/groupinboxsearchfordomain
+########################
+class GroupInboxSearchForDomain(app.basic.BaseHandler):
+    def get(self, user, group, domain):
+        """
+            For a logged in user, searches the inboxes of all of the other users
+            for which he/she is in a group with for emails with a given domain
+        """
+        return self.api_response(data=None)
+
 
 
 

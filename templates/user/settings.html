@@ -1,1 +1,22 @@
-{{ user }}
+{% extends "../base.html" %}
+
+{% block body %}
+  <div class="row">
+    <div class="col-md-6">
+
+      Settings for {{ user.name }}
+      </br>
+
+      Email: {{ user.email }}
+      </br>
+
+      Groups: 
+    </br>
+       Sharing:
+
+    </div><!--col-md-6-->
+  </div><!--row-->
+{% end %}
+
+{% block javascript %}
+{% end %}
