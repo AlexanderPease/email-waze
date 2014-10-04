@@ -5,6 +5,7 @@ import requests, datetime, logging
 
 from db.profiledb import Profile
 from db.userdb import User
+from db.connectiondb import Connection
 
 ###########################
 ### List the available admin tools
@@ -14,9 +15,8 @@ class AdminHome(app.basic.BaseHandler):
     @tornado.web.authenticated
     def get(self):
 
-        #p = Profile.add_new(name='Shaina Conners', email='shainaconners@gmail.com')
-        #if p:
-        #    p.delete()
+        Connection.test_class()
+
         
         return self.render('admin/admin_home.html')
 
