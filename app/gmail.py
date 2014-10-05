@@ -7,9 +7,8 @@ from oauth2client.client import flow_from_clientsecrets
 from oauth2client.file import Storage
 from oauth2client.tools import run
 from googleapiclient import errors
-
-import time
-import timeout_decorator
+from email.utils import parsedate
+import datetime, time, timeout_decorator
 
 
 def ListMessagesMatchingQuery(service, user_id, query=''):
@@ -46,6 +45,8 @@ def ListMessagesMatchingQuery(service, user_id, query=''):
         return messages
     except errors.HttpError, error:
         logging.warning('An error occurred: %s' % error)
+    except KeyError:
+        logging.warning('KeyError')
 
 
 @timeout_decorator.timeout(30) # Give Google 30 seconds to respond
@@ -95,6 +96,11 @@ def GetMessageHeader(msg):
 
     return msg_header
 
+def ParseDate(date_string):
+    """
+    Takes date string specified by RFC 2822 and returns datetime instance
+    """
+    return datetime.datetime.fromtimestamp(time.mktime(parsedate(date_string)))
 
 FAIL_THRESHOLD = 10
 def GmailJob(user):

@@ -10,7 +10,7 @@ import logging
 import settings 
 import templates
 
-import app.basic, app.public, app.admin, app.email
+import app.basic, app.public, app.admin, app.email_handler
 import app.googleauth, app.api, app.user
 
 #import newrelic.agent I also deleted newrelic.ini. Need to re-add if we want 
@@ -36,7 +36,7 @@ class Application(tornado.web.Application):
       (r"/api/gmailinboxsearch", app.api.GmailInboxSearch),
 
       # Email handling
-      (r"/email/forward", app.email.Forward),
+      (r"/email/forward", app.email_handler.Forward),
 
       # Google auth
       (r"/auth/google/?", app.googleauth.Auth),
@@ -50,6 +50,7 @@ class Application(tornado.web.Application):
       (r"/admin", app.admin.AdminHome),
       (r"/admin/db_profiles", app.admin.DB_Profiles),
       (r"/admin/db_users", app.admin.DB_Users),
+      (r"/admin/db_connections", app.admin.DB_Connections),
 
       # Public
       (r'/$', app.public.Index),

@@ -47,3 +47,9 @@ def email_obscure(email):
       obscured = obscured + "*"
 
     return first_letter + obscured + "@" + string_split[1]
+
+def encode(text):
+    """
+    For printing unicode characters
+    """
+    return text.encode('utf-8')

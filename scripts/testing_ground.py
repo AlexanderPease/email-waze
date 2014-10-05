@@ -7,6 +7,7 @@ except:
 
 from db.userdb import User
 from db.profiledb import Profile
+from db.connectiondb import Connection
 import logging, datetime
 logging.getLogger().setLevel(logging.INFO)
 

@@ -62,6 +62,8 @@ default_options = {
 
   'staff':[
     "alexander@usv.com",
+    "me@alexanderpease.com",
+    "jqgorelick@gmail.com"
   ],
 
   # define the various roles and what capabilities they support
