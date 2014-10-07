@@ -42,9 +42,9 @@ options = {
 default_options = {
     'project_root': os.path.abspath(os.path.join(os.path.dirname(__file__))),
 
-    # postmark details
-    #'sendgrid_user': os.environ.get("SENDGRID_USER"),
-    #'sendgrid_secret': os.environ.get("SENDGRID_SECRET"),
+    # Google API keys
+    'google_client_id': os.environ.get("GOOGLE_CLIENT_ID"),
+    'google_client_secret': os.environ.get("GOOGLE_CLIENT_SECRET"),
 
     'staff':[
         "alexander@usv.com",
