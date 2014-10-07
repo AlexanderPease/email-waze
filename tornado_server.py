@@ -51,6 +51,7 @@ class Application(tornado.web.Application):
       (r"/admin/db_profiles", app.admin.DB_Profiles),
       (r"/admin/db_users", app.admin.DB_Users),
       (r"/admin/db_connections", app.admin.DB_Connections),
+      (r"/admin/scratch", app.admin.Scratch), # for ad hoc testing
 
       # Public
       (r'/$', app.public.Index),
