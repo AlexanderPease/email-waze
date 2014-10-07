@@ -22,7 +22,7 @@
 
       {% else %}
         Welcome {{ current_user_name() }} 
-
+        <a href="/user/settings">settings</a>
         {% if current_user_staff() %}
           <a href="/admin">admin</a>
         {% end %}

@@ -5,6 +5,7 @@ import requests, datetime, logging
 
 from db.profiledb import Profile
 from db.userdb import User
+from db.groupdb import Group
 from db.connectiondb import Connection
 
 from tests.test_group import test_group_class
@@ -62,7 +63,7 @@ class DB_Connections(app.basic.BaseHandler):
 
 
 ###########################
-### Scratch
+### Scratch for debugging
 ### /admin/scratch
 ###########################
 class Scratch(app.basic.BaseHandler):
@@ -70,8 +71,13 @@ class Scratch(app.basic.BaseHandler):
     def get(self):
         if self.current_user not in settings.get('staff'):
             self.redirect('/')
-        
 
-        test_group_class()
+        users = User.objects()
+        g = Group(name="All", users = [users[0]])
+        for u in users:
+            g.add_user(u)
+        g.save()
+
+        #test_group_class()
 
         return self.render('admin/admin_home.html')

@@ -11,7 +11,7 @@ class GroupSettings(EmbeddedDocument):
 
 class Group(Document):
     # List of Users in the group 
-    users = ListField(ReferenceField(User))
+    users = ListField(ReferenceField(User), required=True)
     name = StringField()
     admin = ReferenceField(User)
     settings = EmbeddedDocumentField(GroupSettings)

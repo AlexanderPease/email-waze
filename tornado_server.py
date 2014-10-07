@@ -44,7 +44,7 @@ class Application(tornado.web.Application):
       (r"/auth/logout/?", app.googleauth.LogOut),
 
       # User pages
-      (r"/user/(?P<username>[A-z-+0-9@.]+)/settings/?", app.user.UserSettings),
+      (r"/user/settings", app.user.UserSettings),
 
       # Admin
       (r"/admin", app.admin.AdminHome),
