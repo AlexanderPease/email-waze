@@ -27,7 +27,7 @@ options = {
             'port' : 27017, 
             'db' : os.environ.get('DB_NAME')
         },
-        'base_url' : 'http://email-waze-dev.herokuapp.com',
+        'base_url' : os.environ.get('BASE_URL'),
     },
     'prod' : {
         'mongo_database' : {'host' : os.environ.get('MONGODB_URL'), 
