@@ -17,7 +17,7 @@ class UserSettings(app.basic.BaseHandler):
             raise tornado.web.HTTPError(404)
 
         #msg = self.get_argument("msg", None)
-        return self.render('user/settings.html', user=user)
+        return self.render('user/user_settings.html', user=user)
 
 
 

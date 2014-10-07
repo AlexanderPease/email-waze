@@ -52,6 +52,7 @@ class User(Document):
         from groupdb import Group # B/c of circular dependency
         return Group.objects(users=self)
 
+
     def all_group_users(self):
         """
         Returns a distinct list of Users in all of the groups 
@@ -60,6 +61,7 @@ class User(Document):
         groups = self.get_groups()
         all_users = [u for g in groups for u in g.users]
         return list(set(all_users))
+
 
     def get_domain(self):
         """
