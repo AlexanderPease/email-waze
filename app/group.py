@@ -11,7 +11,6 @@ from db.groupdb import Group
 class CreateGroup(app.basic.BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        print 'IINNNNN'
         return self.render('group/group_edit.html')
 
 ########################

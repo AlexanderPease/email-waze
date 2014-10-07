@@ -112,8 +112,8 @@ def redirect_uri():
     """
     Both Auth and AuthReturn need redirect_uri
     """
-    if settings.get('environment') == "prod":
-        return 'http://%s/auth/google/return' % settings.get('domain_name')
+    if settings.get('environment') in ['dev', 'prod']:
+        return 'http://%s/auth/google/return' % settings.get('base_url')
     else:
         return 'http://localhost:8001/auth/google/return'
         
