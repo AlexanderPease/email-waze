@@ -70,7 +70,7 @@ class Profile(Document):
     def get_domain_title(self):
         """
         Returns domain name minus extension of self.email
-        Ex: craigslist.com from foo@reply.craigslist.com
+        Ex: reply.craigslist from foo@reply.craigslist.com
         """
         domain = self.get_domain()
         return domain.split('.')[-2]

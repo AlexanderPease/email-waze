@@ -40,8 +40,29 @@ class User(Document):
     # Tracks when Google Contacts was last scraped
     google_contacts_job = DateTimeField() 
 
+
     def __str__(self):
         return self.name + ' <' + self.email + '>'
+
+
+    def all_group_users(self):
+        """
+        Returns a distinct list of Users in all of the groups 
+        that the User is a part of. Includes self in that list. 
+        """
+        from groupdb import Group # B/c of circular dependency
+        groups = Group.objects(users=self)
+        all_users = [u for g in groups for u in g.users]
+        return list(set(all_users))
+
+
+    def get_domain(self):
+        """
+        Returns just the domain name of self.email
+        Ex: usv.com from foo@usv.com
+        """
+        return self.email.split('@')[1]
+
 
     def gmail_job_start_date(self):
         """
@@ -62,6 +83,7 @@ class User(Document):
         else:
             return None
 
+
     def get_service(self, service_type='gmail', version='v1'):
         """
         Returns Google service object for calling APIs
@@ -77,6 +99,7 @@ class User(Document):
         except:
             logging.error('Could not return Google Discovery APIs service object for User "%s"' % self)
             return
+
 
     def get_gd_client(self):
         """

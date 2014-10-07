@@ -7,7 +7,7 @@ from db.profiledb import Profile
 from db.userdb import User
 from db.connectiondb import Connection
 
-from tests import test_group
+from tests.test_group import test_group_class
 
 ###########################
 ### List the available admin tools
@@ -72,6 +72,6 @@ class Scratch(app.basic.BaseHandler):
             self.redirect('/')
         
 
-        test_group.test_class()
+        test_group_class()
 
         return self.render('admin/admin_home.html')
