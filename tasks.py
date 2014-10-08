@@ -63,12 +63,14 @@ def onboard_user(u):
                             p = Profile.objects.get(email=email)
                         except DoesNotExist:
                             p = Profile.add_new(name=name, email=email)
+                            p.save()
 
                         # Ensure p was succesfully created before 
                         # adding a Connection
                         if p:
                             # Search Connection database to see if this is a new contact
-                            c, created_flag = Connection.objects.get_or_create(user=u, profile=p)
+                            c, created_flag = Connection.objects.get_or_create(user=u,
+                                                                            profile=p)
 
                             # If newly created Connection, fill it in by
                             # searching Gmail API
