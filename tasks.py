@@ -63,6 +63,7 @@ def onboard_user(u):
                             p = Profile.objects.get(email=email)
                         except DoesNotExist:
                             p = Profile.add_new(name=name, email=email)
+                            p.save()
 
                         # Ensure p was succesfully created before 
                         # adding a Connection
