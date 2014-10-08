@@ -112,7 +112,7 @@ class Profile(Document):
                     flag = False # Exit loop
                 except Exception as e:
                     logging.info(e)
-                    burner = burner + str(flag)
+                    burner = burner[:-1] + str(flag)
                     flag = flag + 1
 
 

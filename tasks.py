@@ -1,13 +1,11 @@
 from celery import Celery
 from celery.decorators import periodic_task
 from datetime import timedelta
-import logging
-import settings
-
-from scripts.google_contacts_job import main as google_contacts_job
+import settings, logging
 
 from db.userdb import User
 from app.gmail import GmailJob
+from scripts.google_contacts_job import main as google_contacts_job
 
 app = Celery('tasks', 
     broker=settings.get('rabbitmq_bigwig_url'),
@@ -17,12 +15,19 @@ app = Celery('tasks',
 def add(x, y):
     return x + y
 
+
+
+
+
+
+"""
 @periodic_task(run_every=timedelta(hours=24))
 def run_google_contacts_job():
     logging.info("Celery worker starting tasks.run_google_contacts_job()")
     google_contacts_job()
     logging.info("Celery worker finished tasks.run_google_contacts_job()")
-
+"""
+"""
 @app.task
 def run_gmail_job():
     logging.info("Celery worker starting tasks.run_gmail_job()")
@@ -39,3 +44,4 @@ def run_gmail_job():
         GmailJob(u)
 
     logging.info("Celery worker finished tasks.run_gmail_job()")
+"""

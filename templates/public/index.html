@@ -65,7 +65,7 @@
               {% for c in connections %}
                 <tr>  
                   <td>{{ c.profile.name }}</td>
-                  <td>{{ c.profile.email }}</td>
+                  <td><a href="mailto:{{ c.profile.email }}" target="_blank">{{ c.profile.email }}<a/></td>
                   <td>{{ c.user.name }} ({{ c.user.email }})</td>
                   <td>{{ c.total_emails_in }}</td>
                   <td>{{ c.latest_email_in_date }}</td>
