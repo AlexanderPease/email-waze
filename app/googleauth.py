@@ -2,7 +2,7 @@ import app.basic
 import settings, logging, httplib2
 
 from db.userdb import User
-from oauth2client.client import OAuth2WebServerFlow
+import tasks
 
 OAUTH_SCOPE = ('https://www.googleapis.com/auth/gmail.modify '
                             'https://www.googleapis.com/auth/userinfo.email '
@@ -11,6 +11,7 @@ OAUTH_SCOPE = ('https://www.googleapis.com/auth/gmail.modify '
                             #'https://www.googleapis.com/auth/plus.profile.emails.read '
                             #'https://www.googleapis.com/auth/plus.me')
 
+from oauth2client.client import OAuth2WebServerFlow
 from googleapiclient.discovery import build
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.file import Storage
@@ -78,6 +79,7 @@ class AuthReturn(app.basic.BaseHandler):
         except:
             user = None
         if user:
+            # Update existing user info
             user.google_credentials = credentials.to_json()
             user.google_credentials_scope = OAUTH_SCOPE
             user.name = name
@@ -85,10 +87,13 @@ class AuthReturn(app.basic.BaseHandler):
             user.save()
             logging.info("Prexisting user %s is now logged in" % user.email)
         else:
+            # Create and onboard new user
             user = User(google_credentials=credentials.to_json(),
                         google_credentials_scope=OAUTH_SCOPE,
                         email=email,
                         name=name)
+            logging.info('ENTERING CELERY')
+            tasks.onboard_user.delay(user) # Celery task
             user.save()
             logging.info('Saved new user %s' % user.email)
 
