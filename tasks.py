@@ -1,7 +1,8 @@
 from celery import Celery
 from celery.decorators import periodic_task
 from datetime import timedelta
-import settings, logging
+import settings, logging, datetime
+from mongoengine import DoesNotExist
 
 from db.profiledb import Profile
 from db.userdb import User

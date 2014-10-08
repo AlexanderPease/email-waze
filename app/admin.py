@@ -80,6 +80,9 @@ class Scratch(app.basic.BaseHandler):
         g.save()
         """
 
+        import tasks
+        tasks.onboard_user(User.objects.get(email="me@alexanderpease.com"))
+
         #test_group_class()
 
         return self.render('admin/admin_home.html')
