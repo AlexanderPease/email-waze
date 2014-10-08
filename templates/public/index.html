@@ -2,7 +2,7 @@
 
 {% block body %}
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-9">
       {{ err }}
       {{ msg }}
 
@@ -49,9 +49,36 @@
           </div>
         </form>
 
-        {% if results %}
+        {% if connections %}
+        Contacts shared with you: 
+          <table class="table table-striped">
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Connected through</th>
+                <th>Total Emails In</th>
+                <th>Latest Email In</th>
+                <th>Total Emails Out</th>
+                <th>Latest Email Out</th>
+              </tr>
 
-          In Your Network: 
+              {% for c in connections %}
+                <tr>  
+                  <td>{{ c.profile.name }}</td>
+                  <td>{{ c.profile.email }}</td>
+                  <td>{{ c.user.name }} ({{ c.user.email }})</td>
+                  <td>{{ c.total_emails_in }}</td>
+                  <td>{{ c.latest_email_in_date }}</td>
+                  <td>{{ c.total_emails_out }}</td>
+                  <td>{{ c.latest_email_out_date }}</td>
+                </tr>
+              {% end %}
+          </table>
+        {% end %}
+
+        {% if results %}
+          <!--
+          In Your Groups: 
           <table class="table table-striped">
               <tr>
                 <th>Name</th>
@@ -63,7 +90,7 @@
 
               <tr class="account_row" id="test_id" style="display:none">  
                 <td>
-                  Alexander Pease (alexander@usv.com)
+                  
                 </td>
                 <td class="account_row_total_emails_in">
                   loading...
@@ -79,12 +106,7 @@
                 </td>
               </tr>
           </table>
-
-
-
-
-
-
+          -->
 
           {% if results is 'empty' %}
             No results found, try another search!

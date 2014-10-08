@@ -72,11 +72,13 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             self.redirect('/')
 
-        users = User.objects()
+        """
+        zander = 
         g = Group(name="All", users = [users[0]])
         for u in users:
             g.add_user(u)
         g.save()
+        """
 
         #test_group_class()
 

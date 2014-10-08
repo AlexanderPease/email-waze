@@ -1,6 +1,10 @@
 import app.basic, settings, ui_methods
 import logging
 from db.profiledb import Profile
+from db.userdb import User
+from db.groupdb import Group
+from db.connectiondb import Connection
+from mongoengine.queryset import Q
 
 
 ########################
@@ -11,16 +15,16 @@ class Index(app.basic.BaseHandler):
     name = self.get_argument('name', '')
     domain = self.get_argument('domain', '')
 
+    
     if name or domain:
-        results = Profile.objects(name__icontains=name, email__icontains=domain).order_by('name') # case-insensitive contains
-        if not results:
-        	results = 'empty' # this is passed into to alert user that no results were returned
+        # Global results
+        profiles = Profile.objects(name__icontains=name, email__icontains=domain).order_by('name') # case-insensitive contains
+
+        # Group users
+        current_user = User.objects.get(email=self.current_user)
+        group_users = current_user.all_group_users()
+        connections = Connection.objects(profile__in=profiles, user__in=group_users)
+        return self.render('public/index.html', results=profiles, connections=connections, email_obscure=Profile.get_domain)
     else:
-        results = None
-    #return self.render('public/index.html', results=results, email_obscure=ui_methods.email_obscure)
-    return self.render('public/index.html', results=results, email_obscure=Profile.get_domain)
-
-
-
-
+        return self.render('public/index.html', results=None, connections=None)
 

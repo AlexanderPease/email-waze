@@ -43,8 +43,8 @@ default_options = {
     'project_root': os.path.abspath(os.path.join(os.path.dirname(__file__))),
 
     # Google API keys
-    'google_client_id': os.environ.get("GOOGLE_CLIENT_ID"),
-    'google_client_secret': os.environ.get("GOOGLE_CLIENT_SECRET"),
+    #'google_client_id': os.environ.get("GOOGLE_CLIENT_ID"),
+    #'google_client_secret': os.environ.get("GOOGLE_CLIENT_SECRET"),
 
     'staff':[
         "alexander@usv.com",
