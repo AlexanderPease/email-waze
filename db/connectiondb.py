@@ -3,11 +3,10 @@ from mongoengine import *
 from userdb import User
 from profiledb import Profile
 import logging, datetime
-from app import gmail
-import gdata.contacts.client
 
 mongo_database = settings.get('mongo_database')
 connect('connection', host=mongo_database['host'])
+
 
 class Connection(Document):
     # The User who has corresponded with... 

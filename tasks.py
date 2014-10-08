@@ -7,6 +7,9 @@ from db.profiledb import Profile
 from db.userdb import User
 from db.connectiondb import Connection
 
+from app import gmail
+import gdata.contacts.client
+
 #from app.gmail import GmailJob
 #from scripts.google_contacts_job import main as google_contacts_job
 
