@@ -61,12 +61,10 @@ def onboard_user(u):
                         # Profile.get_or_create() was working. 
                         try:
                             p = Profile.objects.get(email=email)
+                            logging.info(p)
                         except DoesNotExist:
                             p = Profile.add_new(name=name, email=email)
-                            p.save()
-
-                        p = Profile.objects.get(email=email)
-                        logging.info(p)
+                            logging.info(p)
                         logging.info('above line should show profile')
 
                         # Ensure p was succesfully created before 
@@ -79,7 +77,7 @@ def onboard_user(u):
                             # If newly created Connection, fill it in by
                             # searching Gmail API
                             if not created_flag:
-                                logging.info('%s already exists, not updating')
+                                logging.info('%s already exists, not updating' % c)
                             else:
                                 logging.info('Created %s' % c)
                                 # See if any messages match query
