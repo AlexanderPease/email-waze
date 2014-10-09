@@ -67,7 +67,7 @@ class DB_Connections(app.basic.BaseHandler):
 ### /admin/scratch
 ###########################
 class Scratch(app.basic.BaseHandler):
-    @tornado.web.authenticated
+    #@tornado.web.authenticated
     def get(self):
         if self.current_user not in settings.get('staff'):
             self.redirect('/')
