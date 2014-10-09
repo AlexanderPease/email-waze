@@ -1,5 +1,5 @@
 import app.basic
-import settings, logging, httplib2
+import settings, logging, httplib2, datetime
 
 from db.userdb import User
 import tasks
@@ -91,7 +91,8 @@ class AuthReturn(app.basic.BaseHandler):
             user = User(google_credentials=credentials.to_json(),
                         google_credentials_scope=OAUTH_SCOPE,
                         email=email,
-                        name=name)
+                        name=name,
+                        joined=datetime.datetime.now())
             user.save()
             tasks.onboard_user.delay(user) # Celery task
             logging.info('Saved new user %s' % user.email)
