@@ -67,13 +67,16 @@ def onboard_user(u):
 
                         p = Profile.objects.get(email=email)
                         logging.info(p)
+                        logging.info('above line should show profile')
 
                         # Ensure p was succesfully created before 
                         # adding a Connection
                         if p:
                             # Search Connection database to see if this is a new contact
-                            c, created_flag = Connection.objects.get_or_create(user=u,
-                                                                            profile=p)
+                            #c, created_flag = Connection.objects.get_or_create(user=u,
+                            #                                                profile=p)
+                            logging.info('returning')
+                            return
 
                             # If newly created Connection, fill it in by
                             # searching Gmail API
