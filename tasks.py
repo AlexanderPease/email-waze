@@ -65,6 +65,9 @@ def onboard_user(u):
                             p = Profile.add_new(name=name, email=email)
                             p.save()
 
+                        p = Profile.objects.get(email=email)
+                        logging.info(p)
+
                         # Ensure p was succesfully created before 
                         # adding a Connection
                         if p:
