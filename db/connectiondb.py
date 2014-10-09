@@ -37,7 +37,7 @@ class Connection(Document):
         return 'Connection: User %s <-> Profile %s' % (self.user, self.profile)
 
 
-    def populate_from_gmail(service):
+    def populate_from_gmail(self, service):
         """
         This function searches entire inbox to populate fields,
         therefore it is not optimized for speed.
