@@ -34,6 +34,27 @@ def test_worker():
     logging.info(flag)
 
 
+
+    logging.info('new shit')
+    logging.info('new shit')
+    logging.info('new shit')
+    logging.info('new shit')
+    try:
+        p = Profile.objects.get(email="brad@usv.com")
+        logging.info(p)
+    except DoesNotExist:
+        p = Profile.add_new(name="Brad", email="brad@usv.com")
+        logging.info(p)
+    logging.info('above line should show profile')
+
+    # Ensure p was succesfully created before 
+    # adding a Connection
+    if p:
+        # Search Connection database to see if this is a new contact
+        c, created_flag = Connection.objects.get_or_create(user=u,
+                                                        profile=p)
+
+
 @app.task
 def onboard_user(u):
     logging.info('Onboarding new user %s' % u)
