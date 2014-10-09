@@ -58,7 +58,7 @@ class Connection(Document):
 
         # Emails in fields
         if emails_in and len(emails_in) > 0:
-            c.total_emails_in = len(emails_in)
+            self.total_emails_in = len(emails_in)
 
             # Get dates of latest emails in and out
             try:
@@ -66,26 +66,26 @@ class Connection(Document):
                                     user_id='me', 
                                     msg_id=emails_in[0]['id'])
                 latest_email_in_header = gmail.GetMessageHeader(latest_email_in)
-                c.latest_email_in_date = gmail.ParseDate(latest_email_in_header['Date'])
+                self.latest_email_in_date = gmail.ParseDate(latest_email_in_header['Date'])
             except:
                 logging.warning('latest_email_in not added')
         else:
-            c.total_emails_in = 0
+            self.total_emails_in = 0
 
         # Emails out fields
         if emails_out and len(emails_out) > 0:
-            c.total_emails_out = len(emails_out)
+            self.total_emails_out = len(emails_out)
             try:
                 latest_email_out = gmail.GetMessage(service=service, 
                                     user_id='me', 
                                     msg_id=emails_out[0]['id'])
                 latest_email_out_header = gmail.GetMessageHeader(latest_email_out)
-                c.latest_email_out_date = gmail.ParseDate(latest_email_out_header['Date'])
+                self.latest_email_out_date = gmail.ParseDate(latest_email_out_header['Date'])
             except:
                 logging.warning('latest_email_out not added')
         else:
-            c.total_emails_out = 0
+            self.total_emails_out = 0
 
         # Finished with all Connection fields
-        c.last_updated = datetime.datetime.now()
-        c.save()
+        self.last_updated = datetime.datetime.now()
+        self.save()
