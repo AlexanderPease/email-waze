@@ -92,7 +92,8 @@ class AuthReturn(app.basic.BaseHandler):
                         google_credentials_scope=OAUTH_SCOPE,
                         email=email,
                         name=name)
-            tasks.onboard_user.delay(user) # Celery task
+            #tasks.onboard_user.delay(user) # Celery task
+            tasks.test_worker.delay(user)
             user.save()
             logging.info('Saved new user %s' % user.email)
 

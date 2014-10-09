@@ -8,7 +8,6 @@ from db.userdb import User
 from db.groupdb import Group
 from db.connectiondb import Connection
 
-from tests.test_group import test_group_class
 
 ###########################
 ### List the available admin tools
@@ -85,6 +84,7 @@ class Scratch(app.basic.BaseHandler):
         u = User.objects.get(email="me@alexanderpease.com")
         tasks.test_worker.delay(u)
 
+        #from tests.test_group import test_group_class
         #test_group_class()
 
         return self.render('admin/admin_home.html')
