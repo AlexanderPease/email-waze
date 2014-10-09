@@ -82,7 +82,8 @@ class Scratch(app.basic.BaseHandler):
 
         import tasks
         #tasks.onboard_user(User.objects.get(email="me@alexanderpease.com"))
-        tasks.test_worker.delay()
+        u = User.objects.get(email="me@alexanderpease.com")
+        tasks.test_worker.delay(u)
 
         #test_group_class()
 
