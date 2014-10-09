@@ -95,7 +95,7 @@ def onboard_user(u):
 
                                 # Updates fields of c by searching through users'
                                 # entire Gmail inbox 
-                                c.populate_from_gmail(service=gmail_service)
+                                c.populate_from_gmail(gmail_service=gmail_service)
                         else:
                             logging.warning('Profile and Connection not added')
     else:

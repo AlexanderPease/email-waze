@@ -33,6 +33,9 @@ class User(Document):
     google_credentials = StringField(required=True)
     # Save OAUTH_SCOPE for each user, in case this evolves
     google_credentials_scope = StringField(required=True) 
+
+    # Date user joined the app
+    joined = DateTimeField()
     
     ### Track status of updates/jobs run on this user
     # Tracks when Gmail was last scraped
