@@ -101,7 +101,12 @@ def onboard_user(u):
     else:
         logging.warning('User %s could not log in to Gmail or Contacts API', user)
 
-
+@periodic_task(run_every=timedelta(hours=24))
+def update_users():
+    """
+    Update users 
+    """
+    pass
 
 """
 @periodic_task(run_every=timedelta(hours=24))
