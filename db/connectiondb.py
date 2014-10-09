@@ -37,22 +37,22 @@ class Connection(Document):
         return 'Connection: User %s <-> Profile %s' % (self.user, self.profile)
 
 
-    def populate_from_gmail(gmail_service):
+    def populate_from_gmail(service):
         """
         This function searches entire inbox to populate fields,
         therefore it is not optimized for speed.
 
-        Requires gmail_service to be from self.user, or else will populate
+        Requires service to be from self.user, or else will populate
         field incorrectly. 
 
         Args:
-            gmail_service: a Google API service object authed in with self.user
+            service: a Gmail API service object authed in with self.user
         """
         # See if any messages match query
-        emails_in = gmail.ListMessagesMatchingQuery(service=gmail_service, 
+        emails_in = gmail.ListMessagesMatchingQuery(service=service, 
                                                     user_id='me', 
                                                     query= "from:" + p.email)
-        emails_out = gmail.ListMessagesMatchingQuery(service=gmail_service, 
+        emails_out = gmail.ListMessagesMatchingQuery(service=service, 
                                                     user_id='me', 
                                                     query= "to:" + p.email)
 
@@ -62,7 +62,7 @@ class Connection(Document):
 
             # Get dates of latest emails in and out
             try:
-                latest_email_in = gmail.GetMessage(service=gmail_service, 
+                latest_email_in = gmail.GetMessage(service=service, 
                                     user_id='me', 
                                     msg_id=emails_in[0]['id'])
                 latest_email_in_header = gmail.GetMessageHeader(latest_email_in)
@@ -76,7 +76,7 @@ class Connection(Document):
         if emails_out and len(emails_out) > 0:
             c.total_emails_out = len(emails_out)
             try:
-                latest_email_out = gmail.GetMessage(service=gmail_service, 
+                latest_email_out = gmail.GetMessage(service=service, 
                                     user_id='me', 
                                     msg_id=emails_out[0]['id'])
                 latest_email_out_header = gmail.GetMessageHeader(latest_email_out)
