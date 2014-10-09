@@ -22,6 +22,14 @@ app = Celery('tasks',
 def add(x, y):
     return x + y
 
+@app.task
+def test_worker():
+    u = User.objects.get(email="alexander@usv.com")
+    p = Profile.objects.get(email="brad@usv.com")
+    logging.info(u)
+    logging.info(p)
+    logging.info('see above')
+    c = Connection(user=u, profile=p)
 
 @app.task
 def onboard_user(u):
