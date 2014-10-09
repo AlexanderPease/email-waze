@@ -29,7 +29,10 @@ def test_worker():
     logging.info(u)
     logging.info(p)
     logging.info('see above')
-    c = Connection(user=u, profile=p)
+    c, flag = Connection.objects.get_or_create(user=u, profile=p)
+    logging.info(c)
+    logging.info(flag)
+
 
 @app.task
 def onboard_user(u):
