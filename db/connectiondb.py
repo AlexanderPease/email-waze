@@ -51,10 +51,10 @@ class Connection(Document):
         # See if any messages match query
         emails_in = gmail.ListMessagesMatchingQuery(service=service, 
                                                     user_id='me', 
-                                                    query= "from:" + p.email)
+                                                    query= "from:" + self.profile.email)
         emails_out = gmail.ListMessagesMatchingQuery(service=service, 
                                                     user_id='me', 
-                                                    query= "to:" + p.email)
+                                                    query= "to:" + self.profile.email)
 
         # Emails in fields
         if emails_in and len(emails_in) > 0:
