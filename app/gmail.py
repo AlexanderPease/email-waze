@@ -102,14 +102,16 @@ def ParseDate(date_string):
     """
     return datetime.datetime.fromtimestamp(time.mktime(parsedate(date_string)))
 
-FAIL_THRESHOLD = 10
-def GmailJob(user):
+
+#FAIL_THRESHOLD = 10
+#def GmailJob(user):
     """
     Updates database with a signed up user's contacts by going through every
     single email in the inbox and adding new addresses to the database.
     This is the original scraping method used. 
 
     Args: user is a User profile object
+    """
     """
     if not isinstance(user, User):
         logging.warning("User type argument incorrect")
@@ -170,5 +172,6 @@ def GmailJob(user):
         user.gmail_job.success = True
         user.save()
         return
+    """
 
 

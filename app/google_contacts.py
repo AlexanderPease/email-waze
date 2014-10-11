@@ -5,13 +5,14 @@ import gdata.contacts.client
 import logging
 import mongoengine.errors
 
-def ContactsJob(user):
+#def ContactsJob(user):
     """
     Creates a Profile document for every contact from Google Contacts API
     for User user
 
     Args: 
         user: A User object 
+    """
     """
     gd_client= user.get_gd_client()
 
@@ -39,3 +40,4 @@ def ContactsJob(user):
 
     else:
         logging.warning('User %s most likely does not have Contacts oauth scope', user)
+    """
