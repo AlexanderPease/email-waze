@@ -3,3 +3,5 @@
 settings_local_environ.py
 local
 local/*
+node_modules
+.sass-cache
