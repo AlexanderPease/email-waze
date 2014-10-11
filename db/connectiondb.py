@@ -40,7 +40,8 @@ class Connection(Document):
     def populate_from_gmail(self, service):
         """
         This function searches entire inbox to populate fields,
-        therefore it is not optimized for speed.
+        therefore it is not optimized for speed. Only looks for messages directly
+        to: and from: User and Profile.
 
         Requires service to be from self.user, or else will populate
         field incorrectly. 
@@ -49,12 +50,14 @@ class Connection(Document):
             service: a Gmail API service object authed in with self.user
         """
         # See if any messages match query
+        in_query = "from:%s to:%s" % (self.profile.email, self.user.email)
         emails_in = gmail.ListMessagesMatchingQuery(service=service, 
                                                     user_id='me', 
-                                                    query= "from:" + self.profile.email)
+                                                    query=in_query)
+        out_query = "to:%s from:%s" % (self.profile.email, self.user.email) 
         emails_out = gmail.ListMessagesMatchingQuery(service=service, 
                                                     user_id='me', 
-                                                    query= "to:" + self.profile.email)
+                                                    query=out_query)
 
         # Emails in fields
         if emails_in and len(emails_in) > 0:

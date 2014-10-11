@@ -36,6 +36,10 @@ class User(Document):
 
     # Date user joined the app
     joined = DateTimeField()
+
+    # Date user last had update_user() task run OR if just onboarded
+    # the date that onboard_user() finished
+    last_updated = DateTimeField()
     
     ### Track status of updates/jobs run on this user
     # Tracks when Gmail was last scraped

@@ -5,6 +5,7 @@ logger = get_task_logger(__name__)
 
 from datetime import timedelta
 import settings, logging, datetime
+from email.utils import parseaddr
 from mongoengine import DoesNotExist
 
 from db.profiledb import Profile
@@ -12,6 +13,7 @@ from db.userdb import User
 from db.connectiondb import Connection
 
 import gdata.contacts.client
+import app.gmail as gmail
 
 #from app.gmail import GmailJob
 #from scripts.google_contacts_job import main as google_contacts_job
@@ -19,10 +21,6 @@ import gdata.contacts.client
 app = Celery('tasks', 
     broker=settings.get('rabbitmq_bigwig_url'),
     backend='amqp')
-
-@app.task
-def add(x, y):
-    return x + y
 
 
 @app.task
@@ -69,44 +67,117 @@ def onboard_user(u):
                         # Entry has passed tests and will now be added to database
                         email = email.address
                         logging.info('Adding: %s <%s>' % (name, email))
-
-                        # The following lines could be condensed if 
-                        # Profile.get_or_create() was working. 
-                        try:
-                            p = Profile.objects.get(email=email)
-                            logging.info(p)
-                        except DoesNotExist:
-                            p = Profile.add_new(name=name, email=email)
-                            logging.info(p)
-                        logging.info('above line should show profile')
-
-                        # Ensure p was succesfully created before 
-                        # adding a Connection. Profile.add_new() sometimes fails
-                        if p:
-                            # Search Connection database to see if this is a new contact
-                            c, created_flag = Connection.objects.get_or_create(user=u,
-                                                                            profile=p)
-                            # If newly created Connection, fill it in by
-                            # searching Gmail API
-                            if not created_flag:
-                                logging.info('%s already exists, not updating' % c)
-                            else:
-                                logging.info('Created %s' % c)
-
-                                # Updates fields of c by searching through users'
-                                # entire Gmail inbox 
-                                c.populate_from_gmail(service=gmail_service)
-                        else:
-                            logging.warning('Profile and Connection not added')
+                        update_profile_and_connection(email=email, 
+                                                        name=name,
+                                                        user = u,
+                                                        gmail_service=gmail_service)
     else:
         logging.warning('User %s could not log in to Gmail or Contacts API', user)
+
+    u.last_updated = datetime.datetime.now()
+    u.save()
+
+
+@app.task
+def update_user(u):
+    """
+    Updates Connections of a user and creates any new Profiles as needed.
+    Uses User field last_updated to filter emails to run through
+
+    Args:
+        u is an existing User to the app. If u is a new User this function will
+        take a long time. 
+    """
+    gmail_service = u.get_service(service_type='gmail')
+
+
+
+    messages = gmail.ListMessagesMatchingQuery(service=gmail_service,
+                                                user_id='me',
+                                                query='after:%s' % u.last_updated.strftime('%Y/%m/%d'))
+    if not messages:
+        return
+
+    # Track list of emails that have been updated by this function
+    updated_emails = []
+    msg_counter = 0
+    total_num = len(messages)
+    for msg_info in messages:
+        logging.info("Checking message of id: %s (%s of %s total)" % (msg_info['id'], msg_counter, total_num))
+        msg = gmail.GetMessage(gmail_service, 'me', msg_info['id'])
+        if msg:
+            msg_header = gmail.GetMessageHeader(msg)
+            if msg_header:
+                header_list = ['Delivered-To', 'Return-Path', 'From', 'To'] # Which email addresses to check
+                for header in header_list:
+                    if header in msg_header.keys():
+                        field = parseaddr(msg_header[header]) # Allows local emails addresses unfortunately
+                        name = field[0]
+                        email = field[1].lower() 
+
+                        # Only consider email if it hasn't yet been done 
+                        # for this user 
+                        if email not in updated_emails:
+                            updated_emails.append(email)
+                            logging.info(updated_emails)
+                            if name and name is not "" and email and email is not "":
+                                logging.info("Good pair: %s <%s>" % (name, email))
+                                update_profile_and_connection(email=email,
+                                                            name=name,
+                                                            user=u,
+                                                            gmail_service=gmail_service)
+        msg_counter = msg_counter + 1
+
+    # Save completed job specs to user
+    u.last_updated = datetime.datetime.now()
+    u.save()
+    return
+
 
 @periodic_task(run_every=timedelta(hours=24))
 def update_users():
     """
-    Update users 
+    Update all users every 24 hours
     """
-    pass
+    for u in User.objects:
+        update_user(u)
+
+
+def update_profile_and_connection(email, name, user, gmail_service):
+    """
+    Logic to update both Profile and Connection databases for the given 
+    User and an email and name
+    """ 
+    # The following lines could be condensed if 
+    # Profile.get_or_create() was working. 
+    try:
+        p = Profile.objects.get(email=email)
+        logging.info("Found existing Profile %s" % p)
+    except DoesNotExist:
+        p = Profile.add_new(name=name, email=email)
+        logging.info(p)
+
+    # Ensure p was succesfully created before 
+    # adding a Connection. Profile.add_new() sometimes fails (for good reason,
+    # like email address was a reply.craigslist.com one)
+    if not p:
+        logging.warning("Could not find or add Profile of email %s" % email)
+        return
+
+    # Search Connection database to see if this is a new contact
+    c, created_flag = Connection.objects.get_or_create(user=user,
+                                                    profile=p)
+    # If newly created Connection, fill it in by
+    # searching Gmail API
+    if created_flag:
+        logging.info('Created %s' % c)
+    else:
+        logging.info('%s already exists, not updating' % c)
+
+    # Updates fields of c by searching through users'
+    # entire Gmail inbox 
+    c.populate_from_gmail(service=gmail_service)
+
 
 """
 @periodic_task(run_every=timedelta(hours=24))

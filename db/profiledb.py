@@ -112,7 +112,14 @@ class Profile(Document):
                     flag = False # Exit loop
                 except Exception as e:
                     logging.info(e)
-                    burner = burner[:-1] + str(flag)
+                    
+                    # Add number to end of burner if necessary.
+                    # Remove previous number if this is not first time
+                    # Ex: avoids foo123, instead gives foo3
+                    if flag == 1:
+                        burner = burner + str(flag)
+                    else:
+                        burner = burner[:-1] + str(flag)
                     flag = flag + 1
 
 
@@ -178,7 +185,7 @@ class Profile(Document):
                 name = field[0]
                 email = field[1].lower() 
                 if name and email: # Only add if both are available 
-                    return Profile.add_new(name=name, email=email)
+                    Profile.add_new(name=name, email=email)
             else:
                 logging.debug('No %s field in header (output in line below)' % header)
                 logging.debug(msg_header)
