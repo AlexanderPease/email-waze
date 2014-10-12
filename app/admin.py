@@ -72,6 +72,15 @@ class Scratch(app.basic.BaseHandler):
             self.redirect('/')
 
         """
+        p = Profile.objects
+        logging.info(p)
+        p = p[0]
+        print p
+        """
+
+        from gmail import ParseDate
+        print ParseDate("2014/10/10")
+        """
         zander = 
         g = Group(name="All", users = [users[0]])
         for u in users:
@@ -79,10 +88,11 @@ class Scratch(app.basic.BaseHandler):
         g.save()
         """
 
-        import tasks
+
+        #import tasks
         #tasks.onboard_user(User.objects.get(email="me@alexanderpease.com"))
-        u = User.objects.get(email="me@alexanderpease.com")
         
+        """
         import sys
         sys.path.append("..")
         from tests import test_both_jobs
@@ -90,5 +100,6 @@ class Scratch(app.basic.BaseHandler):
 
         #from tests.test_group import test_group_class
         #test_group_class()
+        """
 
         return self.render('admin/admin_home.html')

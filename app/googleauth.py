@@ -94,7 +94,13 @@ class AuthReturn(app.basic.BaseHandler):
                         name=name,
                         joined=datetime.datetime.now())
             user.save()
-            tasks.onboard_user.delay(user) # Celery task
+
+            # On board new yser to database
+            if settings.get('environment') in ['dev', 'prod']:
+                tasks.onboard_user.delay(user) # Celery task
+            else:
+                logging.info("Won't onboard new user in local")
+
             logging.info('Saved new user %s' % user.email)
 
         # Set cookies
@@ -120,5 +126,5 @@ def redirect_uri():
     if settings.get('environment') in ['dev', 'prod']:
         return '%s/auth/google/return' % settings.get('base_url')
     else:
-        return 'https://localhost:8001/auth/google/return'
-        
+        return 'http://localhost:8001/auth/google/return'
+
