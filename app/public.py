@@ -28,3 +28,7 @@ class Index(app.basic.BaseHandler):
     else:
         return self.render('public/index.html', results=None, connections=None)
 
+class About(app.basic.BaseHandler):
+  def get(self):
+    return self.render('public/about.html')
+
