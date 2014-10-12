@@ -20,7 +20,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">Ansatz</a>
+        <a class="navbar-brand" href="/">Ansatz</a>
       </div>
 
       <div class="collapse navbar-collapse" id="main-navbar-collapse">
@@ -29,21 +29,19 @@
           {% if not current_user %}
           <li><a href="/auth/google">Sign Up</a></li>
           <li><a href="/auth/google">Log In</a></li>
-          {% end %}
-          {% if current_user_staff() %}
-            <a href="/admin">Admin</a>
-          {% end %}
+          {% else %}
+            {% if current_user_staff() %}<li><a href="/admin">Admin</a></li>{% end %}
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
-              <li><a href="#">Profile</a></li>
-              <li><a href="#">Settings</a></li>
+              <li><a href="/user/{{ current_user }}/settings">Settings</a></li>
               <li class="divider"></li>
               {% if current_user %}
-              <li><a href="#">Logout</a></li>
+              <li><a href="/auth/logout/">Logout</a></li>
               {% end %}
             </ul>
           </li>
+          {% end %}
         </ul>
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
@@ -60,8 +58,8 @@
     {% block footer %}{% end %}
   </footer>
 
-  {% block javascript %}{% end %}
   <script type="text/javascript" src="//code.jquery.com/jquery-1.10.1.min.js"></script>
   <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  {% block javascript %}{% end %}
 </body>
 </html>
