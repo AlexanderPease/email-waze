@@ -27,6 +27,8 @@ class User(Document):
     # Email is the unique key and the username
     email = EmailField(required=True, unique=True) 
     name = StringField(required=True)
+    given_name = StringField()
+    family_name = StringField()
 
     # Everything comes from Google OAuth2
     # Saved by OAuth2Credentials.to_json()

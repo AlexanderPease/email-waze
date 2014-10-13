@@ -70,9 +70,10 @@ class AuthReturn(app.basic.BaseHandler):
         try:
             name = user_info['name']
             email = user_info['email']
-            logging.info(user_info)
         except:
             logging.info('No name or email for authenticating user')
+            err = 'Log in failed. Google Auth did not return an email address'
+            return self.redirect('/') # add err
 
         # Save credentials to user database
         try:
@@ -85,6 +86,7 @@ class AuthReturn(app.basic.BaseHandler):
             user.google_credentials_scope = OAUTH_SCOPE
             user.name = name
             user.email = email
+            self.add_given_family_names(user, user_info)
             user.save()
             logging.info("Prexisting user %s is now logged in" % user.email)
         else:
@@ -94,6 +96,7 @@ class AuthReturn(app.basic.BaseHandler):
                         email=email,
                         name=name,
                         joined=datetime.datetime.now())
+            self.add_given_family_names(user, user_info)
             user.save()
 
             # On board new yser to database
@@ -109,6 +112,13 @@ class AuthReturn(app.basic.BaseHandler):
         self.set_secure_cookie('user_name', user.name)
 
         return self.redirect('/')
+
+    def add_given_family_names(self, user, user_info):
+        if 'given_name' in user_info.keys():
+            user.given_name = user_info['given_name']
+        if 'family_name' in user_info.keys():
+            user.family_name = user_info['family_name']
+
 
 ###########################
 ### LOG USER OUT OF ACCOUNT
