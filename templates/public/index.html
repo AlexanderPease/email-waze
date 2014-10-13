@@ -1,56 +1,56 @@
 {% extends "../base.html" %}
+{% block page-title %}Home{% end %}
+{% block page-description %}Ansatz is a simple way to find someone's email address while still respecting their privacy.{% end %}
+
+{% block header %}
+  {% if current_user %}
+    <h2>Hi {{ current_user_name() }}</h2>
+  {% else %}
+    <h2>Welcome to Ansatz!</h2>
+  {% end %}
+{% end %}
 
 {% block body %}
-  <div class="row">
-    <div class="col-md-9">
       {{ err }}
       {{ msg }}
 
       {% if not current_user %}
-        <h2>Welcome to Ansatz!</h2>
-
-        <p>
-          Ansatz is a simple way to find someone's email address while still respecting their privacy. 
-          </br></br>
-          It works like this:</br>
-          If I search the database for "Alexander Pease" at "Union Square Ventures", I'll find an entry for 
-          "a********@usv.com". Ansatz lets me send him an email directly to his inbox while still keeping his address private.
-          If he chooses to respond, then I'll know his real email address. 
-        </p>
-
-        To find someone, <a href="/auth/google">login w/ your Gmail account</a>
+        <div class="quick-start">
+          <h3>
+            Ansatz is a simple way to find someone's email address while still respecting their privacy.
+          </h3>
+          <h3>It works like this:</h3>
+          <p>
+            If I search the database for "Alexander Pease" at "Union Square Ventures", I'll find an entry for 
+            "a********@usv.com". Ansatz lets me send him an email directly to his inbox while still keeping his address private.
+            If he chooses to respond, then I'll know his real email address. 
+          </p>
+        </div>
+        <div class="login-cta">
+          <h4>To find someone, <a href="/auth/google">login with Gmail</a></h4>
+        </div>
 
       {% else %}
-        Welcome {{ current_user_name() }} 
-        <a href="/user/settings">settings</a>
-        {% if current_user_staff() %}
-          <a href="/admin">admin</a>
-        {% end %}
-
-        <form class="form-horizontal" action="/" method="GET">
+        <h3>Enter a name and domain to find an email.</h3>
+        <form id="main-search" class="form-horizontal container" action="/" method="GET">
           <div class="form-group">
-            <label for="inputEmail3" class="col-sm-2 control-label">Name</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" name="name" placeholder="Ex: Alexander Pease">
+            <div class="input-group-lg">
+              <input name="name" type="text" class="form-control" placeholder="Name">
             </div>
           </div>
-          
           <div class="form-group">
-            <label for="inputPassword3" class="col-sm-2 control-label">Domain</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" name="domain" placeholder="Ex: domain.com">
+            <div class="input-group input-group-lg">
+              <span class="input-group-addon">@</span>
+              <input name="domain" type="text" class="form-control" placeholder="Domain">
             </div>
           </div>
-
           <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-              <button type="submit" class="btn btn-primary">Search</button>
-            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
           </div>
         </form>
 
         {% if connections %}
-        Contacts shared with you: 
+        <h3>Contacts shared with you:</h3> 
           <table class="table table-striped">
               <tr>
                 <th>Name</th>
@@ -77,6 +77,7 @@
         {% end %}
 
         {% if results %}
+        <h3>Search Results:</h3>
           <!--
           In Your Groups: 
           <table class="table table-striped">
@@ -109,7 +110,7 @@
           -->
 
           {% if results is 'empty' %}
-            No results found, try another search!
+            <p>No results found, try another search!</p>
           {% else %}
             Global Database:
             <table class="table table-striped">
@@ -125,12 +126,9 @@
               {% end %}
             </table>
           {% end %}
+        </div>
         {% end %}
-
-
-      {% end %} <!--current user-->
-    </div><!--col-md-6-->
-  </div><!--row-->
+      {% end %}<!--current user-->
 {% end %}
 
 {% block javascript %}

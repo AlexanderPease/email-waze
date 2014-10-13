@@ -59,6 +59,7 @@ class Application(tornado.web.Application):
 
       # Public
       (r'/$', app.public.Index),
+      (r'/about.html', app.public.About),
     ]
 
     tornado.web.Application.__init__(self, handlers, **app_settings)
