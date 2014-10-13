@@ -36,6 +36,11 @@ class Connection(Document):
     def __str__(self):
         return 'Connection: User %s <-> Profile %s' % (self.user, self.profile)
 
+    def latest_email_in_date_string(self):
+        return date_to_string(self.latest_email_in_date)
+
+    def latest_email_out_date_string(self):
+        return date_to_string(self.latest_email_out_date)
 
     def populate_from_gmail(self, service):
         """
@@ -104,3 +109,9 @@ class Connection(Document):
         # Finished with all Connection fields
         self.last_updated = datetime.datetime.now()
         self.save()
+
+def date_to_string(datetime_object):
+        if datetime_object:
+            return datetime_object.strftime('%Y/%m/%d')
+        else:
+            return 'N/A'

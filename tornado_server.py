@@ -33,6 +33,7 @@ class Application(tornado.web.Application):
     handlers = [
       # API
       (r"/api/profilesearch", app.api.ProfileSearch),
+      (r"/api/connectionsearch", app.api.ConnectionSearch),
       (r"/api/gmailinboxsearch", app.api.GmailInboxSearch),
 
       # Email handling

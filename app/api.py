@@ -2,6 +2,7 @@ import app.basic, settings, ui_methods
 import logging
 from db.profiledb import Profile
 from db.userdb import User
+from db.connectiondb import Connection
 import gmail
 
 
@@ -22,15 +23,78 @@ class ProfileSearch(app.basic.BaseHandler):
         return self.api_response(data=None)
 
 
+########################
+### ConnectionSearch
+### /api/connectionsearch
+########################
+class ConnectionSearch(app.basic.BaseHandler):
+    def get(self):
+        name = self.get_argument('name', '')
+        domain = self.get_argument('domain', '')
+
+        if name or domain:
+            try:
+                current_user = User.objects.get(email=self.current_user)
+            except:
+                return self.api_error(500, 'Could not find client user in database')
+
+            profiles = Profile.objects(name__icontains=name, email__icontains=domain)
+
+            # insert limits on how many profiles this returns?
+
+            group_users = current_user.all_group_users()
+            connections = Connection.objects(profile__in=profiles, user__in=group_users)
+
+            # Package and dedupe results for client-side use
+            results = []
+            results_emails = [] # For fast indexing deduping connections
+            for c in connections:
+                try:
+                    existing_index = results_emails.index(c.profile.email)
+                except ValueError:
+                    existing_index = -1
+
+                # If this connection is already in results, just add connection
+                # to existing results 'profile'
+                if existing_index != -1:
+                    results[existing_index]['connections'].append({'connected_user_name': c.user.name,
+                                                    'connected_user_email': c.user.email,
+                                                    'total_emails_in': c.total_emails_in,
+                                                    'latest_email_in_date': c.latest_email_in_date_string(),
+                                                    'total_emails_out': c.total_emails_out,
+                                                    'latest_email_out_date': c.latest_email_out_date_string()})
+
+                # Else it is a new connection to add to results
+                else:
+                    results.append({'email': c.profile.email,
+                                    'name': c.profile.name,
+                                    'connections':[{'connected_user_name': c.user.name,
+                                                    'connected_user_email': c.user.email,
+                                                    'total_emails_in': c.total_emails_in,
+                                                    'latest_email_in_date': c.latest_email_in_date_string(),
+                                                    'total_emails_out': c.total_emails_out,
+                                                    'latest_email_out_date': c.latest_email_out_date_string()
+                                                    }]
+                                    })
+                    results_emails.append(c.profile.email)
+
+            if results:
+                return self.api_response(data=results)
+
+        return self.api_response(data=None)
+
+
+
 ###########################
 ### API call for correspondence data from a single USVer
+### This literally searches the Gmail inbox, not the Ansatz database
 ### /api/gmailinboxsearch
 ###########################
 class GmailInboxSearch(app.basic.BaseHandler):
     def get(self):
         query = self.get_argument('q', '')
         #user_email = self.get_argument('u','')
-        user_email = 'alexander@usv.com'
+        user_email = 'alexander@usv.com' ### HACK
         if not query or not user_email:
             return self.api_error(400, 'Empty query')
 

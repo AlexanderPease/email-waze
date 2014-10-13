@@ -99,8 +99,8 @@ class AuthReturn(app.basic.BaseHandler):
             self.add_given_family_names(user, user_info)
             user.save()
 
-            # On board new yser to database
-            if settings.get('environment') in ['dev', 'prod']:
+            # On board new user to database
+            if 'localhost' not in settings.get('base_url'):
                 tasks.onboard_user.delay(user) # Celery task
             else:
                 logging.info("Won't onboard new user in local")
