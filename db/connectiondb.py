@@ -62,30 +62,42 @@ class Connection(Document):
         # Emails in fields
         if emails_in and len(emails_in) > 0:
             self.total_emails_in = len(emails_in)
+            latest_email_in = gmail.GetMessage(service=service, 
+                                            user_id='me', 
+                                            msg_id=emails_in[0]['id'])
+            if not latest_email_in:
+                logging.warning('latest_email_in not added b/c gmail.GetMessage did not return message')
+            else:
+                try:
+                    latest_email_in_header = gmail.GetMessageHeader(latest_email_in)
+                except:
+                    logging.warning('gmail.GetMessageHeader error')
 
-            # Get dates of latest emails in and out
-            try:
-                latest_email_in = gmail.GetMessage(service=service, 
-                                    user_id='me', 
-                                    msg_id=emails_in[0]['id'])
-                latest_email_in_header = gmail.GetMessageHeader(latest_email_in)
-                self.latest_email_in_date = gmail.ParseDate(latest_email_in_header['Date'])
-            except:
-                logging.warning('latest_email_in not added')
+                if 'Date' in latest_email_in_header:
+                    self.latest_email_in_date = gmail.ParseDate(latest_email_in_header['Date'])
+                else:
+                    logging.info('Date not in email header')
         else:
             self.total_emails_in = 0
 
         # Emails out fields
         if emails_out and len(emails_out) > 0:
             self.total_emails_out = len(emails_out)
-            try:
-                latest_email_out = gmail.GetMessage(service=service, 
-                                    user_id='me', 
-                                    msg_id=emails_out[0]['id'])
-                latest_email_out_header = gmail.GetMessageHeader(latest_email_out)
-                self.latest_email_out_date = gmail.ParseDate(latest_email_out_header['Date'])
-            except:
-                logging.warning('latest_email_out not added')
+            latest_email_out = gmail.GetMessage(service=service, 
+                                                user_id='me', 
+                                                msg_id=emails_out[0]['id'])
+            if not latest_email_out:
+                logging.warning('latest_email_in not added b/c gmail.GetMessage did not return message')
+            else:
+                try:
+                    latest_email_out_header = gmail.GetMessageHeader(latest_email_out)
+                except:
+                    logging.warning('gmail.GetMessageHeader error')
+
+                if 'Date' in latest_email_out_header:
+                    self.latest_email_out_date = gmail.ParseDate(latest_email_out_header['Date'])
+                else:
+                    logging.info('Date not in email header')
         else:
             self.total_emails_out = 0
 

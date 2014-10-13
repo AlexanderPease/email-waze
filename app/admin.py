@@ -78,8 +78,6 @@ class Scratch(app.basic.BaseHandler):
         print p
         """
 
-        from gmail import ParseDate
-        print ParseDate("2014/10/10")
         """
         zander = 
         g = Group(name="All", users = [users[0]])

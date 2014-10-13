@@ -65,12 +65,11 @@ def GetMessage(service, user_id, msg_id):
         A Message.
     """
     try:
-        logging.debug('getting message from service.users().messages().get()')
         message = service.users().messages().get(userId=user_id, id=msg_id).execute()
-        logging.debug('service.users().messages().get() returns %s' % message)
         return message
     except errors.HttpError, error:
         logging.warning('An error occurred: %s' % error)
+        logging.warning('Could not find message of id %s' % msg_id)
 
 def GetMessageHeader(msg):
     """
@@ -92,6 +91,7 @@ def GetMessageHeader(msg):
     msg_header = {}
 
     for header in headers:
+        logging.info(header)
         if header['name'] in header_list:
             msg_header[header['name']] = header['value']
 

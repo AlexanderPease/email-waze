@@ -70,6 +70,7 @@ class AuthReturn(app.basic.BaseHandler):
         try:
             name = user_info['name']
             email = user_info['email']
+            logging.info(user_info)
         except:
             logging.info('No name or email for authenticating user')
 
