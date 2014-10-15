@@ -92,7 +92,7 @@ class Connection(Document):
                                                 user_id='me', 
                                                 msg_id=emails_out[0]['id'])
             if not latest_email_out:
-                logging.warning('latest_email_in not added b/c gmail.GetMessage did not return message')
+                logging.warning('latest_email_out not added b/c gmail.GetMessage did not return message')
             else:
                 try:
                     latest_email_out_header = gmail.GetMessageHeader(latest_email_out)
