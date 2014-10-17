@@ -2,7 +2,7 @@ console.log('background.js');
 
 var LOGIN_URL = 'https://rapportive.com/login_status';
 //var LOOKUP_URL = 'https://profiles.rapportive.com/contacts/email/';
-var LOOKUP_URL = 'http://ansatz.me/api/test';
+var LOOKUP_URL = 'http://email-waze-dev.herokuapp.com/api/test';
 //var API_HOST = '104.131.218.68';
 //var API_URL = 'http://'+API_HOST+'/api/profiles';
 //var API_ERROR_URL = 'http://'+API_HOST+'/api/errors';
@@ -23,6 +23,7 @@ chrome.extension.onMessage.addListener(function(request, sender, callback) {
     }
 });
 
+/* Get Rapportive session before making email request
 function get_session(user, email, callback, force) {
     if (lscache.get('session') && lscache.get('session')['session_token'] && !force) {
         callback(lscache.get('session'));
@@ -55,7 +56,9 @@ function get_session(user, email, callback, force) {
         });
     }
 }
+*/
 
+/*
 function lookup_email(data, callback) {
     console.log('lookup_email');
     if (lscache.get('e:'+data.email)) {
@@ -91,6 +94,48 @@ function lookup_email(data, callback) {
                 $.ajax(options);
                 console.log('sent ajax');
             });
+        }
+    }
+    return true;
+}
+*/
+
+function lookup_email(data, callback) {
+    console.log('lookup_email');
+    if (lscache.get('e:'+data.email)) {
+        callback({contact:lscache.get('e:'+data.email)});
+    } else {
+        if (lscache.get('sleep')) {
+            lscache.remove('sleep');
+            setTimeout(function() { lookup_email(data, callback); }, 3000);
+        } else {
+            lscache.set('sleep', true);
+            var options = {
+                type: 'GET',
+                //url: LOOKUP_URL+encodeURIComponent(data.email),
+                url: LOOKUP_URL,
+                dataType: 'json',
+                //headers: {
+                //    'X-Session-Token': session.session_token,
+                //},
+                success: function(response) {
+                    console.log('successful_response');
+                    console.log('response');
+                    lscache.remove('sleep');
+                    //save_response(response);
+                    //lscache.set('e:'+data.email, response.contact);
+                    if (is_ok(response)) {
+                        callback({contact:response.contact});
+                    }
+                },
+                error: function(response) {
+                    console.warn(response);
+                    lscache.remove('session')
+                    //save_error(data.email, response.status, response.responseText);
+                }
+            };
+            $.ajax(options);
+            console.log('sent ajax');
         }
     }
     return true;
