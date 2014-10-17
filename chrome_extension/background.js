@@ -60,6 +60,46 @@ function get_profile_by_email(data, callback) {
     return true;
 }
 
+
+function get_connection_by_email(data, callback) {
+    var email = data.email
+    if (lscache.get('e:'+data.email)) {
+        callback({contact:lscache.get('e:'+data.email)});
+    } else {
+        if (lscache.get('sleep')) {
+            lscache.remove('sleep');
+            setTimeout(function() { profile_search(data, callback); }, 3000);
+        } else {
+            lscache.set('sleep', true);
+            var options = {
+                type: 'GET',
+                url: ROOT_URL + 'api/connectionbyemail?domain=' + encodeURIComponent(email),
+                dataType: 'json',
+                //headers: {
+                //    'X-Session-Token': session.session_token,
+                //},
+                success: function(response) {
+                    lscache.remove('sleep');
+                    //save_response(response);
+                    //lscache.set('e:'+data.email, response.contact);
+                    if (is_ok(response)) {
+                        console.log(response);
+                        callback({data:response.data});
+                    }
+                },
+                error: function(response) {
+                    console.warn(response);
+                    lscache.remove('session')
+                    //save_error(data.email, response.status, response.responseText);
+                }
+            };
+            console.log('profile_search_by_email() requesting: ' + options.url)
+            $.ajax(options);
+        }
+    }
+    return true;
+}
+
 /* Ensures API response is OK for processing data */
 function is_ok(data) {
     return data.status_code >= 200 && data.status_code < 300 && data['data'] != null;

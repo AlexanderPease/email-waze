@@ -30,6 +30,49 @@ function email_from_string(str) {
     return undefined;
 }
 
+
+function render_connection(contact) {
+    var $panel = $('td.Bu.y3 div.nH.adC');
+    if ($panel) {
+        $.ajax({
+            type: 'GET',
+            url: 'chrome-extension://'+encodeURIComponent(ID)+'/templates/profile.html',
+            cache: true,
+            dataType: 'text',
+            success: function(html) {
+                var email = contact.email;
+                var email_parts = contact.email.split('@');
+                if (email_parts.length == 2) {
+                    contact.email_name = email_parts[0];
+                    contact.email_domain = email_parts[1];
+                }
+                var $div = $panel.find('div#rapporto');
+                console.log($div)
+                if (!$div.length)
+                    $div = $('<div id="rapporto" style="position:relative;" />');
+                $div.html(Mustache.render(html, contact));
+                $panel.prepend($div);
+                /*
+                var src = lscache.get('p:'+ email);
+                if (src) {
+                    replace_image($div, src);
+                } else {
+                    first_valid_image(contact.images.sort(compare_images), function(src) {
+                        if (!src)
+                            src = 'chrome-extension://'+encodeURIComponent(ID)+'/img/profile.png';
+                        lscache.set('p:'+contact.email, src);
+                        replace_image($div, src);
+                    });
+                }
+                */
+            },
+        });
+    } else {
+        console.log($panel);
+    }
+}
+
+
 function render_profile(contact) {
     var $panel = $('td.Bu.y3 div.nH.adC');
     if ($panel) {
@@ -130,7 +173,15 @@ function start() {
         var $el = $(e.target);
         var email = email_from_attr($el) || email_from_mailto($el);
         if (email) {
-            console.log(email);
+            console.log('Mouse over ' + email);
+            chrome.extension.sendMessage({name:'get_connection_by_email', email:email}, function(data) {
+                if (data['data']) {
+                    var connections = data.data;
+                    console.log(connections)
+                    render_connection(JSON.parse(connections));
+                }
+            });
+            /*
             chrome.extension.sendMessage({name:'get_profile_by_email', email:email}, function(data) {
                 if (data['profile']) {
                     var profile = data.profile;
@@ -138,6 +189,7 @@ function start() {
                     render_profile(JSON.parse(profile));
                 }
             });
+            */
         }
     });
 }

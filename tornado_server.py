@@ -35,6 +35,7 @@ class Application(tornado.web.Application):
       (r"/api/profilesearch", app.api.ProfileSearch),
       (r"/api/profilebyemail", app.api.ProfileByEmail),
       (r"/api/connectionsearch", app.api.ConnectionSearch),
+      (r"/api/connectionbyemail", app.api.ConnectionByEmail),
       (r"/api/gmailinboxsearch", app.api.GmailInboxSearch),
       (r"/api/test", app.api.Test),
 

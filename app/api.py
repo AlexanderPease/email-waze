@@ -48,6 +48,38 @@ class ProfileSearch(app.basic.BaseHandler):
 
 ########################
 ### ConnectionSearch
+### /api/connectionbyemail
+########################
+class ConnectionByEmail(app.basic.BaseHandler):
+    def get(self):
+        domain = self.get_argument('domain', '')
+        if not domain:
+            return self.api_error(400, 'No domain query given')
+
+        # Authenticate user
+        if not self.current_user:
+            return self.api_error(401, 'User is not logged in')
+        try:
+            current_user = User.objects.get(email=self.current_user)
+        except:
+            return self.api_error(500, 'Could not find client user in database')
+
+        try:
+            profile = Profile.objects.get(email=domain)
+        except:
+            return self.api_response(data=None)
+
+        group_users = current_user.all_group_users()
+        connections = Connection.objects(profile=profile, user__in=group_users)
+        if connections and len(connections) > 0:
+            results = PackageConnections(connections)
+            return self.api_response(data=results)
+
+        return self.api_response(data=None)
+
+
+########################
+### ConnectionSearch
 ### /api/connectionsearch
 ########################
 class ConnectionSearch(app.basic.BaseHandler):
@@ -67,45 +99,53 @@ class ConnectionSearch(app.basic.BaseHandler):
 
             group_users = current_user.all_group_users()
             connections = Connection.objects(profile__in=profiles, user__in=group_users)
-
-            # Package and dedupe results for client-side use
-            results = []
-            results_emails = [] # For fast indexing deduping connections
-            for c in connections:
-                try:
-                    existing_index = results_emails.index(c.profile.email)
-                except ValueError:
-                    existing_index = -1
-
-                # If this connection is already in results, just add connection
-                # to existing results 'profile'
-                if existing_index != -1:
-                    results[existing_index]['connections'].append({'connected_user_name': c.user.name,
-                                                    'connected_user_email': c.user.email,
-                                                    'total_emails_in': c.total_emails_in,
-                                                    'latest_email_in_date': c.latest_email_in_date_string(),
-                                                    'total_emails_out': c.total_emails_out,
-                                                    'latest_email_out_date': c.latest_email_out_date_string()})
-
-                # Else it is a new connection to add to results
-                else:
-                    results.append({'email': c.profile.email,
-                                    'name': c.profile.name,
-                                    'connections':[{'connected_user_name': c.user.name,
-                                                    'connected_user_email': c.user.email,
-                                                    'total_emails_in': c.total_emails_in,
-                                                    'latest_email_in_date': c.latest_email_in_date_string(),
-                                                    'total_emails_out': c.total_emails_out,
-                                                    'latest_email_out_date': c.latest_email_out_date_string()
-                                                    }]
-                                    })
-                    results_emails.append(c.profile.email)
-
-            if results:
+            if connections and len(connections) > 0:
+                results = PackageConnections(connections)
                 return self.api_response(data=results)
 
         return self.api_response(data=None)
 
+
+def PackageConnections(connections):
+    """
+    Package and dedupe connections for client-side use
+
+    Args:
+        connections are a list of Connections
+    """
+    results = []
+    results_emails = [] # For fast indexing deduping connections
+    for c in connections:
+        try:
+            existing_index = results_emails.index(c.profile.email)
+        except ValueError:
+            existing_index = -1
+
+        # If this connection is already in results, just add connection
+        # to existing results 'profile'
+        if existing_index != -1:
+            results[existing_index]['connections'].append({'connected_user_name': c.user.name,
+                                            'connected_user_email': c.user.email,
+                                            'total_emails_in': c.total_emails_in,
+                                            'latest_email_in_date': c.latest_email_in_date_string(),
+                                            'total_emails_out': c.total_emails_out,
+                                            'latest_email_out_date': c.latest_email_out_date_string()})
+
+        # Else it is a new connection to add to results
+        else:
+            results.append({'email': c.profile.email,
+                            'name': c.profile.name,
+                            'connections':[{'connected_user_name': c.user.name,
+                                            'connected_user_email': c.user.email,
+                                            'total_emails_in': c.total_emails_in,
+                                            'latest_email_in_date': c.latest_email_in_date_string(),
+                                            'total_emails_out': c.total_emails_out,
+                                            'latest_email_out_date': c.latest_email_out_date_string()
+                                            }]
+                            })
+            results_emails.append(c.profile.email)
+
+    return results
 
 
 ###########################
