@@ -130,12 +130,12 @@ function start() {
         var email = email_from_attr($el) || email_from_mailto($el);
         if (email) {
             console.log(email);
-            chrome.extension.sendMessage({name:'profile_search_by_email', email:email, user:find_account()}, function(data) {
-                console.log('callback');
-                console.log(data);
-                if (data['contact']) {
-                    var contact = data.contact;
-                    render(contact);
+            //chrome.extension.sendMessage({name:'profile_search_by_email', email:email, user:find_account()}, function(data) {
+            chrome.extension.sendMessage({name:'profile_search_by_email', email:email}, function(data) {
+                if (data['profiles']) {
+                    var profiles = data.profiles;
+                    console.log(profiles)
+                    render(profiles);
                 }
             });
         }

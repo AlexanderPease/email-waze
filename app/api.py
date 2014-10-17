@@ -15,6 +15,19 @@ class Test(app.basic.BaseHandler):
         return self.api_response(data=None)
 
 
+########################
+### Profile
+### /api/profilebyemail
+########################
+class ProfileByEmail(app.basic.BaseHandler):
+    def get(self):
+        domain = self.get_argument('domain', '')
+        try:
+            p = Profile.objects.get(email=domain)
+            return self.api_response(data=p.to_json())
+        except:
+            return self.api_response(data=None)
+
 
 ########################
 ### ProfileSearch

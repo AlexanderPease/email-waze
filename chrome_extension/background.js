@@ -21,7 +21,7 @@ chrome.extension.onMessage.addListener(function(request, sender, callback) {
 });
 
 
-function profile_search_by_email(data, callback) {
+function get_profile_by_email(data, callback) {
     var email = data.email
     if (lscache.get('e:'+data.email)) {
         callback({contact:lscache.get('e:'+data.email)});
@@ -43,8 +43,7 @@ function profile_search_by_email(data, callback) {
                     //save_response(response);
                     //lscache.set('e:'+data.email, response.contact);
                     if (is_ok(response)) {
-                        console.log(response);
-                        callback({contact:response.data});
+                        callback({profiles:response.data});
                     }
                 },
                 error: function(response) {
@@ -53,7 +52,7 @@ function profile_search_by_email(data, callback) {
                     //save_error(data.email, response.status, response.responseText);
                 }
             };
-            console.log('profile_search_by_email() requesting' + options.url)
+            console.log('profile_search_by_email() requesting: ' + options.url)
             $.ajax(options);
         }
     }
