@@ -1,5 +1,3 @@
-console.log('content_script');
-
 function email_from_mailto($el) {
     if (!$el.attr('href'))
         return undefined;
@@ -114,9 +112,13 @@ function replace_image($div, src) {
     $div.find('img:first').attr('src', src);
 }
 
+/* Not sure what this does */
 function find_account() {
+    console.log('find_account()')
     var $email = $('div.gb_aa.gb_B').find('div.gb_ia');
     if ($email.length)
+        console.log('find_account()');
+        console.log($email.text());
         return $email.text();
     return undefined;
 }
@@ -128,8 +130,9 @@ function start() {
         var email = email_from_attr($el) || email_from_mailto($el);
         if (email) {
             console.log(email);
-            chrome.extension.sendMessage({name:'lookup_email', email:email, user:find_account()}, function(data) {
+            chrome.extension.sendMessage({name:'profile_search_by_email', email:email, user:find_account()}, function(data) {
                 console.log('callback');
+                console.log(data);
                 if (data['contact']) {
                     var contact = data.contact;
                     render(contact);
