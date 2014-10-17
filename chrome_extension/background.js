@@ -33,7 +33,7 @@ function get_profile_by_email(data, callback) {
             lscache.set('sleep', true);
             var options = {
                 type: 'GET',
-                url: ROOT_URL + 'api/profilesearch?domain=' + encodeURIComponent(email),
+                url: ROOT_URL + 'api/profilebyemail?domain=' + encodeURIComponent(email),
                 dataType: 'json',
                 //headers: {
                 //    'X-Session-Token': session.session_token,
@@ -43,7 +43,8 @@ function get_profile_by_email(data, callback) {
                     //save_response(response);
                     //lscache.set('e:'+data.email, response.contact);
                     if (is_ok(response)) {
-                        callback({profiles:response.data});
+                        console.log(response);
+                        callback({profile:response.data});
                     }
                 },
                 error: function(response) {
@@ -65,6 +66,7 @@ function is_ok(data) {
 }
 
 
+/* Returns extension ID to content_script.js */
 function get_extension_id(data, callback) {
     callback(ID);
 }

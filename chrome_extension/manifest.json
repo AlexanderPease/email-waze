@@ -29,6 +29,8 @@
         "libs/mustache.js",
         "libs/lscache.js",
         "templates/contact.html",
+        "templates/profile.html",
+        "templates/connection.html",
         "img/ajax-loader.gif",
         "img/profile.png"
     ],

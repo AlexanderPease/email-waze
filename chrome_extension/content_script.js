@@ -30,28 +30,29 @@ function email_from_string(str) {
     return undefined;
 }
 
-function render(contact) {
-    console.log('render');
+function render_profile(contact) {
     var $panel = $('td.Bu.y3 div.nH.adC');
     if ($panel) {
         $.ajax({
             type: 'GET',
-            url: 'chrome-extension://'+encodeURIComponent(ID)+'/templates/contact.html',
+            url: 'chrome-extension://'+encodeURIComponent(ID)+'/templates/profile.html',
             cache: true,
             dataType: 'text',
             success: function(html) {
+                var email = contact.email;
                 var email_parts = contact.email.split('@');
                 if (email_parts.length == 2) {
                     contact.email_name = email_parts[0];
                     contact.email_domain = email_parts[1];
                 }
                 var $div = $panel.find('div#rapporto');
+                console.log($div)
                 if (!$div.length)
                     $div = $('<div id="rapporto" style="position:relative;" />');
-                contact.image_url_raw = 'chrome-extension://'+encodeURIComponent(ID)+'/img/ajax-loader.gif';
                 $div.html(Mustache.render(html, contact));
                 $panel.prepend($div);
-                var src = lscache.get('p:'+contact.email);
+                /*
+                var src = lscache.get('p:'+ email);
                 if (src) {
                     replace_image($div, src);
                 } else {
@@ -62,6 +63,7 @@ function render(contact) {
                         replace_image($div, src);
                     });
                 }
+                */
             },
         });
     } else {
@@ -124,24 +126,23 @@ function find_account() {
 }
 
 function start() {
-    console.log('start()');
     $(window).on('mouseover', function(e) {
         var $el = $(e.target);
         var email = email_from_attr($el) || email_from_mailto($el);
         if (email) {
             console.log(email);
-            //chrome.extension.sendMessage({name:'profile_search_by_email', email:email, user:find_account()}, function(data) {
-            chrome.extension.sendMessage({name:'profile_search_by_email', email:email}, function(data) {
-                if (data['profiles']) {
-                    var profiles = data.profiles;
-                    console.log(profiles)
-                    render(profiles);
+            chrome.extension.sendMessage({name:'get_profile_by_email', email:email}, function(data) {
+                if (data['profile']) {
+                    var profile = data.profile;
+                    console.log(profile)
+                    render_profile(JSON.parse(profile));
                 }
             });
         }
     });
 }
 
+/* Get id of this chrome extension so render() can call local html files */
 chrome.extension.sendMessage({name:'get_extension_id'}, function(id) {
     window.ID = id;
     start();
