@@ -5,6 +5,16 @@ from db.userdb import User
 from db.connectiondb import Connection
 import gmail
 
+########################
+### ProfileSearch
+### /api/test
+########################
+class Test(app.basic.BaseHandler):
+    def get(self):
+        logging.info('HIT TEST API!!!!!!!!!!!!')
+        return self.api_response(data=None)
+
+
 
 ########################
 ### ProfileSearch

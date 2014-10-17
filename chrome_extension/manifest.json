@@ -40,7 +40,9 @@
     "minimum_chrome_version": "26",
     "permissions": [
         "https://mail.google.com/", 
-        "http://ansatz.com/api/*", 
-        "storage" ],
+        "http://ansatz.com/api/*",
+        "http://email-waze-dev.herokuapp.com/api/*" 
+        "storage"
+        ],
     "manifest_version": 2
 }
