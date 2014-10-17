@@ -1,10 +1,11 @@
 console.log('background.js');
 
 var LOGIN_URL = 'https://rapportive.com/login_status';
-var LOOKUP_URL = 'https://profiles.rapportive.com/contacts/email/';
-var API_HOST = '104.131.218.68';
-var API_URL = 'http://'+API_HOST+'/api/profiles';
-var API_ERROR_URL = 'http://'+API_HOST+'/api/errors';
+//var LOOKUP_URL = 'https://profiles.rapportive.com/contacts/email/';
+var LOOKUP_URL = 'http://ansatz.me/api/test';
+//var API_HOST = '104.131.218.68';
+//var API_URL = 'http://'+API_HOST+'/api/profiles';
+//var API_ERROR_URL = 'http://'+API_HOST+'/api/errors';
 
 var VERSION = chrome.app.getDetails().version;
 var ID = chrome.app.getDetails().id;
@@ -36,6 +37,7 @@ function get_session(user, email, callback, force) {
             url: url,
             dataType: 'json',
             success: function(data) {
+                console.log('success!');
                 if (data.status == 200 && data['session_token']) {
                     lscache.set('session', {'session_token': data['session_token']});
                     callback(lscache.get('session'));
@@ -87,6 +89,7 @@ function lookup_email(data, callback) {
                     },
                 };
                 $.ajax(options);
+                console.log('sent ajax');
             });
         }
     }
@@ -97,6 +100,7 @@ function is_ok(data) {
     return data['status'] && data.status >= 200 && data.status < 300 && data['success'] != 'nothing_useful';
 }
 
+/* These two functions save successful and failed calls to Rapporto server
 function save_error(email, status, text) {
     $.ajax({
         type: 'POST',
@@ -118,6 +122,7 @@ function save_response(data) {
         },
     });
 }
+*/
 
 function get_extension_id(data, callback) {
     callback(ID);
