@@ -28,7 +28,7 @@ function get_profile_by_email(data, callback) {
     } else {
         if (lscache.get('sleep')) {
             lscache.remove('sleep');
-            setTimeout(function() { profile_search(data, callback); }, 3000);
+            setTimeout(function() { get_profile_by_email(data, callback); }, 3000);
         } else {
             lscache.set('sleep', true);
             var options = {
@@ -53,7 +53,7 @@ function get_profile_by_email(data, callback) {
                     //save_error(data.email, response.status, response.responseText);
                 }
             };
-            console.log('profile_search_by_email() requesting: ' + options.url)
+            console.log('get_profile_by_email() requesting: ' + options.url)
             $.ajax(options);
         }
     }
@@ -68,7 +68,7 @@ function get_connection_by_email(data, callback) {
     } else {
         if (lscache.get('sleep')) {
             lscache.remove('sleep');
-            setTimeout(function() { profile_search(data, callback); }, 3000);
+            setTimeout(function() { get_connection_by_email(data, callback); }, 3000);
         } else {
             lscache.set('sleep', true);
             var options = {
@@ -82,8 +82,8 @@ function get_connection_by_email(data, callback) {
                     lscache.remove('sleep');
                     //save_response(response);
                     //lscache.set('e:'+data.email, response.contact);
+                    console.log(response);
                     if (is_ok(response)) {
-                        console.log(response);
                         callback({data:response.data});
                     }
                 },
@@ -93,7 +93,7 @@ function get_connection_by_email(data, callback) {
                     //save_error(data.email, response.status, response.responseText);
                 }
             };
-            console.log('profile_search_by_email() requesting: ' + options.url)
+            console.log('get_connection_by_email() requesting: ' + options.url)
             $.ajax(options);
         }
     }

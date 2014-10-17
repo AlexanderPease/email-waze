@@ -73,7 +73,12 @@ class ConnectionByEmail(app.basic.BaseHandler):
         connections = Connection.objects(profile=profile, user__in=group_users)
         if connections and len(connections) > 0:
             results = PackageConnections(connections)
-            return self.api_response(data=results)
+
+            # Should only be one result
+            if len(results) > 1 or len(results) == 0:
+                return self.api_error(500, 'Multiple Connections after deduping be email')
+
+            return self.api_response(data=results[0]) # Return single Connection
 
         return self.api_response(data=None)
 
