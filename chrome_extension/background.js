@@ -1,4 +1,4 @@
-var ROOT_URL = 'http://email-waze-dev.herokuapp.com/';
+var ROOT_URL = 'http://ansatz.me/';
 //var API_HOST = '104.131.218.68';
 //var API_URL = 'http://'+API_HOST+'/api/profiles';
 //var API_ERROR_URL = 'http://'+API_HOST+'/api/errors';
