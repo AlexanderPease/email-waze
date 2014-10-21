@@ -5,3 +5,7 @@ local
 local/*
 node_modules
 .sass-cache
+local_db
+local_db/*
+dump
+dump/*

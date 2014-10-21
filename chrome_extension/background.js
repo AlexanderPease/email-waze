@@ -86,6 +86,9 @@ function get_connection_by_email(data, callback) {
                     if (is_ok(response)) {
                         callback({data:response.data});
                     }
+                    else if (queried_self(response)) {
+                        console.log('queried self')
+                    }
                 },
                 error: function(response) {
                     console.warn(response);
@@ -100,9 +103,17 @@ function get_connection_by_email(data, callback) {
     return true;
 }
 
+
 /* Ensures API response is OK for processing data */
 function is_ok(data) {
     return data.status_code >= 200 && data.status_code < 300 && data['data'] != null;
+}
+
+
+/* Checks to see if the query was of itself 
+    Ex: User me@alexanderpease.com queried about me@alexanderpease.com */
+function queried_self(data) {
+    return data.status_code == 400 && data['data'] == 'Queried self';
 }
 
 
@@ -110,6 +121,7 @@ function is_ok(data) {
 function get_extension_id(data, callback) {
     callback(ID);
 }
+
 
 /* Get Rapportive session before making email request
 function get_session(user, email, callback, force) {

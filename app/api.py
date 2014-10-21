@@ -64,6 +64,10 @@ class ConnectionByEmail(app.basic.BaseHandler):
         except:
             return self.api_error(500, 'Could not find client user in database')
 
+        # Don't show connection to self
+        if current_user.email == domain:
+            return self.api_error(400, 'Queried self')
+
         try:
             profile = Profile.objects.get(email=domain)
         except:
