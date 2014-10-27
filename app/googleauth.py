@@ -4,19 +4,21 @@ import settings, logging, httplib2, datetime
 from db.userdb import User
 import tasks
 
-OAUTH_SCOPE = ('https://www.googleapis.com/auth/gmail.modify '
-                'https://www.googleapis.com/auth/contacts.readonly '
-                'https://www.googleapis.com/auth/plus.profile.emails.read')
-                #'https://www.googleapis.com/auth/plus.me')
-                #'https://www.googleapis.com/auth/userinfo.email '
-                #'https://www.googleapis.com/auth/userinfo.profile '
-
 from oauth2client.client import OAuth2WebServerFlow
 from googleapiclient.discovery import build
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.file import Storage
 from oauth2client.tools import run
 from googleapiclient import errors
+
+OAUTH_SCOPE = ('https://www.googleapis.com/auth/gmail.modify '
+                'https://www.googleapis.com/auth/contacts.readonly '
+                'https://www.googleapis.com/auth/userinfo.email ' #deprecated
+                'https://www.googleapis.com/auth/userinfo.profile') #deprecated
+                #'https://www.googleapis.com/auth/plus.profile.emails.read')
+                #'https://www.googleapis.com/auth/plus.login')
+                #'https://www.googleapis.com/auth/plus.me')
+                
 
 ####################
 ### AUTH VIA GOOGLE
@@ -25,14 +27,15 @@ from googleapiclient import errors
 class Auth(app.basic.BaseHandler):
     def get(self):
         logging.info('Entered Auth')
-        logging.info(settings.get('google_client_id'))
-        logging.info(settings.get('google_client_secret'))
         flow = OAuth2WebServerFlow(client_id=settings.get('google_client_id'),
                                 client_secret=settings.get('google_client_secret'),
                                 scope=OAUTH_SCOPE,
                                 redirect_uri=redirect_uri(), 
-                                access_type='offline',
-                                approval_prompt='force') # Needed for refresh tokens
+                                access_type='offline')
+                                # I thought this was needed for refresh tokens, 
+                                # but if had been causing extra consent screen for 
+                                # "offline consent"
+                                #approval_prompt='force') 
         auth_uri = flow.step1_get_authorize_url()
         return self.redirect(auth_uri)
 
@@ -44,15 +47,17 @@ class AuthReturn(app.basic.BaseHandler):
     def get(self):
         logging.info('Entered AuthReturn')
         oauth_code = self.get_argument('code', '')
-
         flow = OAuth2WebServerFlow(client_id=settings.get('google_client_id'),
                                 client_secret=settings.get('google_client_secret'),
                                 scope=OAUTH_SCOPE,
                                 redirect_uri=redirect_uri(),
-                                access_type='offline',
-                                approval_prompt='force') # Needed for refresh tokens
+                                access_type='offline')
+                                # I thought this was needed for refresh tokens, 
+                                # but if had been causing extra consent screen for 
+                                # "offline consent"
+                                #approval_prompt='force') 
         credentials = flow.step2_exchange(oauth_code)
-        logging.info(credentials)
+        logging.info("Credentials: %s" % credentials)
         if credentials is None or credentials.invalid:
             logging.warning('Credentials DNE or invalid')
             return self.redirect('/')
@@ -62,6 +67,8 @@ class AuthReturn(app.basic.BaseHandler):
         http = credentials.authorize(http)
         service = build('oauth2', 'v2', http=http)
         user_info = service.userinfo().get().execute()
+        logging.info(user_info)
+        #print service.people().get(userId='me').execute()
         """ 
         The above two lines can also be accomplished using GPlus API 
         service = build('plus', 'v1', http=http)
