@@ -104,6 +104,26 @@ function get_connection_by_email(data, callback) {
 }
 
 
+function get_current_user_email(callback) {
+    var options = {
+        type: 'GET',
+        url: ROOT_URL + 'api/currentuseremail',
+        dataType: 'json',
+        success: function(response) {
+            console.log(response);
+            if (is_ok(response)) {
+                callback({data:response.data});
+            }
+        },
+        error: function(response) {
+            console.warn(response);
+        }
+    };
+    console.log('get_current_user_email() requesting: ' + options.url)
+    $.ajax(options);
+        }
+
+
 /* Ensures API response is OK for processing data */
 function is_ok(data) {
     return data.status_code >= 200 && data.status_code < 300 && data['data'] != null;

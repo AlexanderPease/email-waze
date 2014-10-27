@@ -73,26 +73,27 @@ function render_profile(contact) {
 }
 
 
-function render_connection(contact) {
+function render_connection(connection) {
     console.log('render_connection()');
     var $panel = $('td.Bu.y3 div.nH.adC');
     if ($panel) {
+        // Get local html and inject into page
         $.ajax({
             type: 'GET',
             url: 'chrome-extension://'+encodeURIComponent(ID)+'/templates/connection.html',
             cache: true,
             dataType: 'text',
             success: function(html) {
-                var email = contact.email;
-                var email_parts = contact.email.split('@');
+                var email = connection.email;
+                var email_parts = email.split('@');
                 if (email_parts.length == 2) {
-                    contact.email_name = email_parts[0];
-                    contact.email_domain = email_parts[1];
+                    connection.email_name = email_parts[0];
+                    connection.email_domain = email_parts[1];
                 }
                 var $div = $panel.find('div#rapporto');
                 if (!$div.length)
                     $div = $('<div id="rapporto" style="position:relative;" />');
-                $div.html(Mustache.render(html, contact));
+                $div.html(Mustache.render(html, connection));
                 $panel.prepend($div);
                 /*
                 var src = lscache.get('p:'+ email);
@@ -114,7 +115,7 @@ function render_connection(contact) {
     }
 }
 
-
+/*
 var PRIORITY = {
     'Gravatar': 1,
     'LinkedIn': 2,
@@ -158,6 +159,8 @@ function first_valid_image(images, callback) {
 function replace_image($div, src) {
     $div.find('img:first').attr('src', src);
 }
+*/
+
 
 /* Not sure what this does */
 function find_account() {

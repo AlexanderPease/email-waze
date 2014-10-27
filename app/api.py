@@ -16,6 +16,22 @@ class Test(app.basic.BaseHandler):
 
 
 ########################
+### Returns email of self
+### /api/currentuseremail
+########################
+class CurrentUserEmail(app.basic.BaseHandler):
+    def get(self):
+        if not self.current_user:
+            return self.api_error(401, 'User is not logged in')
+        try:
+            current_user = User.objects.get(email=self.current_user)
+        except:
+            return self.api_error(500, 'Could not find client user in database')
+
+        return current_user.email
+
+
+########################
 ### Profile
 ### /api/profilebyemail
 ########################
@@ -139,7 +155,6 @@ def PackageConnections(connections):
                                             'latest_email_in_date': c.latest_email_in_date_string(),
                                             'total_emails_out': c.total_emails_out,
                                             'latest_email_out_date': c.latest_email_out_date_string()})
-
         # Else it is a new connection to add to results
         else:
             results.append({'email': c.profile.email,

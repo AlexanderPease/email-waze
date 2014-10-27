@@ -7,17 +7,17 @@
   <div style="font-size:14px; margin-top:2px; margin-bottom:5px;">
     Connected via: {{connected_user_name}} ({{connected_user_email}})
   </div>
-  <div style="font-size:14px; margin-top:2px; margin-bottom:5px; left:85px">
-    Total Emails In: {{total_emails_in}}
+    <div style="font-size:14px; margin-top:2px; margin-bottom:5px; left:85px">
+    Emails Sent: {{total_emails_out}}
   </div>
   <div style="font-size:14px; margin-top:2px; margin-bottom:5px; left:85px">
-    Latest_Email_in: {{latest_email_in_date}}
+    Latest Email Sent: {{latest_email_out_date}}
   </div>
   <div style="font-size:14px; margin-top:2px; margin-bottom:5px; left:85px">
-    Total Emails Out: {{total_emails_out}}
+    Emails Received: {{total_emails_in}}
   </div>
   <div style="font-size:14px; margin-top:2px; margin-bottom:5px; left:85px">
-    Latest Email Out: {{latest_email_out_date}}
+    Latest Email Received: {{latest_email_in_date}}
   </div>
   </br>
 {{/connections}}
@@ -25,3 +25,12 @@
 No connections
 {{/connections}}
 
+<div> 
+  <form action="http://ansatz.me/" method="GET" target="_blank">
+    Or search Ansatz global email database
+    </br>
+    Name: <input type="search" name="name">
+    Domain: <input type="search" name="domain">
+    <input type="submit"> 
+  </form>
+</div

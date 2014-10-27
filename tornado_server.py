@@ -32,6 +32,7 @@ class Application(tornado.web.Application):
 
     handlers = [
       # API
+      (r"/api/currentuseremail", app.api.CurrentUserEmail),
       (r"/api/profilesearch", app.api.ProfileSearch),
       (r"/api/profilebyemail", app.api.ProfileByEmail),
       (r"/api/connectionsearch", app.api.ConnectionSearch),
