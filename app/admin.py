@@ -71,6 +71,16 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             self.redirect('/')
 
+        u = User.objects.get(email="alexander@usv.com")
+        p = Profile.objects.get(email="Brittany@usv.com")
+        c = Connection.objects.get(user=u, profile=p)
+        c.print_stats()
+
+        service = u.get_service()
+        c.populate_from_gmail(service)
+        c.print_stats()
+
+
         """
         p = Profile.objects
         logging.info(p)

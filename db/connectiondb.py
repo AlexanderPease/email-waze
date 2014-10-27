@@ -36,6 +36,11 @@ class Connection(Document):
     def __str__(self):
         return 'Connection: User %s <-> Profile %s' % (self.user, self.profile)
 
+    def print_stats(self):
+        logging.info(self)
+        logging.info("Emails in: %s (%s)" % (self.total_emails_in, self.latest_email_in_date_string()))
+        logging.info("Emails out: %s (%s)" % (self.total_emails_out, self.latest_email_out_date_string()))
+
     def latest_email_in_date_string(self):
         return date_to_string(self.latest_email_in_date)
 
