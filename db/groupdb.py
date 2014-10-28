@@ -5,16 +5,19 @@ from userdb import User
 mongo_database = settings.get('mongo_database')
 connect('group', host=mongo_database['host'])
 
-class GroupSettings(EmbeddedDocument):
-    # Ex: only @usv.com users can join
-    domain_restriction = StringField()
-
 class Group(Document):
     # List of Users in the group 
     users = ListField(ReferenceField(User), required=True)
     name = StringField()
     admin = ReferenceField(User)
-    settings = EmbeddedDocumentField(GroupSettings)
+
+    # List of emails that have been invited but haven't joined yet
+    # Delete from this list as a User with this email join the Group
+    invited_emails = ListField(EmailField())
+
+    # Ex: only @usv.com users can join
+    domain_restriction = StringField()
+
 
 
     def __str__(self):

@@ -30,6 +30,26 @@ def ordinal(numb):
                 suffix = 'th'
     return str(numb)+ suffix
 
+
+def list_to_comma_delimited_string(list_arg):
+    """
+    Takes of list of strings and turns into comma-delimited string.
+    Used for turning Group.invited_emails into correct form for template display.
+
+    Args: 
+      list: A list of strings, ex: ["alex@usv.com", "bob@usv.com"]
+
+    Returns
+      A string , ex: "alex@usv.com, bob@usv.com"
+      """
+    long_string = ""
+    for item in list_arg:
+        long_string += item + ", "
+
+    long_string = long_string[0:-2] # Remove last ", "
+    return long_string
+
+
 def email_obscure(email):
     """
     Obscures an email address
@@ -47,6 +67,7 @@ def email_obscure(email):
       obscured = obscured + "*"
 
     return first_letter + obscured + "@" + string_split[1]
+
 
 def encode(text):
     """

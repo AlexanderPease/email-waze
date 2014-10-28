@@ -4,7 +4,44 @@
   <div class="row">
     <div class="col-md-6">
 
-      Page to create a group
+      <form role="form" action="" method="POST">
+        <div class="form-group">
+          <label for="name">Team Name*</label>
+          {% if g %}
+            <input type="text" class="form-control" id="name" name="name" value="{{ g.name }}">
+          {% else %}
+            <input type="text" class="form-control" id="name" name="name">
+          {% end %}
+        </div>
+        <div class="form-group">
+          <label for="invited_emails">Invites*</label>
+          (Comment-delimited emails only)
+          <textarea class="form-control" rows="3" id="invited_emails" name="invited_emails" placeholder="Ex: bob@company.com, fred@company.com, etc.">{% try %}{{ list_to_comma_delimited_string(g.invited_emails) }}{% except %}{% end %}</textarea>
+        </div>
+        <div class="form-group">
+          <label for="domain_restriction">Domain restriction</label>
+          (Require all members to have an email address of this domain)
+          {% try %}
+            {% set domain_restriction = g.domain_restriction %}
+          {% except %}
+            {% set domain_restriction = None %}
+          {% end %}
+          {% if domain_restriction %}
+            <input type="text" class="form-control" id="domain_restriction" name="domain_restriction" value="{{ domain_restriction }}">
+          {% else %}
+            <input type="text" class="form-control" id="domain_restriction" name="domain_restriction" placeholder="Ex: usv.com">
+          {% end %}
+        </div>
+        <button type="submit" class="btn btn-default">
+          {% if g %}
+            Update
+          {% else %}
+            Submit
+          {% end %}
+        </button>
+      </form>
+      </br>
+      * Fields marked with an asterisk are required
 
     </div><!--col-md-6-->
   </div><!--row-->

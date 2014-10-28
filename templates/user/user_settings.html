@@ -9,14 +9,37 @@
 
       Email: {{ user.email }}
       </br>
+      </br>
 
-      Groups: 
-      {% for g in user.get_groups() %}
-        {{ g }} </br>
+      Ansatz email: {{ profile.burner }}@{{ settings.get('domain_name') }}
+      <ul>
+        <li>Update your Ansatz email</li>
+      </ul>
+
+      Teams: 
+      {% if groups %}
+      <ul>
+        {% for g in groups %}
+          <li>{{ g }} ({{ len(g.users) }} members): 
+            {% for u in g.users %}
+              {{ u.name }} ({{ u.email }}), 
+            {% end %}
+          </li>
+        {% end %}
+      </ul>
+      {% else %}
+        You're not yet in any teams! Teams are a great way to collaborate
+        with friends or coworkers while expanding your address book. </br>
       {% end %}
-      </br>
-      </br>
-      <a href="/group/create">Add a group</a>
+
+      {% if group_invites %}
+        You have pending invites to these teams:
+        {% for g in group_invites %}
+          {{ g }} ({{ g.users }})
+        {% end %}
+      {% end %}
+
+      <a href="/group/create">Create a team</a>
 
     </div><!--col-md-6-->
   </div><!--row-->
