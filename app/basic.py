@@ -5,6 +5,7 @@ import simplejson as json
 import os
 import httplib
 import logging
+from db.userdb import User
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -25,6 +26,7 @@ class BaseHandler(tornado.web.RequestHandler):
         kwargs['user_obj'] = None
         kwargs['settings'] = settings 
         kwargs['current_user_name'] = self.current_user_name
+        kwargs['current_user_casual_name'] = self.current_user_casual_name
         kwargs['current_user_staff'] = self.current_user_staff
         kwargs['body_location_class'] = ""
         
@@ -49,6 +51,16 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def current_user_name(self):
         return self.get_secure_cookie("user_name")
+
+    def current_user_casual_name(self):
+        """
+        Returns casual name of the logged in user
+        Ex: "Alexander"
+        """
+        try:
+            return User.objects.get(email=self.current_user).casual_name()
+        except:
+            return self.get_secure_cookie("user_name")
 
 
     def current_user_staff(self):

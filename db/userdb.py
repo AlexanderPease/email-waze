@@ -53,6 +53,11 @@ class User(Document):
     def __str__(self):
         return self.name + ' <' + self.email + '>'
 
+    def casual_name(self):
+        if self.given_name and self.given_name is not "":
+            return self.given_name
+        else:
+            return self.name
 
     def get_groups(self):
         """
