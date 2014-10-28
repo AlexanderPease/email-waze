@@ -54,6 +54,7 @@ class Application(tornado.web.Application):
       # Group pages
       (r"/group/create", app.group.CreateGroup),
       (r"/group/(?P<group>[A-z-+0-9]+)/edit", app.group.EditGroup),
+      (r"/group/(?P<group>[A-z-+0-9]+)/acceptinvite", app.group.AcceptGroupInvite),
 
       # Admin
       (r"/admin", app.admin.AdminHome),

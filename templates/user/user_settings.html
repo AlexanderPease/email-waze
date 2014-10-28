@@ -4,29 +4,39 @@
   <div class="row">
     <div class="col-md-6">
 
+      {% if msg %}
+        {{ msg }}</br>
+      {% end %}
+
+      {% if err %}
+        {{ msg }}</br>
+      {% end %}
+
       Settings for {{ user.name }}
-      </br>
+      </br></br>
 
       Email: {{ user.email }}
-      </br>
-      </br>
+      </br></br>
 
       Ansatz email: {{ profile.burner }}@{{ settings.get('domain_name') }}
       <ul>
         <li>Update your Ansatz email</li>
       </ul>
 
-      Teams: 
+      <a href="/group/create">Create a new team</a>
+      </br>
+
       {% if groups %}
-      <ul>
-        {% for g in groups %}
-          <li>{{ g }} ({{ len(g.users) }} members): 
-            {% for u in g.users %}
-              {{ u.name }} ({{ u.email }}), 
-            {% end %}
-          </li>
-        {% end %}
-      </ul>
+        Teams: 
+        <ul>
+          {% for g in groups %}
+            <li>{{ g }} ({{ len(g.users) }} members): 
+              {% for u in g.users %}
+                {{ u.name }} ({{ u.email }}), 
+              {% end %}
+            </li>
+          {% end %}
+        </ul>
       {% else %}
         You're not yet in any teams! Teams are a great way to collaborate
         with friends or coworkers while expanding your address book. </br>
@@ -34,12 +44,17 @@
 
       {% if group_invites %}
         You have pending invites to these teams:
-        {% for g in group_invites %}
-          {{ g }} ({{ g.users }})
-        {% end %}
+        <ul>
+          {% for g in group_invites %}
+            <li>{{ g }} ({{ len(g.users) }} members): 
+              {% for u in g.users %}
+                {{ u.name }} ({{ u.email }}), 
+              {% end %}
+              - <a href="/group/{{ g.id }}/acceptinvite">Accept invitation</a>
+            </li>
+          {% end %}
+        </ul>
       {% end %}
-
-      <a href="/group/create">Create a team</a>
 
     </div><!--col-md-6-->
   </div><!--row-->

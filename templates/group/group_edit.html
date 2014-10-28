@@ -10,7 +10,7 @@
           {% if g %}
             <input type="text" class="form-control" id="name" name="name" value="{{ g.name }}">
           {% else %}
-            <input type="text" class="form-control" id="name" name="name">
+            <input type="text" class="form-control" id="name" name="name" placeholder="Ex: Awesome People">
           {% end %}
         </div>
         <div class="form-group">
@@ -19,8 +19,8 @@
           <textarea class="form-control" rows="3" id="invited_emails" name="invited_emails" placeholder="Ex: bob@company.com, fred@company.com, etc.">{% try %}{{ list_to_comma_delimited_string(g.invited_emails) }}{% except %}{% end %}</textarea>
         </div>
         <div class="form-group">
-          <label for="domain_restriction">Domain restriction</label>
-          (Require all members to have an email address of this domain)
+          <label for="domain_restriction">Domain Setting</label>
+          (Any user with an email address of this domain can find and join this group)
           {% try %}
             {% set domain_restriction = g.domain_restriction %}
           {% except %}
