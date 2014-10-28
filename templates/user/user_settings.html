@@ -30,7 +30,14 @@
         Teams: 
         <ul>
           {% for g in groups %}
-            <li>{{ g }} ({{ len(g.users) }} members): 
+            <li> 
+              {% if current_user is g.admin.email %}
+                <a href="/group/{{ g.id }}/edit">{{ g }}</a>
+              {% else %}
+                {{ g }}
+              {% end %}
+
+              ({{ len(g.users) }} members): 
               {% for u in g.users %}
                 {{ u.name }} ({{ u.email }}), 
               {% end %}
