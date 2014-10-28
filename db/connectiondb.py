@@ -87,7 +87,10 @@ class Connection(Document):
                     self.latest_email_in_date = gmail.ParseDate(latest_email_in_header['Date'])
                 else:
                     logging.info('Date not in email header')
-        else:
+        else if not self.total_emails_in:
+            # Only set to 0 if no prior total_emails_in. 
+            # Occasionally Gmail won't return anything, so this way we keep the last
+            # total_emails_in without resetting to zero
             self.total_emails_in = 0
 
         # Emails out fields
@@ -108,7 +111,10 @@ class Connection(Document):
                     self.latest_email_out_date = gmail.ParseDate(latest_email_out_header['Date'])
                 else:
                     logging.info('Date not in email header')
-        else:
+        else if not self.total_emails_out:
+            # Only set to 0 if no prior total_emails_out. 
+            # Occasionally Gmail won't return anything, so this way we keep the last
+            # total_emails_out without resetting to zero
             self.total_emails_out = 0
 
         # Finished with all Connection fields
