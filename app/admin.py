@@ -71,6 +71,19 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             self.redirect('/')
 
+        """
+        ### Delete all connections to oneself
+        users = User.objects
+        for u in users:
+            try:
+                p = Profile.objects.get(email=u.email)
+                c = Connection.objects.get(profile=p, user=u)
+                logging.info(c)
+            except:
+                pass
+        """
+
+        """
         u = User.objects.get(email="alexander@usv.com")
         p = Profile.objects.get(email="Brittany@usv.com")
         c = Connection.objects.get(user=u, profile=p)
@@ -79,7 +92,7 @@ class Scratch(app.basic.BaseHandler):
         service = u.get_service()
         c.populate_from_gmail(service)
         c.print_stats()
-
+        """
 
         """
         p = Profile.objects

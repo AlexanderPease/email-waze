@@ -64,9 +64,41 @@
         </ul>
       {% end %}
 
+      <script src="https://checkout.stripe.com/checkout.js"></script>
+
+<button id="stripeButton" class="btn-primary">Update Billing</button>
+
+
+
     </div><!--col-md-6-->
   </div><!--row-->
+
 {% end %}
 
 {% block javascript %}
+<script>
+  var handler = StripeCheckout.configure({
+    key: 'pk_test_RMlPjQ0uu36oDd6TRWXSFmWh',
+    image: '/square-image.png',
+    token: function(token) {
+      // Use the token to create the charge with a server-side script.
+      // You can access the token ID with `token.id`
+      $('#stripeButton').attr('disabled', true);
+      $('#stripeButton').removeClass('btn-primary').addClass('btn-success');
+      //$('#submit-form').attr('disabled', false);
+      console.log('USCCESS')
+    }
+  });
+
+  document.getElementById('stripeButton').addEventListener('click', function(e) {
+    // Open Checkout with further options
+    handler.open({
+      name: '{{ settings.get("company_name") }}',
+      description: 'Monthly subscription billing info',
+      email: '{{ user.email }}',
+      panelLabel: "Subscribe"
+    });
+    e.preventDefault();
+  });
+</script>
 {% end %}

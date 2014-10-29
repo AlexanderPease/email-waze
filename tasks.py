@@ -29,7 +29,7 @@ def onboard_user(u):
     Onboards a new user by
     1. Searches through Google Contacts and creates new Profile objects if that
         email address does not yet exist in global database. 
-    2. Creating Correspondence objecst for all Profiles this User is 
+    2. Creating Connection objects for all Profiles this User is 
         connected to
 
     Args:
@@ -164,19 +164,23 @@ def update_profile_and_connection(email, name, user, gmail_service):
         logging.warning("Could not find or add Profile of email %s" % email)
         return
 
-    # Search Connection database to see if this is a new contact
-    c, created_flag = Connection.objects.get_or_create(user=user,
-                                                    profile=p)
-    # If newly created Connection, fill it in by
-    # searching Gmail API
-    if created_flag:
-        logging.info('Created %s' % c)
+    # Create connection if not to oneself
+    if user.email == p.email:
+        logging.info('Connection not created for email address %s to itself' % user.email)
     else:
-        logging.info('%s already exists, not updating' % c)
+        # Search Connection database to see if this is a new contact
+        c, created_flag = Connection.objects.get_or_create(user=user,
+                                                        profile=p)
+        # If newly created Connection, fill it in by
+        # searching Gmail API
+        if created_flag:
+            logging.info('Created %s' % c)
+        else:
+            logging.info('%s already exists, not updating' % c)
 
-    # Updates fields of c by searching through users'
-    # entire Gmail inbox 
-    c.populate_from_gmail(service=gmail_service)
+        # Updates fields of c by searching through users'
+        # entire Gmail inbox 
+        c.populate_from_gmail(service=gmail_service)
 
 
 """
