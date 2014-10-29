@@ -1,0 +1,36 @@
+{% extends "../base.html" %}
+
+{% block body %}
+  <div class="row">
+    <div class="col-md-6">
+
+      Welcome {{ user.casual_name() }}!</br>
+      Before you get started, let's add you to a team</br></br>
+
+      {% if group_invites %}
+        You have pending invites to these teams:
+        <ul>
+          {% for g in group_invites %}
+            <li>{{ g }} ({{ len(g.users) }} members): 
+              {% for u in g.users %}
+                {{ u.name }} ({{ u.email }}), 
+              {% end %}
+              - <a href="/group/{{ g.id }}/acceptinvite">Accept invitation</a>
+            </li>
+          {% end %}
+        </ul>
+        Or, <a href="/group/create">create a new team</a> 
+        by inviting your friends!
+      {% else %}
+        You do not have any pending team invitations. 
+        <a href="/group/create">Create a new team</a> 
+        by inviting your friends!
+
+      {% end %}
+
+    </div><!--col-md-6-->
+  </div><!--row-->
+{% end %}
+
+{% block javascript %}
+{% end %}

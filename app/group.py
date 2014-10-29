@@ -24,8 +24,8 @@ class CreateGroup(app.basic.BaseHandler):
 
         g = Group(name=name, 
                 users=[current_user],
-                admin=current_user, 
-                domain_restriction=domain_restriction)
+                admin=current_user)
+        g.set_domain_restriction(domain_restriction)
 
         # Add email invites
         if invited_emails:
@@ -74,7 +74,7 @@ class EditGroup(app.basic.BaseHandler):
         domain_restriction = self.get_argument('domain_restriction', '')
 
         g.name = name
-        g.domain_restriction = domain_restriction
+        g.set_domain_restriction(domain_restriction)
         if not g.admin:
             g.admin = current_user
 
@@ -110,7 +110,7 @@ class AcceptGroupInvite(app.basic.BaseHandler):
 
         if u.email in g.invited_emails or u.get_domain() in g.domain_restriction:
             # Add user and remove from invited email list
-            g.users.append(u)
+            g.add_user(u)
             if u.email in g.invited_emails:
                 g.invited_emails.remove(u.email)
             g.save()

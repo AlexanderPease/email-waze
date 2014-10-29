@@ -56,9 +56,7 @@ class Group(Document):
             if u.get_domain() not in domain:
                 return None
 
-        if not self.settings:
-            self.settings = GroupSettings()
-        self.settings.domain_restriction = domain
+        self.domain_restriction = domain
         return self
 
     def check_domain_restriction(self, user):
@@ -67,11 +65,8 @@ class Group(Document):
 
         Returns: True or None
         """
-        if not self.settings:
-            return True
-
-        if self.settings.domain_restriction:
-            if user.get_domain() in self.settings.domain_restriction:
+        if self.domain_restriction:
+            if user.get_domain() in self.domain_restriction:
                 return True
 
         return False

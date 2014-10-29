@@ -50,6 +50,7 @@ class Application(tornado.web.Application):
 
       # User pages
       (r"/user/settings", app.user.UserSettings),
+      (r"/user/welcome", app.user.UserWelcome),
 
       # Group pages
       (r"/group/create", app.group.CreateGroup),

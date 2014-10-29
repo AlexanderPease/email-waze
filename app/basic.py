@@ -49,6 +49,7 @@ class BaseHandler(tornado.web.RequestHandler):
         return self.get_secure_cookie("user_email")
 
 
+    # Left over from Nick. Not using yet. kwargs above. 
     def current_user_name(self):
         return self.get_secure_cookie("user_name")
 

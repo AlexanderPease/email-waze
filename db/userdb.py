@@ -38,6 +38,8 @@ class User(Document):
 
     # Date user joined the app
     joined = DateTimeField()
+    # Has user been through welcome onboarding process?
+    onboarded = BooleanField()
 
     # Date user last had update_user() task run OR if just onboarded
     # the date that onboard_user() finished

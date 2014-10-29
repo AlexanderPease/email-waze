@@ -67,7 +67,6 @@ class AuthReturn(app.basic.BaseHandler):
         http = credentials.authorize(http)
         service = build('oauth2', 'v2', http=http)
         user_info = service.userinfo().get().execute()
-        logging.info(user_info)
         #print service.people().get(userId='me').execute()
         """ 
         The above two lines can also be accomplished using GPlus API 
@@ -105,6 +104,7 @@ class AuthReturn(app.basic.BaseHandler):
                         joined=datetime.datetime.now())
             self.add_given_family_names(user, user_info)
             user.save()
+            logging.info('Saved new user %s' % user.email)
 
             # On board new user to database
             if 'localhost' not in settings.get('base_url'):
@@ -112,13 +112,16 @@ class AuthReturn(app.basic.BaseHandler):
             else:
                 logging.info("Won't onboard new user in local")
 
-            logging.info('Saved new user %s' % user.email)
-
         # Set cookies
         self.set_secure_cookie('user_email', user.email)
         self.set_secure_cookie('user_name', user.name)
 
-        return self.redirect('/')
+        logging.info(user.onboarded)
+        if not user.onboarded:
+            return self.redirect('/user/welcome')
+        else:
+            return self.redirect('/')
+
 
     def add_given_family_names(self, user, user_info):
         if 'given_name' in user_info.keys():
