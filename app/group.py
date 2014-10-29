@@ -108,3 +108,20 @@ class AcceptGroupInvite(app.basic.BaseHandler):
         else:
             return self.redirect("/user/settings?err=Not allowed to join that team!")
 
+
+########################
+### Delete a group 
+### /group/(?P<group>[A-z-+0-9]+)/delete
+########################
+class DeleteGroup(app.basic.BaseHandler):
+    @tornado.web.authenticated
+    def post(self, group):
+        # Only allow Group admin to delete Group
+        g = Group.objects.get(id=group)
+        u = User.objects.get(email=self.current_user)
+        if not u.same_user(g.admin):
+            return self.redirect('/')
+
+        g.delete()
+        return self.redirect("/user/settings?msg=You deleted the team :(")
+
