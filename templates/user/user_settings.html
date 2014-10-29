@@ -77,6 +77,8 @@
 
 {% block javascript %}
 <script>
+  var ROOT_URL = 'https://email-waze-dev.herokuapp.com/';
+
   var handler = StripeCheckout.configure({
     key: 'pk_test_RMlPjQ0uu36oDd6TRWXSFmWh',
     image: '/square-image.png',
@@ -85,8 +87,19 @@
       // You can access the token ID with `token.id`
       $('#stripeButton').attr('disabled', true);
       $('#stripeButton').removeClass('btn-primary').addClass('btn-success');
-      //$('#submit-form').attr('disabled', false);
-      console.log('USCCESS')
+      var options = {
+          type: 'POST',
+          url: ROOT_URL + 'api/stripe?token_id=' + token.id + '&email=' + token.email,
+          dataType: 'json',
+          success: function(response) {
+              console.log(response);
+          },
+          error: function(response) {
+              console.warn(response);
+          }
+      };
+      console.log('Requesting: ' + options.url)
+      $.ajax(options);
     }
   });
 
