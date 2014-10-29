@@ -64,6 +64,12 @@ class UserWelcome(app.basic.BaseHandler):
         except DoesNotExist:
             raise tornado.web.HTTPError(404)
 
+        if user.welcomed:
+            return self.redirect('/')
+        else:
+            user.welcomed = True
+            user.save()
+
         # Display User's Group invites
         # This block exists because some preexisting users may be new to onboarding
         groups = user.get_groups()
@@ -73,8 +79,6 @@ class UserWelcome(app.basic.BaseHandler):
             if g not in groups:
                 group_invites.append(g)
 
-        logging.info(user)
-        logging.info(group_invites)
         return self.render('user/user_welcome.html', user=user, 
                                                     group_invites=group_invites)
 

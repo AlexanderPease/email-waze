@@ -116,8 +116,7 @@ class AuthReturn(app.basic.BaseHandler):
         self.set_secure_cookie('user_email', user.email)
         self.set_secure_cookie('user_name', user.name)
 
-        logging.info(user.onboarded)
-        if not user.onboarded:
+        if not user.welcomed:
             return self.redirect('/user/welcome')
         else:
             return self.redirect('/')

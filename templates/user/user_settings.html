@@ -31,7 +31,7 @@
         <ul>
           {% for g in groups %}
             <li> 
-              {% if current_user is g.admin.email %}
+              {% if current_user == g.admin.email %}
                 <a href="/group/{{ g.id }}/edit">{{ g }}</a>
               {% else %}
                 {{ g }}

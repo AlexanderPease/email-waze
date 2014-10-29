@@ -39,7 +39,7 @@ class User(Document):
     # Date user joined the app
     joined = DateTimeField()
     # Has user been through welcome onboarding process?
-    onboarded = BooleanField()
+    welcomed = BooleanField()
 
     # Date user last had update_user() task run OR if just onboarded
     # the date that onboard_user() finished
@@ -106,6 +106,11 @@ class User(Document):
         else:
             return None
 
+    def same_user(self, u):
+        """ 
+        Returns True if the two User objects are the same Document, or False if not.
+        """
+        return self.id == u.id
 
     def get_service(self, service_type='gmail', version='v1'):
         """

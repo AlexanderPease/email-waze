@@ -34,7 +34,7 @@ class CreateGroup(app.basic.BaseHandler):
 
         g.save()
 
-        return self.redirect('/group/%s/edit' % g.id)
+        return self.redirect('/user/settings?msg=Successfully updated group settings!')
 
 
 ########################
@@ -51,23 +51,27 @@ class EditGroup(app.basic.BaseHandler):
 
         # Only allow Group admin to make changes to Group
         u = User.objects.get(email=self.current_user)
-        if g.admin is not u:
-            return self.render('/')
+        logging.info(u)
+        logging.info(g.admin)
+        logging.info(type(g.admin))
+        logging.info(type(u))
+        if not u.same_user(g.admin):
+            return self.redirect('/')
 
         return self.render('group/group_edit.html', g=g, 
             list_to_comma_delimited_string=ui_methods.list_to_comma_delimited_string)
 
     @tornado.web.authenticated
     def post(self, group):
-        # Only allow Group admin to make changes to Group
-        u = User.objects.get(email=self.current_user)
-        if g.admin is not u:
-            return self.render('/')
-
         try:
             g = Group.objects.get(id=group)
         except:
             pass # error
+
+        # Only allow Group admin to make changes to Group
+        u = User.objects.get(email=self.current_user)
+        if not u.same_user(g.admin):
+            return self.redirect('/')
 
         name = self.get_argument('name', '')
         invited_emails = self.get_argument('invited_emails', '')
@@ -83,12 +87,9 @@ class EditGroup(app.basic.BaseHandler):
             invited_emails = invited_emails.split(", ")
             g.invited_emails = invited_emails
 
-        logging.info(g.invited_emails)
-
         g.save()
 
-        return self.render('group/group_edit.html', g=g,
-            list_to_comma_delimited_string=ui_methods.list_to_comma_delimited_string)
+        return self.redirect('/user/settings?msg=Successfully updated group settings!')
 
 
 ########################
