@@ -49,12 +49,10 @@ def test_group_class():
     assert u.all_group_users().sort() == [u, u3].sort()
 
     # Test group settings
-    g4.set_domain_restriction('usv.com')
+    g4.set_domain_setting('usv.com')
     g4.save()
-    assert g4.check_domain_restriction(u) == True
-    assert g4.check_domain_restriction(u2) == False
     g4.add_user(u4) # Should add
-    g4.add_user(u3) # Should not add
+    g4.add_user(u2) # Should not add
     assert g4.users.sort() == [u, u3, u4].sort()
 
     for g in Group.objects:

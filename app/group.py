@@ -20,12 +20,12 @@ class CreateGroup(app.basic.BaseHandler):
 
         name = self.get_argument('name', '')
         invited_emails = self.get_argument('invited_emails', '')
-        domain_restriction = self.get_argument('domain_restriction', '')
+        domain_setting = self.get_argument('domain_setting', '')
 
         g = Group(name=name, 
                 users=[current_user],
-                admin=current_user)
-        g.set_domain_restriction(domain_restriction)
+                admin=current_user,
+                domain_setting=domain_setting)
 
         # Add email invites
         if invited_emails:
@@ -44,17 +44,9 @@ class CreateGroup(app.basic.BaseHandler):
 class EditGroup(app.basic.BaseHandler):
     @tornado.web.authenticated
     def get(self, group):
-        try:
-            g = Group.objects.get(id=group)
-        except:
-            pass #error
-
         # Only allow Group admin to make changes to Group
+        g = Group.objects.get(id=group)
         u = User.objects.get(email=self.current_user)
-        logging.info(u)
-        logging.info(g.admin)
-        logging.info(type(g.admin))
-        logging.info(type(u))
         if not u.same_user(g.admin):
             return self.redirect('/')
 
@@ -63,22 +55,18 @@ class EditGroup(app.basic.BaseHandler):
 
     @tornado.web.authenticated
     def post(self, group):
-        try:
-            g = Group.objects.get(id=group)
-        except:
-            pass # error
-
         # Only allow Group admin to make changes to Group
+        g = Group.objects.get(id=group)
         u = User.objects.get(email=self.current_user)
         if not u.same_user(g.admin):
             return self.redirect('/')
 
         name = self.get_argument('name', '')
         invited_emails = self.get_argument('invited_emails', '')
-        domain_restriction = self.get_argument('domain_restriction', '')
+        domain_setting = self.get_argument('domain_setting', '')
 
         g.name = name
-        g.set_domain_restriction(domain_restriction)
+        g.domain_setting =domain_setting 
         if not g.admin:
             g.admin = current_user
 
@@ -109,9 +97,10 @@ class AcceptGroupInvite(app.basic.BaseHandler):
         except:
             return self.redirect("/user/settings?err=Could not find team!")
 
-        if u.email in g.invited_emails or u.get_domain() in g.domain_restriction:
+        if u.email in g.invited_emails or u.get_domain() in g.domain_setting:
             # Add user and remove from invited email list
             g.add_user(u)
+            logging.info(g.users)
             if u.email in g.invited_emails:
                 g.invited_emails.remove(u.email)
             g.save()

@@ -15,8 +15,8 @@ class Group(Document):
     # Delete from this list as a User with this email join the Group
     invited_emails = ListField(EmailField())
 
-    # Ex: only @usv.com users can join
-    domain_restriction = StringField()
+    # Ex: All @usv.com users can find and join
+    domain_setting = StringField()
 
 
 
@@ -31,7 +31,7 @@ class Group(Document):
         """
         Adds a User to the Group (w/out duplication)
         """
-        if user not in self.users and self.check_domain_restriction(user):
+        if user not in self.users or user.domain() in self.domain_setting:
             return self.users.append(user)
 
 
@@ -41,35 +41,6 @@ class Group(Document):
         """
         if user in self.users:
             return self.users.remove(user)
-
-
-    def set_domain_restriction(self, domain):
-        """
-        Sets a domain restriction for the group.
-        Ex: only @usv.com users can join.
-
-        Returns:
-            Group or None if failed
-        """
-        # Ensure that existing users belong in the group
-        for u in self.users:
-            if u.get_domain() not in domain:
-                return None
-
-        self.domain_restriction = domain
-        return self
-
-    def check_domain_restriction(self, user):
-        """
-        Checks if user is allowed to be added to the group based on self.settings
-
-        Returns: True or None
-        """
-        if self.domain_restriction:
-            if user.get_domain() in self.domain_restriction:
-                return True
-
-        return False
 
 
 

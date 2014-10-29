@@ -24,7 +24,7 @@ class UserSettings(app.basic.BaseHandler):
 
         # Display User's Groups
         groups = user.get_groups()
-        group_invites_raw = Group.objects(Q(invited_emails=self.current_user) | Q(domain_restriction__icontains=user.get_domain()))
+        group_invites_raw = Group.objects(Q(invited_emails=self.current_user) | Q(domain_setting__icontains=user.get_domain()))
         group_invites = []
         for g in group_invites_raw:
             if g not in groups:
@@ -73,7 +73,7 @@ class UserWelcome(app.basic.BaseHandler):
         # Display User's Group invites
         # This block exists because some preexisting users may be new to onboarding
         groups = user.get_groups()
-        group_invites_raw = Group.objects(Q(invited_emails=self.current_user) | Q(domain_restriction__icontains=user.get_domain()))
+        group_invites_raw = Group.objects(Q(invited_emails=self.current_user) | Q(domain_setting__icontains=user.get_domain()))
         group_invites = []
         for g in group_invites_raw:
             if g not in groups:
