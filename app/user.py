@@ -30,6 +30,12 @@ class UserSettings(app.basic.BaseHandler):
             if g not in groups:
                 group_invites.append(g)
 
+        # User pays for groups larger than 5 people
+        paying_groups_raw = groups(admin=user)
+        paying_groups = []
+        for g in paying_groups_raw:
+            if len(g.users) > 5:
+                paying_groups.append(g)
 
         # Display User's ansatz email
         try:
@@ -44,9 +50,11 @@ class UserSettings(app.basic.BaseHandler):
         return self.render('user/user_settings.html', user=user, 
                                                     groups=groups, 
                                                     group_invites=group_invites,
+                                                    paying_groups=paying_groups,
                                                     profile=profile, 
                                                     msg=msg, 
-                                                    err=err)
+                                                    err=err,
+                                                    list_to_comma_delimited_string=ui_methods.list_to_comma_delimited_string)
 
 
 ########################

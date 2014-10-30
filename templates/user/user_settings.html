@@ -64,10 +64,19 @@
         </ul>
       {% end %}
 
-      <script src="https://checkout.stripe.com/checkout.js"></script>
+      Billing info:</br>
+      All teams up to 5 users are free! 
+      You are the admin of {{ len(paying_groups) }} team ({{ list_to_comma_delimited_string(paying_groups) }}) 
+      that qualifies for our Basic tier of $5/month for each user.
 
-<button id="stripeButton" class="btn-primary">Update Billing</button>
-
+      </br>
+      <button id="stripeButton" trype="button" class="btn-primary">
+        {% if user.stripe_id %}
+          Update Billing Info
+        {% else %}
+          Enter Billing Info
+        {% end %}
+      </button>
 
 
     </div><!--col-md-6-->
@@ -76,8 +85,9 @@
 {% end %}
 
 {% block javascript %}
+<script src="https://checkout.stripe.com/checkout.js"></script>
 <script>
-  var ROOT_URL = 'http://email-waze-dev.herokuapp.com/';
+  var ROOT_URL = 'http://localhost:8001/';
 
   var handler = StripeCheckout.configure({
     key: 'pk_test_RMlPjQ0uu36oDd6TRWXSFmWh',
@@ -85,8 +95,8 @@
     token: function(token) {
       // Use the token to create the charge with a server-side script.
       // You can access the token ID with `token.id`
-      $('#stripeButton').attr('disabled', true);
-      $('#stripeButton').removeClass('btn-primary').addClass('btn-success');
+      //$('#stripeButton').attr('disabled', true);
+      //$('#stripeButton').removeClass('btn-primary').addClass('btn-success');
       var options = {
           type: 'POST',
           url: ROOT_URL + 'stripe/basic?token_id=' + token.id + '&email=' + token.email,
@@ -109,7 +119,7 @@
       name: '{{ settings.get("company_name") }}',
       description: 'Monthly subscription billing info',
       email: '{{ user.email }}',
-      panelLabel: "Subscribe"
+      panelLabel: "Update Card"
     });
     e.preventDefault();
   });
