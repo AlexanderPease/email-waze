@@ -66,8 +66,12 @@
 
       Billing info:</br>
       All teams up to 5 users are free! 
-      You are the admin of {{ len(paying_groups) }} team ({{ list_to_comma_delimited_string(paying_groups) }}) 
-      that qualifies for our Basic tier of $5/month for each user.
+
+      {% if paying_groups %}
+        You are the admin of {{ len(paying_groups) }} team ({{ list_to_comma_delimited_string(paying_groups) }}) that qualifies for our Basic tier of $5/month for each user.
+      {% else %}
+        None of your teams exceed the free tier, but you can update your billing info if you'd like. 
+      {% end %}
 
       </br>
       <button id="stripeButton" trype="button" class="btn-primary">
