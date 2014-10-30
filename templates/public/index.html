@@ -95,42 +95,11 @@
       </section>
       {% end %}
 
-      {% if results %}
+      {% if profiles %}
       <section class="feature">
         <div class="container">
           <h3>Search Results:</h3>
-            <!--
-            In Your Groups: 
-            <table class="table table-striped">
-                <tr>
-                  <th>Name</th>
-                  <th>Total Emails In</th>
-                  <th>Latest Email In</th>
-                  <th>Total Emails Out</th>
-                  <th>Latest Email Out</th>
-                </tr>
-
-                <tr class="account_row" id="test_id" style="display:none">  
-                  <td>
-                    
-                  </td>
-                  <td class="account_row_total_emails_in">
-                    loading...
-                  </td>
-                  <td class="account_row_latest_email_in">
-                    
-                  </td>
-                  <td class="account_row_total_emails_out">
-                    
-                  </td>
-                  <td class="account_row_latest_email_out">
-                    
-                  </td>
-                </tr>
-            </table>
-            -->
-
-            {% if results is 'empty' %}
+            {% if profiles is 'empty' %}
               <p>No results found, try another search!</p>
             {% else %}
               Global Database:
@@ -139,10 +108,10 @@
                   <th>Profile</th>
                   <th>Public Email Address</th>
                 </tr>
-                {% for r in results %}
+                {% for p in profiles %}
                   <tr>
-                    <td>{{ r.name }} ({{ email_obscure(r) }})</td>
-                    <td><a href="mailto:{{ r.burner }}@ansatz.me" target="_blank">{{ r.burner }}@ansatz.me</a></td>
+                    <td>{{ p.name }} ({{ email_obscure(p) }})</td>
+                    <td><a href="mailto:{{ p.burner }}@ansatz.me" target="_blank">{{ p.burner }}@ansatz.me</a></td>
                   </tr>
                 {% end %}
               </table>
@@ -155,8 +124,17 @@
 {% end %}
 
 {% block javascript %}
+
+  <script>
+    $(".collapsiblerow").click(function() {
+      $(this).collapse('hide');
+
+    });
+  </script>
+
+
     <!-- Script for querying GMail API through our API --> 
-    <script>
+<!--<script>
     // Queries API for all accounts on page load
     $(document).ready(function() {
       $('.account_row').each(function() {
@@ -211,7 +189,7 @@
     }
 
 
-  </script>
+  </script>-->
 
 
 {% end %}

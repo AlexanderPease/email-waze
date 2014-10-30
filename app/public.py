@@ -17,16 +17,29 @@ class Index(app.basic.BaseHandler):
 
     
     if name or domain:
-        # Global results
+        # Global profile results
         profiles = Profile.objects(name__icontains=name, email__icontains=domain).order_by('name') # case-insensitive contains
 
-        # Group users
+        # Connections
         current_user = User.objects.get(email=self.current_user)
         group_users = current_user.all_group_users()
         connections = Connection.objects(profile__in=profiles, user__in=group_users)
-        return self.render('public/index.html', results=profiles, connections=connections, email_obscure=Profile.get_domain)
+
+        # De-dupe profiles that user is connected to
+        # This is djanky because can't to joins :(
+        ps = []
+        for p in profiles:
+            p_flag = True
+            for c in connections:
+                if p.id == c.profile.id:
+                    p_flag = False
+            if p_flag:
+                ps.append(p)
+        profiles = ps
+
+        return self.render('public/index.html', profiles=profiles, connections=connections, email_obscure=Profile.get_domain)
     else:
-        return self.render('public/index.html', results=None, connections=None)
+        return self.render('public/index.html', profiles=None, connections=None)
 
 class About(app.basic.BaseHandler):
   def get(self):
