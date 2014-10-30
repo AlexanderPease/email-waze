@@ -1,19 +1,24 @@
+{% extends "../base.html" %}
 {% block body %}
-  {{ len(profiles) }} entries
-  <table class="table table-striped">
-    <tr>
-      <th>Email</th>
-      <th>Name</th>
-      <th>Ansatz Email</th>
-    </tr>
-    {% for p in profiles %}
-      <tr>
-        <td>{{ p.email }}</td>
-        <td>{{ p.name }}</td>
-        <td>{{ p.burner }}</td>
-      </tr>
-    {% end %}
-  </table>
+  <div class="feature">
+    <div class="container">
+      <h2>{{ len(profiles) }} entries</h2>
+      <table class="table table-striped">
+        <tr>
+          <th>Email</th>
+          <th>Name</th>
+          <th>Ansatz Email</th>
+        </tr>
+        {% for p in profiles %}
+          <tr>
+            <td>{{ p.email }}</td>
+            <td>{{ p.name }}</td>
+            <td>{{ p.burner }}</td>
+          </tr>
+        {% end %}
+      </table>
+    </div>
+  </div>
 {% end %}
 
 

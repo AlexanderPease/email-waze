@@ -2,132 +2,155 @@
 {% block page-title %}Home{% end %}
 {% block page-description %}Ansatz is a simple way to find someone's email address while still respecting their privacy.{% end %}
 
-{% block header %}
-  {% if current_user %}
-    <h2>Hi {{ current_user_casual_name() }}</h2>
-  {% else %}
-    <h2>Welcome to Ansatz!</h2>
-  {% end %}
-{% end %}
-
 {% block body %}
       {{ err }}
       {{ msg }}
 
       {% if not current_user %}
-        <div class="quick-start">
-          <h3>
-            Ansatz is a simple way to find someone's email address while still respecting their privacy.
-          </h3>
-          <h3>It works like this:</h3>
-          <p>
-            If I search the database for "Alexander Pease" at "Union Square Ventures", I'll find an entry for 
-            "a********@usv.com". Ansatz lets me send him an email directly to his inbox while still keeping his address private.
-            If he chooses to respond, then I'll know his real email address. 
-          </p>
-        </div>
-        <div class="login-cta">
-          <h4>To find someone, <a href="/auth/google">login with Gmail</a></h4>
-        </div>
-
-      {% else %}
-        <h3>Enter a name and domain to find an email.</h3>
-        <form id="main-search" class="form-horizontal container" action="/" method="GET">
-          <div class="form-group">
-            <div class="input-group-lg">
-              <input name="name" type="text" class="form-control" placeholder="Name">
+      <section class="hero">
+        <div class="container">
+          <h1>Stop Connecting. Start Emailing</h1>
+          <div class="group">
+            <div class="span6">
+              <h2>Effortlessly email new leads, and know in seconds <br>their existing relationship to your team.</h2>
+              <p>Oh, and it's free.</p>
+              <p><a href="/auth/google" class="btn-primary btn-cta">Sign up with Google</a></p>
             </div>
           </div>
-          <div class="form-group">
-            <div class="input-group input-group-lg">
+        </div>
+      </section>
+      <section class="feature">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-4 text-center">
+            <p><span class="img-target"></span></p>
+            <h3>Powerful Search</h3>
+            <p>Reliably find anyone in the world in seconds.</p>
+          </div>
+          <div class="col-sm-4 text-center">
+            <p><span class="img-team"></span></p>
+            <h3>Integrated Team Features</h3>
+            <p>See who has a preexisting connection before reaching out. </p>
+          </div>
+          <div class="col-sm-4 text-center">
+            <p><span class="img-anti"></span></p>
+            <h3>The Anti-CRM</h3>
+            <p>Leverage your team’s network without tedious data entry.</p>
+          </div>
+        </div>
+      </div>
+      </section>
+
+      {% else %}
+      <section class="feature">
+        <div class="container">
+          <h2>Hi {{ current_user_casual_name() }}</h2>
+          <p>Enter a name and domain to find an email.</p>
+        </div>
+        <form id="main-search" class="form-horizontal container" action="/" method="GET">
+          <div class="row">
+            <div class="input-group-lg col-sm-6 col-lg-4 col-xs-12">
+              <input name="name" type="text" class="form-control" placeholder="Name">
+            </div>
+            <div class="input-group input-group-lg col-sm-6 col-lg-4 col-xs-12">
               <span class="input-group-addon">@</span>
               <input name="domain" type="text" class="form-control" placeholder="Domain">
             </div>
           </div>
-          <div class="form-group">
-            <button type="submit" class="btn btn-primary">Search</button>
+          <div class="row">
+            <div class="col-sm-6 col-lg-4 col-xs-12 search-btn-wrap">
+              <button type="submit" class="btn btn-primary">Search</button>
+            </div>
           </div>
         </form>
-
-        {% if connections %}
-        <h3>Contacts shared with you:</h3> 
+      </section>
+      {% if connections %}
+      <section class="feature">
+        <div class="container">
+          <h3>Contacts shared with you:</h3> 
           <table class="table table-striped">
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Connected through</th>
-                <th>Total Emails In</th>
-                <th>Latest Email In</th>
-                <th>Total Emails Out</th>
-                <th>Latest Email Out</th>
-              </tr>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Connected through</th>
+              <th>Total Emails In</th>
+              <th>Latest Email In</th>
+              <th>Total Emails Out</th>
+              <th>Latest Email Out</th>
+            </tr>
 
-              {% for c in connections %}
-                <tr>  
-                  <td>{{ c.profile.name }}</td>
-                  <td><a href="mailto:{{ c.profile.email }}" target="_blank">{{ c.profile.email }}<a/></td>
-                  <td>{{ c.user.name }} ({{ c.user.email }})</td>
-                  <td>{{ c.total_emails_in }}</td>
-                  <td>{{ c.latest_email_in_date }}</td>
-                  <td>{{ c.total_emails_out }}</td>
-                  <td>{{ c.latest_email_out_date }}</td>
-                </tr>
-              {% end %}
+            {% for c in connections %}
+              <tr>  
+                <td>{{ c.profile.name }}</td>
+                <td><a href="mailto:{{ c.profile.email }}" target="_blank">{{ c.profile.email }}</a></td>
+                <td>{{ c.user.name }} ({{ c.user.email }})</td>
+                <td>{{ c.total_emails_in }}</td>
+                <td>{{ c.latest_email_in_date }}</td>
+                <td>{{ c.total_emails_out }}</td>
+                <td>{{ c.latest_email_out_date }}</td>
+              </tr>
+            {% end %}
           </table>
-        {% end %}
-
-        {% if results %}
-        <h3>Search Results:</h3>
-          <!--
-          In Your Groups: 
-          <table class="table table-striped">
-              <tr>
-                <th>Name</th>
-                <th>Total Emails In</th>
-                <th>Latest Email In</th>
-                <th>Total Emails Out</th>
-                <th>Latest Email Out</th>
-              </tr>
-
-              <tr class="account_row" id="test_id" style="display:none">  
-                <td>
-                  
-                </td>
-                <td class="account_row_total_emails_in">
-                  loading...
-                </td>
-                <td class="account_row_latest_email_in">
-                  
-                </td>
-                <td class="account_row_total_emails_out">
-                  
-                </td>
-                <td class="account_row_latest_email_out">
-                  
-                </td>
-              </tr>
-          </table>
-          -->
-
-          {% if results is 'empty' %}
-            <p>No results found, try another search!</p>
-          {% else %}
-            Global Database:
-            <table class="table table-striped">
-              <tr>
-                <th>Profile</th>
-                <th>Public Email Address</th>
-              </tr>
-              {% for r in results %}
-                <tr>
-                  <td>{{ r.name }} ({{ email_obscure(r) }})</td>
-                  <td><a href="mailto:{{ r.burner }}@ansatz.me" target="_blank">{{ r.burner }}@ansatz.me</a></td>
-                </tr>
-              {% end %}
-            </table>
-          {% end %}
         </div>
-        {% end %}
+      </section>
+      {% end %}
+
+      {% if results %}
+      <section class="feature">
+        <div class="container">
+          <h3>Search Results:</h3>
+            <!--
+            In Your Groups: 
+            <table class="table table-striped">
+                <tr>
+                  <th>Name</th>
+                  <th>Total Emails In</th>
+                  <th>Latest Email In</th>
+                  <th>Total Emails Out</th>
+                  <th>Latest Email Out</th>
+                </tr>
+
+                <tr class="account_row" id="test_id" style="display:none">  
+                  <td>
+                    
+                  </td>
+                  <td class="account_row_total_emails_in">
+                    loading...
+                  </td>
+                  <td class="account_row_latest_email_in">
+                    
+                  </td>
+                  <td class="account_row_total_emails_out">
+                    
+                  </td>
+                  <td class="account_row_latest_email_out">
+                    
+                  </td>
+                </tr>
+            </table>
+            -->
+
+            {% if results is 'empty' %}
+              <p>No results found, try another search!</p>
+            {% else %}
+              Global Database:
+              <table class="table table-striped">
+                <tr>
+                  <th>Profile</th>
+                  <th>Public Email Address</th>
+                </tr>
+                {% for r in results %}
+                  <tr>
+                    <td>{{ r.name }} ({{ email_obscure(r) }})</td>
+                    <td><a href="mailto:{{ r.burner }}@ansatz.me" target="_blank">{{ r.burner }}@ansatz.me</a></td>
+                  </tr>
+                {% end %}
+              </table>
+            {% end %}
+          </div>
+        </section>
+      {% end %}
+      </section>
       {% end %}<!--current user-->
 {% end %}
 

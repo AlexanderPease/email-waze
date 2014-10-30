@@ -6,13 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{% block page-description %}{% end %}">
 
+  <link href='http://fonts.googleapis.com/css?family=Lato:300,400,400italic,700|Titillium+Web:600,400' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
   <link href="{{ static_url("css/screen.css") }}" rel="stylesheet" type="text/css" />
 </head>
 <body>
   <nav class="navbar navbar-default" role="navigation">
-    <div class="container-fluid">
+    <div class="container">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse">
           <span class="sr-only">Toggle navigation</span>
@@ -46,16 +47,9 @@
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
   </nav>
-  <div class="main container" role="main">
-    <header class="container">
-      {% block header %}{% end %}
-    </header>
-    <div class="page-content container">
-      {% block body %}{% end %}
-    </div>
-  </div>
+  <main class="page-content">{% block body %}{% end %}</main>
   <footer>
-    {% block footer %}{% end %}
+    <span>Made in New York City</span>
   </footer>
 
   <script type="text/javascript" src="//code.jquery.com/jquery-1.10.1.min.js"></script>
