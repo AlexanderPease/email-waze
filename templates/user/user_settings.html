@@ -89,7 +89,7 @@
       $('#stripeButton').removeClass('btn-primary').addClass('btn-success');
       var options = {
           type: 'POST',
-          url: ROOT_URL + 'api/stripe?token_id=' + token.id + '&email=' + token.email,
+          url: ROOT_URL + 'stripe/basic?token_id=' + token.id + '&email=' + token.email,
           dataType: 'json',
           success: function(response) {
               console.log(response);
