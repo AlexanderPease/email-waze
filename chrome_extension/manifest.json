@@ -31,6 +31,7 @@
         "templates/contact.html",
         "templates/profile.html",
         "templates/connection.html",
+        "templates/search.html",
         "img/ajax-loader.gif",
         "img/profile.png"
     ],
@@ -43,8 +44,8 @@
     "permissions": [
         "https://*.rapportive.com/",
         "https://mail.google.com/", 
-        "http://www.ansatz.me/api/*",
-        "http://ansatz.me/api/*",
+        "https://www.ansatz.me/api/*",
+        "https://ansatz.me/api/*",
         "http://email-waze-dev.herokuapp.com/api/*",
         "http://www.email-waze-dev.herokuapp.com/api/*",
         "storage"

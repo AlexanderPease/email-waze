@@ -23,7 +23,7 @@ class Index(app.basic.BaseHandler):
         # Connections
         current_user = User.objects.get(email=self.current_user)
         group_users = current_user.all_group_users()
-        connections = Connection.objects(profile__in=profiles, user__in=group_users)
+        connections = Connection.objects(profile__in=profiles, user__in=group_users).order_by('-total_emails_out')
 
         # De-dupe profiles that user is connected to
         # This is djanky because can't to joins :(
@@ -40,6 +40,7 @@ class Index(app.basic.BaseHandler):
         return self.render('public/index.html', profiles=profiles, connections=connections, email_obscure=Profile.get_domain)
     else:
         return self.render('public/index.html', profiles=None, connections=None)
+
 
 class About(app.basic.BaseHandler):
   def get(self):

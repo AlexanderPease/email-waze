@@ -12,12 +12,14 @@ function email_from_mailto($el) {
     return email_from_string(decodeURIComponent(href));
 }
 
+
 function email_from_attr($el) {
     if (!$el.attr('email'))
         return undefined;
 
     return $el.attr('email');
 }
+
 
 function email_from_string(str) {
     str = ' '+str+' ';
@@ -115,52 +117,41 @@ function render_connection(connection) {
     }
 }
 
-/*
-var PRIORITY = {
-    'Gravatar': 1,
-    'LinkedIn': 2,
-    'Google+': 3,
-    'Google Profile': 4,
-    'Facebook': 5,
-    'Twitter': 6,
-    'AngelList': 7,
-};
-
-
-function compare_images(a, b) {
-    var aa = PRIORITY[a['service']] || a;
-    var bb = PRIORITY[b['service']] || b;
-    if (aa < bb) return -1;
-    if (aa > bb) return 1;
-    return 0;
-}
-
-function first_valid_image(images, callback) {
-    if (images.length > 0) {
-        var el = new Image();
-        var image = images.shift();
-        var src = image.url;
-        var success = function() {
-            callback(src);
-        }
-        var fail = function() {
-            first_valid_image(images, callback);
-        }
-        if (image['service'] && image.service.toLowerCase() == 'gravatar')
-            src = src + '?s=80&d=404';
-        el.onload = success;
-        el.onerror = fail;
-        el.src = src;
+function render_search() {
+    console.log('render_search()');
+    var $panel = $('td.Bu.y3 div.nH.adC');
+    if ($panel) {
+        // Get local html and inject into page
+        $.ajax({
+            type: 'GET',
+            url: 'chrome-extension://'+encodeURIComponent(ID)+'/templates/search.html',
+            cache: true,
+            dataType: 'text',
+            success: function(html) {
+                var $div = $panel.find('div#rapporto');
+                if (!$div.length)
+                    $div = $('<div id="rapporto" style="position:relative;" />');
+                $div.html(Mustache.render(html));
+                $panel.prepend($div);
+                /*
+                var src = lscache.get('p:'+ email);
+                if (src) {
+                    replace_image($div, src);
+                } else {
+                    first_valid_image(contact.images.sort(compare_images), function(src) {
+                        if (!src)
+                            src = 'chrome-extension://'+encodeURIComponent(ID)+'/img/profile.png';
+                        lscache.set('p:'+contact.email, src);
+                        replace_image($div, src);
+                    });
+                }
+                */
+            },
+        });
     } else {
-        callback();
+        console.log($panel);
     }
 }
-
-function replace_image($div, src) {
-    $div.find('img:first').attr('src', src);
-}
-*/
-
 
 /* Not sure what this does */
 function find_account() {
@@ -197,6 +188,11 @@ function start() {
         }
     });
 }
+
+// Immediately render search form on page load
+$(document).ready(function(){
+    render_search()
+});
 
 /* Get id of this chrome extension so render() can call local html files */
 chrome.extension.sendMessage({name:'get_extension_id'}, function(id) {

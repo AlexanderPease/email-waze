@@ -73,10 +73,10 @@
               <th>Name</th>
               <th>Email</th>
               <th>Connected through</th>
-              <th>Total Emails In</th>
-              <th>Latest Email In</th>
               <th>Total Emails Out</th>
               <th>Latest Email Out</th>
+              <th>Total Emails In</th>
+              <th>Latest Email In</th>
             </tr>
 
             {% for c in connections %}
@@ -84,10 +84,22 @@
                 <td>{{ c.profile.name }}</td>
                 <td><a href="mailto:{{ c.profile.email }}" target="_blank">{{ c.profile.email }}</a></td>
                 <td>{{ c.user.name }} ({{ c.user.email }})</td>
-                <td>{{ c.total_emails_in }}</td>
-                <td>{{ c.latest_email_in_date }}</td>
                 <td>{{ c.total_emails_out }}</td>
-                <td>{{ c.latest_email_out_date }}</td>
+                {% if c.latest_email_out_date %}
+                  <td>{{ c.latest_email_out_date.strftime('%b. %d, %Y') }}</td>
+                {% elif c.total_emails_out %}
+                  <td>Not found</td>
+                {% else %}
+                  <td>N/A</td>
+                {% end %}
+                <td>{{ c.total_emails_in }}</td>
+                {% if c.latest_email_in_date %}
+                  <td>{{ c.latest_email_in_date.strftime('%b. %d, %Y') }}</td>
+                {% elif c.total_emails_in %}
+                  <td>Not found</td>
+                {% else %}
+                  <td>N/A</td>
+                {% end %}
               </tr>
             {% end %}
           </table>
@@ -98,11 +110,11 @@
       {% if profiles %}
       <section class="feature">
         <div class="container">
-          <h3>Search Results:</h3>
+          <h3>Other search results:</h3>
+          (People you're not connected to, but we enable you to send them an email directly to their inbox!)
             {% if profiles is 'empty' %}
               <p>No results found, try another search!</p>
             {% else %}
-              Global Database:
               <table class="table table-striped">
                 <tr>
                   <th>Profile</th>
