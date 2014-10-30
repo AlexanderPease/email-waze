@@ -33,18 +33,18 @@ def ordinal(numb):
 
 def list_to_comma_delimited_string(list_arg):
     """
-    Takes of list of strings and turns into comma-delimited string.
+    Takes a list and turns into comma-delimited string.
     Used for turning Group.invited_emails into correct form for template display.
 
     Args: 
-      list: A list of strings, ex: ["alex@usv.com", "bob@usv.com"]
+      list: A list, ex: ["alex@usv.com", "bob@usv.com"] or Group.users
 
     Returns
       A string , ex: "alex@usv.com, bob@usv.com"
       """
     long_string = ""
     for item in list_arg:
-        long_string += item + ", "
+        long_string += str(item) + ", "
 
     long_string = long_string[0:-2] # Remove last ", "
     return long_string

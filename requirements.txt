@@ -36,6 +36,7 @@ selenium==2.40.0
 simplejson==3.6.0
 six==1.8.0
 slugify==0.0.1
+stripe==1.19.1
 timeout-decorator==0.1.0
 tornado==3.2
 uritemplate==0.6

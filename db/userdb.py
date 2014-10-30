@@ -8,6 +8,7 @@ from googleapiclient.discovery import build
 import gdata.gauth 
 import gdata.contacts.client
 
+
 mongo_database = settings.get('mongo_database')
 connect('user', host=mongo_database['host'])
 
@@ -40,6 +41,10 @@ class User(Document):
     joined = DateTimeField()
     # Has user been through welcome onboarding process?
     welcomed = BooleanField()
+
+    # Stripe customer ID number
+    stripe_id = StringField()
+    stripe_subscription_id = StringField()
 
     # Date user last had update_user() task run OR if just onboarded
     # the date that onboard_user() finished
