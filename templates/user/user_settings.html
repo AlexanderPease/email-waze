@@ -65,23 +65,25 @@
         </ul>
       {% end %}
 
-      Billing info:</br>
-      All teams up to 5 users are free! 
+      {% if 0 %}
+        Billing info:</br>
+        All teams up to 5 users are free! 
 
-      {% if paying_groups %}
-        You are the admin of {{ len(paying_groups) }} team ({{ list_to_comma_delimited_string(paying_groups) }}) that qualifies for our Basic tier of $5/month for each user.
-      {% else %}
-        None of your teams exceed the free tier, but you can update your billing info if you'd like. 
-      {% end %}
-
-      </br>
-      <button id="stripeButton" trype="button" class="btn-primary">
-        {% if user.stripe_id %}
-          Update Billing Info
+        {% if paying_groups %}
+          You are the admin of {{ len(paying_groups) }} team ({{ list_to_comma_delimited_string(paying_groups) }}) that qualifies for our Basic tier of $5/month for each user.
         {% else %}
-          Enter Billing Info
+          None of your teams exceed the free tier, but you can update your billing info if you'd like. 
         {% end %}
-      </button>
+
+        </br>
+        <button id="stripeButton" trype="button" class="btn-primary">
+          {% if user.stripe_id %}
+            Update Billing Info
+          {% else %}
+            Enter Billing Info
+          {% end %}
+        </button>
+      {% end %}
 
 
     </div><!--col-md-6-->
