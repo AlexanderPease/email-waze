@@ -35,6 +35,9 @@
         "img/ajax-loader.gif",
         "img/profile.png"
     ],
+    "externally_connectable": {
+        "matches": [ "https://mail.google.com/*" ]
+    },
     "icons": {
         "16": "img/icon16.png",
         "48": "img/icon48.png",

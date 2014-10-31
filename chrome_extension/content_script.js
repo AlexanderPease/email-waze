@@ -189,10 +189,26 @@ function start() {
     });
 }
 
+
+
+function foo() {
+    console.log('hit foo');
+}
+
+$('#search_button').click(function(){
+    console.log('button clicked');
+});
+
 // Immediately render search form on page load
 $(document).ready(function(){
     render_search()
 });
+
+// Lets content script listen for an event triggered by local html
+document.addEventListener("hello", function(data) {
+    console.log('hit LIstener!');
+    //chrome.runtime.sendMessage("test");
+})
 
 /* Get id of this chrome extension so render() can call local html files */
 chrome.extension.sendMessage({name:'get_extension_id'}, function(id) {

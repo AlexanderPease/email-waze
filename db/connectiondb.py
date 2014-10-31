@@ -42,7 +42,7 @@ class Connection(Document):
 
     def latest_email_in_date_string(self):
         if self.latest_email_in_date:
-            return self.latest_email_in.strftime('%Y/%m/%d')
+            return self.latest_email_in_date.strftime('%Y/%m/%d')
         elif self.total_emails_in:
             return 'Not found'
         else:
@@ -50,7 +50,7 @@ class Connection(Document):
 
     def latest_email_out_date_string(self):
         if self.latest_email_out_date:
-            return self.latest_email_in.strftime('%Y/%m/%d')
+            return self.latest_email_out_date.strftime('%Y/%m/%d')
         elif self.total_emails_out:
             return 'Not found'
         else:

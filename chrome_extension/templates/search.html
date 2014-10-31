@@ -1,9 +1,20 @@
 <div> 
-  <form action="http://ansatz.me/" method="GET" target="_blank">
     Search Ansatz
     </br>
-    Name: <input type="search" name="name">
-    Domain: <input type="search" name="domain">
-    <input type="submit"> 
-  </form>
-</div
+    Name: <input type="search" name="name" id="search_name">
+    Domain: <input type="search" name="domain" id="search_domain">
+    <button type="button" id="search_button">Search</button> 
+</div>
+
+<script>
+$('#search_button').click(function(){
+    console.log('Search button clicked');
+    var name = $('#search_name').val();
+    var domain = $('#search_domain').val();
+
+    var event = document.createEvent('Event');
+    event.initEvent('hello');
+    document.dispatchEvent(event);
+    console.log('dispatched');
+});
+</script>
