@@ -104,6 +104,51 @@ function get_connection_by_email(data, callback) {
 }
 
 
+function get_connection_search(data, callback) {
+    console.log('getconnectionsearh');
+    var email = data.email
+    var name = data.name_string
+    if (lscache.get('e:'+data.email)) {
+        callback({contact:lscache.get('e:'+data.email)});
+    } else {
+        if (lscache.get('sleep')) {
+            lscache.remove('sleep');
+            setTimeout(function() { get_connection_by_email(data, callback); }, 3000);
+        } else {
+            lscache.set('sleep', true);
+            var options = {
+                type: 'GET',
+                url: ROOT_URL + 'api/connectionsearch?domain=' + encodeURIComponent(email) + '&name=' + encodeURIComponent(name),
+                dataType: 'json',
+                //headers: {
+                //    'X-Session-Token': session.session_token,
+                //},
+                success: function(response) {
+                    lscache.remove('sleep');
+                    //save_response(response);
+                    //lscache.set('e:'+data.email, response.contact);
+                    console.log(response);
+                    if (is_ok(response)) {
+                        callback({data:response.data});
+                    }
+                    else if (queried_self(response)) {
+                        console.log('queried self')
+                    }
+                },
+                error: function(response) {
+                    console.warn(response);
+                    lscache.remove('session')
+                    //save_error(data.email, response.status, response.responseText);
+                }
+            };
+            console.log('get_connection_search() requesting: ' + options.url)
+            $.ajax(options);
+        }
+    }
+    return true;
+}
+
+
 function get_current_user_email(callback) {
     var options = {
         type: 'GET',

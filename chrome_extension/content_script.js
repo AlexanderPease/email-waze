@@ -176,7 +176,7 @@ document.addEventListener("search", function(data) {
     console.log('Content script initiating search')
     var name = $('#search_name').val();
     var domain = $('#search_domain').val();
-    chrome.extension.sendMessage({name:'get_connection_by_email', email:email}, function(data) {
+    chrome.extension.sendMessage({name:'get_connection_search', email:domain, name_string:name}, function(data) {
         if (data.data) {
             var connection = data.data;
             render_connection(connection);
