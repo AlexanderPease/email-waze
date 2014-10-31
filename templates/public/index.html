@@ -7,131 +7,177 @@
       {{ msg }}
 
       {% if not current_user %}
-      <section class="hero">
-        <div class="container">
-          <h1>Stop Connecting. Start Emailing</h1>
-          <div class="group">
-            <div class="span6">
-              <h2>Effortlessly email new leads, and know in seconds <br>their existing relationship to your team.</h2>
-              <p>Oh, and it's free.</p>
-              <p><a href="/auth/google" class="btn-primary btn-cta">Sign up with Google</a></p>
+        <section class="hero">
+          <div class="container">
+            <h1>Stop Connecting. Start Emailing</h1>
+            <div class="group">
+              <div class="span6">
+                <h2>Effortlessly email new leads, and know in seconds <br>their existing relationship to your team.</h2>
+                <p>Oh, and it's free.</p>
+                <p><a href="/auth/google" class="btn-primary btn-cta">Sign up with Google</a></p>
+              </div>
             </div>
-          </div>
-        </div>
-      </section>
-      <section class="feature">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-4 text-center">
-            <p><span class="img-target"></span></p>
-            <h3>Powerful Search</h3>
-            <p>Reliably find anyone in the world in seconds.</p>
-          </div>
-          <div class="col-sm-4 text-center">
-            <p><span class="img-team"></span></p>
-            <h3>Integrated Team Features</h3>
-            <p>See who has a preexisting connection before reaching out. </p>
-          </div>
-          <div class="col-sm-4 text-center">
-            <p><span class="img-anti"></span></p>
-            <h3>The Anti-CRM</h3>
-            <p>Leverage your team’s network without tedious data entry.</p>
-          </div>
-        </div>
-      </div>
-      </section>
-
-      {% else %}
-      <section class="feature">
-        <div class="container">
-          <h2>Hi {{ current_user_casual_name() }}</h2>
-          <p>Enter a name and domain to find an email.</p>
-        </div>
-        <form id="main-search" class="form-horizontal container" action="/" method="GET">
-          <div class="row">
-            <div class="input-group-lg col-sm-6 col-lg-4 col-xs-12">
-              <input name="name" type="text" class="form-control" placeholder="Name">
-            </div>
-            <div class="input-group input-group-lg col-sm-6 col-lg-4 col-xs-12">
-              <span class="input-group-addon">@</span>
-              <input name="domain" type="text" class="form-control" placeholder="Domain">
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-6 col-lg-4 col-xs-12 search-btn-wrap">
-              <button type="submit" class="btn btn-primary">Search</button>
-            </div>
-          </div>
-        </form>
-      </section>
-      {% if connections %}
-      <section class="feature">
-        <div class="container">
-          <h3>Contacts shared with you:</h3> 
-          <table class="table table-striped">
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Connected through</th>
-              <th>Total Emails Out</th>
-              <th>Latest Email Out</th>
-              <th>Total Emails In</th>
-              <th>Latest Email In</th>
-            </tr>
-
-            {% for c in connections %}
-              <tr>  
-                <td>{{ c.profile.name }}</td>
-                <td><a href="mailto:{{ c.profile.email }}" target="_blank">{{ c.profile.email }}</a></td>
-                <td>{{ c.user.name }} ({{ c.user.email }})</td>
-                <td>{{ c.total_emails_out }}</td>
-                {% if c.latest_email_out_date %}
-                  <td>{{ c.latest_email_out_date.strftime('%b. %d, %Y') }}</td>
-                {% elif c.total_emails_out %}
-                  <td>Not found</td>
-                {% else %}
-                  <td>N/A</td>
-                {% end %}
-                <td>{{ c.total_emails_in }}</td>
-                {% if c.latest_email_in_date %}
-                  <td>{{ c.latest_email_in_date.strftime('%b. %d, %Y') }}</td>
-                {% elif c.total_emails_in %}
-                  <td>Not found</td>
-                {% else %}
-                  <td>N/A</td>
-                {% end %}
-              </tr>
-            {% end %}
-          </table>
-        </div>
-      </section>
-      {% end %}
-
-      {% if profiles %}
-      <section class="feature">
-        <div class="container">
-          <h3>Other search results:</h3>
-          (People you're not connected to, but we enable you to send them an email directly to their inbox!)
-            {% if profiles is 'empty' %}
-              <p>No results found, try another search!</p>
-            {% else %}
-              <table class="table table-striped">
-                <tr>
-                  <th>Profile</th>
-                  <th>Public Email Address</th>
-                </tr>
-                {% for p in profiles %}
-                  <tr>
-                    <td>{{ p.name }} ({{ email_obscure(p) }})</td>
-                    <td><a href="mailto:{{ p.burner }}@ansatz.me" target="_blank">{{ p.burner }}@ansatz.me</a></td>
-                  </tr>
-                {% end %}
-              </table>
-            {% end %}
           </div>
         </section>
-      {% end %}
-      </section>
+        <section class="feature">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-4 text-center">
+              <p><span class="img-target"></span></p>
+              <h3>Powerful Search</h3>
+              <p>Reliably find anyone in the world in seconds.</p>
+            </div>
+            <div class="col-sm-4 text-center">
+              <p><span class="img-team"></span></p>
+              <h3>Integrated Team Features</h3>
+              <p>See who has a preexisting connection before reaching out. </p>
+            </div>
+            <div class="col-sm-4 text-center">
+              <p><span class="img-anti"></span></p>
+              <h3>The Anti-CRM</h3>
+              <p>Leverage your team’s network without tedious data entry.</p>
+            </div>
+          </div>
+        </div>
+        </section>
+
+      {% else %}
+        <section class="feature">
+          <div class="container">
+            <h2>Hi {{ current_user_casual_name() }}</h2>
+            <p>Enter a name and domain to find an email.</p>
+          </div>
+          <form id="main-search" class="form-horizontal container" action="/" method="GET">
+            <div class="row">
+              <div class="input-group-lg col-sm-6 col-lg-4 col-xs-12">
+                <input name="name" type="text" class="form-control" placeholder="Name">
+              </div>
+              <div class="input-group input-group-lg col-sm-6 col-lg-4 col-xs-12">
+                <span class="input-group-addon">@</span>
+                <input name="domain" type="text" class="form-control" placeholder="Domain">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6 col-lg-4 col-xs-12 search-btn-wrap">
+                <button type="submit" class="btn btn-primary">Search</button>
+              </div>
+            </div>
+          </form>
+        </section>
+        {% if superconnections %}
+        <section class="feature">
+          <div class="container">
+            <h3>Contacts shared with you:</h3> 
+            <table class="table table-striped">
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Connected through</th>
+                <th>Total Emails Out</th>
+                <th>Latest Email Out</th>
+                <th>Total Emails In</th>
+                <th>Latest Email In</th>
+              </tr>
+
+              {% for sc in superconnections %}
+                <tr>  
+                  <td>{{ sc.name }}</td>
+                  <td><a href="mailto:{{ sc.email }}" target="_blank">{{ sc.email }}</a></td>
+                  
+                  {% for c in sc.connections %}
+                    <td>{{ c.user.name }} ({{ c.user.email }})</td>
+                    <td>{{ c.total_emails_out }}</td>
+                    {% if c.latest_email_out_date %}
+                      <td>{{ c.latest_email_out_date.strftime('%b. %d, %Y') }}</td>
+                    {% elif c.total_emails_out %}
+                      <td>Not found</td>
+                    {% else %}
+                      <td>N/A</td>
+                    {% end %}
+                    <td>{{ c.total_emails_in }}</td>
+                    {% if c.latest_email_in_date %}
+                      <td>{{ c.latest_email_in_date.strftime('%b. %d, %Y') }}</td>
+                    {% elif c.total_emails_in %}
+                      <td>Not found</td>
+                    {% else %}
+                      <td>N/A</td>
+                    {% end %}
+                  {% end %} <!-- c in sc.connections -->
+                </tr>
+              {% end %}
+            </table>
+          </div>
+        </section>
+        {% end %}
+
+        {% if connections %}
+        <section class="feature">
+          <div class="container">
+            <h3>Contacts shared with you:</h3> 
+            <table class="table table-striped">
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Connected through</th>
+                <th>Total Emails Out</th>
+                <th>Latest Email Out</th>
+                <th>Total Emails In</th>
+                <th>Latest Email In</th>
+              </tr>
+
+              {% for c in connections %}
+                <tr>  
+                  <td>{{ c.profile.name }}</td>
+                  <td><a href="mailto:{{ c.profile.email }}" target="_blank">{{ c.profile.email }}</a></td>
+                  <td>{{ c.user.name }} ({{ c.user.email }})</td>
+                  <td>{{ c.total_emails_out }}</td>
+                  {% if c.latest_email_out_date %}
+                    <td>{{ c.latest_email_out_date.strftime('%b. %d, %Y') }}</td>
+                  {% elif c.total_emails_out %}
+                    <td>Not found</td>
+                  {% else %}
+                    <td>N/A</td>
+                  {% end %}
+                  <td>{{ c.total_emails_in }}</td>
+                  {% if c.latest_email_in_date %}
+                    <td>{{ c.latest_email_in_date.strftime('%b. %d, %Y') }}</td>
+                  {% elif c.total_emails_in %}
+                    <td>Not found</td>
+                  {% else %}
+                    <td>N/A</td>
+                  {% end %}
+                </tr>
+              {% end %}
+            </table>
+          </div>
+        </section>
+        {% end %}
+
+        {% if profiles %}
+        <section class="feature">
+          <div class="container">
+            <h3>Other search results:</h3>
+            (People you're not connected to, but we enable you to send them an email directly to their inbox!)
+              {% if profiles is 'empty' %}
+                <p>No results found, try another search!</p>
+              {% else %}
+                <table class="table table-striped">
+                  <tr>
+                    <th>Profile</th>
+                    <th>Public Email Address</th>
+                  </tr>
+                  {% for p in profiles %}
+                    <tr>
+                      <td>{{ p.name }} ({{ email_obscure(p) }})</td>
+                      <td><a href="mailto:{{ p.burner }}@ansatz.me" target="_blank">{{ p.burner }}@ansatz.me</a></td>
+                    </tr>
+                  {% end %}
+                </table>
+              {% end %}
+            </div>
+          </section>
+        {% end %}
+        </section>
       {% end %}<!--current user-->
 {% end %}
 
