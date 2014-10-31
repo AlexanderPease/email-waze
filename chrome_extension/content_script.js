@@ -97,25 +97,40 @@ function render_connection(connection) {
                     $div = $('<div id="rapporto" style="position:relative;" />');
                 $div.html(Mustache.render(html, connection));
                 $panel.prepend($div);
-                /*
-                var src = lscache.get('p:'+ email);
-                if (src) {
-                    replace_image($div, src);
-                } else {
-                    first_valid_image(contact.images.sort(compare_images), function(src) {
-                        if (!src)
-                            src = 'chrome-extension://'+encodeURIComponent(ID)+'/img/profile.png';
-                        lscache.set('p:'+contact.email, src);
-                        replace_image($div, src);
-                    });
-                }
-                */
             },
         });
     } else {
         console.log($panel);
     }
 }
+
+
+function render_multiple_connections(connections_array) {
+    console.log('render_multiple_connections()');
+    var $panel = $('td.Bu.y3 div.nH.adC');
+    if ($panel) {
+        // Get local html and inject into page
+        $.ajax({
+            type: 'GET',
+            url: 'chrome-extension://'+encodeURIComponent(ID)+'/templates/multiple_connections.html',
+            cache: true,
+            dataType: 'text',
+            success: function(html) {
+                console.log(connections_array);
+                var $div = $panel.find('div#rapporto');
+                if (!$div.length)
+                    $div = $('<div id="rapporto" style="position:relative;" />');
+                for (var i=0; i < connections_array.length; i++) {
+                    $div.append(Mustache.render(html, connections_array[i]));
+                }
+                $panel.prepend($div);
+            },
+        });
+    } else {
+        console.log($panel);
+    }
+}
+
 
 function render_search() {
     console.log('render_search()');
@@ -133,19 +148,6 @@ function render_search() {
                     $div = $('<div id="rapporto" style="position:relative;" />');
                 $div.html(Mustache.render(html));
                 $panel.prepend($div);
-                /*
-                var src = lscache.get('p:'+ email);
-                if (src) {
-                    replace_image($div, src);
-                } else {
-                    first_valid_image(contact.images.sort(compare_images), function(src) {
-                        if (!src)
-                            src = 'chrome-extension://'+encodeURIComponent(ID)+'/img/profile.png';
-                        lscache.set('p:'+contact.email, src);
-                        replace_image($div, src);
-                    });
-                }
-                */
             },
         });
     } else {
@@ -178,8 +180,8 @@ document.addEventListener("search", function(data) {
     var domain = $('#search_domain').val();
     chrome.extension.sendMessage({name:'get_connection_search', email:domain, name_string:name}, function(data) {
         if (data.data) {
-            var connection = data.data;
-            render_connection(connection);
+            var connections = data.data;
+            render_multiple_connections(connections);
         }
     });
 })

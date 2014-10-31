@@ -31,6 +31,7 @@
         "templates/contact.html",
         "templates/profile.html",
         "templates/connection.html",
+        "templates/multiple_connections.html",
         "templates/search.html",
         "img/ajax-loader.gif",
         "img/profile.png"
