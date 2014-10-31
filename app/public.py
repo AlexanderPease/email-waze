@@ -1,5 +1,6 @@
 import app.basic, settings, ui_methods
 import logging
+import tornado.web
 from db.profiledb import Profile
 from db.userdb import User
 from db.groupdb import Group
@@ -10,13 +11,22 @@ import api
 
 ########################
 ### Homepage
+### /
 ########################
 class Index(app.basic.BaseHandler):
+  def get(self):
+    return self.render('public/index.html')
+
+########################
+### Search
+### /$
+########################
+class Search(app.basic.BaseHandler):
+  @tornado.web.authenticated
   def get(self):
     name = self.get_argument('name', '')
     domain = self.get_argument('domain', '')
 
-    
     if name or domain:
         # Global profile results
         profiles = Profile.objects(name__icontains=name, email__icontains=domain).order_by('name') # case-insensitive contains
@@ -24,7 +34,7 @@ class Index(app.basic.BaseHandler):
         # Connections
         current_user = User.objects.get(email=self.current_user)
         group_users = current_user.all_group_users()
-        connections = Connection.objects(profile__in=profiles, user__in=group_users).order_by('-total_emails_out')
+        connections = Connection.objects(profile__in=profiles, user__in=group_users).order_by('-latest_email_out_date')
 
         # De-dupe profiles that user is connected to
         # This is djanky because can't do joins :(
@@ -42,18 +52,19 @@ class Index(app.basic.BaseHandler):
         # connected to the same email
         superconnections = SuperConnection.package_connections(connections)
         groupconnections = GroupConnection.package_connections(connections)
-        logging.info(groupconnections)
 
-        return self.render('public/index.html', 
+        return self.render('public/search.html', 
             profiles=profiles, 
-            connections=connections, 
             superconnections=superconnections,
             groupconnections=groupconnections, 
             email_obscure=Profile.get_domain)
     else:
-        return self.render('public/index.html', profiles=None, connections=None)
+        return self.redirect('/')
 
-
+########################
+### About 
+### /about
+########################
 class About(app.basic.BaseHandler):
   def get(self):
     return self.render('public/about.html')

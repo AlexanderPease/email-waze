@@ -69,8 +69,9 @@ class Application(tornado.web.Application):
       (r"/admin/scratch", app.admin.Scratch), # for ad hoc testing
 
       # Public
-      (r'/$', app.public.Index),
       (r'/about.html', app.public.About),
+      (r'/search/?', app.public.Search),
+      (r'/', app.public.Index),
     ]
 
     tornado.web.Application.__init__(self, handlers, **app_settings)

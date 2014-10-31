@@ -67,6 +67,17 @@ class Connection(Document):
         else:
             return None
 
+    def days_since_emailed_in(self):
+        ''' 
+        Returns how many days since the Profile has emailed the User,
+        i.e. # days since self.latest_email_in_date
+        '''
+        if self.latest_email_in_date:
+            delta = datetime.datetime.today() - self.latest_email_in_date
+            return delta.days
+        else:
+            return None
+
     def populate_from_gmail(self, service):
         """
         This function searches entire inbox to populate fields,

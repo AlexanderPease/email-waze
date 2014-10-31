@@ -1,0 +1,201 @@
+{% extends "../base.html" %}
+{% block page-title %}Home{% end %}
+{% block page-description %}Ansatz is a simple way to find someone's email address while still respecting their privacy.{% end %}
+
+{% block body %}
+      {{ err }}
+      {{ msg }}
+
+      <section class="feature">
+        <form id="main-search" class="form-horizontal container" action="/search" method="GET">
+          <div class="row">
+            <div class="input-group-lg col-sm-4 col-lg-4 col-xs-12">
+              <input name="name" type="text" class="form-control" placeholder="Name">
+            </div>
+            <div class="input-group input-group-lg col-sm-4 col-lg-4 col-xs-12">
+              <span class="input-group-addon">@</span>
+              <input name="domain" type="text" class="form-control" placeholder="Domain">
+            </div>
+            <div class="col-sm-4 col-lg-4 col-xs-12 search-btn-wrap">
+              <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+
+          </div>
+        </form>
+      </section>
+
+
+
+      {% if groupconnections %}
+      <section class="feature">
+        <div class="container">
+          <h3>Results</h3> 
+
+          <!-- Nav tabs on top of results table -->
+          <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+              <a href="#GroupConnections" role="tab" data-toggle="tab">By Teammate</a>
+            </li>
+            <li role="presentation">
+              <a href="#SuperConnections" role="tab" data-toggle="tab">By Connection</a>
+            </li>
+          </ul>
+
+          <!-- Tab panes -->
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="GroupConnections">
+              <!-- Table for GroupConnections -->
+                <table class="table table-striped">
+                  <tr>
+                    <th>Teammate</th>
+                    <th>Connections</th>
+                  </tr>
+
+                  {% for sc in groupconnections %}
+                    <tr>  
+                      <td>{{ sc.name }} (<a href="{{ sc.email }}">{{ sc.email }}</a>) emailed...</td>
+                      <td>
+                        {% for c in sc.connections %}
+                          {% set days_since_emailed_out = c.days_since_emailed_out() %}
+                          {{ c.profile.name }} (<a href="{{ c.profile.email }}">{{ c.profile.email }}</a>) 
+                          {% if days_since_emailed_out %}
+                            {{ days_since_emailed_out }} days ago
+                          {% end %}
+                        </br>
+                        {% end %} <!-- c in sc.connections -->
+                      </td> 
+                    </tr>
+                  {% end %}
+                </table>
+              <!-- End table for GroupConnections -->
+            </div>
+            
+            <div role="tabpanel" class="tab-pane" id="SuperConnections">
+              <!-- Table for GroupConnections -->
+              <table class="table table-striped">
+                <tr>
+                  <th>Connection</th>
+                  <th>Teammates</th>
+                </tr>
+
+                {% for sc in superconnections %}
+                  <tr>  
+                    <td>{{ sc.name }} (<a href="{{ sc.email }}">{{ sc.email }}</a>) emailed...</td>
+                    <td>
+                      {% for c in sc.connections %}
+                        {% set days_since_emailed_in = c.days_since_emailed_in() %}
+                        {{ c.user.name }} (<a href="{{ c.user.email }}">{{ c.user.email }}</a>) 
+                        {% if days_since_emailed_in %}
+                          {{ days_since_emailed_in }} days ago
+                        {% end %}
+                      </br>
+                      {% end %} <!-- c in sc.connections -->
+                    </td>
+                  </tr>
+                {% end %}
+              </table>
+              <!-- End table for GroupConnections -->
+            </div>
+          </div>
+        </div>
+      </section>
+      {% end %}
+
+
+      {% if profiles %}
+      <section class="feature">
+        <div class="container">
+          <h3>Other search results:</h3>
+          (People you're not connected to, but we enable you to send them an email directly to their inbox!)
+            {% if profiles is 'empty' %}
+              <p>No results found, try another search!</p>
+            {% else %}
+              <table class="table table-striped">
+                <tr>
+                  <th>Profile</th>
+                  <th>Public Email Address</th>
+                </tr>
+                {% for p in profiles %}
+                  <tr>
+                    <td>{{ p.name }} ({{ email_obscure(p) }})</td>
+                    <td><a href="mailto:{{ p.burner }}@ansatz.me" target="_blank">{{ p.burner }}@ansatz.me</a></td>
+                  </tr>
+                {% end %}
+              </table>
+            {% end %}
+          </div>
+        </section>
+      {% end %}
+      </section>
+{% end %}
+
+{% block javascript %}
+
+  <script>
+    $(".collapsiblerow").click(function() {
+      $(this).collapse('hide');
+
+    });
+  </script>
+
+
+    <!-- Script for querying GMail API through our API --> 
+<!--<script>
+    // Queries API for all accounts on page load
+    $(document).ready(function() {
+      $('.account_row').each(function() {
+        var query = window.location.href.split("domain=")[1];
+        if (query) {
+          $(this).show();
+          var url = "api/gmailinboxsearch?";
+          url += "q=" + query; 
+          url += "&u=" + $(this).attr('id');
+
+          console.log("Querying " + url);
+          $.ajax(url, {
+                error: function(jqxhr, status, error) {
+                  console.log("Error: " + error);
+                },
+                success: function(data, status, jqxhr) {
+                  updateRow(data);
+                }
+              });
+        }
+      });
+    });
+
+    // Updates row upon successful API call
+    function updateRow(data) {
+      correspondence = data['data'];
+      console.log(correspondence);
+      //name = correspondence['name'];
+      name = '#test_id';
+      $(name).children('.account_row_total_emails_in').text(correspondence['total_emails_in']);
+      $(name).children('.account_row_latest_email_in').text(correspondence['latest_email_in_date']);
+      $(name).children('.account_row_total_emails_out').text(correspondence['total_emails_out']);
+      $(name).children('.account_row_latest_email_out').text(correspondence['latest_email_out_date']);
+      /*
+      if (correspondence['err'] == 'not logged in'){
+        $('#' + name).children('.account_row_total_emails_in').text("You're not logged in! Go log in at USV.com");
+      }
+      else if (correspondence['err'] == 'error login') {
+        $('#' + name).children('.account_row_total_emails_in').text('Error logging into inbox');
+      }
+      else if (correspondence['err'] == 'no results') {
+        $('#' + name).children('.account_row_total_emails_in').text(0);
+        $('#' + name).children('.account_row_latest_email_in').text('N/A');
+        $('#' + name).children('.account_row_total_emails_out').text(0);
+        $('#' + name).children('.account_row_latest_email_out').text('N/A');
+      }
+      */
+    }
+
+    function jq( myid ) {
+      return "#" + myid.replace( /(:|\.|\[|\])/g, "\\$1" );
+    }
+
+
+  </script>-->
+
+
+{% end %}
