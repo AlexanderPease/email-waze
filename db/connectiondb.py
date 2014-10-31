@@ -16,9 +16,13 @@ class Connection(Document):
     # ...the email address of this Profile
     profile = ReferenceField(Profile, required=True) 
 
+    # In is the Profile emailing the User
     total_emails_in = IntField()
-    total_emails_out = IntField()
     latest_email_in_date = DateTimeField()
+
+
+    # Out is the User emailing the Profile
+    total_emails_out = IntField()
     latest_email_out_date = DateTimeField()
 
     # Last time a job was run that updated this document
@@ -36,16 +40,32 @@ class Connection(Document):
     def __str__(self):
         return 'Connection: User %s <-> Profile %s' % (self.user, self.profile)
 
-    def print_stats(self):
-        logging.info(self)
-        logging.info("Emails in: %s (%s)" % (self.total_emails_in, self.latest_email_in_date_string()))
-        logging.info("Emails out: %s (%s)" % (self.total_emails_out, self.latest_email_out_date_string()))
-
     def latest_email_in_date_string(self):
-        return date_to_string(self.latest_email_in_date)
+        if self.latest_email_in_date:
+            return self.latest_email_in.strftime('%Y/%m/%d')
+        elif self.total_emails_in:
+            return 'Not found'
+        else:
+            return 'N/A'
 
     def latest_email_out_date_string(self):
-        return date_to_string(self.latest_email_out_date)
+        if self.latest_email_out_date:
+            return self.latest_email_in.strftime('%Y/%m/%d')
+        elif self.total_emails_out:
+            return 'Not found'
+        else:
+            return 'N/A'
+
+    def days_since_emailed_out(self):
+        ''' 
+        Returns how many days since the User has emailed the Profile,
+        i.e. # days since self.latest_email_out_date
+        '''
+        if self.latest_email_out_date:
+            delta = datetime.datetime.today() - self.latest_email_out_date
+            return delta.days
+        else:
+            return None
 
     def populate_from_gmail(self, service):
         """
@@ -121,8 +141,15 @@ class Connection(Document):
         self.last_updated = datetime.datetime.now()
         self.save()
 
-def date_to_string(datetime_object):
-        if datetime_object:
-            return datetime_object.strftime('%Y/%m/%d')
-        else:
-            return 'N/A'
+
+    def print_stats(self):
+        """
+        For debugging
+        """
+        logging.info(self)
+        logging.info("Emails in: %s (%s)" % (self.total_emails_in, self.latest_email_in_date_string()))
+        logging.info("Emails out: %s (%s)" % (self.total_emails_out, self.latest_email_out_date_string()))
+
+
+
+

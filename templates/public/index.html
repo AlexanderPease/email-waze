@@ -71,39 +71,23 @@
             <h3>GroupConnections:</h3> 
             <table class="table table-striped">
               <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Connected through</th>
-                <th>Total Emails Out</th>
-                <th>Latest Email Out</th>
-                <th>Total Emails In</th>
-                <th>Latest Email In</th>
+                <th>Teammate</th>
+                <th>Connection</th>
               </tr>
 
               {% for sc in groupconnections %}
                 <tr>  
-                  <td>{{ sc.name }}</td>
-                  <td><a href="mailto:{{ sc.email }}" target="_blank">{{ sc.email }}</a></td>
-                  
-                  {% for c in sc.connections %}
-                    <td>{{ c.profile.name }} ({{ c.profile.email }})</td>
-                    <td>{{ c.total_emails_out }}</td>
-                    {% if c.latest_email_out_date %}
-                      <td>{{ c.latest_email_out_date.strftime('%b. %d, %Y') }}</td>
-                    {% elif c.total_emails_out %}
-                      <td>Not found</td>
-                    {% else %}
-                      <td>N/A</td>
+                  <td>{{ sc.name }} ({{ sc.email }}) emailed...</td>
+                  <td>
+                    {% for c in sc.connections %}
+                      {% set days_since_emailed_out = c.days_since_emailed_out() %}
+                      {{ c.profile.name }} ({{ c.profile.email }}) 
+                      {% if days_since_emailed_out %}
+                        {{ days_since_emailed_out }} days ago
+                      {% end %}
+                    </br>
                     {% end %}
-                    <td>{{ c.total_emails_in }}</td>
-                    {% if c.latest_email_in_date %}
-                      <td>{{ c.latest_email_in_date.strftime('%b. %d, %Y') }}</td>
-                    {% elif c.total_emails_in %}
-                      <td>Not found</td>
-                    {% else %}
-                      <td>N/A</td>
-                    {% end %}
-                  {% end %} <!-- c in sc.connections -->
+                  </td> <!-- c in sc.connections -->
                 </tr>
               {% end %}
             </table>
