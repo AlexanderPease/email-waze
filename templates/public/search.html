@@ -48,21 +48,39 @@
                 <table class="table table-striped">
                   <tr>
                     <th>Teammate</th>
-                    <th>Connections</th>
+                    <th>Connection</th>
+                    <th>Most Recently</th>
                   </tr>
 
                   {% for sc in group_connection_set %}
                     <tr>  
                       <td>{{ sc.name }} (<a href="{{ sc.email }}">{{ sc.email }}</a>) emailed...</td>
                       <td>
-                        {% for c in sc.connections %}
+                        {% for c in sc.connections[:-1] %}
                           {% set days_since_emailed_out = c.days_since_emailed_out() %}
-                          {{ c.profile.name }} (<a href="{{ c.profile.email }}">{{ c.profile.email }}</a>) 
+                          {{ c.profile.name }} (<a href="{{ c.profile.email }}">{{ c.profile.email }}</a>)
+                          </td>
+                          <td> 
+                            {% if days_since_emailed_out %}
+                              {{ days_since_emailed_out }} days ago
+                            {% else %}
+                              <!-- Blank if nothing -->
+                            {% end %}
+                          </td>
+                          <tr><td></td><td>
+                        {% end %} <!-- c in sc.connections -->
+
+                        <!-- Final entry of sc.connections -->
+                        {% set c = sc.connections[-1] %}
+                        {% set days_since_emailed_out = c.days_since_emailed_out() %}
+                        {{ c.profile.name }} (<a href="{{ c.profile.email }}">{{ c.profile.email }}</a>)
+                        </td>
+                        <td> 
                           {% if days_since_emailed_out %}
                             {{ days_since_emailed_out }} days ago
+                          {% else %}
+                            <!-- Blank if nothing -->
                           {% end %}
-                        </br>
-                        {% end %} <!-- c in sc.connections -->
                       </td> 
                     </tr>
                   {% end %}
