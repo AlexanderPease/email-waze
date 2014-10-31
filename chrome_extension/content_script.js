@@ -164,6 +164,28 @@ function find_account() {
     return undefined;
 }
 
+
+// Immediately render search form on page load
+$(document).ready(function(){
+    render_search()
+});
+
+
+// Lets content script listen for an search event triggered by local html
+document.addEventListener("search", function(data) {
+    console.log('Content script initiating search')
+    var name = $('#search_name').val();
+    var domain = $('#search_domain').val();
+    chrome.extension.sendMessage({name:'get_connection_by_email', email:email}, function(data) {
+        if (data.data) {
+            var connection = data.data;
+            render_connection(connection);
+        }
+    });
+})
+
+
+/* Displays Connection for any email address that is moused over */
 function start() {
     $(window).on('mouseover', function(e) {
         var $el = $(e.target);
@@ -189,26 +211,6 @@ function start() {
     });
 }
 
-
-
-function foo() {
-    console.log('hit foo');
-}
-
-$('#search_button').click(function(){
-    console.log('button clicked');
-});
-
-// Immediately render search form on page load
-$(document).ready(function(){
-    render_search()
-});
-
-// Lets content script listen for an event triggered by local html
-document.addEventListener("hello", function(data) {
-    console.log('hit LIstener!');
-    //chrome.runtime.sendMessage("test");
-})
 
 /* Get id of this chrome extension so render() can call local html files */
 chrome.extension.sendMessage({name:'get_extension_id'}, function(id) {

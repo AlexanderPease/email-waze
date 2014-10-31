@@ -13,7 +13,7 @@ $('#search_button').click(function(){
     var domain = $('#search_domain').val();
 
     var event = document.createEvent('Event');
-    event.initEvent('hello');
+    event.initEvent('search');
     document.dispatchEvent(event);
     console.log('dispatched');
 });
