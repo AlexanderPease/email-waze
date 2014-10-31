@@ -6,6 +6,7 @@
       {{ err }}
       {{ msg }}
 
+
       <section class="feature">
         <form id="main-search" class="form-horizontal container" action="/search" method="GET">
           <div class="row">
@@ -23,7 +24,6 @@
           </div>
         </form>
       </section>
-
 
 
       {% if group_connection_set or profile_connection_set %}
@@ -45,26 +45,28 @@
           <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="GroupConnections">
               <!-- Table for GroupConnections -->
-                <table class="table table-striped">
-                  <tr>
-                    <th>Teammate</th>
-                    <th>Connection</th>
-                    <th>Most Recently</th>
-                  </tr>
+                <table class="table table-condensed table-hover">
+                  <thead>
+                    <tr>
+                      <th>Teammate</th>
+                      <th>Connection</th>
+                      <th>Most Recently</th>
+                    </tr>
+                  </thead>
 
                   {% for sc in group_connection_set %}
                     <tr>  
-                      <td>{{ sc.name }} (<a href="{{ sc.email }}">{{ sc.email }}</a>) emailed...</td>
+                      <td>{{ sc.name }} (<a href="mailto:{{ sc.email }}">{{ sc.email }}</a>) emailed...</td>
                       <td>
                         {% for c in sc.connections[:-1] %}
                           {% set days_since_emailed_out = c.days_since_emailed_out() %}
-                          {{ c.profile.name }} (<a href="{{ c.profile.email }}">{{ c.profile.email }}</a>)
+                          {{ c.profile.name }} (<a href="mailto:{{ c.profile.email }}">{{ c.profile.email }}</a>)...
                           </td>
                           <td> 
                             {% if days_since_emailed_out %}
                               {{ days_since_emailed_out }} days ago
                             {% else %}
-                              <!-- Blank if nothing -->
+                              N/A
                             {% end %}
                           </td>
                           <tr><td></td><td>
@@ -73,13 +75,13 @@
                         <!-- Final entry of sc.connections -->
                         {% set c = sc.connections[-1] %}
                         {% set days_since_emailed_out = c.days_since_emailed_out() %}
-                        {{ c.profile.name }} (<a href="{{ c.profile.email }}">{{ c.profile.email }}</a>)
+                        {{ c.profile.name }} (<a href="mailto:{{ c.profile.email }}">{{ c.profile.email }}</a>)...
                         </td>
                         <td> 
                           {% if days_since_emailed_out %}
                             {{ days_since_emailed_out }} days ago
                           {% else %}
-                            <!-- Blank if nothing -->
+                            N/A
                           {% end %}
                       </td> 
                     </tr>
@@ -98,11 +100,11 @@
 
                 {% for sc in profile_connection_set %}
                   <tr>  
-                    <td>{{ sc.name }} (<a href="{{ sc.email }}">{{ sc.email }}</a>) emailed...</td>
+                    <td>{{ sc.name }} (<a href="mailto:{{ sc.email }}">{{ sc.email }}</a>) emailed...</td>
                     <td>
                       {% for c in sc.connections %}
                         {% set days_since_emailed_in = c.days_since_emailed_in() %}
-                        {{ c.user.name }} (<a href="{{ c.user.email }}">{{ c.user.email }}</a>) 
+                        {{ c.user.name }} (<a href="mailto:{{ c.user.email }}">{{ c.user.email }}</a>) 
                         {% if days_since_emailed_in %}
                           {{ days_since_emailed_in }} days ago
                         {% end %}
