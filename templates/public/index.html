@@ -64,10 +64,58 @@
             </div>
           </form>
         </section>
+
+        {% if groupconnections %}
+        <section class="feature">
+          <div class="container">
+            <h3>GroupConnections:</h3> 
+            <table class="table table-striped">
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Connected through</th>
+                <th>Total Emails Out</th>
+                <th>Latest Email Out</th>
+                <th>Total Emails In</th>
+                <th>Latest Email In</th>
+              </tr>
+
+              {% for sc in groupconnections %}
+                <tr>  
+                  <td>{{ sc.name }}</td>
+                  <td><a href="mailto:{{ sc.email }}" target="_blank">{{ sc.email }}</a></td>
+                  
+                  {% for c in sc.connections %}
+                    <td>{{ c.profile.name }} ({{ c.profile.email }})</td>
+                    <td>{{ c.total_emails_out }}</td>
+                    {% if c.latest_email_out_date %}
+                      <td>{{ c.latest_email_out_date.strftime('%b. %d, %Y') }}</td>
+                    {% elif c.total_emails_out %}
+                      <td>Not found</td>
+                    {% else %}
+                      <td>N/A</td>
+                    {% end %}
+                    <td>{{ c.total_emails_in }}</td>
+                    {% if c.latest_email_in_date %}
+                      <td>{{ c.latest_email_in_date.strftime('%b. %d, %Y') }}</td>
+                    {% elif c.total_emails_in %}
+                      <td>Not found</td>
+                    {% else %}
+                      <td>N/A</td>
+                    {% end %}
+                  {% end %} <!-- c in sc.connections -->
+                </tr>
+              {% end %}
+            </table>
+          </div>
+        </section>
+        {% end %}
+
+
         {% if superconnections %}
         <section class="feature">
           <div class="container">
-            <h3>Contacts shared with you:</h3> 
+            <h3>SuperConnections:</h3> 
             <table class="table table-striped">
               <tr>
                 <th>Name</th>
@@ -109,6 +157,7 @@
           </div>
         </section>
         {% end %}
+
 
         {% if connections %}
         <section class="feature">
