@@ -37,14 +37,18 @@ class User(Document):
     # Save OAUTH_SCOPE for each user, in case this evolves
     google_credentials_scope = StringField(required=True) 
 
+    # Stripe customer ID number
+    stripe_id = StringField()
+    stripe_subscription_id = StringField()
+
     # Date user joined the app
     joined = DateTimeField()
     # Has user been through welcome onboarding process?
     welcomed = BooleanField()
 
-    # Stripe customer ID number
-    stripe_id = StringField()
-    stripe_subscription_id = StringField()
+    # True when tasks.onboard_user completes
+    # That task also sets last_updated
+    onboarded = BooleanField()
 
     # Date user last had update_user() task run OR if just onboarded
     # the date that onboard_user() finished

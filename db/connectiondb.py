@@ -63,7 +63,10 @@ class Connection(Document):
         '''
         if self.latest_email_out_date:
             delta = datetime.datetime.today() - self.latest_email_out_date
-            return delta.days
+            if delta.days > 0:
+                return delta.days
+            else:
+                return 'Today'
         else:
             return None
 
@@ -74,7 +77,10 @@ class Connection(Document):
         '''
         if self.latest_email_in_date:
             delta = datetime.datetime.today() - self.latest_email_in_date
-            return delta.days
+            if delta.days > 0:
+                return delta.days
+            else:
+                return 'Today'
         else:
             return None
 

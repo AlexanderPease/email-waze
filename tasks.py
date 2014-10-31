@@ -75,6 +75,7 @@ def onboard_user(u):
         logging.warning('User %s could not log in to Gmail or Contacts API', user)
 
     u.last_updated = datetime.datetime.now()
+    u.onboarded = True
     u.save()
 
 
@@ -82,7 +83,7 @@ def onboard_user(u):
 def update_user(u):
     """
     Updates Connections of a user and creates any new Profiles as needed.
-    Uses User field last_updated to filter emails to run through
+    Uses User field last_updated to filter emails to run through.
 
     Args:
         u is an existing User to the app. If u is a new User this function will

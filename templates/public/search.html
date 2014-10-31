@@ -63,8 +63,10 @@
                           {{ c.profile.name }} (<a href="mailto:{{ c.profile.email }}">{{ c.profile.email }}</a>)...
                           </td>
                           <td> 
-                            {% if days_since_emailed_out %}
-                              {{ days_since_emailed_out }} days ago
+                            {% if days_since_emailed_out == 'Today' %}
+                              Today
+                            {% elif days_since_emailed_out %}
+                                {{ days_since_emailed_out }} days ago
                             {% else %}
                               N/A
                             {% end %}
@@ -78,7 +80,9 @@
                         {{ c.profile.name }} (<a href="mailto:{{ c.profile.email }}">{{ c.profile.email }}</a>)...
                         </td>
                         <td> 
-                          {% if days_since_emailed_out %}
+                          {% if days_since_emailed_out == 'Today' %}
+                            Today
+                          {% elif days_since_emailed_out %}
                             {{ days_since_emailed_out }} days ago
                           {% else %}
                             N/A
