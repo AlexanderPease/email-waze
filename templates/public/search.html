@@ -26,7 +26,7 @@
 
 
 
-      {% if groupconnections %}
+      {% if group_connection_set or profile_connection_set %}
       <section class="feature">
         <div class="container">
           <h3>Results</h3> 
@@ -51,7 +51,7 @@
                     <th>Connections</th>
                   </tr>
 
-                  {% for sc in groupconnections %}
+                  {% for sc in group_connection_set %}
                     <tr>  
                       <td>{{ sc.name }} (<a href="{{ sc.email }}">{{ sc.email }}</a>) emailed...</td>
                       <td>
@@ -78,7 +78,7 @@
                   <th>Teammates</th>
                 </tr>
 
-                {% for sc in superconnections %}
+                {% for sc in profile_connection_set %}
                   <tr>  
                     <td>{{ sc.name }} (<a href="{{ sc.email }}">{{ sc.email }}</a>) emailed...</td>
                     <td>
