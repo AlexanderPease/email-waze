@@ -40,6 +40,18 @@ class Connection(Document):
     def __str__(self):
         return 'Connection: User %s <-> Profile %s' % (self.user, self.profile)
 
+    # Not used yet
+    def to_json(self):
+        json = {'connected_user_name': self.user.name,
+            'connected_user_email': self.user.email,
+            'connected_profile_name': self.profile.name,
+            'connected_profile_email': self.profile.email,
+            'total_emails_in': self.total_emails_in, 
+            'latest_email_in_date': self.latest_email_in_date_string(),
+            'total_emails_out': self.total_emails_out,
+            'latest_email_out_date': self.latest_email_out_date_string()}
+        return json
+
     def latest_email_in_date_string(self):
         if self.latest_email_in_date:
             return self.latest_email_in_date.strftime('%Y/%m/%d')

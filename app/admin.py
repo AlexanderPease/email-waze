@@ -71,11 +71,6 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             self.redirect('/')
 
-        connections = Connection._get_collection().aggregate([{'$match':{'total_emails_in':0}}])
-        connections = Profile._get_collection().aggregate([{'$group': {'_id': 'email.', 'specialField':{'$sum':1}}}])
-        connections = Connection._get_collection().aggregate([{'$group': {'_id': '$total_emails_in', 'specialField':{'$addToSet':'$latest_email_in_date'}}}])
-        logging.info(connections)
-
         """
         ### Delete all connections to oneself
         users = User.objects

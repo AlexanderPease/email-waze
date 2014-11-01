@@ -1,3 +1,4 @@
+import settings, logging
 from db.profiledb import Profile
 from db.userdb import User
 from db.groupdb import Group
@@ -25,7 +26,9 @@ class GroupConnectionSet:
         '''
         Returns JSON dict of GroupConnectionSet instance
         '''
-        json = {'email': self.email, 'name': self.name, 'connections': self.connections}
+        json = {'email': self.email, 'name': self.name, 'connections': []}
+        for c in self.connections:
+            json['connections'].append(c.to_json())
         return json
 
 
@@ -82,7 +85,9 @@ class ProfileConnectionSet:
         '''
         Returns JSON dict of GroupConnectionSet instance
         '''
-        json = {'email': self.email, 'name': self.name, 'connections': self.connections}
+        json = {'email': self.email, 'name': self.name, 'connections': []}
+        for c in self.connections:
+            json['connections'].append(c.to_json())
         return json
 
 
@@ -115,3 +120,15 @@ class ProfileConnectionSet:
                 results_emails.append(c.profile.email)
 
         return results
+
+
+def list_to_json_list(l):
+    """
+    Turns list of either ProfileConnectionSets or GroupConnectionSets
+    into a list of JSON ProfileConnectionSets or GroupConnectionSets
+    """
+    json_list = []
+    for connection_set in l:
+        logging.info(connection_set)
+        json_list.append(connection_set.to_json())
+    return json_list

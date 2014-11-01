@@ -1,9 +1,10 @@
-import app.basic, settings, ui_methods
+import app.basic, settings, ui_methods, tornado.web
 import logging
 from db.profiledb import Profile
 from db.userdb import User
 from db.connectiondb import Connection
 from connectionsets import GroupConnectionSet, ProfileConnectionSet
+import connectionsets
 import gmail
 
 ########################
@@ -12,6 +13,7 @@ import gmail
 ########################
 class Test(app.basic.BaseHandler):
     def get(self):
+        logging.info(self.current_user)
         logging.info('HIT TEST API!!!!!!!!!!!!')
         return self.api_response(data=None)
 
@@ -21,6 +23,7 @@ class Test(app.basic.BaseHandler):
 ### /api/currentuseremail
 ########################
 class CurrentUserEmail(app.basic.BaseHandler):
+    @tornado.web.authenticated
     def get(self):
         if not self.current_user:
             return self.api_error(401, 'User is not logged in')
@@ -37,6 +40,7 @@ class CurrentUserEmail(app.basic.BaseHandler):
 ### /api/profilebyemail
 ########################
 class ProfileByEmail(app.basic.BaseHandler):
+    @tornado.web.authenticated
     def get(self):
         domain = self.get_argument('domain', '')
         try:
@@ -51,6 +55,7 @@ class ProfileByEmail(app.basic.BaseHandler):
 ### /api/profilesearch
 ########################
 class ProfileSearch(app.basic.BaseHandler):
+    @tornado.web.authenticated
     def get(self):
         name = self.get_argument('name', '')
         domain = self.get_argument('domain', '')
@@ -68,6 +73,7 @@ class ProfileSearch(app.basic.BaseHandler):
 ### /api/connectionbyemail
 ########################
 class ConnectionByEmail(app.basic.BaseHandler):
+    @tornado.web.authenticated
     def get(self):
         domain = self.get_argument('domain', '')
         if not domain:
@@ -110,6 +116,7 @@ class ConnectionByEmail(app.basic.BaseHandler):
 ### /api/connectionsearch
 ########################
 class ConnectionSearch(app.basic.BaseHandler):
+    @tornado.web.authenticated
     def get(self):
         name = self.get_argument('name', '')
         domain = self.get_argument('domain', '')
@@ -129,6 +136,9 @@ class ConnectionSearch(app.basic.BaseHandler):
 
             if connections and len(connections) > 0:
                 results = ProfileConnectionSet.package_connections(connections)
+                logging.info(results)
+                results = connectionsets.list_to_json_list(results)
+                logging.info(results)
                 return self.api_response(data=results)
 
         return self.api_response(data=None)
@@ -180,6 +190,7 @@ def PackageConnections(connections):
 ### This literally searches the Gmail inbox, not the Ansatz database
 ### /api/gmailinboxsearch
 ###########################
+"""
 class GmailInboxSearch(app.basic.BaseHandler):
     def get(self):
         query = self.get_argument('q', '')
@@ -238,6 +249,6 @@ class GmailInboxSearch(app.basic.BaseHandler):
                 return self.api_response(data=results)
 
         return self.api_response(data=None)
-
+"""
 
 
