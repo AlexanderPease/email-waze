@@ -76,6 +76,8 @@ class ConnectionByEmail(app.basic.BaseHandler):
     @tornado.web.authenticated
     def get(self):
         domain = self.get_argument('domain', '')
+        cs = self.get_argument('cs', '') # defaults to ProfileConnectionSet
+
         if not domain:
             return self.api_error(400, 'No domain query given')
 
@@ -100,7 +102,11 @@ class ConnectionByEmail(app.basic.BaseHandler):
         group_users = current_user.all_group_users()
         connections = Connection.objects(profile=profile, user__in=group_users)
         if connections and len(connections) > 0:
-            results = PackageConnections(connections)
+            if cs == 'group':
+                results = GroupConnectionSet.package_connections(connections)
+            else:
+                results = ProfileConnectionSet.package_connections(connections)
+            results = connectionsets.list_to_json_list(results)
 
             # Should only be one result
             if len(results) > 1 or len(results) == 0:

@@ -118,14 +118,20 @@ function render_multiple_connections(connections_array) {
             cache: true,
             dataType: 'text',
             success: function(html) {
-                console.log(connections_array);
+                // Break out email handle vs. email domain for displaying
+                for (var i=0; i < connections_array.length; i++) {
+                    var email = connections_array[i].email;
+                    var email_parts = email.split('@');
+                    if (email_parts.length == 2) {
+                        connections_array[i].email_name = email_parts[0];
+                        connections_array[i].email_domain = email_parts[1];
+                    }
+                }
+                // Insert into html
                 var $div = $panel.find('div#rapporto');
                 if (!$div.length)
                     $div = $('<div id="rapporto" style="position:relative;" />');
-                for (var i=0; i < connections_array.length; i++) {
-                    console.log(connections_array[i]);
-                    $div.append(Mustache.render(html, connections_array[i]));
-                }
+                $div.append(Mustache.render(html, {'connections': connections_array}));
                 $panel.prepend($div);
             },
         });

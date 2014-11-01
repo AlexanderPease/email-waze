@@ -105,7 +105,6 @@ function get_connection_by_email(data, callback) {
 
 
 function get_connection_search(data, callback) {
-    console.log('getconnectionsearh');
     var email = data.email
     var name = data.name_string
     if (lscache.get('e:'+data.email)) {
