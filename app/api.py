@@ -104,7 +104,7 @@ class ConnectionByEmail(app.basic.BaseHandler):
 
             # Should only be one result
             if len(results) > 1 or len(results) == 0:
-                return self.api_error(500, 'Multiple Connections after deduping be email')
+                return self.api_error(500, 'Multiple Connections after deduping by email')
 
             return self.api_response(data=results[0]) # Return single Connection
 
@@ -120,6 +120,7 @@ class ConnectionSearch(app.basic.BaseHandler):
     def get(self):
         name = self.get_argument('name', '')
         domain = self.get_argument('domain', '')
+        cs = self.get_argument('cs', '') # defaults to ProfileConnectionSet
 
         if name or domain:
             try:
@@ -135,15 +136,16 @@ class ConnectionSearch(app.basic.BaseHandler):
             connections = Connection.objects(profile__in=profiles, user__in=group_users)
 
             if connections and len(connections) > 0:
-                results = ProfileConnectionSet.package_connections(connections)
-                logging.info(results)
+                if cs == 'group':
+                    results = GroupConnectionSet.package_connections(connections)
+                else:
+                    results = ProfileConnectionSet.package_connections(connections)
                 results = connectionsets.list_to_json_list(results)
-                logging.info(results)
                 return self.api_response(data=results)
 
         return self.api_response(data=None)
 
-
+'''
 def PackageConnections(connections):
     """
     Package and dedupe connections for client-side use
@@ -183,7 +185,7 @@ def PackageConnections(connections):
             results_emails.append(c.profile.email)
 
     return results
-
+'''
 
 ###########################
 ### API call for correspondence data from a single USVer
