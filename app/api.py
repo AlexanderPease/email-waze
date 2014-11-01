@@ -14,7 +14,7 @@ import gmail
 class Test(app.basic.BaseHandler):
     def get(self):
         logging.info(self.current_user)
-        logging.info('HIT TEST API!!!!!!!!!!!!')
+        logging.info('HIT TEST API!!!!!!!!!!!')
         return self.api_response(data=None)
 
 
