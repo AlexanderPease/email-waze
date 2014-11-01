@@ -105,7 +105,7 @@ function render_connection(connection) {
 }
 
 
-function render_multiple_connections(connections_array) {
+function render_multiple_connections(connections_array, url) {
     console.log('render_multiple_connections()');
     var $panel = $('td.Bu.y3 div.nH.adC');
     if ($panel) {
@@ -118,6 +118,16 @@ function render_multiple_connections(connections_array) {
             cache: true,
             dataType: 'text',
             success: function(html) {
+                var total_num = connections_array.length;
+                if (total_num < 5) {
+                    var show_num = total_num;
+                } 
+                else {
+                    var show_num = 5;
+                    connections_array = connections_array.slice(0,show_num);
+                }
+                
+
                 // Break out email handle vs. email domain for displaying
                 for (var i=0; i < connections_array.length; i++) {
                     var email = connections_array[i].email;
@@ -131,7 +141,14 @@ function render_multiple_connections(connections_array) {
                 var $div = $panel.find('div#rapporto');
                 if (!$div.length)
                     $div = $('<div id="rapporto" style="position:relative;" />');
-                $div.append(Mustache.render(html, {'connections': connections_array}));
+                
+                var data = {
+                    'connections': connections_array, 
+                    'total_num': total_num,
+                    'show_num': show_num,
+                    'url': url
+                }
+                $div.append(Mustache.render(html, data));
                 $panel.prepend($div);
             },
         });
@@ -190,7 +207,8 @@ document.addEventListener("search", function(data) {
     chrome.extension.sendMessage({name:'get_connection_search', email:domain, name_string:name}, function(data) {
         if (data.data) {
             var connections = data.data;
-            render_multiple_connections(connections);
+            var url = 'https://ansatz.me/search?name=' + name + '&domain=' + domain 
+            render_multiple_connections(connections, url);
         }
     });
 })
@@ -209,15 +227,6 @@ function start() {
                     render_connection(connection);
                 }
             });
-            /*
-            chrome.extension.sendMessage({name:'get_profile_by_email', email:email}, function(data) {
-                if (data['profile']) {
-                    var profile = data.profile;
-                    console.log(profile)
-                    render_profile(JSON.parse(profile));
-                }
-            });
-            */
         }
     });
 }
