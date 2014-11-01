@@ -3,6 +3,7 @@ import logging
 from db.profiledb import Profile
 from db.userdb import User
 from db.connectiondb import Connection
+from connectionsets import GroupConnectionSet, ProfileConnectionSet
 import gmail
 
 ########################
@@ -73,6 +74,7 @@ class ConnectionByEmail(app.basic.BaseHandler):
             return self.api_error(400, 'No domain query given')
 
         # Authenticate user
+        logging.info(self.current_user)
         if not self.current_user:
             return self.api_error(401, 'User is not logged in')
         try:
@@ -124,8 +126,9 @@ class ConnectionSearch(app.basic.BaseHandler):
 
             group_users = current_user.all_group_users()
             connections = Connection.objects(profile__in=profiles, user__in=group_users)
+
             if connections and len(connections) > 0:
-                results = PackageConnections(connections)
+                results = ProfileConnectionSet.package_connections(connections)
                 return self.api_response(data=results)
 
         return self.api_response(data=None)

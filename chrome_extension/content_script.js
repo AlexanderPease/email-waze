@@ -109,7 +109,9 @@ function render_multiple_connections(connections_array) {
     console.log('render_multiple_connections()');
     var $panel = $('td.Bu.y3 div.nH.adC');
     if ($panel) {
-        // Get local html and inject into page
+        // Inject search bar on top...
+        render_search()
+        //...then append connections below
         $.ajax({
             type: 'GET',
             url: 'chrome-extension://'+encodeURIComponent(ID)+'/templates/multiple_connections.html',
@@ -121,6 +123,7 @@ function render_multiple_connections(connections_array) {
                 if (!$div.length)
                     $div = $('<div id="rapporto" style="position:relative;" />');
                 for (var i=0; i < connections_array.length; i++) {
+                    console.log(connections_array[i]);
                     $div.append(Mustache.render(html, connections_array[i]));
                 }
                 $panel.prepend($div);

@@ -12,11 +12,21 @@ class GroupConnectionSet:
         self.name = name
         self.connections = [] # start with empty array
 
+
     def __repr__(self):
         return 'GroupConnectionSet: %s (%s) connected to %s profiles' % (self.name, self.email, len(self.connections))
 
+
     def add_connection(self, c):
         self.connections.append(c)
+
+
+    def to_json(self):
+        '''
+        Returns JSON dict of GroupConnectionSet instance
+        '''
+        json = {'email': self.email, 'name': self.name, 'connections': self.connections}
+        return json
 
 
     @classmethod
@@ -52,18 +62,28 @@ class GroupConnectionSet:
 
 class ProfileConnectionSet:
     """
-    Class that groups Connections together by User
+    Class that groups Connections together by Profile. 
     """
     def __init__(self, email, name):
         self.email = email
         self.name = name
         self.connections = [] # start with empty array
 
+
     def __repr__(self):
         return 'ProfileConnectionSet: %s (%s) connected to %s of your team members' % (self.name, self.email, len(self.connections))
 
+
     def add_connection(self, c):
         self.connections.append(c)
+
+
+    def to_json(self):
+        '''
+        Returns JSON dict of GroupConnectionSet instance
+        '''
+        json = {'email': self.email, 'name': self.name, 'connections': self.connections}
+        return json
 
 
     @classmethod

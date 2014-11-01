@@ -46,6 +46,7 @@ class BaseHandler(tornado.web.RequestHandler):
         Function that controls self.current_user (Tornado handles this on back end)
         Use the user's email as the identifying property
         """
+        logging.info(self.get_secure_cookie("user_email"))
         return self.get_secure_cookie("user_email")
 
 
