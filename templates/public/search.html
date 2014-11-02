@@ -82,6 +82,8 @@
                         <td> 
                           {% if days_since_emailed_out == 'Today' %}
                             Today
+                          {% elif days_since_emailed_out == 1 %}
+                            {{ days_since_emailed_out }} day ago
                           {% elif days_since_emailed_out %}
                             {{ days_since_emailed_out }} days ago
                           {% else %}
@@ -94,7 +96,7 @@
               <!-- End table for GroupConnections -->
             </div>
             
-            <div role="tabpanel" class="tab-pane" id="SuperConnections">
+            <div role="tabpanel" class="tab-pane" id="ProfileConnections">
               <!-- Table for GroupConnections -->
               <table class="table table-striped">
                 <tr>
@@ -109,8 +111,14 @@
                       {% for c in sc.connections %}
                         {% set days_since_emailed_in = c.days_since_emailed_in() %}
                         {{ c.user.name }} (<a href="mailto:{{ c.user.email }}">{{ c.user.email }}</a>) 
-                        {% if days_since_emailed_in %}
+                        {% if days_since_emailed_in == 'Today' %}
+                          Today
+                        {% elif days_since_emailed_in == 1 %}
+                            {{ days_since_emailed_in }} day ago
+                        {% elif days_since_emailed_in %}
                           {{ days_since_emailed_in }} days ago
+                        {% else %}
+                          N/A
                         {% end %}
                       </br>
                       {% end %} <!-- c in sc.connections -->
