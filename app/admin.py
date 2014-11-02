@@ -72,11 +72,8 @@ class Scratch(app.basic.BaseHandler):
             self.redirect('/')
 
         u = User.objects.get(email="me@alexanderpease.com")
-        gmail_service = u.get_service(service_type='gmail')
-        import gmail
-        messages = gmail.ListMessagesMatchingQuery(service=gmail_service,
-                                                user_id='me',
-                                                query='after:%s' % u.last_updated.strftime('%Y/%m/%d'))
+        u.last_updated = datetime.datetime.now()
+        u.save()
 
         """
         ### Delete all connections to oneself

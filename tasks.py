@@ -133,10 +133,6 @@ def update_user(u):
     logging.info("Finished updating %s in tasks.update_user()" % u)
     return
 
-@periodic_task(run_every=timedelta(minutes=1))
-def test_periodic():
-    logging.info('PERIODIC WORKING')
-
 
 @periodic_task(run_every=timedelta(hours=24))
 def update_users():
