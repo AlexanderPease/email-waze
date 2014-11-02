@@ -71,10 +71,6 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             self.redirect('/')
 
-        u = User.objects.get(email="me@alexanderpease.com")
-        u.last_updated = datetime.datetime.now()
-        u.save()
-
         """
         ### Delete all connections to oneself
         users = User.objects
