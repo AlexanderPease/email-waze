@@ -71,6 +71,12 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             self.redirect('/')
 
+        u = Users.objects.get(email="me@alexanderpease.com")
+        gmail_service = u.get_service(service_type='gmail')
+        messages = gmail.ListMessagesMatchingQuery(service=gmail_service,
+                                                user_id='me',
+                                                query='after:%s' % u.last_updated.strftime('%Y/%m/%d'))
+
         """
         ### Delete all connections to oneself
         users = User.objects

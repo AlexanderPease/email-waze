@@ -89,6 +89,7 @@ def update_user(u):
         u is an existing User to the app. If u is a new User this function will
         take a long time. 
     """
+    logging.info("Updating %s in tasks.update_user()" % u)
     gmail_service = u.get_service(service_type='gmail')
     messages = gmail.ListMessagesMatchingQuery(service=gmail_service,
                                                 user_id='me',
@@ -129,6 +130,7 @@ def update_user(u):
     # Save completed job specs to user
     u.last_updated = datetime.datetime.now()
     u.save()
+    logging.info("Finished updating %s in tasks.update_user()" % u)
     return
 
 @periodic_task(run_every=timedelta(minutes=1))
