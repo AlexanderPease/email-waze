@@ -140,7 +140,10 @@ def update_users():
     Update all users every 24 hours
     """
     for u in User.objects:
-        update_user(u)
+        try:
+            update_user(u)
+        except:
+            pass
 
 
 def update_profile_and_connection(email, name, user, gmail_service):
