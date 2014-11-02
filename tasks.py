@@ -90,9 +90,6 @@ def update_user(u):
         take a long time. 
     """
     gmail_service = u.get_service(service_type='gmail')
-
-
-
     messages = gmail.ListMessagesMatchingQuery(service=gmail_service,
                                                 user_id='me',
                                                 query='after:%s' % u.last_updated.strftime('%Y/%m/%d'))
@@ -133,6 +130,10 @@ def update_user(u):
     u.last_updated = datetime.datetime.now()
     u.save()
     return
+
+@periodic_task(run_every=timedelta(minutes=1))
+def test_periodic():
+    logging.info('PERIODIC WORKING')
 
 
 @periodic_task(run_every=timedelta(hours=24))

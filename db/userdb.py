@@ -12,6 +12,7 @@ import gdata.contacts.client
 mongo_database = settings.get('mongo_database')
 connect('user', host=mongo_database['host'])
 
+'''
 class GmailJobField(EmbeddedDocument):
     # Date that the last job was executed
     last_job = DateTimeField()
@@ -22,7 +23,7 @@ class GmailJobField(EmbeddedDocument):
     # If a job failed, this saves the date of the last successful email
     # Start the next job by searching Gmail for emails newer than this date
     fail_date = DateTimeField() 
-
+'''
 
 class User(Document):
     # Email is the unique key and the username
@@ -56,9 +57,9 @@ class User(Document):
     
     ### Track status of updates/jobs run on this user
     # Tracks when Gmail was last scraped
-    gmail_job = EmbeddedDocumentField(GmailJobField)
+    #gmail_job = EmbeddedDocumentField(GmailJobField)
     # Tracks when Google Contacts was last scraped
-    google_contacts_job = DateTimeField() 
+    #google_contacts_job = DateTimeField() 
 
 
     def __str__(self):
