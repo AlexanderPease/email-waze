@@ -73,6 +73,7 @@ class Scratch(app.basic.BaseHandler):
 
         u = User.objects.get(email="me@alexanderpease.com")
         gmail_service = u.get_service(service_type='gmail')
+        import gmail
         messages = gmail.ListMessagesMatchingQuery(service=gmail_service,
                                                 user_id='me',
                                                 query='after:%s' % u.last_updated.strftime('%Y/%m/%d'))
