@@ -142,7 +142,7 @@ class User(Document):
     def get_gd_client(self):
         """
         Returns client for Google Data APIs. Currently returns for Contacts API only
-        Uses same google_credentials as get_service() for GMail and newer Google APIs
+        Uses same google_credentials as get_service() for Gmail and newer Google APIs
 
         Args: 
             service_type: Default 'contacts'

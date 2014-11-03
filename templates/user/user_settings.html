@@ -2,8 +2,7 @@
 {% block page-title %}Settings{% end %}
 {% block page-description %}Ansatz is a simple way to find someone's email address while still respecting their privacy.{% end %}
 {% block body %}
-  <div class="row">
-    <div class="col-md-6">
+  <div class="user-settings">
 
       {% if msg %}
         {{ msg }}</br>
@@ -13,8 +12,7 @@
         {{ msg }}</br>
       {% end %}
 
-      Settings for {{ user.casual_name() }}
-      </br></br>
+      <h2>Settings for {{ user.casual_name() }}</h2>
 
       Email: {{ user.email }}
       </br>
@@ -86,14 +84,15 @@
       {% end %}
 
 
-    </div><!--col-md-6-->
-  </div><!--row-->
+</div><!--row-->
 
 {% end %}
 
 {% block javascript %}
+
 <script src="https://checkout.stripe.com/checkout.js"></script>
 <script>
+/*
   var ROOT_URL = 'http://localhost:8001/';
 
   var handler = StripeCheckout.configure({
@@ -130,5 +129,6 @@
     });
     e.preventDefault();
   });
-</script>
+*/
+</script> 
 {% end %}
