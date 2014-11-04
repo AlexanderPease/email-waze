@@ -6,7 +6,6 @@
       {{ err }}
       {{ msg }}
 
-
       <section class="feature">
         <form id="main-search" class="form-horizontal container" action="/search" method="GET">
           <div class="row">
@@ -20,7 +19,6 @@
             <div class="col-sm-4 col-lg-4 col-xs-12 search-btn-wrap">
               <button type="submit" class="btn btn-primary">Search</button>
             </div>
-
           </div>
         </form>
       </section>
@@ -53,45 +51,46 @@
                       <th>Most Recently</th>
                     </tr>
                   </thead>
+                  <tbody>
+                    {% for sc in group_connection_set %}
+                      <tr id="popover-row" data-container="body" data-content="{{ sc.email }} --> FOO </br> foo">
+                        <td>{{ sc.name }} (<a href="mailto:{{ sc.email }}">{{ sc.email }}</a>) emailed...</td>
+                        <td>
+                          {% for c in sc.connections[:-1] %}
+                            {% set days_since_emailed_out = c.days_since_emailed_out() %}
+                            {{ c.profile.name }} (<a href="mailto:{{ c.profile.email }}">{{ c.profile.email }}</a>)...
+                            </td>
+                            <td> 
+                              {% if days_since_emailed_out == 'Today' %}
+                                Today
+                              {% elif days_since_emailed_out %}
+                                  {{ days_since_emailed_out }} days ago
+                              {% else %}
+                                N/A
+                              {% end %}
+                            </td>
+                            <tr><td></td><td>
+                          {% end %} <!-- c in sc.connections -->
 
-                  {% for sc in group_connection_set %}
-                    <tr>  
-                      <td>{{ sc.name }} (<a href="mailto:{{ sc.email }}">{{ sc.email }}</a>) emailed...</td>
-                      <td>
-                        {% for c in sc.connections[:-1] %}
+                          <!-- Final entry of sc.connections -->
+                          {% set c = sc.connections[-1] %}
                           {% set days_since_emailed_out = c.days_since_emailed_out() %}
                           {{ c.profile.name }} (<a href="mailto:{{ c.profile.email }}">{{ c.profile.email }}</a>)...
                           </td>
                           <td> 
                             {% if days_since_emailed_out == 'Today' %}
                               Today
+                            {% elif days_since_emailed_out == 1 %}
+                              {{ days_since_emailed_out }} day ago
                             {% elif days_since_emailed_out %}
-                                {{ days_since_emailed_out }} days ago
+                              {{ days_since_emailed_out }} days ago
                             {% else %}
                               N/A
                             {% end %}
-                          </td>
-                          <tr><td></td><td>
-                        {% end %} <!-- c in sc.connections -->
-
-                        <!-- Final entry of sc.connections -->
-                        {% set c = sc.connections[-1] %}
-                        {% set days_since_emailed_out = c.days_since_emailed_out() %}
-                        {{ c.profile.name }} (<a href="mailto:{{ c.profile.email }}">{{ c.profile.email }}</a>)...
-                        </td>
-                        <td> 
-                          {% if days_since_emailed_out == 'Today' %}
-                            Today
-                          {% elif days_since_emailed_out == 1 %}
-                            {{ days_since_emailed_out }} day ago
-                          {% elif days_since_emailed_out %}
-                            {{ days_since_emailed_out }} days ago
-                          {% else %}
-                            N/A
-                          {% end %}
-                      </td> 
-                    </tr>
-                  {% end %}
+                        </td> 
+                      </tr>
+                    {% end %}
+                  </tbody>
                 </table>
               <!-- End table for GroupConnections -->
             </div>
@@ -99,32 +98,35 @@
             <div role="tabpanel" class="tab-pane" id="ProfileConnections">
               <!-- Table for GroupConnections -->
               <table class="table table-striped">
-                <tr>
-                  <th>Connection</th>
-                  <th>Teammates</th>
-                </tr>
-
-                {% for sc in profile_connection_set %}
-                  <tr>  
-                    <td>{{ sc.name }} (<a href="mailto:{{ sc.email }}">{{ sc.email }}</a>) emailed...</td>
-                    <td>
-                      {% for c in sc.connections %}
-                        {% set days_since_emailed_in = c.days_since_emailed_in() %}
-                        {{ c.user.name }} (<a href="mailto:{{ c.user.email }}">{{ c.user.email }}</a>) 
-                        {% if days_since_emailed_in == 'Today' %}
-                          Today
-                        {% elif days_since_emailed_in == 1 %}
-                            {{ days_since_emailed_in }} day ago
-                        {% elif days_since_emailed_in %}
-                          {{ days_since_emailed_in }} days ago
-                        {% else %}
-                          N/A
-                        {% end %}
-                      </br>
-                      {% end %} <!-- c in sc.connections -->
-                    </td>
+                <thead>
+                  <tr>
+                    <th>Connection</th>
+                    <th>Teammates</th>
                   </tr>
-                {% end %}
+                </thead>
+                <tbody>
+                  {% for sc in profile_connection_set %}
+                    <tr>  
+                      <td>{{ sc.name }} (<a href="mailto:{{ sc.email }}">{{ sc.email }}</a>) emailed...</td>
+                      <td>
+                        {% for c in sc.connections %}
+                          {% set days_since_emailed_in = c.days_since_emailed_in() %}
+                          {{ c.user.name }} (<a href="mailto:{{ c.user.email }}">{{ c.user.email }}</a>) 
+                          {% if days_since_emailed_in == 'Today' %}
+                            Today
+                          {% elif days_since_emailed_in == 1 %}
+                              {{ days_since_emailed_in }} day ago
+                          {% elif days_since_emailed_in %}
+                            {{ days_since_emailed_in }} days ago
+                          {% else %}
+                            N/A
+                          {% end %}
+                        </br>
+                        {% end %} <!-- c in sc.connections -->
+                      </td>
+                    </tr>
+                  {% end %}
+                </tbody>
               </table>
               <!-- End table for GroupConnections -->
             </div>
@@ -162,5 +164,14 @@
 {% end %}
 
 {% block javascript %}
-
+  <script>
+    $(document).ready(function(){
+      $('body').popover({
+        placement:"top",
+        trigger:"hover",
+        selector:'tr[id=popover-row]',
+        html: true
+      });
+    });
+  </script>
 {% end %}
