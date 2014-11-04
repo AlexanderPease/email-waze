@@ -27,7 +27,7 @@
       {% if group_connection_set or profile_connection_set %}
       <section class="feature">
         <div class="container">
-          <h3>Results</h3> 
+          <h3>Team Results</h3> 
 
           <!-- Nav tabs on top of results table -->
           <ul class="nav nav-tabs" role="tablist">
@@ -53,43 +53,33 @@
                   </thead>
                   <tbody>
                     {% for sc in group_connection_set %}
-                      <tr id="popover-row" data-container="body" data-content="{{ sc.email }} --> FOO </br> foo">
-                        <td>{{ sc.name }} (<a href="mailto:{{ sc.email }}">{{ sc.email }}</a>) emailed...</td>
-                        <td>
-                          {% for c in sc.connections[:-1] %}
+                      {% set first = True %}
+                      {% for c in sc.connections %}
+                        <tr id="popover-row" data-container="body" data-content="{{ sc.email }} --> {{ c.profile.email}}:</br>{{ c.total_emails_out }} total emails, most recently on {{ c.latest_email_out_date_string() }}</br></br>{{ c.profile.email}} --> {{ sc.email }}:</br>{{ c.total_emails_in }} total emails, most recently on {{ c.latest_email_in_date_string() }}">
+                          
+                          {% if first %}
+                            <td>{{ sc.name }} (<a href="mailto:{{ sc.email }}">{{ sc.email }}</a>) emailed...</td>
+                          {% else %}
+                            <td></td>
+                          {% end %}
+                          <td>
                             {% set days_since_emailed_out = c.days_since_emailed_out() %}
-                            {{ c.profile.name }} (<a href="mailto:{{ c.profile.email }}">{{ c.profile.email }}</a>)...
-                            </td>
-                            <td> 
-                              {% if days_since_emailed_out == 'Today' %}
-                                Today
-                              {% elif days_since_emailed_out %}
-                                  {{ days_since_emailed_out }} days ago
-                              {% else %}
-                                N/A
-                              {% end %}
-                            </td>
-                            <tr><td></td><td>
-                          {% end %} <!-- c in sc.connections -->
-
-                          <!-- Final entry of sc.connections -->
-                          {% set c = sc.connections[-1] %}
-                          {% set days_since_emailed_out = c.days_since_emailed_out() %}
-                          {{ c.profile.name }} (<a href="mailto:{{ c.profile.email }}">{{ c.profile.email }}</a>)...
+                             {{ c.profile.name }} (<a href="mailto:{{ c.profile.email }}">{{ c.profile.email }}</a>)...
                           </td>
                           <td> 
                             {% if days_since_emailed_out == 'Today' %}
                               Today
-                            {% elif days_since_emailed_out == 1 %}
-                              {{ days_since_emailed_out }} day ago
                             {% elif days_since_emailed_out %}
-                              {{ days_since_emailed_out }} days ago
+                                {{ days_since_emailed_out }} days ago
                             {% else %}
                               N/A
                             {% end %}
-                        </td> 
-                      </tr>
-                    {% end %}
+                          </td>
+                        </tr>
+
+                        {% set first = False %}
+                      {% end %} <!-- c in sc.connections -->
+                    {% end %} <!-- sc in group_connection_set -->
                   </tbody>
                 </table>
               <!-- End table for GroupConnections -->
@@ -97,7 +87,7 @@
             
             <div role="tabpanel" class="tab-pane" id="ProfileConnections">
               <!-- Table for GroupConnections -->
-              <table class="table table-striped">
+              <table class="table table-condensed table-hover">
                 <thead>
                   <tr>
                     <th>Connection</th>
@@ -106,10 +96,15 @@
                 </thead>
                 <tbody>
                   {% for sc in profile_connection_set %}
-                    <tr>  
-                      <td>{{ sc.name }} (<a href="mailto:{{ sc.email }}">{{ sc.email }}</a>) emailed...</td>
-                      <td>
-                        {% for c in sc.connections %}
+                    {% set first = True %}
+                    {% for c in sc.connections %}
+                      <tr>
+                        {% if first %}
+                          <td>{{ sc.name }} (<a href="mailto:{{ sc.email }}">{{ sc.email }}</a>) emailed...</td>
+                        {% else %}
+                          <td></td>
+                        {% end %}
+                        <td>
                           {% set days_since_emailed_in = c.days_since_emailed_in() %}
                           {{ c.user.name }} (<a href="mailto:{{ c.user.email }}">{{ c.user.email }}</a>) 
                           {% if days_since_emailed_in == 'Today' %}
@@ -121,11 +116,11 @@
                           {% else %}
                             N/A
                           {% end %}
-                        </br>
-                        {% end %} <!-- c in sc.connections -->
-                      </td>
-                    </tr>
-                  {% end %}
+                        </td>
+                      </tr>
+                      {% set first = False %}
+                    {% end %} <!-- c in sc.connections -->
+                  {% end %} <!-- sc in profile_connection_set -->
                 </tbody>
               </table>
               <!-- End table for GroupConnections -->
@@ -167,10 +162,12 @@
   <script>
     $(document).ready(function(){
       $('body').popover({
-        placement:"top",
-        trigger:"hover",
-        selector:'tr[id=popover-row]',
-        html: true
+        placement: "top",
+        trigger: "hover",
+        selector: "tr[id=popover-row]",
+        container: "body",
+        html: true,
+        template: '<div class="popover popover-medium"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>'
       });
     });
   </script>
