@@ -98,7 +98,7 @@
                   {% for sc in profile_connection_set %}
                     {% set first = True %}
                     {% for c in sc.connections %}
-                      <tr>
+                      <tr id="popover-row" data-container="body" data-content="{{ sc.email }} --> {{ c.user.email}}:</br>{{ c.total_emails_in }} total emails, most recently on {{ c.latest_email_in_date_string() }}</br></br>{{ c.user.email}} --> {{ sc.email }}:</br>{{ c.total_emails_out }} total emails, most recently on {{ c.latest_email_out_date_string() }}">
                         {% if first %}
                           <td>{{ sc.name }} (<a href="mailto:{{ sc.email }}">{{ sc.email }}</a>) emailed...</td>
                         {% else %}
