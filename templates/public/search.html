@@ -58,7 +58,11 @@
                         <tr id="popover-row" data-container="body" data-content="{{ sc.email }} --> {{ c.profile.email}}:</br>{{ c.total_emails_out }} total emails, most recently on {{ c.latest_email_out_date_string() }}</br></br>{{ c.profile.email}} --> {{ sc.email }}:</br>{{ c.total_emails_in }} total emails, most recently on {{ c.latest_email_in_date_string() }}">
                           
                           {% if first %}
-                            <td>{{ sc.name }} (<a href="mailto:{{ sc.email }}">{{ sc.email }}</a>) emailed...</td>
+                            {% if sc.email == current_user %}
+                              You
+                            {% else %}
+                              <td>{{ sc.name }} (<a href="mailto:{{ sc.email }}">{{ sc.email }}</a>) emailed...</td>
+                            {% end %}
                           {% else %}
                             <td></td>
                           {% end %}
