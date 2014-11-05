@@ -194,10 +194,33 @@ function find_account() {
 
 
 // Immediately render search form on page load
-$(document).ready(function(){
+/*$(document).ready(function(){
     render_search()
 });
+*/
 
+$(document).ready(function(){
+    var $panel = $('td.Bu.y3 div.nH.adC');
+    if ($panel) {
+        // Get local html and inject into page
+        $.ajax({
+            type: 'GET',
+            url: 'chrome-extension://'+encodeURIComponent(ID)+'/templates/connection.html',
+            cache: true,
+            dataType: 'text',
+            success: function(html) {
+                var $div = $panel.find('div#rapporto');
+                if (!$div.length)
+                    $div = $('<div id="rapporto" style="position:relative;" />');
+                $div.html(Mustache.render(html));
+                $panel.prepend($div);
+            },
+        });
+    } else {
+        console.log($panel);
+    }
+
+});
 
 // Lets content script listen for an search event triggered by local html
 document.addEventListener("search", function(data) {

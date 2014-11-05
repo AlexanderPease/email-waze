@@ -1,41 +1,42 @@
-<p style="font-size:18px; font-weight:bold; margin-top:10px; margin-bottom:2px;">{{name}}</p>
-<div style="font-size:14px;">
-  {{#email_name}}{{email_name}}<span style="color:#6d6d6d;">@{{email_domain}}</span>{{/email_name}}{{^email_name}}{{email}}{{/email_name}}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+
+<div style="margin-left: 8px;">
+  <p style="font-size:18px; font-weight:bold; margin-top:10px; margin-bottom:0px;">
+    Joel Spolsky
+  </p>
+  <p style="font-size:14px;">
+    joel<span style="color:#6d6d6d;">@stackexchange.com</span>
+  </p>
 </div>
-</br>
-{{#connections}}
-  <div style="font-size:14px; margin-top:2px; margin-bottom:5px;">
-    Connected via: {{connected_user_name}} ({{connected_user_email}})
-  </div>
-    <div style="font-size:14px; margin-top:2px; margin-bottom:5px; left:85px">
-    Emails Sent: {{total_emails_out}}
-  </div>
-  <div style="font-size:14px; margin-top:2px; margin-bottom:5px; left:85px">
-    Latest Email Sent: {{latest_email_out_date}}
-  </div>
-  <div style="font-size:14px; margin-top:2px; margin-bottom:5px; left:85px">
-    Emails Received: {{total_emails_in}}
-  </div>
-  <div style="font-size:14px; margin-top:2px; margin-bottom:5px; left:85px">
-    Latest Email Received: {{latest_email_in_date}}
-  </div>
-  </br>
-{{/connections}}
-{{^connections}}
-No connections
-{{/connections}}
+
+<table class="table table-striped">
+  <tbody>
+    <tr id="popover-row" data-container="body" data-content="FOOO">
+      <td>You emailed Joel 4 days ago</td>
+    </tr>
+    <tr><td>brad@usv.com emailed Joel 2 days ago</td></tr>
+    <tr><td>fred@usv.com emailed stackexchange.com today</td></tr>
+    <tr><td><a href="">Click here</a> for all info</td></tr>
+
+  </tbody>
+</table>
 
 <div> 
-    Or search Ansatz again
+    Search Ansatz
     </br>
-    Name: <input type="search" name="name" id="search_name">
-    Domain: <input type="search" name="domain" id="search_domain">
-    <button type="button" id="search_button">Search</button> 
+    <form role="form">
+        <div class="form-group">
+            <input type="search" name="name" id="search_name" placeholder="Name">
+        </div>
+        <div class="form-group">
+            <input type="search" name="domain" id="search_domain" placeholder="Domain">
+        </div>
+        <button type="button" class="btn btn-primary" id="search_button">Search</button> 
+    </form>
 </div>
 
-
 <script>
-$('#search_button').click(function(){
+  $('#search_button').click(function(){
     console.log('Search button clicked');
     var name = $('#search_name').val();
     var domain = $('#search_domain').val();
@@ -43,5 +44,18 @@ $('#search_button').click(function(){
     var event = document.createEvent('Event');
     event.initEvent('search');
     document.dispatchEvent(event);
-});
+  });
+
+  $(document).ready(function(){
+    console.log('ready');
+
+    /* Doesn't recognize this function
+    $('body').popover({
+      placement: "top",
+      trigger: "hover",
+      selector: "tr[id=popover-row]",
+      container: "body"
+    });
+  */  
+  });
 </script>

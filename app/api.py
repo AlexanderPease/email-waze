@@ -152,47 +152,81 @@ class ConnectionSearch(app.basic.BaseHandler):
 
         return self.api_response(data=None)
 
-'''
-def PackageConnections(connections):
-    """
-    Package and dedupe connections for client-side use
 
-    Args:
-        connections are a list of Connections
-    """
-    results = []
-    results_emails = [] # For fast indexing deduping connections
-    for c in connections:
+########################
+### ConnectionSearch
+### /api/connectionbyemailforextension
+########################
+class ConnectionByEmailForExtension(app.basic.BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        """
+        Returns dict with key-value pairs. All values are a single Connection 
+        except for key 'domain' (ex: 'usv.com')
+        """
+        domain = self.get_argument('domain', '')
+
+        if not domain:
+            return self.api_error(400, 'No domain query given')
+
+        # Authenticate user
+        if not self.current_user:
+            return self.api_error(401, 'User is not logged in')
         try:
-            existing_index = results_emails.index(c.profile.email)
-        except ValueError:
-            existing_index = -1
+            current_user = User.objects.get(email=self.current_user)
+        except:
+            return self.api_error(500, 'Could not find client user in database')
 
-        # If this connection is already in results, just add connection
-        # to existing results 'profile'
-        if existing_index != -1:
-            results[existing_index]['connections'].append({'connected_user_name': c.user.name,
-                                            'connected_user_email': c.user.email,
-                                            'total_emails_in': c.total_emails_in,
-                                            'latest_email_in_date': c.latest_email_in_date_string(),
-                                            'total_emails_out': c.total_emails_out,
-                                            'latest_email_out_date': c.latest_email_out_date_string()})
-        # Else it is a new connection to add to results
+        # Don't show connection to self
+        if current_user.email == domain:
+            return self.api_error(400, 'Queried self')
+
+        # Setup needed to find results values
+        results = {}
+        group_users = current_user.all_group_users()
+        try:
+            profile = Profile.objects.get(email=domain)
+        except:
+            profile = None
+
+        # First two fields require exact profile
+        if profile:
+            # Last time current_user emailed profile
+            try:
+                connection = Connection.objects(profile=profile, user=current_user)
+                results['current_user'] = connection[0].to_json()
+            except:
+                results['current_user'] = None
+
+            # Last time a group_user emailed profile
+            try:
+                connections = Connection.objects(profile=profile, user__in=group_users).order_by("-latest_email_out_date")
+                results['group_users_profile'] = connections[0].to_json()
+            except:
+                results['group_users_profile'] = None
         else:
-            results.append({'email': c.profile.email,
-                            'name': c.profile.name,
-                            'connections':[{'connected_user_name': c.user.name,
-                                            'connected_user_email': c.user.email,
-                                            'total_emails_in': c.total_emails_in,
-                                            'latest_email_in_date': c.latest_email_in_date_string(),
-                                            'total_emails_out': c.total_emails_out,
-                                            'latest_email_out_date': c.latest_email_out_date_string()
-                                            }]
-                            })
-            results_emails.append(c.profile.email)
+            results['current_user'] = None
+            results['group_users_profile'] = None
 
-    return results
-'''
+        # Final field is about domain
+        if '@' in domain:
+            domain = domain.split('@')[1] # doesn't include @
+        results['domain'] = domain
+
+        # Last time a group_user emailed domain of profile
+        try:
+            profiles = Profile.objects(email__icontains=domain)
+            connections = Connection.objects(profile__in=profiles, user__in=group_users).order_by("-latest_email_out_date")
+            results['group_users_domain'] = connections[0].to_json()
+        except:
+            results['group_users_domain'] = None
+
+        # Return
+        logging.info(results)
+        if all(x == [] for x in results.itervalues()):
+            return self.api_response(data=None)
+        else:
+            return self.api_response(data=results)
 
 ###########################
 ### API call for correspondence data from a single USVer
