@@ -74,7 +74,7 @@ function render_profile(contact) {
     }
 }
 
-
+/* OLD
 function render_connection(connection) {
     console.log('render_connection()');
     var $panel = $('td.Bu.y3 div.nH.adC');
@@ -87,6 +87,38 @@ function render_connection(connection) {
             dataType: 'text',
             success: function(html) {
                 var email = connection.email;
+                var email_parts = email.split('@');
+                if (email_parts.length == 2) {
+                    connection.email_name = email_parts[0];
+                    connection.email_domain = email_parts[1];
+                }
+                var $div = $panel.find('div#rapporto');
+                if (!$div.length)
+                    $div = $('<div id="rapporto" style="position:relative;" />');
+                $div.html(Mustache.render(html, connection));
+                $panel.prepend($div);
+            },
+        });
+    } else {
+        console.log($panel);
+    }
+}
+*/
+
+/* New layout for connection */
+function render_connection(connection_dict) {
+    console.log('render_connection()');
+    var $panel = $('td.Bu.y3 div.nH.adC');
+    if ($panel) {
+        // Get local html and inject into page
+        $.ajax({
+            type: 'GET',
+            url: 'chrome-extension://'+encodeURIComponent(ID)+'/templates/connection.html',
+            cache: true,
+            dataType: 'text',
+            success: function(html) {
+                console.log(connection_dict);
+                var email = connection_dict.current_user.email;
                 var email_parts = email.split('@');
                 if (email_parts.length == 2) {
                     connection.email_name = email_parts[0];
@@ -194,33 +226,10 @@ function find_account() {
 
 
 // Immediately render search form on page load
-/*$(document).ready(function(){
+$(document).ready(function(){
     render_search()
 });
-*/
 
-$(document).ready(function(){
-    var $panel = $('td.Bu.y3 div.nH.adC');
-    if ($panel) {
-        // Get local html and inject into page
-        $.ajax({
-            type: 'GET',
-            url: 'chrome-extension://'+encodeURIComponent(ID)+'/templates/connection.html',
-            cache: true,
-            dataType: 'text',
-            success: function(html) {
-                var $div = $panel.find('div#rapporto');
-                if (!$div.length)
-                    $div = $('<div id="rapporto" style="position:relative;" />');
-                $div.html(Mustache.render(html));
-                $panel.prepend($div);
-            },
-        });
-    } else {
-        console.log($panel);
-    }
-
-});
 
 // Lets content script listen for an search event triggered by local html
 document.addEventListener("search", function(data) {
@@ -244,10 +253,10 @@ function start() {
         var email = email_from_attr($el) || email_from_mailto($el);
         if (email) {
             console.log('Mouse over ' + email);
-            chrome.extension.sendMessage({name:'get_connection_by_email', email:email}, function(data) {
+            chrome.extension.sendMessage({name:'get_connection_by_email_for_extension', email:email}, function(data) {
                 if (data.data) {
-                    var connection = data.data;
-                    render_connection(connection);
+                    var connection_dict = data.data;
+                    render_connection(connection_dict);
                 }
             });
         }
