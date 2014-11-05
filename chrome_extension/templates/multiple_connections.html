@@ -7,7 +7,7 @@
 <table class="table table-hover">
   <tbody>
     {{#connections}}
-      <tr profileemail="{{ email }}"><td profileemail="{{ email }}">
+      <tr profile-email="{{ email }}"><td profile-email="{{ email }}">
         {{name}}</br>
         {{#email_name}}{{email_name}}<span style="color:#6d6d6d;">@{{email_domain}}</span>{{/email_name}}{{^email_name}}{{email}}{{/email_name}}
       </td></tr>
@@ -19,6 +19,9 @@
     {{/connections}}
   </tbody>
 </table>
+
+<!-- Hidden div holds email address of selected row -->
+<div id="selected-domain" style="display:none"></div>
 
 <div>
   <a href="{{url}}">Click here</a> to see all connections
@@ -40,23 +43,24 @@
 
 <script>
   $('#search_button').click(function(){
-      console.log('Search button clicked');
-      var name = $('#search_name').val();
-      var domain = $('#search_domain').val();
-
-      send_search(name, domain)
-  });
-
-  $('td').click(function(){
-    var email = $(this).attr('profileemail');
-    console.log(email);
-    send_search("", email);
-  });
-
-  function send_search(name, domain){
+    console.log('Search button clicked');
     var event = document.createEvent('Event');
     event.initEvent('search');
     document.dispatchEvent(event);
+  });
+
+  $('td').click(function(){
+    console.log('Row selected');
+    var email = $(this).attr('profile-email')
+    console.log(email);
+    $('#selected-domain').attr('profile-email', email);
+    var event = document.createEvent('Event');
+    event.initEvent('rowClicked');
+    document.dispatchEvent(event);
+  });
+
+  function send_search(){
+    
   }
 /*
   $('tr').hover(

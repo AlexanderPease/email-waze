@@ -227,7 +227,7 @@ $(document).ready(function(){
 });
 
 
-// Lets content script listen for an search event triggered by local html
+// Content script listens for "search" event
 document.addEventListener("search", function(data) {
     console.log('Content script initiating search')
     var name = $('#search_name').val();
@@ -237,6 +237,18 @@ document.addEventListener("search", function(data) {
             var connections = data.data;
             var url = 'https://ansatz.me/search?name=' + name + '&domain=' + domain 
             render_multiple_connections(connections, url);
+        }
+    });
+})
+
+// Content script listens for "rowClicked" event in multiple_connections.html
+document.addEventListener("rowClicked", function(data) {
+    console.log('Content script chose row')
+    var email = $('#selected-domain').attr('profile-email');
+    chrome.extension.sendMessage({name:'get_connection_by_email_for_extension', email:email}, function(data) {
+        if (data.data) {
+            var connection_dict = data.data;
+            render_connection(connection_dict);
         }
     });
 })
