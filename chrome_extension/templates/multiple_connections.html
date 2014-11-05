@@ -1,16 +1,68 @@
-Showing {{show_num}} of {{total_num}} connections
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
 
-{{#connections}}
-  <p style="font-size:18px; font-weight:bold; margin-top:10px; margin-bottom:2px;">{{name}}</p>
-  <div style="font-size:14px;">
-    {{#email_name}}{{email_name}}<span style="color:#6d6d6d;">@{{email_domain}}</span>{{/email_name}}{{^email_name}}{{email}}{{/email_name}}
-  </div>
-{{/connections}}
-{{^connections}}
-No connections
-{{/connections}}
+<div style="margin-top:10px;">
+  Showing {{show_num}} of {{total_num}} connections
+</div>
 
-</br>
+<table class="table table-hover">
+  <tbody>
+    {{#connections}}
+      <tr><td email="{{ email }}">
+        {{name}}</br>
+        {{#email_name}}{{email_name}}<span style="color:#6d6d6d;">@{{email_domain}}</span>{{/email_name}}{{^email_name}}{{email}}{{/email_name}}
+      </td></tr>
+    {{/connections}}
+    {{^connections}}
+    <tr><td>
+      No connections found
+    </td></tr>
+    {{/connections}}
+  </tbody>
+</table>
+
 <div>
   <a href="{{url}}">Click here</a> to see all connections
 </div>
+
+<div style="margin-top:10px;"> 
+    Search Ansatz
+    </br>
+    <form role="form">
+        <div class="form-group">
+            <input type="search" name="name" id="search_name" placeholder="Name">
+        </div>
+        <div class="form-group">
+            <input type="search" name="domain" id="search_domain" placeholder="Domain">
+        </div>
+        <button type="button" class="btn btn-primary" id="search_button">Search</button> 
+    </form>
+</div>
+
+<script>
+  $('#search_button').click(function(){
+      console.log('Search button clicked');
+      var name = $('#search_name').val();
+      var domain = $('#search_domain').val();
+
+      send_search(name, domain)
+  });
+
+  $('td').click(function(){
+    var email = $(this).attr('email');
+    console.log(email);
+    send_search("", email);
+  });
+
+  function send_search(name, domain){
+    console.log('Search button clicked');
+    var event = document.createEvent('Event');
+    event.initEvent('search');
+    document.dispatchEvent(event);
+  }
+/*
+  $('tr').hover(
+    function(){ $(this).addClass("active")}, 
+    function(){ $(this).removeClass("active")}
+  );
+*/
+</script>

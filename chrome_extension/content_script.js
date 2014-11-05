@@ -141,7 +141,6 @@ function render_multiple_connections(connections_array, url) {
     console.log('render_multiple_connections()');
     var $panel = $('td.Bu.y3 div.nH.adC');
     if ($panel) {
-        //Render connections...
         $.ajax({
             type: 'GET',
             url: 'chrome-extension://'+encodeURIComponent(ID)+'/templates/multiple_connections.html',
@@ -156,8 +155,6 @@ function render_multiple_connections(connections_array, url) {
                     var show_num = 5;
                     connections_array = connections_array.slice(0,show_num);
                 }
-                
-
                 // Break out email handle vs. email domain for displaying
                 for (var i=0; i < connections_array.length; i++) {
                     var email = connections_array[i].email;
@@ -178,12 +175,10 @@ function render_multiple_connections(connections_array, url) {
                     'show_num': show_num,
                     'url': url
                 }
-                $div.append(Mustache.render(html, data));
+                $div.html(Mustache.render(html, data));
                 $panel.prepend($div);
             },
         });
-        // ...then search bar on bottom
-        render_search()
     } else {
         console.log($panel);
     }
@@ -214,7 +209,7 @@ function render_search() {
     }
 }
 
-/* Not sure what this does */
+/* Not sure what this does 
 function find_account() {
     console.log('find_account()')
     var $email = $('div.gb_aa.gb_B').find('div.gb_ia');
@@ -224,7 +219,7 @@ function find_account() {
         return $email.text();
     return undefined;
 }
-
+*/
 
 // Immediately render search form on page load
 $(document).ready(function(){
