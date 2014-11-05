@@ -1,8 +1,8 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
 
-<div style="margin-left: 8px;">
+<div style="padding-left: 8px;">
     {{ #profile}}
-      <p style="font-size:18px; font-weight:bold; margin-top:10px; margin-bottom:0px;">
+      <p style="font-size:18px; font-weight:bold; padding-top:10px; padding-bottom:0px;">
         {{ profile.name }}
       </p>
       <p style="font-size:14px;">
@@ -25,7 +25,7 @@
     {{ /current_user }}
     {{ ^current_user }}
       <tr id="popover-row" data-container="body" data-content="FOOO">
-        <td>You've never emailed this person</td>
+        <td>You've never emailed this person.</td>
       </tr>
     {{ /current_user }}
 
@@ -44,7 +44,7 @@
             No one in your team has emailed {{ profile.email }}, but {{ connected_user_email }} emailed {{ connected_profile_email }} on {{ latest_email_out_date }}. 
           {{ /group_users_domain }}
           {{ ^group_users_domain }}
-            No one in your team has emailed {{ profile.email }} or anyone at {{ email_domain }}. 
+            No one in your team has emailed anyone at {{ email_domain }}. 
           {{ /group_users_domain }}
         </td>
       </tr>
@@ -52,22 +52,21 @@
 
     <tr><td><a href="https://ansatz.me/search?domain={{ profile.email }}">Click here</a> for all info</td></tr>
 
+    <tr><td>
+      Search again: 
+      <form role="form">
+          <div class="form-group">
+              <input type="search" name="name" id="search_name" placeholder="Name">
+          </div>
+          <div class="form-group">
+              <input type="search" name="domain" id="search_domain" placeholder="Domain">
+          </div>
+          <button type="button" class="btn btn-primary" id="search_button">Search</button> 
+      </form>
+    </td></tr>
+
   </tbody>
 </table>
-
-<div> 
-    Search Ansatz
-    </br>
-    <form role="form">
-        <div class="form-group">
-            <input type="search" name="name" id="search_name" placeholder="Name">
-        </div>
-        <div class="form-group">
-            <input type="search" name="domain" id="search_domain" placeholder="Domain">
-        </div>
-        <button type="button" class="btn btn-primary" id="search_button">Search</button> 
-    </form>
-</div>
 
 <script>
   $('#search_button').click(function(){
