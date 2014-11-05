@@ -186,6 +186,7 @@ class ConnectionByEmailForExtension(app.basic.BaseHandler):
         group_users = current_user.all_group_users(include_self=False)
         try:
             profile = Profile.objects.get(email=domain)
+            results['profile'] = profile.to_json()
         except:
             profile = None
 

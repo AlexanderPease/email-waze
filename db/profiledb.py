@@ -58,6 +58,13 @@ class Profile(Document):
     def __str__(self):
         return self.name + ' <' + self.email + '>'
 
+    def to_json(self):
+        return {
+            'email': self.email,
+            'name': self.name,
+            'burner': self.burner
+        }
+
 
     def get_domain(self):
         """

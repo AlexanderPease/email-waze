@@ -118,7 +118,7 @@ function render_connection(connection_dict) {
             dataType: 'text',
             success: function(html) {
                 console.log(connection_dict);
-                var email = connection_dict.group_users_profile.connected_profile_email;
+                var email = connection_dict.profile.email;
                 var email_parts = email.split('@');
                 if (email_parts.length == 2) {
                     connection_dict.email_name = email_parts[0];
