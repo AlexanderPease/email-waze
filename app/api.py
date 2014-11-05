@@ -183,7 +183,7 @@ class ConnectionByEmailForExtension(app.basic.BaseHandler):
 
         # Setup needed to find results values
         results = {}
-        group_users = current_user.all_group_users()
+        group_users = current_user.all_group_users(include_self=False)
         try:
             profile = Profile.objects.get(email=domain)
         except:

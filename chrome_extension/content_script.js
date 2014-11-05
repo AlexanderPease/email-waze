@@ -118,16 +118,16 @@ function render_connection(connection_dict) {
             dataType: 'text',
             success: function(html) {
                 console.log(connection_dict);
-                var email = connection_dict.current_user.email;
+                var email = connection_dict.group_users_profile.connected_profile_email;
                 var email_parts = email.split('@');
                 if (email_parts.length == 2) {
-                    connection.email_name = email_parts[0];
-                    connection.email_domain = email_parts[1];
+                    connection_dict.email_name = email_parts[0];
+                    connection_dict.email_domain = email_parts[1];
                 }
                 var $div = $panel.find('div#rapporto');
                 if (!$div.length)
                     $div = $('<div id="rapporto" style="position:relative;" />');
-                $div.html(Mustache.render(html, connection));
+                $div.html(Mustache.render(html, connection_dict));
                 $panel.prepend($div);
             },
         });
@@ -204,6 +204,7 @@ function render_search() {
                 var $div = $panel.find('div#rapporto');
                 if (!$div.length)
                     $div = $('<div id="rapporto" style="position:relative;" />');
+                console.log('injecting search');
                 $div.html(Mustache.render(html));
                 $panel.prepend($div);
             },

@@ -79,15 +79,22 @@ class User(Document):
         return Group.objects(users=self)
 
 
-    def all_group_users(self):
+    def all_group_users(self, include_self=True):
         """
         Returns a distinct list of Users in all of the groups 
-        that the User is a part of. Includes self in that list. 
+        that the User is a part of. Includes self in that list unless 
+        exclude_self = False.
         """
         groups = self.get_groups()
-        all_users = [u for g in groups for u in g.users]
-        return list(set(all_users))
+        all_users = set([u for g in groups for u in g.users])
 
+        if not include_self:
+            try:
+                all_users.remove(self)
+            except KeyError:
+                pass # self was not in the set
+
+        return list(all_users)
 
     def get_domain(self):
         """
