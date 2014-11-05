@@ -1,17 +1,17 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
 
 <div style="margin-left: 8px;">
-    {{ #group_users_profile.connected_profile_name }}
+    {{ #profile}}
       <p style="font-size:18px; font-weight:bold; margin-top:10px; margin-bottom:0px;">
-        {{ group_users_profile.connected_profile_name }}
+        {{ profile.name }}
       </p>
       <p style="font-size:14px;">
           {{ email_name }}<span style="color:#6d6d6d;">@{{ email_domain }}</span>
       </p>
-    {{ /group_users_profile.connected_profile_name }}
-    {{ ^group_users_profile.connected_profile_name }}
+    {{ /profile }}
+    {{ ^profile }}
       No Profile Found
-    {{ /group_users_profile.connected_profile_name }}
+    {{ /profile}}
 </div>
 
 <table class="table table-striped">
@@ -19,7 +19,7 @@
     {{ #current_user }}
       <tr id="popover-row" data-container="body" data-content="FOOO">
         <td> 
-          You last emailed on {{ latest_email_out_date }}
+          You last emailed {{ profile.email }} on {{ latest_email_out_date }}
         </td>
       </tr>
     {{ /current_user }}
@@ -32,6 +32,7 @@
     {{ #group_users_profile }}
       <tr>
         <td>
+          Latest team connection:</br>
           {{ connected_user_email }} emailed {{ connected_profile_email }} on {{ latest_email_out_date }}
         </td>
       </tr>
@@ -39,25 +40,15 @@
     {{ ^group_users_profile }}
       <tr>
         <td>
-          No one in your team has emailed {{ email_name }}@{{ email_domain }}
+          {{ #group_users_domain }}
+            No one in your team has emailed {{ profile.email }}, but {{ connected_user_email }} emailed {{ connected_profile_email }} on {{ latest_email_out_date }}. 
+          {{ /group_users_domain }}
+          {{ ^group_users_domain }}
+            No one in your team has emailed {{ profile.email }} or anyone at {{ email_domain }}. 
+          {{ /group_users_domain }}
         </td>
       </tr>
     {{ /group_users_profile }}
-
-    {{ #group_users_domain }}
-      <tr>
-        <td>
-          {{ connected_user_email }} emailed a @{{ email_domain }} address on {{ latest_email_out_date }}
-        </td>
-      </tr>
-    {{ /group_users_domain }}
-    {{ ^group_users_domain }}
-      <tr>
-        <td>
-          No one in your team has emailed @{{ email_domain }}
-        </td>
-      </tr>
-    {{ /group_users_domain }}
 
     <tr><td><a href="">Click here</a> for all info</td></tr>
 
