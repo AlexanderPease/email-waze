@@ -2,6 +2,7 @@
 "update_url": "https://clients2.google.com/service/update2/crx",
 
     "name": "Ansatz",
+    "short_name": "Ansatz",
     "version": "0.0.1",
     "description": "Stop connecting. Start emailing.",
     "background": {
@@ -38,11 +39,6 @@
     ],
     "externally_connectable": {
         "matches": [ "https://mail.google.com/*" ]
-    },
-    "icons": {
-        "16": "img/icon16.png",
-        "48": "img/icon48.png",
-        "128": "img/icon128.png"
     },
     "minimum_chrome_version": "26",
     "permissions": [

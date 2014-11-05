@@ -129,6 +129,5 @@ def list_to_json_list(l):
     """
     json_list = []
     for connection_set in l:
-        logging.info(connection_set)
         json_list.append(connection_set.to_json())
     return json_list

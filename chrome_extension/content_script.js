@@ -109,9 +109,7 @@ function render_multiple_connections(connections_array, url) {
     console.log('render_multiple_connections()');
     var $panel = $('td.Bu.y3 div.nH.adC');
     if ($panel) {
-        // Inject search bar on top...
-        render_search()
-        //...then append connections below
+        //Render connections...
         $.ajax({
             type: 'GET',
             url: 'chrome-extension://'+encodeURIComponent(ID)+'/templates/multiple_connections.html',
@@ -152,6 +150,8 @@ function render_multiple_connections(connections_array, url) {
                 $panel.prepend($div);
             },
         });
+        // ...then search bar on bottom
+        render_search()
     } else {
         console.log($panel);
     }

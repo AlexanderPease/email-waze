@@ -139,7 +139,7 @@ class ConnectionSearch(app.basic.BaseHandler):
             # insert limits on how many profiles this returns?
 
             group_users = current_user.all_group_users()
-            connections = Connection.objects(profile__in=profiles, user__in=group_users)
+            connections = Connection.objects(profile__in=profiles, user__in=group_users).order_by('-latest_email_out_date')
 
             if connections and len(connections) > 0:
                 if cs == 'group':
@@ -147,6 +147,7 @@ class ConnectionSearch(app.basic.BaseHandler):
                 else:
                     results = ProfileConnectionSet.package_connections(connections)
                 results = connectionsets.list_to_json_list(results)
+
                 return self.api_response(data=results)
 
         return self.api_response(data=None)
