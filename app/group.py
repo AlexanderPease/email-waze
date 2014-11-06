@@ -86,7 +86,6 @@ class EditGroup(app.basic.BaseHandler):
         # Add email invites
         if invited_emails:
             invited_emails = invited_emails.split(", ")
-
             # Send invites to only newly invited emails
             old_invited_emails = g.invited_emails
             for e in invited_emails:
@@ -102,9 +101,10 @@ class EditGroup(app.basic.BaseHandler):
                         <a href="https://ansatz.me">https://ansatz.me</a> 
                         to learn more!''' % (current_user.name)
                         )
-
             # Set new invited_emails
             g.invited_emails = invited_emails
+        elif g.invited_emails and invited_emails == "":
+            g.invited_emails = []
 
         g.save()
         return self.redirect('/user/settings?msg=Successfully updated group settings!')
