@@ -35,7 +35,7 @@ class CreateGroup(app.basic.BaseHandler):
             for e in g.invited_emails:
                 self.send_email(from_address='Ansatz.me <postmaster@ansatz.me>',
                     to_address=e,
-                    subject='Invitation from %s (%s)' % (u.name, u.email)
+                    subject='Invitation from %s (%s)' % (u.name, u.email),
                     html_text='''%s has invited you to join them on 
                     <a href="https://www.ansatz.me">Ansatz.me</a>! 
                     Ansatz is the anti-CRM: leverage your team's network
@@ -93,7 +93,7 @@ class EditGroup(app.basic.BaseHandler):
                 if e not in old_invited_emails:
                     self.send_email(from_address='Ansatz.me <postmaster@ansatz.me>',
                         to_address=e,
-                        subject='Invitation from %s (%s)' % (u.name, u.email)
+                        subject='Invitation from %s (%s)' % (u.name, u.email),
                         html_text='''%s has invited you to join them on 
                         <a href="https://www.ansatz.me">Ansatz.me</a>! 
                         Ansatz is the anti-CRM: leverage your team's network
@@ -109,8 +109,6 @@ class EditGroup(app.basic.BaseHandler):
         g.save()
         return self.redirect('/user/settings?msg=Successfully updated group settings!')
 
-
-def send_email_invite
 
 ########################
 ### Accept a group invitation. Use group document id string as identifier. 
