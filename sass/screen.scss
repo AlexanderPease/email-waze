@@ -120,7 +120,8 @@ footer {
 
 .hero {
   @include background-image(linear-gradient(135deg, #182848 0%, #4B6CB7 100%));
-  @media screen and (min-width: 768px) {
+  padding: 80px 0px;
+  @media screen and (min-width: 768px) and (min-height: 750px) {
     padding: 110px 0px;
   }
   background-attachment: fixed;
@@ -150,7 +151,10 @@ footer {
     color: #FFF;
     text-transform: capitalize;
     text-align: center;
-    margin: 0px 0px 120px;
+    margin: 0px 0px 80px;
+    @media screen and (min-width: 768px) and (min-height: 750px) {
+      margin: 0px 0px 120px;
+    }
   }
 
   h2 {
@@ -198,7 +202,7 @@ footer {
   @media screen and (min-width: 768px) {
     padding: 60px 0;
   }
-  @media screen and (min-width: 1025px) {
+  @media screen and (min-width: 1025px) and (min-height: 750px) {
     padding: 120px 0px;
   }
   border-bottom: 1px solid #E8EAF1;
