@@ -36,11 +36,11 @@ class Forward(app.basic.BaseHandler):
 
         try:
             # Add intro message
-            intro_msg = '''%s found you on <a href="http://www.ansatz.com">Ansatz.com</a>. 
+            intro_msg = '''%s found you on <a href="https://www.ansatz.me">Ansatz</a>. 
                         We never give away your real email address, but instead
                         let people find a "public" email address that you can 
                         delete or change the permissions for 
-                        <a href="http://ansatz.com">here</a>.
+                        <a href="https://ansatz.me">here</a>.
                         If you'd like to respond to %s directly just hit 
                         Reply.<br/><br/>''' % (from_address, from_address)
             body = intro_msg + body

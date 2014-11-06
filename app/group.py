@@ -31,6 +31,19 @@ class CreateGroup(app.basic.BaseHandler):
         if invited_emails:
             invited_emails = invited_emails.split(", ")
             g.invited_emails = invited_emails
+            # Send invites
+            for e in g.invited_emails:
+                self.send_email(from_address='Ansatz.me <postmaster@ansatz.me>',
+                    to_address=e,
+                    subject='Invitation from %s (%s)' % (u.name, u.email)
+                    html_text='''%s has invited you to join them on 
+                    <a href="https://www.ansatz.me">Ansatz.me</a>! 
+                    Ansatz is the anti-CRM: leverage your team's network
+                    and communication without any tedious data entry or 
+                    tracking. Visit 
+                    <a href="https://ansatz.me">https://ansatz.me</a> 
+                    to learn more!''' % (u.name, from_address)
+                    )
 
         g.save()
 
@@ -73,12 +86,31 @@ class EditGroup(app.basic.BaseHandler):
         # Add email invites
         if invited_emails:
             invited_emails = invited_emails.split(", ")
+
+            # Send invites to only newly invited emails
+            old_invited_emails = g.invited_emails
+            for e in invited_emails:
+                if e not in old_invited_emails:
+                    self.send_email(from_address='Ansatz.me <postmaster@ansatz.me>',
+                        to_address=e,
+                        subject='Invitation from %s (%s)' % (u.name, u.email)
+                        html_text='''%s has invited you to join them on 
+                        <a href="https://www.ansatz.me">Ansatz.me</a>! 
+                        Ansatz is the anti-CRM: leverage your team's network
+                        and communication without any tedious data entry or 
+                        tracking. Visit 
+                        <a href="https://ansatz.me">https://ansatz.me</a> 
+                        to learn more!''' % (u.name, from_address)
+                        )
+
+            # Set new invited_emails
             g.invited_emails = invited_emails
 
         g.save()
-
         return self.redirect('/user/settings?msg=Successfully updated group settings!')
 
+
+def send_email_invite
 
 ########################
 ### Accept a group invitation. Use group document id string as identifier. 
