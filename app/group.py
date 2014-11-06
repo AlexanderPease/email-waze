@@ -35,14 +35,14 @@ class CreateGroup(app.basic.BaseHandler):
             for e in g.invited_emails:
                 self.send_email(from_address='Ansatz.me <postmaster@ansatz.me>',
                     to_address=e,
-                    subject='Invitation from %s (%s)' % (u.name, u.email),
+                    subject='Invitation from %s (%s)' % (current_user.name, current_user.email),
                     html_text='''%s has invited you to join them on 
                     <a href="https://www.ansatz.me">Ansatz.me</a>! 
                     Ansatz is the anti-CRM: leverage your team's network
                     and communication without any tedious data entry or 
                     tracking. Visit 
                     <a href="https://ansatz.me">https://ansatz.me</a> 
-                    to learn more!''' % (u.name, from_address)
+                    to learn more!''' % (current_user.name)
                     )
 
         g.save()
@@ -70,8 +70,8 @@ class EditGroup(app.basic.BaseHandler):
     def post(self, group):
         # Only allow Group admin to make changes to Group
         g = Group.objects.get(id=group)
-        u = User.objects.get(email=self.current_user)
-        if not u.same_user(g.admin):
+        current_user = User.objects.get(email=self.current_user)
+        if not current_user.same_user(g.admin):
             return self.redirect('/')
 
         name = self.get_argument('name', '')
@@ -93,14 +93,14 @@ class EditGroup(app.basic.BaseHandler):
                 if e not in old_invited_emails:
                     self.send_email(from_address='Ansatz.me <postmaster@ansatz.me>',
                         to_address=e,
-                        subject='Invitation from %s (%s)' % (u.name, u.email),
+                        subject='Invitation from %s (%s)' % (current_user.name, current_user.email),
                         html_text='''%s has invited you to join them on 
                         <a href="https://www.ansatz.me">Ansatz.me</a>! 
                         Ansatz is the anti-CRM: leverage your team's network
                         and communication without any tedious data entry or 
                         tracking. Visit 
                         <a href="https://ansatz.me">https://ansatz.me</a> 
-                        to learn more!''' % (u.name, from_address)
+                        to learn more!''' % (current_user.name)
                         )
 
             # Set new invited_emails
