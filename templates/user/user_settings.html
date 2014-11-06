@@ -17,8 +17,10 @@
       Email: {{ user.email }}
       </br>
 
-      Ansatz email: {{ profile.burner }}@{{ settings.get('domain_name') }}
+      {% if profile %}
+        Ansatz email: {{ profile.burner }}@{{ settings.get('domain_name') }}
       </br></br>
+      {% end %}
       <!--<ul>
         <li>Update your Ansatz email</li>
       </ul>-->

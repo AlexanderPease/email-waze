@@ -36,7 +36,7 @@ class CreateGroup(app.basic.BaseHandler):
                 self.send_email(from_address='Ansatz.me <postmaster@ansatz.me>',
                     to_address=e,
                     subject='Invitation from %s (%s)' % (current_user.name, current_user.email),
-                    html_text='''%s has invited you to join them on 
+                    html_text='''%s has invited you to join 
                     <a href="https://www.ansatz.me">Ansatz.me</a>! 
                     Ansatz is the anti-CRM: leverage your team's network
                     and communication without any tedious data entry or 
@@ -93,7 +93,7 @@ class EditGroup(app.basic.BaseHandler):
                     self.send_email(from_address='Ansatz.me <postmaster@ansatz.me>',
                         to_address=e,
                         subject='Invitation from %s (%s)' % (current_user.name, current_user.email),
-                        html_text='''%s has invited you to join them on 
+                        html_text='''%s has invited you to join 
                         <a href="https://www.ansatz.me">Ansatz.me</a>! 
                         Ansatz is the anti-CRM: leverage your team's network
                         and communication without any tedious data entry or 
