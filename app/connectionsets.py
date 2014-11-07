@@ -4,6 +4,26 @@ from db.userdb import User
 from db.groupdb import Group
 from db.connectiondb import Connection
 
+
+class BaseProfileConnection:
+    """
+    Class for all Profiles and relevant Connection info if it exists
+
+    Args:
+        profile is a Profile instance
+        connections is a list of Connection instances
+        latest_email_out_date is a Connection instance with the most recent email out
+    """
+    def __init__(self, profile, connections=None, latest_email_out_date=None):
+        self.name = profile.name
+        self.email = profile.email
+        self.burner = profile.burner
+        self.connections = connections
+        self.latest_email_out_date = latest_email_out_date
+
+    def __repr__(self):
+        return 'BaseProfileConnection: %s (%s)' % (self.name, self.email)
+
 class GroupConnectionSet:
     """
     Class that groups Connections together by User
@@ -13,14 +33,11 @@ class GroupConnectionSet:
         self.name = name
         self.connections = [] # start with empty array
 
-
     def __repr__(self):
         return 'GroupConnectionSet: %s (%s) connected to %s profiles' % (self.name, self.email, len(self.connections))
 
-
     def add_connection(self, c):
         self.connections.append(c)
-
 
     def to_json(self):
         '''
@@ -30,7 +47,6 @@ class GroupConnectionSet:
         for c in self.connections:
             json['connections'].append(c.to_json())
         return json
-
 
     @classmethod
     def package_connections(self, connections):
@@ -59,9 +75,7 @@ class GroupConnectionSet:
                 results.append(pc)
 
                 results_emails.append(c.user.email)
-
         return results
-
 
 class ProfileConnectionSet:
     """
@@ -72,14 +86,11 @@ class ProfileConnectionSet:
         self.name = name
         self.connections = [] # start with empty array
 
-
     def __repr__(self):
         return 'ProfileConnectionSet: %s (%s) connected to %s of your team members' % (self.name, self.email, len(self.connections))
 
-
     def add_connection(self, c):
         self.connections.append(c)
-
 
     def to_json(self):
         '''
@@ -89,7 +100,6 @@ class ProfileConnectionSet:
         for c in self.connections:
             json['connections'].append(c.to_json())
         return json
-
 
     @classmethod
     def package_connections(self, connections):
@@ -120,7 +130,6 @@ class ProfileConnectionSet:
                 results_emails.append(c.profile.email)
 
         return results
-
 
 def list_to_json_list(l):
     """

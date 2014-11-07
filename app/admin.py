@@ -71,6 +71,11 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             self.redirect('/')
 
+        for u in User.objects():
+            p = Profile.objects.get(email=u.email)
+            print p.burner
+
+
         """
         ### Delete all connections to oneself
         users = User.objects

@@ -5,7 +5,7 @@ from db.profiledb import Profile
 from db.userdb import User
 from db.groupdb import Group
 from db.connectiondb import Connection
-from app.connectionsets import GroupConnectionSet, ProfileConnectionSet
+from app.connectionsets import GroupConnectionSet, ProfileConnectionSet, BaseProfileConnection
 from mongoengine.queryset import Q
 
 
@@ -36,8 +36,20 @@ class Search(app.basic.BaseHandler):
         group_users = current_user.all_group_users()
         connections = Connection.objects(profile__in=profiles, user__in=group_users).order_by('-latest_email_out_date')
 
+        # BaseProfileConnections for All tab 
+        ps = []
+        for p in profiles:
+            bp = BaseProfileConnection(p)
+            cs = Connection.objects(profile=p, user__in=group_users).order_by('-latest_email_out_date')
+            if len(cs) > 0:
+                bp.connections = cs
+                bp.latest_email_out_date = cs[0]
+            ps.append(bp)
+
+
         # De-dupe profiles that user is connected to
         # This is djanky because can't do joins :(
+        '''
         ps = []
         for p in profiles:
             p_flag = True
@@ -47,6 +59,7 @@ class Search(app.basic.BaseHandler):
             if p_flag:
                 ps.append(p)
         profiles = ps
+        '''
 
         # Organize connections into dictionaries to handle multiple people being
         # connected to the same email
@@ -54,12 +67,13 @@ class Search(app.basic.BaseHandler):
         group_connection_set = GroupConnectionSet.package_connections(connections)
 
         return self.render('public/search.html', 
-            profiles=profiles, 
+            profiles=ps,
             profile_connection_set=profile_connection_set,
-            group_connection_set=group_connection_set, 
-            email_obscure=Profile.get_domain)
+            group_connection_set=group_connection_set,
+            get_domain=ui_methods.get_domain)
     else:
         return self.redirect('/')
+
 
 ########################
 ### About 

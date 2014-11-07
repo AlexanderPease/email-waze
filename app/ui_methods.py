@@ -49,6 +49,12 @@ def list_to_comma_delimited_string(list_arg):
     long_string = long_string[0:-2] # Remove last ", "
     return long_string
 
+def get_domain(email):
+        """
+        Returns just the domain name of an email address
+        Ex: reply.craigslist.com from foo@reply.craigslist.com
+        """
+        return email.split('@')[1]
 
 def email_obscure(email):
     """

@@ -157,8 +157,15 @@
                   <th>Public Email Address</th>
                 </tr>
                 {% for p in profiles %}
-                  <tr>
-                    <td>{{ p.name }} ({{ email_obscure(p) }})</td>
+                  <tr
+                    {% if p.connections %}
+                      has-connection="true"
+                    {% end %}
+                    {% if p.latest_email_out_date %}
+                      latest-email-out={{ p.latest_email_out_date.latest_email_out_date }}
+                    {% end %}
+                  >
+                    <td>{{ p.name }} ({{ get_domain(p.email) }})</td>
                     <td><a href="mailto:{{ p.burner }}@ansatz.me" target="_blank">{{ p.burner }}@ansatz.me</a></td>
                   </tr>
                 {% end %}
