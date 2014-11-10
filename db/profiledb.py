@@ -118,15 +118,13 @@ class Profile(Document):
                     logging.info("Added burner: %s" % burner)
                     flag = False # Exit loop
                 except Exception as e:
-                    logging.info(e)
-                    
                     # Add number to end of burner if necessary.
                     # Remove previous number if this is not first time
                     # Ex: avoids foo123, instead gives foo3
                     if flag == 1:
                         burner = burner + str(flag)
                     else:
-                        burner = burner[:-1] + str(flag)
+                        burner = burner[:-len(str(flag-1))] + str(flag)
                     flag = flag + 1
 
 
