@@ -3,7 +3,7 @@
 
     "name": "Ansatz",
     "short_name": "Ansatz",
-    "version": "0.0.2",
+    "version": "0.0.21",
     "description": "Stop connecting. Start emailing.",
     "background": {
         "persistent": false,
@@ -16,6 +16,7 @@
     "content_scripts": [
         {
             "matches": [ "https://mail.google.com/*" ],
+            "css": ["libs/scoped-twbs.css"],
             "js": [
                 "libs/jquery.js",
                 "libs/lscache.js",

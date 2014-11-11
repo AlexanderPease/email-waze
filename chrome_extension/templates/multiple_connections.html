@@ -1,45 +1,45 @@
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+<div class="twbs">
+  <div style="margin-top:10px;">
+    Showing {{show_num}} of {{total_num}} connections
+  </div>
 
-<div style="margin-top:10px;">
-  Showing {{show_num}} of {{total_num}} connections
-</div>
-
-<table class="table table-hover">
-  <tbody>
-    {{#connections}}
-      <tr profile-email="{{ email }}"><td profile-email="{{ email }}">
-        {{name}}</br>
-        {{#email_name}}{{email_name}}<span style="color:#6d6d6d;">@{{email_domain}}</span>{{/email_name}}{{^email_name}}{{email}}{{/email_name}}
+  <table class="table table-hover">
+    <tbody>
+      {{#connections}}
+        <tr profile-email="{{ email }}"><td profile-email="{{ email }}">
+          {{name}}</br>
+          {{#email_name}}{{email_name}}<span style="color:#6d6d6d;">@{{email_domain}}</span>{{/email_name}}{{^email_name}}{{email}}{{/email_name}}
+        </td></tr>
+      {{/connections}}
+      {{^connections}}
+      <tr><td>
+        No connections found
       </td></tr>
-    {{/connections}}
-    {{^connections}}
-    <tr><td>
-      No connections found
-    </td></tr>
-    {{/connections}}
-  </tbody>
-</table>
+      {{/connections}}
+    </tbody>
+  </table>
 
-<!-- Hidden div holds email address of selected row -->
-<div id="selected-domain" style="display:none"></div>
+  <!-- Hidden div holds email address of selected row -->
+  <div id="selected-domain" style="display:none"></div>
 
-<div>
-  <a href="{{url}}">Click here</a> to see all connections
-</div>
+  <div>
+    <a href="{{url}}">Click here</a> to see all connections
+  </div>
 
-<div style="margin-top:10px;"> 
-    Search again:
-    </br>
-    <form role="form">
-        <div class="form-group">
-            <input type="search" name="name" id="search_name" placeholder="Name">
-        </div>
-        <div class="form-group">
-            <input type="search" name="domain" id="search_domain" placeholder="Domain">
-        </div>
-        <button type="button" class="btn btn-primary" id="search_button">Search</button> 
-    </form>
-</div>
+  <div style="margin-top:10px;"> 
+      Search again:
+      </br>
+      <form role="form">
+          <div class="form-group">
+              <input type="search" name="name" id="search_name" placeholder="Name">
+          </div>
+          <div class="form-group">
+              <input type="search" name="domain" id="search_domain" placeholder="Domain">
+          </div>
+          <button type="button" class="btn btn-primary" id="search_button">Search</button> 
+      </form>
+  </div>
+</div> <!--twbs-3_1_1-->
 
 <script>
   $('#search_button').click(function(){
