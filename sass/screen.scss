@@ -12,7 +12,7 @@ html {
 
 body {
   font-family: Lato, "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-  background-color: #182848;
+  background-color: #F8F8FA;
   font-weight: 300;
   font-style: normal;
   font-size: 18px;
@@ -110,9 +110,17 @@ h4, .h4 {
 // footer
 
 footer {
+  width: 100%;
+  display: block;
   padding: 40px 0px;
   text-align: center;
   color: #FFF;
+  background-color: #182848;
+
+  &.fixed {
+    position: absolute;
+    bottom: 0;
+  }
 }
 
 

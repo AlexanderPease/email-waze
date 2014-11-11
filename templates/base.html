@@ -54,6 +54,25 @@
 
   <script type="text/javascript" src="//code.jquery.com/jquery-1.10.1.min.js"></script>
   <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      fixFooter();
+    });
+
+    $(window).resize(function () {
+      fixFooter();
+    });
+
+    var fixFooter = function () {
+    // sticky footer if page is not tall enough to fill the window
+      if ($(".page-content").height() > $(window).innerHeight()) {
+        $("footer").removeClass("fixed");
+      } else {
+        $("footer").addClass("fixed");
+      }
+    }
+
+  </script>
   {% block javascript %}{% end %}
 </body>
 </html>
