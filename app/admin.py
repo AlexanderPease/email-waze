@@ -62,6 +62,14 @@ class DB_Connections(app.basic.BaseHandler):
 
 
 ###########################
+### Google Webmaster Verification
+### /google077100c16d33120b
+###########################
+class GoogleWebmaster(app.basic.BaseHandler):
+    def get(self):
+        return self.render('admin/google077100c16d33120b.html')
+
+###########################
 ### Scratch for debugging
 ### /admin/scratch
 ###########################
