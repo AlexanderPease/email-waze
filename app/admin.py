@@ -77,11 +77,18 @@ class Scratch(app.basic.BaseHandler):
     #@tornado.web.authenticated
     def get(self):
         if self.current_user not in settings.get('staff'):
-            self.redirect('/')
+            return self.redirect('/')
 
-        for u in User.objects():
-            p = Profile.objects.get(email=u.email)
-            print p.burner
+        import gmail
+        for u in [User.objects.get(email="joel@usv.com")]:
+            logging.info(u)
+            gmail_service = u.get_service(service_type='gmail')
+            #messages = gmail.ListMessagesMatchingQuery(service=gmail_service,
+            #                                    user_id='me',
+            #                                    query='after:%s' % u.last_updated.strftime('%Y/%m/%d'))
+            #logging.info(messages)
+            logging.info("---------------------")
+            logging.info("")
 
 
         """

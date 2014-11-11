@@ -103,7 +103,6 @@ class User(Document):
         """
         return self.email.split('@')[1]
 
-
     def gmail_job_start_date(self):
         """
         Returns None if this User's Gmail account has never been scraped. 
@@ -134,17 +133,35 @@ class User(Document):
         Returns Google service object for calling APIs
 
         Args: 
-            service_type: Default 'gmail', or use 'oauth2' or 'plus'
+            service_type: Default 'gmail', or use 'oauth2' or 'plus'.
+
+        Returns:
+            googleapiclient.discovery.Resource instance
         """
-        try:
-            credentials = OAuth2Credentials.new_from_json(self.google_credentials)
-            http = httplib2.Http()
+        credentials = OAuth2Credentials.new_from_json(self.google_credentials)
+        http = httplib2.Http()
+        if credentials is None or credentials.invalid:
+            logging.warning('Credentials DNE or invalid')
+        elif credentials.access_token_expired:
+            # Refresh and save new access token
+            logging.info('refresh token:')
+            logging.info("Access token: %s" % credentials.access_token)
+            logging.info("Refresh token: %s" % credentials.refresh_token)
+            logging.info("Token expiry: %s" % credentials.token_expiry)
+            logging.info(http)
+            logging.info(credentials)
+            credentials.refresh(http)
+            self.save_credentials(credentials)
+            logging.info("Access token: %s" % credentials.access_token)
+            logging.info("Refresh token: %s" % credentials.refresh_token)
+            logging.info("Token expiry: %s" % credentials.token_expiry)
+
+        try: 
             http = credentials.authorize(http)
             return build(service_type, version, http=http)
         except:
             logging.error('Could not return Google Discovery APIs service object for User "%s"' % self)
             return
-
 
     def get_gd_client(self):
         """
@@ -163,5 +180,27 @@ class User(Document):
         except:
             logging.error('Could not return Google Data APIs client for User "%s"' % self)
             return
+
+    def save_credentials(self, credentials):
+        """
+        Saves credentials as self.credentials while maintain refresh tokens. 
+
+        Args:
+            credentials: A oauth2.client.OAuth2Credentials object.
+        """
+        if not self.google_credentials or self.google_credentials is None:
+            self.google_credentials = credentials.to_json()
+        else:
+            old_credentials = OAuth2Credentials.new_from_json(self.google_credentials)
+            logging.info(old_credentials.refresh_token)
+            logging.info(credentials.refresh_token)
+            # Maintain refresh token if new credentials do not include one.
+            # This arises when existing users log back in manually
+            if old_credentials.refresh_token and not credentials.refresh_token:
+                credentials.refresh_token = old_credentials.refresh_token
+
+            logging.info(credentials.refresh_token)
+            self.google_credentials = credentials.to_json()
+        self.save()
 
 

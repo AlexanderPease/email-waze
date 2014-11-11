@@ -4,7 +4,7 @@ import settings, logging, httplib2, datetime
 from db.userdb import User
 import tasks
 
-from oauth2client.client import OAuth2WebServerFlow
+from oauth2client.client import OAuth2WebServerFlow, OAuth2Credentials
 from googleapiclient.discovery import build
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.file import Storage
@@ -58,6 +58,9 @@ class AuthReturn(app.basic.BaseHandler):
                                 #approval_prompt='force') 
         credentials = flow.step2_exchange(oauth_code)
         logging.info("Credentials: %s" % credentials)
+        logging.info("Access token: %s" % credentials.access_token)
+        logging.info("Refresh token: %s" % credentials.refresh_token)
+        logging.info("Token expiry: %s" % credentials.token_expiry)
         if credentials is None or credentials.invalid:
             logging.warning('Credentials DNE or invalid')
             return self.redirect('/')
@@ -88,7 +91,16 @@ class AuthReturn(app.basic.BaseHandler):
             user = None
         if user:
             # Update existing user info
+            user.save_credentials(credentials)
+            '''
+            old_credentials = OAuth2Credentials.new_from_json(user.google_credentials)
+            logging.info(old_credentials.refresh_token)
+            logging.info(credentials.refresh_token)
+            if old_credentials.refresh_token and not credentials.refresh_token:
+                credentials.refresh_token = old_credentials.refresh_token
+
             user.google_credentials = credentials.to_json()
+            '''
             user.google_credentials_scope = OAUTH_SCOPE
             user.name = name
             user.email = email
