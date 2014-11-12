@@ -108,6 +108,7 @@ function render_connection(connection) {
 /* New layout for connection */
 function render_connection(connection_dict) {
     console.log('render_connection()');
+    console.log(connection_dict);
     var $panel = $('td.Bu.y3 div.nH.adC');
     if ($panel) {
         if (connection_dict.empty) {
@@ -117,8 +118,7 @@ function render_connection(connection_dict) {
                 cache: true,
                 dataType: 'text',
                 success: function(html) {
-                    console.log(connection_dict);
-                    var email = connection_dict.profile.email;
+                    var email = connection_dict.email;
                     var email_parts = email.split('@');
                     if (email_parts.length == 2) {
                         connection_dict.email_name = email_parts[0];
@@ -138,7 +138,6 @@ function render_connection(connection_dict) {
                 cache: true,
                 dataType: 'text',
                 success: function(html) {
-                    console.log(connection_dict);
                     var email = connection_dict.profile.email;
                     var email_parts = email.split('@');
                     if (email_parts.length == 2) {
