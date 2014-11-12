@@ -27,15 +27,23 @@ OAUTH_SCOPE = ('https://www.googleapis.com/auth/gmail.modify '
 class Auth(app.basic.BaseHandler):
     def get(self):
         logging.info('Entered Auth')
-        flow = OAuth2WebServerFlow(client_id=settings.get('google_client_id'),
+        approval_prompt = self.get_argument('approval_prompt', '')
+        logging.info(approval_prompt)
+        if approval_prompt:
+            # Manual request for refresh token is necessary
+            # approval_prompt causes 'offline access' dialog box
+            flow = OAuth2WebServerFlow(client_id=settings.get('google_client_id'),
+                                client_secret=settings.get('google_client_secret'),
+                                scope=OAUTH_SCOPE,
+                                redirect_uri=redirect_uri(), 
+                                access_type='offline', 
+                                approval_prompt='force') 
+        else:
+            flow = OAuth2WebServerFlow(client_id=settings.get('google_client_id'),
                                 client_secret=settings.get('google_client_secret'),
                                 scope=OAUTH_SCOPE,
                                 redirect_uri=redirect_uri(), 
                                 access_type='offline')
-                                # I thought this was needed for refresh tokens, 
-                                # but if had been causing extra consent screen for 
-                                # "offline consent"
-                                #approval_prompt='force') 
         auth_uri = flow.step1_get_authorize_url()
         return self.redirect(auth_uri)
 
@@ -92,15 +100,7 @@ class AuthReturn(app.basic.BaseHandler):
         if user:
             # Update existing user info
             user.save_credentials(credentials)
-            '''
-            old_credentials = OAuth2Credentials.new_from_json(user.google_credentials)
-            logging.info(old_credentials.refresh_token)
-            logging.info(credentials.refresh_token)
-            if old_credentials.refresh_token and not credentials.refresh_token:
-                credentials.refresh_token = old_credentials.refresh_token
 
-            user.google_credentials = credentials.to_json()
-            '''
             user.google_credentials_scope = OAUTH_SCOPE
             user.name = name
             user.email = email
@@ -117,6 +117,11 @@ class AuthReturn(app.basic.BaseHandler):
             self.add_given_family_names(user, user_info)
             user.save()
             logging.info('Saved new user %s' % user.email)
+
+        # If after saving user credentials the user still doesn't have a 
+        # refresh_token, run /google/auth again with approval_prompt=force
+        if not user.get_refresh_token():
+            return self.redirect("/auth/google?approval_prompt=force")
 
             # On board new user to database
             if 'localhost' not in settings.get('base_url'):

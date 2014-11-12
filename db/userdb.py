@@ -144,9 +144,9 @@ class User(Document):
         if credentials is None or credentials.invalid:
             logging.warning('Credentials DNE or invalid')
         elif credentials.access_token_expired:
-            # Refresh and save new access token
+            # Refresh and save new access token if necessary
             if not credentials.refresh_token:
-                logging.warning('No refresh token for expired credntials of %s' % self)
+                logging.warning('No refresh token for expired credentials of %s' % self)
                 return
             logging.info('refresh token:')
             logging.info("Access token: %s" % credentials.access_token)
@@ -202,15 +202,15 @@ class User(Document):
             self.google_credentials = credentials.to_json()
         else:
             old_credentials = OAuth2Credentials.new_from_json(self.google_credentials)
-            logging.info(old_credentials.refresh_token)
-            logging.info(credentials.refresh_token)
             # Maintain refresh token if new credentials do not include one.
             # This arises when existing users log back in manually
             if old_credentials.refresh_token and not credentials.refresh_token:
                 credentials.refresh_token = old_credentials.refresh_token
 
-            logging.info(credentials.refresh_token)
+            logging.info("Saving refresh token: %s" % credentials.refresh_token)
             self.google_credentials = credentials.to_json()
         self.save()
 
+    def get_refresh_token(self):
+        return OAuth2Credentials.new_from_json(self.google_credentials).refresh_token
 
