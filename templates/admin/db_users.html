@@ -27,7 +27,11 @@
             {% else %}
               <td>None</td>
             {% end %}
-            <td>{{ u.get_refresh_token() }}</td>
+            {% if u.get_refresh_token() %}
+              <td>Yes</td>
+            {% else %}
+              <td>None!</td>
+            {% end %}
           </tr>
         {% end %}
       </table>

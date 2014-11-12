@@ -43,7 +43,7 @@ class DB_Users(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             self.redirect('/')
         else:
-            u = User.objects
+            u = User.objects.order_by("joined")
             return self.render('admin/db_users.html', users=u)
 
 
