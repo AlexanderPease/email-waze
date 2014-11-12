@@ -110,35 +110,49 @@ function render_connection(connection_dict) {
     console.log('render_connection()');
     var $panel = $('td.Bu.y3 div.nH.adC');
     if ($panel) {
-        // Get local html and inject into page
-        $.ajax({
-            type: 'GET',
-            url: 'chrome-extension://'+encodeURIComponent(ID)+'/templates/connection.html',
-            cache: true,
-            dataType: 'text',
-            success: function(html) {
-                console.log(connection_dict);
-
-                // Display connection or empty connection if no profile returned
-                if (connection_dict.profile) {
-
-                } else {
-
-
-                }
-                var email = connection_dict.profile.email;
-                var email_parts = email.split('@');
-                if (email_parts.length == 2) {
-                    connection_dict.email_name = email_parts[0];
-                    connection_dict.email_domain = email_parts[1];
-                }
-                var $div = $panel.find('div#rapporto');
-                if (!$div.length)
-                    $div = $('<div id="rapporto" style="position:relative;" />');
-                $div.html(Mustache.render(html, connection_dict));
-                $panel.prepend($div);
-            },
-        });
+        if (connection_dict.empty) {
+            $.ajax({
+                type: 'GET',
+                url: 'chrome-extension://'+encodeURIComponent(ID)+'/templates/empty_connection.html',
+                cache: true,
+                dataType: 'text',
+                success: function(html) {
+                    console.log(connection_dict);
+                    var email = connection_dict.profile.email;
+                    var email_parts = email.split('@');
+                    if (email_parts.length == 2) {
+                        connection_dict.email_name = email_parts[0];
+                        connection_dict.email_domain = email_parts[1];
+                    }
+                    var $div = $panel.find('div#rapporto');
+                    if (!$div.length)
+                        $div = $('<div id="rapporto" style="position:relative;" />');
+                    $div.html(Mustache.render(html, connection_dict));
+                    $panel.prepend($div);
+                },
+            });
+        } else {
+            $.ajax({
+                type: 'GET',
+                url: 'chrome-extension://'+encodeURIComponent(ID)+'/templates/connection.html',
+                cache: true,
+                dataType: 'text',
+                success: function(html) {
+                    console.log(connection_dict);
+                    var email = connection_dict.profile.email;
+                    var email_parts = email.split('@');
+                    if (email_parts.length == 2) {
+                        connection_dict.email_name = email_parts[0];
+                        connection_dict.email_domain = email_parts[1];
+                    }
+                    var $div = $panel.find('div#rapporto');
+                    if (!$div.length)
+                        $div = $('<div id="rapporto" style="position:relative;" />');
+                    $div.html(Mustache.render(html, connection_dict));
+                    $panel.prepend($div);
+                },
+            });
+        }
     } else {
         console.log($panel);
     }
