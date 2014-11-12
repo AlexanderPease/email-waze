@@ -16,7 +16,11 @@
           <tr>
             <td>{{ u.email }}</td>
             <td>{{ u.name }}</td>
-            <td>{{ u.joined.strftime('%Y/%m/%d') }}</td>
+            {% if u.joined %}
+              <td>{{ u.joined.strftime('%Y/%m/%d') }}</td>
+            {% else %}
+              <td>None</td>
+            {% end %}
             <td>{{ u.onboarded }}</td>
             {% if u.last_updated %}
               <td>{{ u.last_updated.strftime('%Y/%m/%d') }}</td>
