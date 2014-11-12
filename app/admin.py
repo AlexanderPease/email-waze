@@ -80,7 +80,7 @@ class Scratch(app.basic.BaseHandler):
             return self.redirect('/')
 
         import gmail
-        for u in [User.objects.get(email="alexander@usv.com")]:
+        for u in User.objects:
             logging.info(u)
             gmail_service = u.get_service(service_type='gmail')
             #messages = gmail.ListMessagesMatchingQuery(service=gmail_service,
