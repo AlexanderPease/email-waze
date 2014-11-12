@@ -140,7 +140,6 @@ class User(Document):
         """
         credentials = OAuth2Credentials.new_from_json(self.google_credentials)
         http = httplib2.Http()
-        logging.info(credentials.invalid)
         if credentials is None or credentials.invalid:
             logging.warning('Credentials DNE or invalid')
         elif credentials.access_token_expired:
