@@ -43,7 +43,7 @@ class DB_Users(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             self.redirect('/')
         else:
-            u = User.objects
+            u = User.objects.order_by("joined")
             return self.render('admin/db_users.html', users=u)
 
 
@@ -77,11 +77,23 @@ class Scratch(app.basic.BaseHandler):
     #@tornado.web.authenticated
     def get(self):
         if self.current_user not in settings.get('staff'):
-            self.redirect('/')
+            return self.redirect('/')
 
-        for u in User.objects():
-            p = Profile.objects.get(email=u.email)
-            print p.burner
+        # Checks flow for getting all user credentials, refreshing if necessary
+        # and executing Gmail API calls
+        import gmail
+        for u in User.objects:
+            logging.info(u)
+            gmail_service = u.get_service(service_type='gmail')
+            if not gmail_service:
+                logging.info("Could not create authenticated service for %s" % u)
+            else:
+                messages = gmail.ListMessagesMatchingQuery(service=gmail_service,
+                                                user_id='me',
+                                                query='after:%s' % datetime.datetime.today().strftime('%Y/%m/%d'))
+                logging.info(messages)
+            logging.info("---------------------")
+            logging.info("")
 
 
         """

@@ -91,6 +91,9 @@ def update_user(u):
     """
     logging.info("Updating %s in tasks.update_user()" % u)
     gmail_service = u.get_service(service_type='gmail')
+    if not gmail_service:
+        logging.info("Could not instantiate authenticated service for %s" % u)
+        return
     messages = gmail.ListMessagesMatchingQuery(service=gmail_service,
                                                 user_id='me',
                                                 query='after:%s' % u.last_updated.strftime('%Y/%m/%d'))
