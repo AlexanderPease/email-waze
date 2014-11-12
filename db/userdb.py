@@ -136,22 +136,32 @@ class User(Document):
             service_type: Default 'gmail', or use 'oauth2' or 'plus'.
 
         Returns:
-            googleapiclient.discovery.Resource instance
+            googleapiclient.discovery.Resource instance or None if failed. 
         """
         credentials = OAuth2Credentials.new_from_json(self.google_credentials)
         http = httplib2.Http()
+        logging.info(credentials.invalid)
         if credentials is None or credentials.invalid:
             logging.warning('Credentials DNE or invalid')
         elif credentials.access_token_expired:
             # Refresh and save new access token
+            if not credentials.refresh_token:
+                logging.warning('No refresh token for expired credntials of %s' % self)
+                return
             logging.info('refresh token:')
             logging.info("Access token: %s" % credentials.access_token)
             logging.info("Refresh token: %s" % credentials.refresh_token)
             logging.info("Token expiry: %s" % credentials.token_expiry)
-            logging.info(http)
-            logging.info(credentials)
-            credentials.refresh(http)
+
+            try:
+                credentials.refresh(http)
+            except:
+                logging.warning("Could not refresh Google API tokens for %s" % self)
+                logging.warning("Refresh token: %s" % credentials.refresh_token)
+                return
+
             self.save_credentials(credentials)
+
             logging.info("Access token: %s" % credentials.access_token)
             logging.info("Refresh token: %s" % credentials.refresh_token)
             logging.info("Token expiry: %s" % credentials.token_expiry)
