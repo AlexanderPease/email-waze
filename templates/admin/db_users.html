@@ -10,8 +10,6 @@
           <th>Date Joined</th>
           <th>Onboarded?</th>
           <th>Date last updated</th>
-          <th>Access Token</th>
-          <th>Expiration Date</th>
           <th>Refresh Token</th>
         </tr>
         {% for u in users %}
@@ -25,8 +23,6 @@
             {% else %}
               <td>None</td>
             {% end %}
-            <td>TODO</td>
-            <td>TODO</td>
             <td>{{ u.get_refresh_token() }}</td>
           </tr>
         {% end %}
