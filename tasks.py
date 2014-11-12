@@ -23,6 +23,15 @@ app = Celery('tasks',
     backend='amqp')
 
 
+@periodic_task(run_every=timedelta(minutes=5))
+def awake():
+    """
+    Keeps the worker awake 24/7
+    """
+    foo = 1 + 1
+    logging.info('Awake!')
+
+
 @app.task
 def onboard_user(u):
     """
