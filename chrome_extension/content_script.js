@@ -118,6 +118,14 @@ function render_connection(connection_dict) {
             dataType: 'text',
             success: function(html) {
                 console.log(connection_dict);
+
+                // Display connection or empty connection if no profile returned
+                if (connection_dict.profile) {
+
+                } else {
+
+
+                }
                 var email = connection_dict.profile.email;
                 var email_parts = email.split('@');
                 if (email_parts.length == 2) {
@@ -221,9 +229,15 @@ function find_account() {
 }
 */
 
-// Immediately render search form on page load
 $(document).ready(function(){
-    render_search()
+    // Immediately render search form on page load
+    render_search();
+
+    // Bind event to detect whenever new URL loads
+    $(window).on('hashchange', function(){
+        console.log('Hash changed');
+        render_search();
+    });
 });
 
 

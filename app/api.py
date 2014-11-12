@@ -189,6 +189,7 @@ class ConnectionByEmailForExtension(app.basic.BaseHandler):
             results['profile'] = profile.to_json()
         except:
             profile = None
+            results['profile'] = {'email':domain, name:'No Profile Found'}
 
         # First two fields require exact profile
         if profile:
