@@ -188,8 +188,8 @@ class ConnectionByEmailForExtension(app.basic.BaseHandler):
             profile = Profile.objects.get(email=domain)
             results['profile'] = profile.to_json()
         except:
-            profile = None
-            results['profile'] = {'email':domain, name:'No Profile Found'}
+            results = {'empty': True}
+            return self.api_response(results)
 
         # First two fields require exact profile
         if profile:
