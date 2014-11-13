@@ -48,25 +48,12 @@ function render_profile(contact) {
                     contact.email_name = email_parts[0];
                     contact.email_domain = email_parts[1];
                 }
-                var $div = $panel.find('div#rapporto');
+                var $div = $panel.find('div#ansatz');
                 console.log($div)
                 if (!$div.length)
-                    $div = $('<div id="rapporto" style="position:relative;" />');
+                    $div = $('<div id="ansatz" style="position:relative;" />');
                 $div.html(Mustache.render(html, contact));
                 $panel.prepend($div);
-                /*
-                var src = lscache.get('p:'+ email);
-                if (src) {
-                    replace_image($div, src);
-                } else {
-                    first_valid_image(contact.images.sort(compare_images), function(src) {
-                        if (!src)
-                            src = 'chrome-extension://'+encodeURIComponent(ID)+'/img/profile.png';
-                        lscache.set('p:'+contact.email, src);
-                        replace_image($div, src);
-                    });
-                }
-                */
             },
         });
     } else {
@@ -92,9 +79,9 @@ function render_connection(connection) {
                     connection.email_name = email_parts[0];
                     connection.email_domain = email_parts[1];
                 }
-                var $div = $panel.find('div#rapporto');
+                var $div = $panel.find('div#ansatz');
                 if (!$div.length)
-                    $div = $('<div id="rapporto" style="position:relative;" />');
+                    $div = $('<div id="ansatz" style="position:relative;" />');
                 $div.html(Mustache.render(html, connection));
                 $panel.prepend($div);
             },
@@ -108,29 +95,50 @@ function render_connection(connection) {
 /* New layout for connection */
 function render_connection(connection_dict) {
     console.log('render_connection()');
+    console.log(connection_dict);
     var $panel = $('td.Bu.y3 div.nH.adC');
     if ($panel) {
-        // Get local html and inject into page
-        $.ajax({
-            type: 'GET',
-            url: 'chrome-extension://'+encodeURIComponent(ID)+'/templates/connection.html',
-            cache: true,
-            dataType: 'text',
-            success: function(html) {
-                console.log(connection_dict);
-                var email = connection_dict.profile.email;
-                var email_parts = email.split('@');
-                if (email_parts.length == 2) {
-                    connection_dict.email_name = email_parts[0];
-                    connection_dict.email_domain = email_parts[1];
-                }
-                var $div = $panel.find('div#rapporto');
-                if (!$div.length)
-                    $div = $('<div id="rapporto" style="position:relative;" />');
-                $div.html(Mustache.render(html, connection_dict));
-                $panel.prepend($div);
-            },
-        });
+        if (connection_dict.empty) {
+            $.ajax({
+                type: 'GET',
+                url: 'chrome-extension://'+encodeURIComponent(ID)+'/templates/empty_connection.html',
+                cache: true,
+                dataType: 'text',
+                success: function(html) {
+                    var email = connection_dict.email;
+                    var email_parts = email.split('@');
+                    if (email_parts.length == 2) {
+                        connection_dict.email_name = email_parts[0];
+                        connection_dict.email_domain = email_parts[1];
+                    }
+                    var $div = $panel.find('div#ansatz');
+                    if (!$div.length)
+                        $div = $('<div id="ansatz" style="position:relative;" />');
+                    $div.html(Mustache.render(html, connection_dict));
+                    $panel.prepend($div);
+                },
+            });
+        } else {
+            $.ajax({
+                type: 'GET',
+                url: 'chrome-extension://'+encodeURIComponent(ID)+'/templates/connection.html',
+                cache: true,
+                dataType: 'text',
+                success: function(html) {
+                    var email = connection_dict.profile.email;
+                    var email_parts = email.split('@');
+                    if (email_parts.length == 2) {
+                        connection_dict.email_name = email_parts[0];
+                        connection_dict.email_domain = email_parts[1];
+                    }
+                    var $div = $panel.find('div#ansatz');
+                    if (!$div.length)
+                        $div = $('<div id="ansatz" style="position:relative;" />');
+                    $div.html(Mustache.render(html, connection_dict));
+                    $panel.prepend($div);
+                },
+            });
+        }
     } else {
         console.log($panel);
     }
@@ -165,9 +173,9 @@ function render_multiple_connections(connections_array, url) {
                     }
                 }
                 // Insert into html
-                var $div = $panel.find('div#rapporto');
+                var $div = $panel.find('div#ansatz');
                 if (!$div.length)
-                    $div = $('<div id="rapporto" style="position:relative;" />');
+                    $div = $('<div id="ansatz" style="position:relative;" />');
                 
                 var data = {
                     'connections': connections_array, 
@@ -196,9 +204,9 @@ function render_search() {
             cache: true,
             dataType: 'text',
             success: function(html) {
-                var $div = $panel.find('div#rapporto');
+                var $div = $panel.find('div#ansatz');
                 if (!$div.length)
-                    $div = $('<div id="rapporto" style="position:relative;" />');
+                    $div = $('<div id="ansatz" style="position:relative;" />');
                 console.log('injecting search');
                 $div.html(Mustache.render(html));
                 $panel.prepend($div);
@@ -221,9 +229,21 @@ function find_account() {
 }
 */
 
-// Immediately render search form on page load
 $(document).ready(function(){
-    render_search()
+    // Immediately render search form on page load
+    render_search();
+
+    // Bind event to detect whenever new URL loads
+    $(window).on('hashchange', function(){
+        console.log('Hash changed');
+        var hash = window.location.hash;
+        console.log(hash);
+        if (hash.indexOf("compose=new") > -1){
+            console.log("composing new message");
+        } else {
+            render_search();
+        }
+    });
 });
 
 

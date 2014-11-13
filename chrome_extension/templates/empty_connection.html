@@ -1,0 +1,53 @@
+<div class="twbs">
+  <div>
+      <p style="font-size:16px; font-weight:bold; margin-top:10px; margin-bottom:0px;">
+        {{ email }}
+      </p>
+      <p style="font-size:16px;">
+          No Connection :(
+      </p>
+  </div>
+
+  <table class="table table-striped">
+    <tbody>
+      <tr><td>
+        Search again: 
+        <form role="form">
+            <div class="form-group">
+                <input type="search" name="name" id="search_name" placeholder="Name">
+            </div>
+            <div class="form-group">
+                <input type="search" name="domain" id="search_domain" placeholder="Domain">
+            </div>
+            <button type="button" class="btn btn-primary" id="search_button">Search</button> 
+        </form>
+      </td></tr>
+
+    </tbody>
+  </table>
+</div> <!--twbs-3_1_1-->
+
+<script>
+  $('#search_button').click(function(){
+    console.log('Search button clicked');
+    var name = $('#search_name').val();
+    var domain = $('#search_domain').val();
+
+    var event = document.createEvent('Event');
+    event.initEvent('search');
+    document.dispatchEvent(event);
+  });
+
+  $(document).ready(function(){
+    console.log('ready');
+
+    /* Doesn't recognize this function
+    $('body').popover({
+      placement: "top",
+      trigger: "hover",
+      selector: "tr[id=popover-row]",
+      container: "body"
+    });
+  */  
+  });
+</script>
