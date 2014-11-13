@@ -6,7 +6,7 @@ var ID = chrome.app.getDetails().id;
 var Queue = $.Deferred().resolve();
 
 
-// setup messaging
+// setup messaging to content script
 chrome.extension.onMessage.addListener(function(request, sender, callback) {
     if (window[request.name] !== undefined) {
         var after = function() {
@@ -17,6 +17,30 @@ chrome.extension.onMessage.addListener(function(request, sender, callback) {
     }
 });
 
+// when browser action icon is clicked
+chrome.browserAction.onClicked.addListener(function(callback){
+    chrome.tabs.getSelected(null,function(tab) {
+        var domain = get_domain(tab.url);
+        window.open("https://ansatz.me/search?domain=" + domain);
+    });
+});
+
+// Just splits out base url from href
+function get_domain(url) {
+  if (url.indexOf("http://") != -1) {
+    url = url.split("http://")[1];
+  }
+  else if (url.indexOf("https://") != -1) {
+    url = url.split("https://")[1];
+  }
+  if (url.indexOf("www.") != -1) {
+    url = url.split("www.")[1];
+  }
+  if (url.indexOf("/") != -1) {
+    url = url.split("/")[0];
+  }
+  return url;
+}
 
 function get_profile_by_email(data, callback) {
     var email = data.email

@@ -79,6 +79,7 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
+        """
         # Checks flow for getting all user credentials, refreshing if necessary
         # and executing Gmail API calls
         import gmail
@@ -94,7 +95,7 @@ class Scratch(app.basic.BaseHandler):
                 logging.info(messages)
             logging.info("---------------------")
             logging.info("")
-
+        """
 
         """
         ### Delete all connections to oneself

@@ -52,7 +52,12 @@
         "http://ansatz.me/api/*",
         "http://email-waze-dev.herokuapp.com/api/*",
         "http://www.email-waze-dev.herokuapp.com/api/*",
-        "storage"
+        "storage",
+        "tabs"
         ],
+    "browser_action":{
+        "default_title": "Ansatz",
+        "default_icon": "img/Aicon19x19.png"
+    },
     "manifest_version": 2
 }
