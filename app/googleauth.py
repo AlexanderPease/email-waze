@@ -117,17 +117,16 @@ class AuthReturn(app.basic.BaseHandler):
             self.add_given_family_names(user, user_info)
             user.save()
             logging.info('Saved new user %s' % user.email)
-
-        # If after saving user credentials the user still doesn't have a 
-        # refresh_token, run /google/auth again with approval_prompt=force
-        if not user.get_refresh_token():
-            return self.redirect("/auth/google?approval_prompt=force")
-
             # On board new user to database
             if 'localhost' not in settings.get('base_url'):
                 tasks.onboard_user.delay(user) # Celery task
             else:
                 logging.info("Won't onboard new user in local")
+
+        # If after saving user credentials the user still doesn't have a 
+        # refresh_token, run /google/auth again with approval_prompt=force
+        if not user.get_refresh_token():
+            return self.redirect("/auth/google?approval_prompt=force")
 
         # Set cookies
         self.set_secure_cookie('user_email', user.email)
