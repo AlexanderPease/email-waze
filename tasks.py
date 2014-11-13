@@ -146,7 +146,7 @@ def update_user(u):
     return
 
 
-@periodic_task(run_every=timedelta(hours=24))
+@periodic_task(run_every=timedelta(hours=12))
 def update_users():
     """
     Update all users every 24 hours
