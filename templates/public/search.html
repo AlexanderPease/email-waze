@@ -3,178 +3,254 @@
 {% block page-description %}Ansatz is a simple way to find someone's email address while still respecting their privacy.{% end %}
 
 {% block body %}
-      {{ err }}
-      {{ msg }}
+  {{ err }}
+  {{ msg }}
 
-      <section class="feature">
-        <form id="main-search" class="form-horizontal container" action="/search" method="GET">
-          <div class="row">
-            <div class="input-group-lg col-sm-4 col-lg-4 col-xs-12">
-              <input name="name" type="text" class="form-control" placeholder="Name">
-            </div>
-            <div class="input-group input-group-lg col-sm-4 col-lg-4 col-xs-12">
-              <span class="input-group-addon">@</span>
-              <input name="domain" type="text" class="form-control" placeholder="Domain">
-            </div>
-            <div class="col-sm-4 col-lg-4 col-xs-12 search-btn-wrap">
-              <button type="submit" class="btn btn-primary">Search</button>
-            </div>
-          </div>
-        </form>
-      </section>
+  <!--
+  <section class="search-background">
+    <form id="main-search" class="form-group container" action="/search" method="GET">
+      <div class="row">
+        <div class="input-group-lg col-sm-4 col-lg-4 col-xs-12">
+          <input name="name" type="text" class="form-control" placeholder="Name">
+        </div>
+        <div class="input-group input-group-lg col-sm-4 col-lg-4 col-xs-12">
+          <span class="input-group-addon">@</span>
+          <input name="domain" type="text" class="form-control" placeholder="Domain">
+        </div>
+        <div class="col-sm-4 col-lg-4 col-xs-12 search-btn-wrap">
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </div>
+    </form>
+  </section>
+-->
 
-
-      {% if group_connection_set or profile_connection_set %}
-      <section class="feature">
-        <div class="container">
-          <h3>Team Results</h3> 
-
-          <!-- Nav tabs on top of results table -->
-          <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active">
-              <a href="#GroupConnections" role="tab" data-toggle="tab">By Teammate</a>
-            </li>
-            <li role="presentation">
-              <a href="#ProfileConnections" role="tab" data-toggle="tab">By Connection</a>
-            </li>
-          </ul>
-
-          <!-- Tab panes -->
-          <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="GroupConnections">
-              <!-- Table for GroupConnections -->
-                <table class="table table-condensed table-hover">
-                  <thead>
-                    <tr>
-                      <th>Teammate</th>
-                      <th>Connection</th>
-                      <th>Most Recently</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for sc in group_connection_set %}
-                      {% set first = True %}
-                      {% for c in sc.connections %}
-                        <tr id="popover-row" data-container="body" data-content="{{ sc.email }} --> {{ c.profile.email}}:</br>{{ c.total_emails_out }} total emails, most recently on {{ c.latest_email_out_date_string() }}</br></br>{{ c.profile.email}} --> {{ sc.email }}:</br>{{ c.total_emails_in }} total emails, most recently on {{ c.latest_email_in_date_string() }}">
-                          
-                          {% if first %}
-                            <td>
-                              {% if sc.email == current_user %}
-                                You 
-                              {% else %}
-                                {{ sc.name }} 
-                              {% end %}
-                              (<a href="mailto:{{ sc.email }}">{{ sc.email }}</a>) emailed...
-                            </td>
-                          {% else %}
-                            <td></td>
-                          {% end %}
-                          <td>
-                            {% set days_since_emailed_out = c.days_since_emailed_out() %}
-                             {{ c.profile.name }} (<a href="mailto:{{ c.profile.email }}">{{ c.profile.email }}</a>)...
-                          </td>
-                          <td> 
-                            {% if days_since_emailed_out == 'Today' %}
-                              Today
-                            {% elif days_since_emailed_out %}
-                                {{ days_since_emailed_out }} days ago
-                            {% else %}
-                              N/A
-                            {% end %}
-                          </td>
-                        </tr>
-
-                        {% set first = False %}
-                      {% end %} <!-- c in sc.connections -->
-                    {% end %} <!-- sc in group_connection_set -->
-                  </tbody>
-                </table>
-              <!-- End table for GroupConnections -->
-            </div>
-            
-            <div role="tabpanel" class="tab-pane" id="ProfileConnections">
-              <!-- Table for GroupConnections -->
-              <table class="table table-condensed table-hover">
-                <thead>
-                  <tr>
-                    <th>Connection</th>
-                    <th>Teammates</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for sc in profile_connection_set %}
-                    {% set first = True %}
-                    {% for c in sc.connections %}
-                      <tr id="popover-row" data-container="body" data-content="{{ sc.email }} --> {{ c.user.email}}:</br>{{ c.total_emails_in }} total emails, most recently on {{ c.latest_email_in_date_string() }}</br></br>{{ c.user.email}} --> {{ sc.email }}:</br>{{ c.total_emails_out }} total emails, most recently on {{ c.latest_email_out_date_string() }}">
-                        {% if first %}
-                          <td>{{ sc.name }} (<a href="mailto:{{ sc.email }}">{{ sc.email }}</a>) emailed...</td>
-                        {% else %}
-                          <td></td>
-                        {% end %}
-                        <td>
-                          {% set days_since_emailed_in = c.days_since_emailed_in() %}
-                          {% if c.user.email == current_user %}
-                            You 
-                          {% else %}
-                            {{ c.user.name }} 
-                          {% end %}
-                          (<a href="mailto:{{ c.user.email }}">{{ c.user.email }}</a>) 
-                          {% if days_since_emailed_in == 'Today' %}
-                            Today
-                          {% elif days_since_emailed_in == 1 %}
-                              {{ days_since_emailed_in }} day ago
-                          {% elif days_since_emailed_in %}
-                            {{ days_since_emailed_in }} days ago
-                          {% else %}
-                            N/A
-                          {% end %}
-                        </td>
-                      </tr>
-                      {% set first = False %}
-                    {% end %} <!-- c in sc.connections -->
-                  {% end %} <!-- sc in profile_connection_set -->
-                </tbody>
-              </table>
-              <!-- End table for GroupConnections -->
-            </div>
+  <section class="search-background thin-search">
+    <div class="container">
+      <form id="main-search" class="form-inline" action="/search" method="GET">
+        <div class="form-group">
+          <div class="input-group">
+            <input name="name" type="text" class="form-control" placeholder="Name" id="rounded-name">
           </div>
         </div>
-      </section>
-      {% end %}
-
-
-      {% if profiles %}
-      <section class="feature">
-        <div class="container">
-          <h3>Other search results:</h3>
-          (People you're not connected to, but we enable you to send them an email directly to their inbox!)
-            {% if profiles is 'empty' %}
-              <p>No results found, try another search!</p>
-            {% else %}
-              <table class="table table-striped">
-                <tr>
-                  <th>Profile</th>
-                  <th>Public Email Address</th>
-                </tr>
-                {% for p in profiles %}
-                  <tr
-                    {% if p.connections %}
-                      has-connection="true"
-                    {% end %}
-                    {% if p.latest_email_out_date %}
-                      latest-email-out={{ p.latest_email_out_date.latest_email_out_date }}
-                    {% end %}
-                  >
-                    <td>{{ p.name }} ({{ get_domain(p.email) }})</td>
-                    <td><a href="mailto:{{ p.burner }}@ansatz.me" target="_blank">{{ p.burner }}@ansatz.me</a></td>
-                  </tr>
-                {% end %}
-              </table>
-            {% end %}
+        <div class="form-group">
+          <div class="input-group">
+            <span class="input-group-addon">@</span>
+            <input name="domain" type="text" class="form-control" placeholder="Domain">
           </div>
-        </section>
-      {% end %}
-      </section>
+        </div>
+        <div class="form-group">
+          <div class="input-group">
+            <button type="submit" class="btn btn-primary btn-inline">Search</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+
+  {% if group_connection_set or profile_connection_set %}
+  <section class="feature">
+    <div class="container">
+      <h3>Results</h3> 
+
+      <!-- Nav tabs on top of results table -->
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active">
+          <a href="#AllConnections" role="tab" data-toggle="tab">All</a>
+        </li>
+        <li role="presentation">
+          <a href="#GroupConnections" role="tab" data-toggle="tab">By Teammate</a>
+        </li>
+        <li role="presentation">
+          <a href="#ProfileConnections" role="tab" data-toggle="tab">By Connection</a>
+        </li>
+      </ul>
+
+      <!-- Tab panes -->
+      <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="AllConnections">
+          <!-- Table for All -->
+            <table class="table table-condensed table-hover">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Connection</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for p in profiles %}
+                  {% if p.connections %}
+                    <tr id="popover-row" data-container="body" data-content="
+                      {% for c in p.connections %}
+                        {{ c.user.email }} --> {{ p.email }}:</br>{{ c.total_emails_out }} total emails, most recently on {{ c.latest_email_out_date_string() }}</br>
+                        {{ p.email }} --> {{ c.user.email }}:</br>{{ c.total_emails_in }} total emails, most recently on {{ c.latest_email_in_date_string() }}</br></br>
+                      {% end %}
+                    ">
+                      <td>{{ truncate(p.name) }}</td>
+                      <td><a href="mailto:{{ p.email }}">{{ p.email }}<a></td>
+                      <td>
+                        {% if len(p.connections) == 1 %}
+                          {{ len(p.connections)}} connection
+                        {% else %}
+                          {{ len(p.connections)}} connections
+                        {% end %}
+                      </td>
+                    </tr>
+                  {% else %}
+                    <tr id="popover-row" data-container="body" data-content="You do not have a connection to {{ p.name }}.</br</br>But, you can send an email directly to his/her inbox using this public email address: {{ p.burner }}@{{ settings.get('domain_name') }}">
+                      <td>{{ truncate(p.name) }}</td>
+                      <td>
+                        <a href="{{ p.burner }}@{{ settings.get('domain_name') }}"{{ p.burner }}@{{ settings.get('domain_name') }}</a>
+                      </td>
+                      <td>N/A</td>
+                    </tr>
+                  {% end %} <!-- if connections -->
+                {% end %} <!-- p in profiles -->
+              </tbody>
+            </table>
+          <!-- End table for GroupConnections -->
+        </div>
+
+        <div role="tabpanel" class="tab-pane" id="GroupConnections">
+          <!-- Table for GroupConnections -->
+            <table class="table table-condensed table-hover">
+              <thead>
+                <tr>
+                  <th>Teammate</th>
+                  <th>Connection</th>
+                  <th>Most Recently</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for sc in group_connection_set %}
+                  {% set first = True %}
+                  {% for c in sc.connections %}
+                    <tr id="popover-row" data-container="body" data-content="{{ sc.email }} --> {{ c.profile.email}}:</br>{{ c.total_emails_out }} total emails, most recently on {{ c.latest_email_out_date_string() }}</br></br>{{ c.profile.email}} --> {{ sc.email }}:</br>{{ c.total_emails_in }} total emails, most recently on {{ c.latest_email_in_date_string() }}">
+                      
+                      {% if first %}
+                        <td>
+                          {% if sc.email == current_user %}
+                            You 
+                          {% else %}
+                            {{ truncate(sc.name) }} 
+                          {% end %}
+                          (<a href="mailto:{{ sc.email }}">{{ sc.email }}</a>) emailed...
+                        </td>
+                      {% else %}
+                        <td></td>
+                      {% end %}
+                      <td>
+                        {% set days_since_emailed_out = c.days_since_emailed_out() %}
+                         {{ truncate(c.profile.name) }} (<a href="mailto:{{ c.profile.email }}">{{ c.profile.email }}</a>)...
+                      </td>
+                      <td> 
+                        {% if days_since_emailed_out == 'Today' %}
+                          Today
+                        {% elif days_since_emailed_out %}
+                            {{ days_since_emailed_out }} days ago
+                        {% else %}
+                          N/A
+                        {% end %}
+                      </td>
+                    </tr>
+
+                    {% set first = False %}
+                  {% end %} <!-- c in sc.connections -->
+                {% end %} <!-- sc in group_connection_set -->
+              </tbody>
+            </table>
+          <!-- End table for GroupConnections -->
+        </div>
+        
+        <div role="tabpanel" class="tab-pane" id="ProfileConnections">
+          <!-- Table for GroupConnections -->
+          <table class="table table-condensed table-hover">
+            <thead>
+              <tr>
+                <th>Connection</th>
+                <th>Teammates</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for sc in profile_connection_set %}
+                {% set first = True %}
+                {% for c in sc.connections %}
+                  <tr id="popover-row" data-container="body" data-content="{{ sc.email }} --> {{ c.user.email}}:</br>{{ c.total_emails_in }} total emails, most recently on {{ c.latest_email_in_date_string() }}</br></br>{{ c.user.email}} --> {{ sc.email }}:</br>{{ c.total_emails_out }} total emails, most recently on {{ c.latest_email_out_date_string() }}">
+                    {% if first %}
+                      <td>{{ truncate(sc.name) }} (<a href="mailto:{{ sc.email }}">{{ sc.email }}</a>) emailed...</td>
+                    {% else %}
+                      <td></td>
+                    {% end %}
+                    <td>
+                      {% set days_since_emailed_in = c.days_since_emailed_in() %}
+                      {% if c.user.email == current_user %}
+                        You 
+                      {% else %}
+                        {{ truncate(c.user.name) }} 
+                      {% end %}
+                      (<a href="mailto:{{ c.user.email }}">{{ c.user.email }}</a>) 
+                      {% if days_since_emailed_in == 'Today' %}
+                        Today
+                      {% elif days_since_emailed_in == 1 %}
+                          {{ days_since_emailed_in }} day ago
+                      {% elif days_since_emailed_in %}
+                        {{ days_since_emailed_in }} days ago
+                      {% else %}
+                        N/A
+                      {% end %}
+                    </td>
+                  </tr>
+                  {% set first = False %}
+                {% end %} <!-- c in sc.connections -->
+              {% end %} <!-- sc in profile_connection_set -->
+            </tbody>
+          </table>
+          <!-- End table for ProfileConnections -->
+        </div> <!-- Profile Connections -->
+
+
+
+      </div>
+    </div>
+  </section>
+  {% end %}
+
+
+  <!--
+  {% if profiles %}
+  <section class="feature">
+    <div class="container">
+      <h3>Other search results:</h3>
+      (People you're not connected to, but we enable you to send them an email directly to their inbox!)
+        {% if profiles is 'empty' %}
+          <p>No results found, try another search!</p>
+        {% else %}
+          <table class="table table-striped">
+            <tr>
+              <th>Profile</th>
+              <th>Public Email Address</th>
+            </tr>
+            {% for p in profiles %}
+              <tr
+                {% if p.connections %}
+                  has-connection="true"
+                {% end %}
+                {% if p.latest_email_out_date %}
+                  latest-email-out={{ p.latest_email_out_date.latest_email_out_date }}
+                {% end %}
+              >
+                <td>{{ p.name }} ({{ get_domain(p.email) }})</td>
+                <td><a href="mailto:{{ p.burner }}@ansatz.me" target="_blank">{{ p.burner }}@ansatz.me</a></td>
+              </tr>
+            {% end %}
+          </table>
+        {% end %}
+      </div>
+    </section>
+  {% end %}
+  -->
 {% end %}
 
 {% block javascript %}

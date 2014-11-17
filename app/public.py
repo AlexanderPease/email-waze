@@ -70,7 +70,8 @@ class Search(app.basic.BaseHandler):
             profiles=ps,
             profile_connection_set=profile_connection_set,
             group_connection_set=group_connection_set,
-            get_domain=ui_methods.get_domain)
+            get_domain=ui_methods.get_domain,
+            truncate=ui_methods.truncate)
     else:
         return self.redirect('/')
 

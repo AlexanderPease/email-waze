@@ -74,6 +74,14 @@ def email_obscure(email):
 
     return first_letter + obscured + "@" + string_split[1]
 
+def truncate(string, length=40, ellipses=True):
+    """ Truncates strings for formatting """
+    if len(string)>length:
+        string = string[0:length]
+        if ellipses:
+            string = string + "..."
+    return string
+
 
 def encode(text):
     """

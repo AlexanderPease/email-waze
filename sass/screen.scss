@@ -108,7 +108,6 @@ h4, .h4 {
 }
 
 // footer
-
 footer {
   width: 100%;
   display: block;
@@ -138,7 +137,7 @@ $mailgun-background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI2NCIgaGVp
   overflow: hidden;
   color: #FFF;
 
-  &::after {
+  &:after {
     content: "";
     position: absolute;
     top: 0px;
@@ -205,10 +204,10 @@ $mailgun-background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI2NCIgaGVp
 .feature {
   padding: 20px 0;
   @media screen and (min-width: 768px) {
-    padding: 60px 0;
+    padding: 40px 0;
   }
   @media screen and (min-width: 1025px) and (min-height: 750px) {
-    padding: 120px 0px;
+    padding: 100px 0px;
   }
   border-bottom: 1px solid #E8EAF1;
   overflow: hidden;
@@ -220,6 +219,7 @@ $mailgun-background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI2NCIgaGVp
   }
 }
 
+/* Applies nice image to search backgrounds */
 .search-background {
   @include background-image(linear-gradient(135deg, #182848 0%, #4B6CB7 100%));
   padding: 80px 0px;
@@ -232,7 +232,7 @@ $mailgun-background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI2NCIgaGVp
   overflow: hidden;
   color: #FFF;
 
-  &::after {
+  &:after {
     content: "";
     position: absolute;
     top: 0px;
@@ -243,6 +243,54 @@ $mailgun-background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI2NCIgaGVp
     opacity: 0.2;
     z-index: 1;
   }
+
+  .container {
+    position: relative;
+    z-index: 2;
+  }
+}
+
+/* CSS for the thin search bar */
+.thin-search {
+  padding: 30px;
+  
+  .input-group {
+    width: 250px;
+  }
+  /* CSS was cascading before bootstrap for some horrible reason, so this is a hack */
+  #rounded-name {
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+  }
+
+}
+
+
+
+.btn-inline {
+  // .btn in bootstrap. Basically revert inline button to regular bootstrap
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  //background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+
+  // my single addition to move button up a bit b/c of shadow
+  margin-bottom: 2px;
 }
 
 .img-target, .img-team, .img-anti {

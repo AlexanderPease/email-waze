@@ -65,6 +65,7 @@ class AuthReturn(app.basic.BaseHandler):
                                 # "offline consent"
                                 #approval_prompt='force') 
         credentials = flow.step2_exchange(oauth_code)
+        logging.info("New credentials returned by Google:")
         logging.info("Credentials: %s" % credentials)
         logging.info("Access token: %s" % credentials.access_token)
         logging.info("Refresh token: %s" % credentials.refresh_token)
