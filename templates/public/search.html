@@ -102,7 +102,7 @@
                     <tr id="popover-row" data-container="body" data-content="You do not have a connection to {{ p.name }}.</br</br>But, you can send an email directly to his/her inbox using this public email address: {{ p.burner }}@{{ settings.get('domain_name') }}">
                       <td>{{ truncate(p.name) }}</td>
                       <td>
-                        <a href="{{ p.burner }}@{{ settings.get('domain_name') }}"{{ p.burner }}@{{ settings.get('domain_name') }}</a>
+                        <a href="{{ p.burner }}@{{ settings.get('domain_name') }}">{{ p.burner }}@{{ settings.get('domain_name') }}</a>
                       </td>
                       <td>N/A</td>
                     </tr>
