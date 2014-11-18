@@ -52,7 +52,7 @@
   
   <section class="feature">
     <div class="container">
-      <h3>Results</h3> 
+      <h3 id="results"></h3> 
 
       <!-- Nav tabs on top of results table -->
       <ul class="nav nav-tabs" role="tablist">
@@ -288,6 +288,22 @@
 {% block javascript %}
   <script>
     $(document).ready(function(){
+      queryParameters = queryParameters()
+      var terms = "";
+      var firstParam = true;
+      for (var k in queryParameters) {
+        if (queryParameters[k]) {
+          if (!firstParam) {
+            terms = terms + ", " // Comma-delimitation after first parameter listed
+          }
+          terms = terms + '"' + queryParameters[k] + '"';
+          firstParam = false;
+        }
+      }
+      $('#results').text('Results for ' + terms);
+
+
+      // Popovers for each results row
       $('body').popover({
         placement: "top",
         trigger: "hover",
@@ -299,18 +315,7 @@
 
       /* Load new page when pagination is clicked */
       $('.page-link').click(function(){
-        /*
-         * queryParameters -> handles the query string parameters
-         * queryString -> the query string without the fist '?' character
-         * re -> the regular expression
-         * m -> holds the string matching the regular expression
-         */
-        var queryParameters = {}, queryString = location.search.substring(1), re = /([^&=]+)=([^&]*)/g, m;
-         
-        // Creates a map with the query string parameters
-        while (m = re.exec(queryString)) {
-            queryParameters[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
-        }
+        queryParameters = queryParameters();
          
         // Add new parameters or update existing ones
         var pageNum = $(this).attr('data-page-number');
@@ -343,5 +348,18 @@
       });
 
     });//ready
+
+    function queryParameters() {
+       /* queryParameters -> handles the query string parameters
+       * queryString -> the query string without the fist '?' character
+       * re -> the regular expression
+       * m -> holds the string matching the regular expression */
+      var queryParameters = {}, queryString = location.search.substring(1), re = /([^&=]+)=([^&]*)/g, m;
+      // Creates a map with the query string parameters
+      while (m = re.exec(queryString)) {
+          queryParameters[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+      }
+      return queryParameters
+    }
   </script>
 {% end %}
