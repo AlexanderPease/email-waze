@@ -288,16 +288,19 @@
 {% block javascript %}
   <script>
     $(document).ready(function(){
+      // Results message
       queryParameters = queryParameters()
       var terms = "";
       var firstParam = true;
       for (var k in queryParameters) {
-        if (queryParameters[k]) {
-          if (!firstParam) {
-            terms = terms + ", " // Comma-delimitation after first parameter listed
+        if (k != 'page') {
+          if (queryParameters[k]) {
+            if (!firstParam) {
+              terms = terms + ", " // Comma-delimitation after first parameter listed
+            }
+            terms = terms + '"' + queryParameters[k] + '"';
+            firstParam = false;
           }
-          terms = terms + '"' + queryParameters[k] + '"';
-          firstParam = false;
         }
       }
       $('#results').text('Results for ' + terms);
