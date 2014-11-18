@@ -1,92 +1,94 @@
 {% extends "../base.html" %}
 {% block page-title %}Settings{% end %}
-{% block page-description %}Ansatz is a simple way to find someone's email address while still respecting their privacy.{% end %}
+{% block page-description %}Manage your teams on Ansatz{% end %}
 {% block body %}
-  <div class="user-settings">
+  <section class="feature">
+    <div class="container">
 
-      {% if msg %}
-        {{ msg }}</br>
-      {% end %}
-
-      {% if err %}
-        {{ msg }}</br>
-      {% end %}
-
-      <h2>Settings for {{ user.casual_name() }}</h2>
-
-      Email: {{ user.email }}
-      </br>
-
-      {% if profile %}
-        Ansatz email: {{ profile.burner }}@{{ settings.get('domain_name') }}
-      </br></br>
-      {% end %}
-      <!--<ul>
-        <li>Update your Ansatz email</li>
-      </ul>-->
-
-      <a href="/group/create">Create a new team</a>
-      </br>
-
-      {% if groups %}
-        Teams: 
-        <ul>
-          {% for g in groups %}
-            <li> 
-              {% if current_user == g.admin.email %}
-                <a href="/group/{{ g.id }}/edit">{{ g }}</a>
-              {% else %}
-                {{ g }}
-              {% end %}
-
-              ({{ len(g.users) }} members): 
-              {% for u in g.users %}
-                {{ u.name }} ({{ u.email }}), 
-              {% end %}
-            </li>
-          {% end %}
-        </ul>
-      {% else %}
-        You're not yet in any teams! Teams are a great way to collaborate
-        with friends or coworkers while expanding your address book. </br>
-      {% end %}
-
-      {% if group_invites %}
-        You have pending invites to these teams:
-        <ul>
-          {% for g in group_invites %}
-            <li>{{ g }} ({{ len(g.users) }} members): 
-              {% for u in g.users %}
-                {{ u.name }} ({{ u.email }}), 
-              {% end %}
-              - <a href="/group/{{ g.id }}/acceptinvite">Accept invitation</a>
-            </li>
-          {% end %}
-        </ul>
-      {% end %}
-
-      {% if 0 %}
-        Billing info:</br>
-        All teams up to 5 users are free! 
-
-        {% if paying_groups %}
-          You are the admin of {{ len(paying_groups) }} team ({{ list_to_comma_delimited_string(paying_groups) }}) that qualifies for our Basic tier of $5/month for each user.
-        {% else %}
-          None of your teams exceed the free tier, but you can update your billing info if you'd like. 
+        {% if msg %}
+          {{ msg }}</br>
         {% end %}
 
+        {% if err %}
+          {{ msg }}</br>
+        {% end %}
+
+        <h2>Settings for {{ user.casual_name() }}</h2>
+
+        Email: {{ user.email }}
         </br>
-        <button id="stripeButton" trype="button" class="btn-primary">
-          {% if user.stripe_id %}
-            Update Billing Info
+
+        {% if profile %}
+          Ansatz email: {{ profile.burner }}@{{ settings.get('domain_name') }}
+        </br></br>
+        {% end %}
+        <!--<ul>
+          <li>Update your Ansatz email</li>
+        </ul>-->
+
+        <a href="/group/create">Create a new team</a>
+        </br>
+
+        {% if groups %}
+          Teams: 
+          <ul>
+            {% for g in groups %}
+              <li> 
+                {% if current_user == g.admin.email %}
+                  <a href="/group/{{ g.id }}/edit">{{ g }}</a>
+                {% else %}
+                  {{ g }}
+                {% end %}
+
+                ({{ len(g.users) }} members): 
+                {% for u in g.users %}
+                  {{ u.name }} ({{ u.email }}), 
+                {% end %}
+              </li>
+            {% end %}
+          </ul>
+        {% else %}
+          You're not yet in any teams! Teams are a great way to collaborate
+          with friends or coworkers while expanding your address book. </br>
+        {% end %}
+
+        {% if group_invites %}
+          You have pending invites to these teams:
+          <ul>
+            {% for g in group_invites %}
+              <li>{{ g }} ({{ len(g.users) }} members): 
+                {% for u in g.users %}
+                  {{ u.name }} ({{ u.email }}), 
+                {% end %}
+                - <a href="/group/{{ g.id }}/acceptinvite">Accept invitation</a>
+              </li>
+            {% end %}
+          </ul>
+        {% end %}
+
+        {% if 0 %}
+          Billing info:</br>
+          All teams up to 5 users are free! 
+
+          {% if paying_groups %}
+            You are the admin of {{ len(paying_groups) }} team ({{ list_to_comma_delimited_string(paying_groups) }}) that qualifies for our Basic tier of $5/month for each user.
           {% else %}
-            Enter Billing Info
+            None of your teams exceed the free tier, but you can update your billing info if you'd like. 
           {% end %}
-        </button>
-      {% end %}
+
+          </br>
+          <button id="stripeButton" trype="button" class="btn-primary">
+            {% if user.stripe_id %}
+              Update Billing Info
+            {% else %}
+              Enter Billing Info
+            {% end %}
+          </button>
+        {% end %}
 
 
-</div><!--row-->
+    </div><!--container-->
+  </section>
 
 {% end %}
 

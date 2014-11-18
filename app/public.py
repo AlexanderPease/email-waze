@@ -7,7 +7,9 @@ from db.groupdb import Group
 from db.connectiondb import Connection
 from app.connectionsets import GroupConnectionSet, ProfileConnectionSet, BaseProfileConnection
 from mongoengine.queryset import Q
+import math
 
+RESULTS_PER_PAGE = 20
 
 ########################
 ### Homepage
@@ -29,13 +31,26 @@ class Search(app.basic.BaseHandler):
   def get(self):
     name = self.get_argument('name', '')
     domain = self.get_argument('domain', '')
+    page = int(self.get_argument('page', ''))
 
     if name or domain:
         # Global profile results
         profiles = Profile.objects(name__icontains=name, email__icontains=domain).order_by('name') # case-insensitive contains
+        
+        logging.info(len(profiles))
+
+
         if len(profiles) == 0:
             return self.redirect('/?err=no_results')
-
+        elif len(profiles) > RESULTS_PER_PAGE:
+            num_pages = int(math.ceil(float(len(profiles)) / RESULTS_PER_PAGE))
+            if page:
+                start = (page - 1) * RESULTS_PER_PAGE
+            else:
+                page = 1
+                start = 0
+            end = start + RESULTS_PER_PAGE
+            profiles = profiles[start:end]
 
         # Connections
         current_user = User.objects.get(email=self.current_user)
@@ -76,6 +91,8 @@ class Search(app.basic.BaseHandler):
             profiles=ps,
             profile_connection_set=profile_connection_set,
             group_connection_set=group_connection_set,
+            page=page,
+            num_pages=num_pages,
             get_domain=ui_methods.get_domain,
             truncate=ui_methods.truncate)
     else:
