@@ -92,11 +92,28 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
-        u = User.objects.get(email="jqgorelick@gmail.com")
-        p = Profile.objects.get(email="me@alexanderpease.com")
-        c = Connection.objects.get(user=u, profile=p)
-        logging.info(c)
-        logging.info(c.to_json())
+        from db.companydb import Company
+        company, flag = Company.objects.get_or_create(domain='usv.com')
+        company.update_clearbit()
+        company.save()
+        logging.info(company)
+        return
+
+        # Count number of distinct domains in all Profile email addresses
+        profiles = Profile.objects
+        domains = []
+        num_profiles = len(profiles)
+        counter = 1
+        for p in profiles:
+            logging.info(str(counter) + " / " + str(num_profiles))
+            domain = p.get_domain()
+            if domain not in domains:
+                domains.append(domain)
+            counter = counter + 1
+        logging.info(domains)
+        logging.info(str(len(domains)) + " distinct domains in database")
+
+
 
         """
         # Checks flow for getting all user credentials, refreshing if necessary
