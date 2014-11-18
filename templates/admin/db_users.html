@@ -7,6 +7,7 @@
         <tr>
           <th>Email</th>
           <th>Name</th>
+          <th>Groups</th>
           <th>Date Joined</th>
           <th>Onboarded?</th>
           <th>Date last updated</th>
@@ -16,6 +17,17 @@
           <tr>
             <td>{{ u.email }}</td>
             <td>{{ u.name }}</td>
+            <td>
+              {% set first = True %}
+              {% for g in u.get_groups() %}
+                {% if first %}
+                  {{ g }}
+                  {% set first = False %}
+                {% else %}
+                  , {{ g }}
+                {% end %}
+              {% end %}
+            </td>
             {% if u.joined %}
               <td>{{ u.joined.strftime('%Y/%m/%d') }}</td>
             {% else %}
