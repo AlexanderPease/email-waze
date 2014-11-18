@@ -31,7 +31,7 @@ class Search(app.basic.BaseHandler):
   def get(self):
     name = self.get_argument('name', '')
     domain = self.get_argument('domain', '')
-    page = int(self.get_argument('page', ''))
+    page = self.get_argument('page', '')
 
     if name or domain:
         # Global profile results
@@ -39,12 +39,13 @@ class Search(app.basic.BaseHandler):
         
         logging.info(len(profiles))
 
-
         if len(profiles) == 0:
             return self.redirect('/?err=no_results')
         elif len(profiles) > RESULTS_PER_PAGE:
+            # Get page number
             num_pages = int(math.ceil(float(len(profiles)) / RESULTS_PER_PAGE))
             if page:
+                page = int(page)
                 start = (page - 1) * RESULTS_PER_PAGE
             else:
                 page = 1
