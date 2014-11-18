@@ -20,6 +20,7 @@
 
         {% if profile %}
           Ansatz email: {{ profile.burner }}@{{ settings.get('domain_name') }}
+          <!--<span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> Star-->
         </br></br>
         {% end %}
         <!--<ul>
@@ -30,7 +31,7 @@
         </br>
 
         {% if groups %}
-          Teams: 
+          Edit Your Teams: 
           <ul>
             {% for g in groups %}
               <li> 
@@ -41,8 +42,13 @@
                 {% end %}
 
                 ({{ len(g.users) }} members): 
+                {% set first_user = True %}
                 {% for u in g.users %}
-                  {{ u.name }} ({{ u.email }}), 
+                  {% if not first_user %}
+                  , 
+                  {% end %}
+                  {{ u.name }} ({{ u.email }})
+                  {% set first_user = False %}
                 {% end %}
               </li>
             {% end %}
