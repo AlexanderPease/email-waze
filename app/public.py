@@ -6,6 +6,7 @@ from db.userdb import User
 from db.groupdb import Group
 from db.connectiondb import Connection
 from app.connectionsets import GroupConnectionSet, ProfileConnectionSet, BaseProfileConnection
+from db.companydb import Company
 from mongoengine.queryset import Q
 import math
 
@@ -91,10 +92,17 @@ class Search(app.basic.BaseHandler):
         profile_connection_set = ProfileConnectionSet.package_connections(connections)
         group_connection_set = GroupConnectionSet.package_connections(connections)
 
+        # Company info
+        if domain:
+            companies = Company.objects(domain=domain)
+        else:
+            companies = None
+
         return self.render('public/search.html', 
             profiles=ps,
             profile_connection_set=profile_connection_set,
             group_connection_set=group_connection_set,
+            companies=companies,
             page=page,
             num_pages=num_pages,
             get_domain=ui_methods.get_domain,
