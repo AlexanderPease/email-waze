@@ -35,6 +35,11 @@
         </div>
         <div class="form-group">
           <div class="input-group">
+            <input name="company" type="text" class="form-control" placeholder="Company" id="rounded-name">
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group">
             <span class="input-group-addon">@</span>
             <input name="domain" type="text" class="form-control" placeholder="Domain">
           </div>
@@ -78,6 +83,7 @@
         </div>
       {% end %}
 
+      {% if profiles %}
       <h3 id="results"></h3> 
 
       <!-- Nav tabs on top of results table -->
@@ -240,6 +246,7 @@
 
 
       </div>
+      {% end %} <!-- if profiles -->
 
       <!-- Pagination -->
       {% if num_pages %}
