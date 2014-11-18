@@ -3,7 +3,7 @@
 
     "name": "Ansatz",
     "short_name": "Ansatz",
-    "version": "0.0.21",
+    "version": "0.0.22",
     "description": "Stop connecting. Start emailing.",
     "background": {
         "persistent": false,
@@ -44,15 +44,12 @@
     },
     "minimum_chrome_version": "26",
     "permissions": [
-        "https://*.rapportive.com/",
         "https://mail.google.com/", 
         "https://www.ansatz.me/api/*",
         "https://ansatz.me/api/*",
         "http://www.ansatz.me/api/*",
         "http://ansatz.me/api/*",
-        "http://email-waze-dev.herokuapp.com/api/*",
-        "http://www.email-waze-dev.herokuapp.com/api/*",
-        "storage",
+        "https://*.rapportive.com/",
         "tabs"
         ],
     "browser_action":{

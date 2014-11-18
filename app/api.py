@@ -72,6 +72,7 @@ class ProfileSearch(app.basic.BaseHandler):
 ### ConnectionSearch
 ### /api/connectionbyemail
 ########################
+""" Not being used atm """
 class ConnectionByEmail(app.basic.BaseHandler):
     @tornado.web.authenticated
     def get(self):
@@ -216,11 +217,15 @@ class ConnectionByEmailForExtension(app.basic.BaseHandler):
         results['domain'] = domain
 
         # Last time a group_user emailed domain of profile
-        try:
-            profiles = Profile.objects(email__icontains=domain)
-            connections = Connection.objects(profile__in=profiles, user__in=group_users).order_by("-latest_email_out_date")
-            results['group_users_domain'] = connections[0].to_json()
-        except:
+        generic_domains = ['gmail.com', 'hotmail.com', 'yahoo.com', 'aol.com', 'comcast.net', 'outlook.com']
+        if domain not in generic_domains:
+            try:
+                profiles = Profile.objects(email__icontains=domain)
+                connections = Connection.objects(profile__in=profiles, user__in=group_users).order_by("-latest_email_out_date")
+                results['group_users_domain'] = connections[0].to_json()
+            except:
+                results['group_users_domain'] = None
+        else:
             results['group_users_domain'] = None
 
         # Return
