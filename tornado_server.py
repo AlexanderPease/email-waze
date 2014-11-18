@@ -67,6 +67,7 @@ class Application(tornado.web.Application):
       (r"/admin/db_profiles", app.admin.DB_Profiles),
       (r"/admin/db_users", app.admin.DB_Users),
       (r"/admin/db_connections", app.admin.DB_Connections),
+      (r"/admin/db_groups", app.admin.DB_Groups),
       (r"/admin/scratch", app.admin.Scratch), # for ad hoc testing
       (r"/google077100c16d33120b.html", app.admin.GoogleWebmaster), # Google Webmaster verification
 

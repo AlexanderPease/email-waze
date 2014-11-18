@@ -1,0 +1,28 @@
+{% extends "../base.html" %}
+{% block body %}
+  <div class="feature">
+    <div class="container">
+      <h2>{{ len(groups) }} entries</h2>
+      <table class="table table-striped">
+        <tr>
+          <th>Name</th>
+          <th>Admin</th>
+          <th>Users</th>
+        </tr>
+        {% for g in groups %}
+          <tr>
+            <td>{{ g.name }}</td>
+            <td>{{ g.admin }}</td>
+            <td> 
+              {% for u in g.users %}
+                {{ u }}, 
+              {% end %}
+            </td> 
+          </tr>
+        {% end %}
+      </table>
+    </div>
+  </div>
+{% end %}
+
+

@@ -60,6 +60,19 @@ class DB_Connections(app.basic.BaseHandler):
             c = Connection.objects
             return self.render('admin/db_connections.html', connections=c, encode=ui_methods.encode)
 
+###########################
+### ASCII view of database
+### /admin/db_groups
+###########################
+class DB_Groups(app.basic.BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        if self.current_user not in settings.get('staff'):
+            self.redirect('/')
+        else:
+            g = Group.objects
+            return self.render('admin/db_groups.html', groups=g, encode=ui_methods.encode)
+
 
 ###########################
 ### Google Webmaster Verification
