@@ -15,7 +15,10 @@ from mongoengine.queryset import Q
 ########################
 class Index(app.basic.BaseHandler):
   def get(self):
-    return self.render('public/index.html')
+    err = self.get_argument('err', '')
+    if err == 'no_results':
+        err = 'No results found! Try another search'
+    return self.render('public/index.html', err=err)
 
 ########################
 ### Search
@@ -30,6 +33,9 @@ class Search(app.basic.BaseHandler):
     if name or domain:
         # Global profile results
         profiles = Profile.objects(name__icontains=name, email__icontains=domain).order_by('name') # case-insensitive contains
+        if len(profiles) == 0:
+            return self.redirect('/?err=no_results')
+
 
         # Connections
         current_user = User.objects.get(email=self.current_user)
