@@ -36,14 +36,14 @@ class Search(app.basic.BaseHandler):
     if name or domain:
         # Global profile results
         profiles = Profile.objects(name__icontains=name, email__icontains=domain).order_by('name') # case-insensitive contains
-        
-        logging.info(len(profiles))
 
+        # Pagination and no results
         if len(profiles) == 0:
             return self.redirect('/?err=no_results')
         elif len(profiles) > RESULTS_PER_PAGE:
             # Get page number
             num_pages = int(math.ceil(float(len(profiles)) / RESULTS_PER_PAGE))
+            logging.info(num_pages)
             if page:
                 page = int(page)
                 start = (page - 1) * RESULTS_PER_PAGE
@@ -52,6 +52,9 @@ class Search(app.basic.BaseHandler):
                 start = 0
             end = start + RESULTS_PER_PAGE
             profiles = profiles[start:end]
+        else:
+            page = None
+            num_pages = None
 
         # Connections
         current_user = User.objects.get(email=self.current_user)
