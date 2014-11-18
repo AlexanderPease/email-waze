@@ -11,10 +11,11 @@ from oauth2client.file import Storage
 from oauth2client.tools import run
 from googleapiclient import errors
 
-OAUTH_SCOPE = ('https://www.googleapis.com/auth/gmail.modify '
+OAUTH_SCOPE = ('https://www.googleapis.com/auth/gmail.readonly '
                 'https://www.googleapis.com/auth/contacts.readonly '
                 'https://www.googleapis.com/auth/userinfo.email ' #deprecated
                 'https://www.googleapis.com/auth/userinfo.profile') #deprecated
+                #'https://www.googleapis.com/auth/gmail.modify' changed to readonly
                 #'https://www.googleapis.com/auth/plus.profile.emails.read')
                 #'https://www.googleapis.com/auth/plus.login')
                 #'https://www.googleapis.com/auth/plus.me')
