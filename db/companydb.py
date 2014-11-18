@@ -1,7 +1,6 @@
 import settings
 from mongoengine import *
-import logging
-import base64
+import logging, base64, datetime, json
 from urllib2 import Request, urlopen, URLError
 
 mongo_database = settings.get('mongo_database')
@@ -18,7 +17,7 @@ class Company(Document):
 
     def __str__(self):
         if self.clearbit:
-            return 'Company: %s (%s)' % (self.clearbit.name, self.domain)
+            return 'Company: %s (%s)' % (self.clearbit['name'], self.domain)
         elif self.date_queried_clearbit:
             return 'Company: %s. Clearbit returned no info on %s' % (self.id, self.date_queried_clearbit)
         else:
@@ -34,14 +33,18 @@ class Company(Document):
             calls
         """
         if not self.date_queried_clearbit or overwrite:
-            logging.info('call')
             request = Request(CLEARBIT_COMPANY_URL + self.domain)
             base64string = base64.encodestring('%s:' % settings.get('clearbit_key')).replace('\n', '')
             request.add_header("Authorization", "Basic %s" % base64string)
-            logging.info(request)
             try:
                 response = urlopen(request)
                 info = response.read()
                 logging.info(info)
             except URLError, e:
+                info = None
                 logging.info('Clearbit error code: %s' % e)
+
+            self.date_queried_clearbit = datetime.datetime.now()
+            if info:
+                self.clearbit = json.loads(info)
+            self.save()
