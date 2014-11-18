@@ -214,6 +214,37 @@
 
 
       </div>
+
+      <!-- Pagination -->
+      {% if num_pages %}
+        <nav>
+          <ul class="pagination">
+            <li 
+            {% if page == 1 %}
+              class="page-link disabled"
+            {% else %}
+              class="page-link"
+            {% end %}
+            data-page-number="prev"><a><span aria-hidden="true">&laquo;</span><span class="sr-only">Previous</span></a></li>
+            
+            {% for i in range(1, num_pages + 1) %}
+              {% if page == i %}
+                <li class="page-link active" data-page-number="{{ i }}"><a>{{ i }}<span class="sr-only">(current)</span></a></li>
+              {% else %}
+                <li class="page-link" data-page-number="{{ i }}"><a>{{ i }}</a></li>
+              {% end %}
+            {% end %}
+            <li 
+            {% if page == num_pages %}
+              class="page-link disabled"
+            {% else %}
+              class="page-link"
+            {% end %}
+            data-page-number="next"><a><span aria-hidden="true">&raquo;</span><span class="sr-only">Next</span></a>
+          </ul>
+        </nav>
+      {% end %}
+
     </div> <!-- container -->
   </section> <!-- feature -->
 
@@ -251,6 +282,7 @@
     </section>
   {% end %}
   -->
+
 {% end %}
 
 {% block javascript %}
@@ -264,6 +296,52 @@
         html: true,
         template: '<div class="popover popover-medium"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>'
       });
-    });
+
+      /* Load new page when pagination is clicked */
+      $('.page-link').click(function(){
+        /*
+         * queryParameters -> handles the query string parameters
+         * queryString -> the query string without the fist '?' character
+         * re -> the regular expression
+         * m -> holds the string matching the regular expression
+         */
+        var queryParameters = {}, queryString = location.search.substring(1), re = /([^&=]+)=([^&]*)/g, m;
+         
+        // Creates a map with the query string parameters
+        while (m = re.exec(queryString)) {
+            queryParameters[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+        }
+         
+        // Add new parameters or update existing ones
+        var pageNum = $(this).attr('data-page-number');
+        var currentPageNum = parseInt(queryParameters['page']);
+        if (pageNum == 'prev') {
+          if (currentPageNum) {
+            queryParameters['page'] = currentPageNum - 1;
+          } else {
+            // If there is no currentPageNum, then it's on page 1
+            queryParameters['page'] = 2
+          }
+        } else if (pageNum == 'next' ) {
+          if (currentPageNum) {
+            queryParameters['page'] = currentPageNum + 1;
+          } else {
+            // If there is no currentPageNum, then it's on page 1
+            queryParameters['page'] = 2
+          }
+        }
+        else {
+          queryParameters['page'] = pageNum;
+        }
+         
+        /*
+         * Replace the query portion of the URL.
+         * jQuery.param() -> create a serialized representation of an array or
+         *     object, suitable for use in a URL query string or Ajax request.
+         */
+        location.search = $.param(queryParameters); // Causes page to reload
+      });
+
+    });//ready
   </script>
 {% end %}

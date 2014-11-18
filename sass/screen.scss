@@ -207,7 +207,7 @@ $mailgun-background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI2NCIgaGVp
     padding: 40px 0;
   }
   @media screen and (min-width: 1025px) and (min-height: 750px) {
-    padding: 100px 0px;
+    padding: 90px 0px;
   }
   border-bottom: 1px solid #E8EAF1;
   overflow: hidden;
@@ -313,9 +313,9 @@ $mailgun-background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI2NCIgaGVp
 // Index Logged in
 
 .input-group[class*="col-"] {
-    float: auto;
-    padding-right: 15px;
-    padding-left: 15px;
+  float: auto;
+  padding-right: 15px;
+  padding-left: 15px;
 }
 
 .input-group-lg {
