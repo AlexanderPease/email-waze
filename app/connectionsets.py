@@ -24,6 +24,15 @@ class BaseProfileConnection:
     def __repr__(self):
         return 'BaseProfileConnection: %s (%s)' % (self.name, self.email)
 
+    # This is somewhat redundant with Profile.get_domain. But necessary b/c
+    # BaseProfileConnection saves Profile fields, not Profile instance
+    def get_domain(self):
+        """
+        Returns just the domain name of self.email
+        Ex: reply.craigslist.com from foo@reply.craigslist.com
+        """
+        return self.email.split('@')[1]
+
 class GroupConnectionSet:
     """
     Class that groups Connections together by User

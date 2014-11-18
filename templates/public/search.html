@@ -88,7 +88,7 @@
                         {{ p.email }} --> {{ c.user.email }}:</br>{{ c.total_emails_in }} total emails, most recently on {{ c.latest_email_in_date_string() }}</br></br>
                       {% end %}
                     ">
-                      <td>{{ truncate(p.name) }}</td>
+                      <td>{{ truncate(p.name) }} ({{ p.get_domain() }})</td>
                       <td><a href="mailto:{{ p.email }}">{{ p.email }}<a></td>
                       <td>
                         {% if len(p.connections) == 1 %}
@@ -100,7 +100,7 @@
                     </tr>
                   {% else %}
                     <tr id="popover-row" data-container="body" data-content="You do not have a connection to {{ p.name }}.</br</br>But, you can send an email directly to his/her inbox using this public email address: {{ p.burner }}@{{ settings.get('domain_name') }}">
-                      <td>{{ truncate(p.name) }}</td>
+                      <td>{{ truncate(p.name) }} ({{ p.get_domain() }})</td>
                       <td>
                         <a href="{{ p.burner }}@{{ settings.get('domain_name') }}">{{ p.burner }}@{{ settings.get('domain_name') }}</a>
                       </td>
