@@ -16,7 +16,8 @@
   "description": "Application to enable teams to work better with email address books",
   "main": "index.html",
   "dependencies": {
-    "grunt": "^0.4.5"
+    "grunt": "^0.4.5",
+    "bowser": "^0.7.2"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
