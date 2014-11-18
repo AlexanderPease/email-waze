@@ -63,6 +63,16 @@
                 <a href="{{ c.clearbit['url'] }}" target="_blank">{{ c.clearbit['name'] }}</a> - 
                 {{ c.clearbit['location'] }}
             {% else %}
+              Found {{ len(companies) }} companies. Limit results to:
+              <ul>
+                {% for c in companies %}
+                  <li style="list-style:none;">
+                    <img src="{{ c.clearbit['logo'] }}" height="32" weight="32" style="margin-bottom:4px">
+                <a href="{{ c.clearbit['url'] }}" target="_blank">{{ c.clearbit['name'] }}</a> - 
+                {{ c.clearbit['location'] }}
+                  </li>
+                {% end %}
+              </ul>
             {% end %}
           </div>
         </div>

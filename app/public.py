@@ -94,7 +94,7 @@ class Search(app.basic.BaseHandler):
 
         # Company info
         if domain:
-            companies = Company.objects(domain=domain)
+            companies = Company.objects(domain__icontains=domain)
         else:
             companies = None
 

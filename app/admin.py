@@ -93,7 +93,7 @@ class Scratch(app.basic.BaseHandler):
             return self.redirect('/')
 
         from db.companydb import Company
-        company, flag = Company.objects.get_or_create(domain='usv.com')
+        company, flag = Company.objects.get_or_create(domain='uber.com')
         company.update_clearbit()
         company.save()
         logging.info(company)
