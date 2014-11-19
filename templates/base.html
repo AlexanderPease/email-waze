@@ -69,7 +69,6 @@
 
     $(window).resize(function () {
       fixFooter();
-      fixSearchBg();
     });
 
     var fixFooter = function () {
@@ -78,15 +77,6 @@
         $("footer").removeClass("fixed");
       } else {
         $("footer").addClass("fixed");
-      }
-    }
-
-    var fixSearchBg = function() {
-    //fixes gradient background div height for search results page
-      if ($('.search-background.js-stretch-height').length && $(window).innerWidth() > 767) {
-        var padTop = parseInt($('.search-background').css('padding-top').split('px')[0]);
-        var padBottom = parseInt($('.search-background').css('padding-bottom').split('px')[0]);
-        $('.search-background').height($(window).innerHeight() - $('.nav').height() - $('footer').height() - padTop - padBottom);
       }
     }
 
