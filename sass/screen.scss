@@ -115,10 +115,13 @@ footer {
   text-align: center;
   color: #FFF;
   background-color: #182848;
+  z-index: 10;
 
   &.fixed {
-    position: absolute;
-    bottom: 0;
+    @media (min-width: 768px) {
+      position: absolute;
+      bottom: 0;
+    }
   }
 }
 
