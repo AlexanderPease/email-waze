@@ -61,36 +61,6 @@ function render_profile(contact) {
     }
 }
 
-/* OLD
-function render_connection(connection) {
-    console.log('render_connection()');
-    var $panel = $('td.Bu.y3 div.nH.adC');
-    if ($panel) {
-        // Get local html and inject into page
-        $.ajax({
-            type: 'GET',
-            url: 'chrome-extension://'+encodeURIComponent(ID)+'/templates/connection.html',
-            cache: true,
-            dataType: 'text',
-            success: function(html) {
-                var email = connection.email;
-                var email_parts = email.split('@');
-                if (email_parts.length == 2) {
-                    connection.email_name = email_parts[0];
-                    connection.email_domain = email_parts[1];
-                }
-                var $div = $panel.find('div#ansatz');
-                if (!$div.length)
-                    $div = $('<div id="ansatz" style="position:relative;" />');
-                $div.html(Mustache.render(html, connection));
-                $panel.prepend($div);
-            },
-        });
-    } else {
-        console.log($panel);
-    }
-}
-*/
 
 /* New layout for connection */
 function render_connection(connection_dict) {
@@ -99,6 +69,7 @@ function render_connection(connection_dict) {
     var $panel = $('td.Bu.y3 div.nH.adC');
     if ($panel) {
         if (connection_dict.empty) {
+            /* No connection */
             $.ajax({
                 type: 'GET',
                 url: 'chrome-extension://'+encodeURIComponent(ID)+'/templates/empty_connection.html',
@@ -119,18 +90,59 @@ function render_connection(connection_dict) {
                 },
             });
         } else {
+            /* There's a connection */
             $.ajax({
                 type: 'GET',
                 url: 'chrome-extension://'+encodeURIComponent(ID)+'/templates/connection.html',
                 cache: true,
                 dataType: 'text',
                 success: function(html) {
+                    // Email parts for display
                     var email = connection_dict.profile.email;
                     var email_parts = email.split('@');
                     if (email_parts.length == 2) {
                         connection_dict.email_name = email_parts[0];
                         connection_dict.email_domain = email_parts[1];
                     }
+
+                    // Connection to self message
+                    if (connection_dict.current_user) {
+                        if (connection_dict.current_user.total_emails_out) {
+                            connection_dict.current_user_msg = 'You last emailed on ' + connection_dict.current_user.latest_email_out_date;
+                        } else {
+                            connection_dict.current_user_msg = 'Last emailed you on ' + connection_dict.current_user.latest_email_in_date;
+                        }
+                    } else {
+                        connection_dict.current_user_msg = "No email history with you";
+                    }
+
+                    // Team to profile connection to message
+                    if (connection_dict.group_users_profile) {
+                        if (connection_dict.group_users_profile.total_emails_out) {
+                            connection_dict.group_users_profile_msg = connection_dict.group_users_profile.connected_user_email + ' last emailed on ' + connection_dict.group_users_profile.latest_email_out_date;
+                        } else {
+                            connection_dict.group_users_profile_msg = 'Last emailed ' + connection_dict.group_users_profile.connected_user_email + ' on ' + connection_dict.group_users_profile.latest_email_in_date;
+                        }
+                    } else {
+                        connection_dict.group_users_profile_msg = "No email history with your teams";
+                    }
+
+                    // Team to domain connection to message
+                    if (connection_dict.group_users_domain_generic) {
+                        connection_dict.group_users_domain_msg = null;
+                    } else {
+                        if (connection_dict.group_users_domain) {
+                            if (connection_dict.group_users_domain.total_emails_out) {
+                                connection_dict.group_users_domain_msg = connection_dict.group_users_domain.connected_user_email + ' last emailed ' + connection_dict.group_users_domain.connected_profile_email + ' on ' + connection_dict.group_users_domain.latest_email_out_date;
+                            } else {
+                                connection_dict.group_users_domain_msg = connection_dict.group_users_domain.connected_profile_email + ' Last emailed ' + connection_dict.group_users_domain.connected_user_email + ' on ' + connection_dict.group_users_domain.latest_email_in_date;
+                            }
+                        } else {
+                            connection_dict.group_users_domain_msg = "Your teams have no email history with " + connection_dict.email_domain;
+                        }
+                    }
+                        
+
                     var $div = $panel.find('div#ansatz');
                     if (!$div.length)
                         $div = $('<div id="ansatz" style="position:relative;" />');
@@ -217,18 +229,6 @@ function render_search() {
     }
 }
 
-/* Not sure what this does 
-function find_account() {
-    console.log('find_account()')
-    var $email = $('div.gb_aa.gb_B').find('div.gb_ia');
-    if ($email.length)
-        console.log('find_account()');
-        console.log($email.text());
-        return $email.text();
-    return undefined;
-}
-*/
-
 $(document).ready(function(){
     // Immediately render search form on page load
     render_search();
@@ -297,3 +297,46 @@ chrome.extension.sendMessage({name:'get_extension_id'}, function(id) {
     window.ID = id;
     start();
 });
+
+/* Not sure what this does 
+function find_account() {
+    console.log('find_account()')
+    var $email = $('div.gb_aa.gb_B').find('div.gb_ia');
+    if ($email.length)
+        console.log('find_account()');
+        console.log($email.text());
+        return $email.text();
+    return undefined;
+}
+*/
+
+/* OLD
+function render_connection(connection) {
+    console.log('render_connection()');
+    var $panel = $('td.Bu.y3 div.nH.adC');
+    if ($panel) {
+        // Get local html and inject into page
+        $.ajax({
+            type: 'GET',
+            url: 'chrome-extension://'+encodeURIComponent(ID)+'/templates/connection.html',
+            cache: true,
+            dataType: 'text',
+            success: function(html) {
+                var email = connection.email;
+                var email_parts = email.split('@');
+                if (email_parts.length == 2) {
+                    connection.email_name = email_parts[0];
+                    connection.email_domain = email_parts[1];
+                }
+                var $div = $panel.find('div#ansatz');
+                if (!$div.length)
+                    $div = $('<div id="ansatz" style="position:relative;" />');
+                $div.html(Mustache.render(html, connection));
+                $panel.prepend($div);
+            },
+        });
+    } else {
+        console.log($panel);
+    }
+}
+*/

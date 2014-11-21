@@ -15,39 +15,25 @@
 
   <table class="table table-striped">
     <tbody>
-      {{ #current_user }}
-        <tr id="popover-row" data-container="body" data-content="FOOO">
-          <td> 
-            You last emailed {{ profile.email }} on {{ latest_email_out_date }}
-          </td>
-        </tr>
-      {{ /current_user }}
-      {{ ^current_user }}
-        <tr id="popover-row" data-container="body" data-content="FOOO">
-          <td>You've never emailed this person.</td>
-        </tr>
-      {{ /current_user }}
-
-      {{ #group_users_profile }}
+      <tr>
+        <td> 
+          {{ current_user_msg }}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          {{ group_users_profile_msg }}
+        </td>
+      </tr>
+      {{ #group_users_domain_msg }}
         <tr>
           <td>
-            Latest team connection:</br>
-            {{ connected_user_email }} emailed {{ connected_profile_email }} on {{ latest_email_out_date }}
+            {{ group_users_domain_msg }}
           </td>
         </tr>
-      {{ /group_users_profile }}
-      {{ ^group_users_profile }}
-        <tr>
-          <td>
-            {{ #group_users_domain }}
-              No one in your team has emailed {{ profile.email }}, but {{ connected_user_email }} emailed {{ connected_profile_email }} on {{ latest_email_out_date }}. 
-            {{ /group_users_domain }}
-            {{ ^group_users_domain }}
-              No one in your team has emailed anyone at {{ email_domain }}. 
-            {{ /group_users_domain }}
-          </td>
-        </tr>
-      {{ /group_users_profile }}
+      {{ /group_users_domain_msg }}
+      {{ ^group_users_domain_msg }}
+      {{ /group_users_domain_msg }}
 
       <tr><td><a href="https://ansatz.me/search?domain={{ profile.email }}">Click here</a> for all info</td></tr>
 

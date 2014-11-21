@@ -227,6 +227,7 @@ class ConnectionByEmailForExtension(app.basic.BaseHandler):
                 results['group_users_domain'] = None
         else:
             results['group_users_domain'] = None
+            results['group_users_domain_generic'] = True
 
         # Return
         logging.info(results)
