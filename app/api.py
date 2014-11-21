@@ -42,6 +42,8 @@ class CurrentUserEmail(app.basic.BaseHandler):
 class ProfileByEmail(app.basic.BaseHandler):
     #@tornado.web.authenticated
     def get(self):
+        if not self.current_user:
+            return self.api_error(401, 'User is not logged in')
         domain = self.get_argument('domain', '')
         try:
             p = Profile.objects.get(email=domain)
@@ -57,6 +59,8 @@ class ProfileByEmail(app.basic.BaseHandler):
 class ProfileSearch(app.basic.BaseHandler):
     #@tornado.web.authenticated
     def get(self):
+        if not self.current_user:
+            return self.api_error(401, 'User is not logged in')
         name = self.get_argument('name', '')
         domain = self.get_argument('domain', '')
 
@@ -76,14 +80,7 @@ class ProfileSearch(app.basic.BaseHandler):
 class ConnectionByEmail(app.basic.BaseHandler):
     #@tornado.web.authenticated
     def get(self):
-        domain = self.get_argument('domain', '')
-        cs = self.get_argument('cs', '') # defaults to ProfileConnectionSet
-
-        if not domain:
-            return self.api_error(400, 'No domain query given')
-
         # Authenticate user
-        logging.info(self.current_user)
         if not self.current_user:
             return self.api_error(401, 'User is not logged in')
         try:
@@ -91,6 +88,11 @@ class ConnectionByEmail(app.basic.BaseHandler):
         except:
             return self.api_error(500, 'Could not find client user in database')
 
+        # Query
+        domain = self.get_argument('domain', '')
+        cs = self.get_argument('cs', '') # defaults to ProfileConnectionSet
+        if not domain:
+            return self.api_error(400, 'No domain query given')
         # Don't show connection to self
         if current_user.email == domain:
             return self.api_error(400, 'Queried self')
@@ -125,6 +127,8 @@ class ConnectionByEmail(app.basic.BaseHandler):
 class ConnectionSearch(app.basic.BaseHandler):
     #@tornado.web.authenticated
     def get(self):
+        if not self.current_user:
+            return self.api_error(401, 'User is not logged in')
         name = self.get_argument('name', '')
         domain = self.get_argument('domain', '')
         cs = self.get_argument('cs', '') # defaults to ProfileConnectionSet
@@ -165,6 +169,8 @@ class ConnectionByEmailForExtension(app.basic.BaseHandler):
         Returns dict with key-value pairs. All values are a single Connection 
         except for key 'domain' (ex: 'usv.com')
         """
+        if not self.current_user:
+            return self.api_error(401, 'User is not logged in')
         domain = self.get_argument('domain', '')
 
         if not domain:
