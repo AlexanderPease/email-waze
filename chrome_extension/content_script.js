@@ -229,10 +229,14 @@ function render_search() {
     }
 }
 
-$(document).ready(function(){
-    // Immediately render search form on page load
-    render_search();
+function search_button_loading() {
+    $('#search_button').attr('disabled', 'disabled').html("Loading...");
+    setTimeout(function () {
+        $('#search_button').removeAttr('disabled').html('Search');
+    }, 3000);
+}
 
+$(document).ready(function(){
     // Bind event to detect whenever new URL loads
     $(window).on('hashchange', function(){
         console.log('Hash changed');
@@ -244,12 +248,16 @@ $(document).ready(function(){
             render_search();
         }
     });
+
+    // Render search form on page load
+    render_search();
 });
 
 
 // Content script listens for "search" event
 document.addEventListener("search", function(data) {
     console.log('Content script initiating search')
+    search_button_loading();
     var name = $('#search_name').val();
     var domain = $('#search_domain').val();
     chrome.extension.sendMessage({name:'get_connection_search', email:domain, name_string:name}, function(data) {
