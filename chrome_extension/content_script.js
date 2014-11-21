@@ -243,7 +243,7 @@ function render_login() {
                 var $div = $panel.find('div#ansatz');
                 if (!$div.length)
                     $div = $('<div id="ansatz" style="position:relative;" />');
-                console.log('injecting search');
+                console.log('injecting login');
                 $div.html(Mustache.render(html));
                 $panel.prepend($div);
             },
@@ -276,6 +276,12 @@ $(document).ready(function(){
     // Render search form on page load
     render_search();
 });
+
+// Content script listens for when user logs in and then displays search box
+document.addEventListener("login", function(data) {
+    console.log('User is logging in')
+    render_search();
+})
 
 
 // Content script listens for "search" event

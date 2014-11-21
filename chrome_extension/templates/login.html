@@ -1,14 +1,21 @@
 <div class="twbs" style="margin-top:10px;"> 
     <table class="table">
         <tbody>
-            <tr class="login"><td>
-                <a href="https://ansatz.me/auth/google" target="_blank">Login to Ansatz</a>
+            <tr><td>
+                Welcome to Ansatz!</br>
+                <a id="login" href="https://ansatz.me/auth/google" target="_blank">Click here</a> 
+                to login
             </td></tr>
         </tbody>
     </table>
 </div>
 
 <script>
-
+$('#login').click(function(){
+    console.log('Login link clicked');
+    var event = document.createEvent('Event');
+    event.initEvent('login');
+    document.dispatchEvent(event);
+});
 </script>
 
