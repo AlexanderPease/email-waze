@@ -44,40 +44,30 @@ function get_domain(url) {
 
 function get_profile_by_email(data, callback) {
     var email = data.email
-    if (lscache.get('e:'+data.email)) {
-        callback({contact:lscache.get('e:'+data.email)});
-    } else {
-        if (lscache.get('sleep')) {
+    var options = {
+        type: 'GET',
+        url: ROOT_URL + 'api/profilebyemail?domain=' + encodeURIComponent(email),
+        dataType: 'json',
+        //headers: {
+        //    'X-Session-Token': session.session_token,
+        //},
+        success: function(response) {
             lscache.remove('sleep');
-            setTimeout(function() { get_profile_by_email(data, callback); }, 3000);
-        } else {
-            lscache.set('sleep', true);
-            var options = {
-                type: 'GET',
-                url: ROOT_URL + 'api/profilebyemail?domain=' + encodeURIComponent(email),
-                dataType: 'json',
-                //headers: {
-                //    'X-Session-Token': session.session_token,
-                //},
-                success: function(response) {
-                    lscache.remove('sleep');
-                    //save_response(response);
-                    //lscache.set('e:'+data.email, response.contact);
-                    if (is_ok(response)) {
-                        console.log(response);
-                        callback({profile:response.data});
-                    }
-                },
-                error: function(response) {
-                    console.warn(response);
-                    lscache.remove('session')
-                    //save_error(data.email, response.status, response.responseText);
-                }
-            };
-            console.log('get_profile_by_email() requesting: ' + options.url)
-            $.ajax(options);
+            //save_response(response);
+            //lscache.set('e:'+data.email, response.contact);
+            if (is_ok(response)) {
+                console.log(response);
+                callback({profile:response.data});
+            }
+        },
+        error: function(response) {
+            console.warn(response);
+            lscache.remove('session')
+            //save_error(data.email, response.status, response.responseText);
         }
-    }
+    };
+    console.log('get_profile_by_email() requesting: ' + options.url)
+    $.ajax(options);
     return true;
 }
 
