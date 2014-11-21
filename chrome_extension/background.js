@@ -52,7 +52,7 @@ function get_profile_by_email(data, callback) {
             if (is_ok(response)) {
                 console.log(response);
                 callback({profile:response.data});
-            }
+            } 
         },
         error: function(response) {
             console.warn(response);
@@ -73,6 +73,8 @@ function get_connection_by_email_for_extension(data, callback) {
             console.log(response);
             if (is_ok(response)) {
                 callback({data:response.data});
+            } else if (not_logged_in(response)) {
+                console.log('Not logged in')
             }
             else if (queried_self(response)) {
                 console.log('queried self')
@@ -100,8 +102,9 @@ function get_connection_search(data, callback) {
             if (is_ok(response)) {
                 callback({data:response.data});
             }
-            else if (queried_self(response)) {
-                console.log('queried self')
+            else if (not_logged_in(response)) {
+                console.log('Not logged in');
+                callback({data:response.status_code});
             }
         },
         error: function(response) {
@@ -123,6 +126,8 @@ function get_current_user_email(callback) {
             console.log(response);
             if (is_ok(response)) {
                 callback({data:response.data});
+            } else if (not_logged_in(response)) {
+                console.log('Not logged in')
             }
         },
         error: function(response) {
@@ -139,6 +144,10 @@ function is_ok(data) {
     return data.status_code >= 200 && data.status_code < 300 && data['data'] != null;
 }
 
+/* Checks to see if not logged in */
+function not_logged_in(data) {
+    return data.status_code == 401;
+}
 
 /* Checks to see if the query was of itself 
     Ex: User me@alexanderpease.com queried about me@alexanderpease.com */

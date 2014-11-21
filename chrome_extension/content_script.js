@@ -229,6 +229,30 @@ function render_search() {
     }
 }
 
+function render_login() {
+    console.log('render_login()');
+    var $panel = $('td.Bu.y3 div.nH.adC');
+    if ($panel) {
+        // Get local html and inject into page
+        $.ajax({
+            type: 'GET',
+            url: 'chrome-extension://'+encodeURIComponent(ID)+'/templates/login.html',
+            cache: true,
+            dataType: 'text',
+            success: function(html) {
+                var $div = $panel.find('div#ansatz');
+                if (!$div.length)
+                    $div = $('<div id="ansatz" style="position:relative;" />');
+                console.log('injecting search');
+                $div.html(Mustache.render(html));
+                $panel.prepend($div);
+            },
+        });
+    } else {
+        console.log($panel);
+    }
+}
+
 function search_button_loading() {
     $('#search_button').attr('disabled', 'disabled').html("Loading...");
     setTimeout(function () {
@@ -261,11 +285,14 @@ document.addEventListener("search", function(data) {
     var name = $('#search_name').val();
     var domain = $('#search_domain').val();
     chrome.extension.sendMessage({name:'get_connection_search', email:domain, name_string:name}, function(data) {
-        if (data.data) {
+        if (data.data == 401 ){
+            render_login();
+        }
+        else if (data.data) {
             var connections = data.data;
             var url = 'https://ansatz.me/search?name=' + name + '&domain=' + domain 
             render_multiple_connections(connections, url);
-        }
+        } 
     });
 })
 
@@ -274,7 +301,10 @@ document.addEventListener("rowClicked", function(data) {
     console.log('Content script chose row')
     var email = $('#selected-domain').attr('profile-email');
     chrome.extension.sendMessage({name:'get_connection_by_email_for_extension', email:email}, function(data) {
-        if (data.data) {
+        if (data.data == 401 ){
+            render_login();
+        }
+        else if (data.data) {
             var connection_dict = data.data;
             render_connection(connection_dict);
         }
@@ -290,7 +320,10 @@ function start() {
         if (email) {
             console.log('Mouse over ' + email);
             chrome.extension.sendMessage({name:'get_connection_by_email_for_extension', email:email}, function(data) {
-                if (data.data) {
+                if (data.data == 401 ){
+                    render_login();
+                }
+                else if (data.data) {
                     var connection_dict = data.data;
                     render_connection(connection_dict);
                 }
