@@ -23,7 +23,7 @@ class Test(app.basic.BaseHandler):
 ### /api/currentuseremail
 ########################
 class CurrentUserEmail(app.basic.BaseHandler):
-    @tornado.web.authenticated
+    #@tornado.web.authenticated
     def get(self):
         if not self.current_user:
             return self.api_error(401, 'User is not logged in')
@@ -40,7 +40,7 @@ class CurrentUserEmail(app.basic.BaseHandler):
 ### /api/profilebyemail
 ########################
 class ProfileByEmail(app.basic.BaseHandler):
-    @tornado.web.authenticated
+    #@tornado.web.authenticated
     def get(self):
         domain = self.get_argument('domain', '')
         try:
@@ -55,7 +55,7 @@ class ProfileByEmail(app.basic.BaseHandler):
 ### /api/profilesearch
 ########################
 class ProfileSearch(app.basic.BaseHandler):
-    @tornado.web.authenticated
+    #@tornado.web.authenticated
     def get(self):
         name = self.get_argument('name', '')
         domain = self.get_argument('domain', '')
@@ -74,7 +74,7 @@ class ProfileSearch(app.basic.BaseHandler):
 ########################
 """ Not being used atm """
 class ConnectionByEmail(app.basic.BaseHandler):
-    @tornado.web.authenticated
+    #@tornado.web.authenticated
     def get(self):
         domain = self.get_argument('domain', '')
         cs = self.get_argument('cs', '') # defaults to ProfileConnectionSet
@@ -123,7 +123,7 @@ class ConnectionByEmail(app.basic.BaseHandler):
 ### /api/connectionsearch
 ########################
 class ConnectionSearch(app.basic.BaseHandler):
-    @tornado.web.authenticated
+    #@tornado.web.authenticated
     def get(self):
         name = self.get_argument('name', '')
         domain = self.get_argument('domain', '')
@@ -159,7 +159,7 @@ class ConnectionSearch(app.basic.BaseHandler):
 ### /api/connectionbyemailforextension
 ########################
 class ConnectionByEmailForExtension(app.basic.BaseHandler):
-    @tornado.web.authenticated
+    #@tornado.web.authenticated
     def get(self):
         """
         Returns dict with key-value pairs. All values are a single Connection 
