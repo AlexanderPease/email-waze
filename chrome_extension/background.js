@@ -70,7 +70,6 @@ function get_connection_by_email_for_extension(data, callback) {
         url: ROOT_URL + 'api/connectionbyemailforextension?domain=' + encodeURIComponent(email),
         dataType: 'json',
         success: function(response) {
-            lscache.remove('sleep');
             console.log(response);
             if (is_ok(response)) {
                 callback({data:response.data});
@@ -81,8 +80,6 @@ function get_connection_by_email_for_extension(data, callback) {
         },
         error: function(response) {
             console.warn(response);
-            lscache.remove('session')
-            //save_error(data.email, response.status, response.responseText);
         }
     };
     console.log('get_connection_by_email_for_extension() requesting: ' + options.url)
@@ -99,9 +96,6 @@ function get_connection_search(data, callback) {
         url: ROOT_URL + 'api/connectionsearch?domain=' + encodeURIComponent(email) + '&name=' + encodeURIComponent(name),
         dataType: 'json',
         success: function(response) {
-            lscache.remove('sleep');
-            //save_response(response);
-            //lscache.set('e:'+data.email, response.contact);
             console.log(response);
             if (is_ok(response)) {
                 callback({data:response.data});
@@ -112,8 +106,6 @@ function get_connection_search(data, callback) {
         },
         error: function(response) {
             console.warn(response);
-            lscache.remove('session')
-            //save_error(data.email, response.status, response.responseText);
         }
     };
     console.log('get_connection_search() requesting: ' + options.url)
