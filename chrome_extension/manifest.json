@@ -3,7 +3,7 @@
 
     "name": "Ansatz",
     "short_name": "Ansatz",
-    "version": "0.0.22",
+    "version": "0.0.24",
     "description": "Stop connecting. Start emailing.",
     "background": {
         "persistent": false,
@@ -27,12 +27,9 @@
         }
     ],
     "web_accessible_resources": [
-        "libs/jquery.js",
-        "libs/mustache.js",
-        "libs/lscache.js",
+        "libs/*",
         "templates/*",
-        "img/ajax-loader.gif",
-        "img/profile.png"
+        "img/*"
     ],
     "externally_connectable": {
         "matches": [ "https://mail.google.com/*" ]
@@ -49,7 +46,7 @@
         ],
     "browser_action":{
         "default_title": "Ansatz",
-        "default_icon": "img/Aicon19x19.png"
+        "default_icon": "img/Aicon19x19.jpg"
     },
     "manifest_version": 2
 }
