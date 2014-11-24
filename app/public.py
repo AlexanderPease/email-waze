@@ -43,7 +43,6 @@ class Search(app.basic.BaseHandler):
         elif len(profiles) > RESULTS_PER_PAGE:
             # Get page number
             num_pages = int(math.ceil(float(len(profiles)) / RESULTS_PER_PAGE))
-            logging.info(num_pages)
             if page:
                 page = int(page)
                 start = (page - 1) * RESULTS_PER_PAGE

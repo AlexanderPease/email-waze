@@ -83,9 +83,33 @@
                 {% for p in profiles %}
                   {% if p.connections %}
                     <tr id="popover-row" data-container="body" data-content="
+                      {% set first = True %}
                       {% for c in p.connections %}
-                        {{ c.user.email }} --> {{ p.email }}:</br>{{ c.total_emails_out }} total emails, most recently on {{ c.latest_email_out_date_string() }}</br>
-                        {{ p.email }} --> {{ c.user.email }}:</br>{{ c.total_emails_in }} total emails, most recently on {{ c.latest_email_in_date_string() }}</br></br>
+                        {% if not first %}
+                          </br>
+                        {% end %}
+
+                        {% if c.total_emails_out == 0 and c.total_emails_in == 0 %}
+                          {{ c.user.email }} <--> {{ p.email }}</br>
+                        {% else %}
+                          {{ c.user.email }} --> {{ p.email }}: 
+                          {% if c.total_emails_out == 0 %}
+                            {{ c.total_emails_out }} emails
+                          {% elif c.total_emails_out == 1 %}
+                            {{ c.total_emails_out }} email, most recently on {{ c.latest_email_out_date_string() }}
+                          {% else %}
+                            {{ c.total_emails_out }} emails, most recently on {{ c.latest_email_out_date_string() }}
+                          {% end %}</br>
+                          {{ p.email }} --> {{ c.user.email }}: 
+                          {% if c.total_emails_in == 0 %}
+                            {{ c.total_emails_in }} emails
+                          {% elif c.total_emails_out == 1 %}
+                            {{ c.total_emails_in }} email, most recently on {{ c.latest_email_in_date_string() }}
+                          {% else %}
+                            {{ c.total_emails_in }} emails, most recently on {{ c.latest_email_in_date_string() }}
+                          {% end %}</br>
+                        {% end %}
+                        {% set first = False %}
                       {% end %}
                     ">
                       <td>{{ truncate(p.name) }} ({{ p.get_domain() }})</td>
@@ -128,7 +152,24 @@
                 {% for sc in group_connection_set %}
                   {% set first = True %}
                   {% for c in sc.connections %}
-                    <tr id="popover-row" data-container="body" data-content="{{ sc.email }} --> {{ c.profile.email}}:</br>{{ c.total_emails_out }} total emails, most recently on {{ c.latest_email_out_date_string() }}</br></br>{{ c.profile.email}} --> {{ sc.email }}:</br>{{ c.total_emails_in }} total emails, most recently on {{ c.latest_email_in_date_string() }}">
+                    <tr id="popover-row" data-container="body" data-content="
+                      {{ sc.email }} --> {{ c.profile.email}}: 
+                      {% if c.total_emails_out == 0 %}
+                        {{ c.total_emails_out }} emails
+                      {% elif c.total_emails_out == 1 %}
+                        {{ c.total_emails_out }} email, most recently on {{ c.latest_email_out_date_string() }}
+                      {% else %}
+                        {{ c.total_emails_out }} emails, most recently on {{ c.latest_email_out_date_string() }}
+                      {% end %}</br>
+                      {{ c.profile.email}} --> {{ sc.email }}: 
+                      {% if c.total_emails_in == 0 %}
+                        {{ c.total_emails_in }} emails
+                      {% elif c.total_emails_in == 1 %}
+                        {{ c.total_emails_in }} email, most recently on {{ c.latest_email_in_date_string() }}
+                      {% else %}
+                        {{ c.total_emails_in }} emails, most recently on {{ c.latest_email_in_date_string() }}
+                      {% end %}
+                    ">
                       
                       {% if first %}
                         <td>
@@ -178,7 +219,24 @@
               {% for sc in profile_connection_set %}
                 {% set first = True %}
                 {% for c in sc.connections %}
-                  <tr id="popover-row" data-container="body" data-content="{{ sc.email }} --> {{ c.user.email}}:</br>{{ c.total_emails_in }} total emails, most recently on {{ c.latest_email_in_date_string() }}</br></br>{{ c.user.email}} --> {{ sc.email }}:</br>{{ c.total_emails_out }} total emails, most recently on {{ c.latest_email_out_date_string() }}">
+                  <tr id="popover-row" data-container="body" data-content="
+                    {{ sc.email }} --> {{ c.user.email}}:
+                    {% if c.total_emails_in == 0 %}
+                      {{ c.total_emails_in }} emails
+                    {% elif c.total_emails_in == 1 %}
+                      {{ c.total_emails_in }} email, most recently on {{ c.latest_email_in_date_string() }}</br>
+                    {% else %}
+                      {{ c.total_emails_in }} emails, most recently on {{ c.latest_email_in_date_string() }}</br>
+                    {% end %}
+                    {{ c.user.email}} --> {{ sc.email }}:
+                    {% if c.total_emails_out == 0 %}
+                      {{ c.total_emails_out }} emails
+                    {% elif c.total_emails_out == 1 %}
+                      {{ c.total_emails_out }} email, most recently on {{ c.latest_email_out_date_string() }}</br>
+                    {% else %}
+                      {{ c.total_emails_out }} emails, most recently on {{ c.latest_email_out_date_string() }}</br>
+                    {% end %}
+                  ">
                     {% if first %}
                       <td>{{ truncate(sc.name) }} (<a href="mailto:{{ sc.email }}">{{ sc.email }}</a>) emailed...</td>
                     {% else %}
