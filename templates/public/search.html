@@ -103,7 +103,7 @@
                           {{ p.email }} --> {{ c.user.email }}: 
                           {% if c.total_emails_in == 0 %}
                             {{ c.total_emails_in }} emails
-                          {% elif c.total_emails_out == 1 %}
+                          {% elif c.total_emails_in == 1 %}
                             {{ c.total_emails_in }} email, most recently on {{ c.latest_email_in_date_string() }}
                           {% else %}
                             {{ c.total_emails_in }} emails, most recently on {{ c.latest_email_in_date_string() }}
