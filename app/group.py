@@ -3,6 +3,7 @@ import logging
 import tornado.web
 from db.groupdb import Group
 from db.userdb import User
+from db.connectiondb import Connections
 
 ########################
 ### Create a new group
@@ -128,6 +129,17 @@ class AcceptGroupInvite(app.basic.BaseHandler):
             return self.redirect("/user/settings?err=Could not find team!")
 
         if u.email in g.invited_emails or u.get_domain() in g.domain_setting:
+            # Send emails to new member and existing members
+            new_connections = Connection.objects(user__in=g.users)
+            new_connections_distinct = set([for c.profile in new_connections])
+            self.send_email(from_address='Ansatz.me <postmaster@ansatz.me>',
+                        to_address=u.email,
+                        subject="You've joined %s!" % g.name,
+                        html_text='''Congrats! You're now the newest member of
+                        team %s, along with %s other members. They've expanded your
+                        address book by %s new people!''' % (g.name, len(g.users), len(new_connections_distinct))
+                        )
+
             # Add user and remove from invited email list
             g.add_user(u)
             logging.info(g.users)
