@@ -1,0 +1,45 @@
+{% extends "../base.html" %}
+
+{% block body %}
+  <section class="feature">
+    <div class="container">
+
+      <h2>"{{ g.name }}" Team Settings</h2>
+      <h4>{{ g.admin.name }} ({{ g.admin.email }}) is the team admin. Only an admin can make changes to the team.</h4>
+
+      Members ({{ len(g.users) }} total):
+      <ul>
+        {% for u in g.users %}
+          <li>
+            {{ u.name }} ({{ u.email }}) 
+            {% if u.same_user(g.admin) %}
+              (Admin)
+            {% end%}
+          </li>
+        {% end %}
+      </ul>
+      Invites:
+      {% if g.invited_emails %}
+        <ul>
+          {% for e in g.invited_emails %}
+            <li>{{ e }}</li>
+          {% end %}
+        </ul>
+      {% else %}
+        None</br>
+      {% end %}
+      Domain setting: 
+      {% if g.domain_setting %}
+        {{ g.domain_setting }}
+      {% else %}
+        None</br>
+      {% end %}
+
+    </div><!--container-->
+  </section><!--row-->
+{% end %}
+
+{% block javascript %}
+
+{% end %}
+

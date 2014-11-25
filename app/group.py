@@ -3,7 +3,7 @@ import logging
 import tornado.web
 from db.groupdb import Group
 from db.userdb import User
-from db.connectiondb import Connections
+from db.connectiondb import Connection
 
 ########################
 ### Create a new group
@@ -110,6 +110,21 @@ class EditGroup(app.basic.BaseHandler):
         g.save()
         return self.redirect('/user/settings?msg=Successfully updated group settings!')
 
+########################
+### View a group. Use group document id string as identifier. 
+### /group/(?P<group>[A-z-+0-9]+)/view
+########################
+class ViewGroup(app.basic.BaseHandler):
+    @tornado.web.authenticated
+    def get(self, group):
+        g = Group.objects.get(id=group)
+        u = User.objects.get(email=self.current_user)
+        if not u in g.users:
+            return self.redirect('/')
+
+        return self.render('group/group_view.html', g=g, 
+            list_to_comma_delimited_string=ui_methods.list_to_comma_delimited_string)
+
 
 ########################
 ### Accept a group invitation. Use group document id string as identifier. 
@@ -130,14 +145,25 @@ class AcceptGroupInvite(app.basic.BaseHandler):
 
         if u.email in g.invited_emails or u.get_domain() in g.domain_setting:
             # Send emails to new member and existing members
-            new_connections = Connection.objects(user__in=g.users)
-            new_connections_distinct = set([for c.profile in new_connections])
             self.send_email(from_address='Ansatz.me <postmaster@ansatz.me>',
                         to_address=u.email,
                         subject="You've joined %s!" % g.name,
                         html_text='''Congrats! You're now the newest member of
-                        team %s, along with %s other members. They've expanded your
-                        address book by %s new people!''' % (g.name, len(g.users), len(new_connections_distinct))
+                        team "%s", along with %s other members. 
+                        Click 
+                        <a href="%s/group/%s/view">here</a> to see more info about the 
+                        group.''' % (g.name, len(g.users), settings.get('base_url'), g.id)
+                        )
+            for group_user in g.users:
+                self.send_email(from_address='Ansatz.me <postmaster@ansatz.me>',
+                        to_address=group_user.email,
+                        subject="%s joined %s!" % (u.name, g.name),
+                        html_text='''%s (%s) has joined you as a member of team "%s".
+                        This means that you are now sharing contacts and email metadata
+                        with %s. If you want to remove yourself from the team, 
+                        <a href="%s/group/%s/view">click here</a>. </br>
+                        Team "%s" now has %s members and is administered by %s 
+                        (%s)''' % (u.name, u.email, g.name, u.name, settings.get('base_url'), g.id, g.name, len(g.users), g.admin.name, g.admin.email)
                         )
 
             # Add user and remove from invited email list
