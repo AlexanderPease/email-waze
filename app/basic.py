@@ -27,6 +27,7 @@ class BaseHandler(tornado.web.RequestHandler):
         kwargs['settings'] = settings 
         kwargs['current_user_name'] = self.current_user_name
         kwargs['current_user_casual_name'] = self.current_user_casual_name
+        kwargs['current_user_instance'] = self.current_user_instance
         kwargs['current_user_staff'] = self.current_user_staff
         kwargs['body_location_class'] = ""
         
@@ -52,6 +53,15 @@ class BaseHandler(tornado.web.RequestHandler):
     # Left over from Nick. Not using yet. kwargs above. 
     def current_user_name(self):
         return self.get_secure_cookie("user_name")
+
+    def current_user_instance(self):
+        """
+        Returns actual User instance
+        """
+        try:
+            return User.objects.get(email=self.current_user)
+        except:
+            return None
 
     def current_user_casual_name(self):
         """

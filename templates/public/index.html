@@ -60,8 +60,20 @@
         {% else %}
           <h2>Hi {{ current_user_casual_name() }}!</h2>
         {% end %}
+
+        {% if current_user_instance().get_groups() == [] %}
+          <div class="alert alert-danger" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            You aren't part of a team yet! 
+            <a href="/settings">Click here</a> to join a team or create a new one!
+            This will make Ansatz much more useful to you.
+            </a>
+          </div>
+        {% end %}
+
         <p>Enter a name and domain to find an email</p>
-      </div>
+      </div> <!--container-->
       <form id="main-search" class="form-horizontal container" action="/search" method="GET">
         <div class="row">
           <div class="input-group-lg col-sm-6 col-lg-4 col-xs-12">
