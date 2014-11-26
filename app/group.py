@@ -31,31 +31,73 @@ class CreateGroup(app.basic.BaseHandler):
         # Add email invites
         if invited_emails:
             invited_emails = invited_emails.split(", ")
+            # Send invites to only newly invited emails
+            old_invited_emails = g.invited_emails
+            for e in invited_emails:
+                if e not in old_invited_emails:
+                    try:
+                        existing_user = User.objects.get(email=e)
+                    except:
+                        existing_user = None
+                    if existing_user:
+                        self.send_invite_email_existing_user(group=g, 
+                            to_address=e, 
+                            current_user=current_user)
+                    else:
+                        self.send_invite_email_new_user(to_address=e,
+                            current_user=current_user)
+            # Set new invited_emails
             g.invited_emails = invited_emails
-            # Send invites
-            for e in g.invited_emails:
-                self.send_email(from_address='Ansatz.me <postmaster@ansatz.me>',
-                    to_address=e,
-                    subject='Invitation from %s (%s)' % (current_user.name, current_user.email),
-                    html_text='''%s has invited you to join 
-                    <a href="https://www.ansatz.me">Ansatz.me</a>! 
-                    Ansatz is the anti-CRM: leverage your team's network
-                    and communication without any tedious data entry or 
-                    tracking. Visit 
-                    <a href="https://ansatz.me">https://ansatz.me</a> 
-                    to learn more!''' % (current_user.name)
-                    )
+        elif g.invited_emails and invited_emails == "":
+            g.invited_emails = []
 
         g.save()
-
         return self.redirect('/user/settings?msg=Successfully updated group settings!')
 
+    def send_invite_email_new_user(to_address, current_user):
+        """
+        Sends invite email to a group to a new Ansatz user
+        """
+        self.send_email(from_address='Ansatz.me <postmaster@ansatz.me>',
+            to_address=to_address,
+            subject='Invitation from %s (%s)' % (current_user.name, current_user.email),
+            html_text='''%s has invited you to join 
+            <a href="%s">Ansatz.me</a>! 
+            Ansatz is the anti-CRM: leverage your team's network
+            and communication without any tedious data entry or 
+            tracking. Visit 
+            <a href="https://ansatz.me">https://ansatz.me</a> 
+            to learn more!''' % (settings.get('base_url'), current_user.name)
+            )
+
+    def send_invite_email_existing_user(group, to_address, current_user):
+        """
+        Sends invite email to a group to an existing Ansatz user
+        """
+        # Print string of existing team members
+        group_members = ""
+        first = True
+        for group_member in g.users:
+            if not first:
+                group_members = group_members + ", "
+            group_members = group_members + group_member.name + " (" + group_member.email + ")"
+            first = False
+        # Send email
+        self.send_email(from_address='Ansatz.me <postmaster@ansatz.me>',
+            to_address=to_address,
+            subject='Invitation from %s (%s)' % (current_user.name, current_user.email),
+            html_text='''%s (%s) has invited you to join team
+            "%s". 
+            <a href="%s/group/%s/acceptinvite"Click here</a> 
+            to join!</br>
+            Team %s has %s members: %s.''' % (current_user.name, current_user.email, settings.get('base_url'), group.id, group.name, len(group.users), group_members)
+            )
 
 ########################
 ### Edit a group. Use group document id string as identifier. 
 ### /group/(?P<group>[A-z-+0-9]+)/edit
 ########################
-class EditGroup(app.basic.BaseHandler):
+class EditGroup(CreateGroup):
     @tornado.web.authenticated
     def get(self, group):
         # Only allow Group admin to make changes to Group
@@ -96,35 +138,12 @@ class EditGroup(app.basic.BaseHandler):
                     except:
                         existing_user = None
                     if existing_user:
-                        # Print string of existing team members
-                        group_members = ""
-                        first = True
-                        for group_member in g.users:
-                            if not first:
-                                group_members = group_members + ", "
-                            group_members = group_members + group_member.name + " (" + group_member.email + ")"
-                            first = False
-                        self.send_email(from_address='Ansatz.me <postmaster@ansatz.me>',
-                            to_address=e,
-                            subject='Invitation from %s (%s)' % (current_user.name, current_user.email),
-                            html_text='''%s (%s) has invited you to join team
-                            "%s". 
-                            <a href="%s/group/%s/acceptinvite"Click here</a> 
-                            to join!</br>
-                            Team %s has %s members: %s.''' % (current_user.name, current_user.email, settings.get('base_url'), g.id, g.name, len(g.users), group_members)
-                            )
+                        self.send_invite_email_existing_user(group=g, 
+                            to_address=e, 
+                            current_user=current_user)
                     else:
-                        self.send_email(from_address='Ansatz.me <postmaster@ansatz.me>',
-                            to_address=e,
-                            subject='Invitation from %s (%s)' % (current_user.name, current_user.email),
-                            html_text='''%s has invited you to join 
-                            <a href="https://www.ansatz.me">Ansatz.me</a>! 
-                            Ansatz is the anti-CRM: leverage your team's network
-                            and communication without any tedious data entry or 
-                            tracking. Visit 
-                            <a href="https://ansatz.me">https://ansatz.me</a> 
-                            to learn more!''' % (current_user.name)
-                            )
+                        self.send_invite_email_new_user(to_address=to_address,
+                            current_user=current_user)
             # Set new invited_emails
             g.invited_emails = invited_emails
         elif g.invited_emails and invited_emails == "":
