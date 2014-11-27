@@ -77,7 +77,7 @@ class CreateGroup(app.basic.BaseHandler):
         # Print string of existing team members
         group_members = ""
         first = True
-        for group_member in g.users:
+        for group_member in group.users:
             if not first:
                 group_members = group_members + ", "
             group_members = group_members + group_member.name + " (" + group_member.email + ")"
