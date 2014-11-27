@@ -88,7 +88,7 @@ class CreateGroup(app.basic.BaseHandler):
             subject='Invitation from %s (%s)' % (current_user.name, current_user.email),
             html_text='''%s (%s) has invited you to join team
             "%s". 
-            <a href="%s/group/%s/acceptinvite"Click here</a> 
+            <a href="%s/group/%s/acceptinvite">Click here</a> 
             to join!</br>
             Team %s has %s members: %s.''' % (current_user.name, current_user.email, group.name, settings.get('base_url'), group.id, group.name, len(group.users), group_members)
             )
