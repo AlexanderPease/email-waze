@@ -188,10 +188,6 @@ class AcceptGroupInvite(app.basic.BaseHandler):
             return self.redirect("/user/settings?err=Could not find team!")
 
         if u.email in g.invited_emails or u.get_domain() in g.domain_setting:
-            # Add user
-            g.add_user(u)
-            g.save()
-
             # Send emails to new member and existing members
             self.send_email(from_address='Ansatz.me <postmaster@ansatz.me>',
                         to_address=u.email,
@@ -211,10 +207,13 @@ class AcceptGroupInvite(app.basic.BaseHandler):
                         with %s. If you want to remove yourself from the team, 
                         <a href="%s/group/%s/view">click here</a>. </br>
                         Team "%s" now has %s members and is administered by %s 
-                        (%s)''' % (u.name, u.email, g.name, u.name, settings.get('base_url'), g.id, g.name, len(g.users), g.admin.name, g.admin.email)
+                        (%s)''' % (u.name, u.email, g.name, u.name, settings.get('base_url'), g.id, g.name, len(g.users) + 1, g.admin.name, g.admin.email)
                         )
+                # Number of members is len(g.users) + 1 b/c I add_user below. 
+                # This makes it easy to email the right notifications
 
-            # Update invited email list
+            # Add user and remove from invited email list
+            g.add_user(u)
             if u.email in g.invited_emails:
                 g.invited_emails.remove(u.email)
             g.save()
