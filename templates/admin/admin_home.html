@@ -13,11 +13,12 @@
           <p class="text-success">{{ err }}</p>
         {% end %}
 
+      Stats from {{ stats.date }}
       <ul>
-        <li><a href="/admin/db_profiles">Profiles Database</a></li>
-        <li><a href="/admin/db_users">Users Database</a></li>
-        <li><a href="/admin/db_connections">Connections Database</a></li>
-        <li><a href="/admin/db_groups">Groups Database</a></li>
+        <li><a href="/admin/db_profiles">Profiles Database</a> ({{ stats.profiles }})</li>
+        <li><a href="/admin/db_users">Users Database</a> ({{ stats.users }})</li>
+        <li><a href="/admin/db_connections">Connections Database</a> ({{ stats.connections }})</li>
+        <li><a href="/admin/db_groups">Groups Database</a> ({{ stats.groups }})</li>
       </ul>
     </div>
   </div>

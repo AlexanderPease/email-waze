@@ -16,7 +16,8 @@ from db.connectiondb import Connection
 class AdminHome(app.basic.BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        return self.render('admin/admin_home.html')
+        recent_stats = Stats.objects.order_by("-date")[0]
+        return self.render('admin/admin_home.html', stats=recent_stats)
 
 
 ###########################
