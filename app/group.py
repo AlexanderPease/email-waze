@@ -90,7 +90,7 @@ class CreateGroup(app.basic.BaseHandler):
             "%s". 
             <a href="%s/group/%s/acceptinvite"Click here</a> 
             to join!</br>
-            Team %s has %s members: %s.''' % (current_user.name, current_user.email, settings.get('base_url'), group.id, group.name, len(group.users), group_members)
+            Team %s has %s members: %s.''' % (current_user.name, current_user.email, group_name, settings.get('base_url'), group.id, group.name, len(group.users), group_members)
             )
 
 ########################
