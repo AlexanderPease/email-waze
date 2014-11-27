@@ -27,6 +27,7 @@ class CreateGroup(app.basic.BaseHandler):
                 users=[current_user],
                 admin=current_user,
                 domain_setting=domain_setting)
+        g.save()
 
         # Add email invites
         if invited_emails:
@@ -61,13 +62,13 @@ class CreateGroup(app.basic.BaseHandler):
         self.send_email(from_address='Ansatz.me <postmaster@ansatz.me>',
             to_address=to_address,
             subject='Invitation from %s (%s)' % (current_user.name, current_user.email),
-            html_text='''%s has invited you to join 
+            html_text='''%s (%s) has invited you to join 
             <a href="%s">Ansatz.me</a>! 
             Ansatz is the anti-CRM: leverage your team's network
             and communication without any tedious data entry or 
             tracking. Visit 
             <a href="https://ansatz.me">https://ansatz.me</a> 
-            to learn more!''' % (settings.get('base_url'), current_user.name)
+            to learn more!''' % (current_user.name, current_user.email, settings.get('base_url'))
             )
 
     def send_invite_email_existing_user(self, group, to_address, current_user):
@@ -89,8 +90,8 @@ class CreateGroup(app.basic.BaseHandler):
             html_text='''%s (%s) has invited you to join team
             "%s". 
             <a href="%s/group/%s/acceptinvite">Click here</a> 
-            to join!</br>
-            Team %s has %s members: %s.''' % (current_user.name, current_user.email, group.name, settings.get('base_url'), group.id, group.name, len(group.users), group_members)
+            to join!</br></br>
+            Team "%s" has %s members: %s.''' % (current_user.name, current_user.email, group.name, settings.get('base_url'), group.id, group.name, len(group.users), group_members)
             )
 
 ########################
@@ -125,6 +126,7 @@ class EditGroup(CreateGroup):
         g.domain_setting =domain_setting 
         if not g.admin:
             g.admin = current_user
+        g.save()
 
         # Add email invites
         if invited_emails:
