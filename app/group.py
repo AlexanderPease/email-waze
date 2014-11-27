@@ -54,7 +54,7 @@ class CreateGroup(app.basic.BaseHandler):
         g.save()
         return self.redirect('/user/settings?msg=Successfully updated group settings!')
 
-    def send_invite_email_new_user(to_address, current_user):
+    def send_invite_email_new_user(self, to_address, current_user):
         """
         Sends invite email to a group to a new Ansatz user
         """
@@ -70,7 +70,7 @@ class CreateGroup(app.basic.BaseHandler):
             to learn more!''' % (settings.get('base_url'), current_user.name)
             )
 
-    def send_invite_email_existing_user(group, to_address, current_user):
+    def send_invite_email_existing_user(self, group, to_address, current_user):
         """
         Sends invite email to a group to an existing Ansatz user
         """
