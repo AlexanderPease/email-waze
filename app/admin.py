@@ -7,6 +7,7 @@ from db.profiledb import Profile
 from db.userdb import User
 from db.groupdb import Group
 from db.connectiondb import Connection
+from db.statsdb import Stats
 
 
 ###########################
