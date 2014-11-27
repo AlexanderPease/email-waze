@@ -188,6 +188,10 @@ class AcceptGroupInvite(app.basic.BaseHandler):
             return self.redirect("/user/settings?err=Could not find team!")
 
         if u.email in g.invited_emails or u.get_domain() in g.domain_setting:
+            # Add user
+            g.add_user(u)
+            g.save()
+
             # Send emails to new member and existing members
             self.send_email(from_address='Ansatz.me <postmaster@ansatz.me>',
                         to_address=u.email,
@@ -210,9 +214,7 @@ class AcceptGroupInvite(app.basic.BaseHandler):
                         (%s)''' % (u.name, u.email, g.name, u.name, settings.get('base_url'), g.id, g.name, len(g.users), g.admin.name, g.admin.email)
                         )
 
-            # Add user and remove from invited email list
-            g.add_user(u)
-            logging.info(g.users)
+            # Update invited email list
             if u.email in g.invited_emails:
                 g.invited_emails.remove(u.email)
             g.save()
