@@ -144,7 +144,7 @@ class EditGroup(CreateGroup):
                             to_address=e, 
                             current_user=current_user)
                     else:
-                        self.send_invite_email_new_user(to_address=to_address,
+                        self.send_invite_email_new_user(to_address=e,
                             current_user=current_user)
             # Set new invited_emails
             g.invited_emails = invited_emails
