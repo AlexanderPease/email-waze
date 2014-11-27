@@ -11,6 +11,8 @@ from mongoengine import DoesNotExist
 from db.profiledb import Profile
 from db.userdb import User
 from db.connectiondb import Connection
+from db.groupdb import Group
+from db.statsdb import Stats
 
 import gdata.contacts.client
 import app.gmail as gmail
@@ -30,6 +32,18 @@ def awake():
     """
     foo = 1 + 1
     logging.info('Awake!')
+
+@periodic_task(run_every=timedelta(hours=24))
+def add_stats():
+    """
+    Add a new entry to statsdb every 24 hours
+    """
+    stats = Stats(date=datetime.datetime.now())
+    stats.profiles = len(Profile.objects)
+    stats.users = len(User.objects)
+    stats.connections = len(Connection.objects)
+    stats.groups = len(Group.objects)
+    stats.save()
 
 
 @app.task

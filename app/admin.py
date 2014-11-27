@@ -92,11 +92,14 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
-        u = User.objects.get(email="jqgorelick@gmail.com")
-        p = Profile.objects.get(email="me@alexanderpease.com")
-        c = Connection.objects.get(user=u, profile=p)
-        logging.info(c)
-        logging.info(c.to_json())
+        from db.statsdb import Stats
+        stats = Stats(date=datetime.datetime.now())
+        stats.profiles = len(Profile.objects)
+        stats.users = len(User.objects)
+        stats.connections = len(Connection.objects)
+        stats.groups = len(Group.objects)
+        stats.save()
+        logging.info(stats)
 
         """
         # Checks flow for getting all user credentials, refreshing if necessary
