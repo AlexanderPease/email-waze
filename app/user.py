@@ -48,13 +48,13 @@ class UserSettings(app.basic.BaseHandler):
         err = self.get_argument('err', '')
 
         return self.render('user/user_settings.html', user=user, 
-                                                    groups=groups, 
-                                                    group_invites=group_invites,
-                                                    paying_groups=paying_groups,
-                                                    profile=profile, 
-                                                    msg=msg, 
-                                                    err=err,
-                                                    list_to_comma_delimited_string=ui_methods.list_to_comma_delimited_string)
+            groups=groups, 
+            group_invites=group_invites,
+            paying_groups=paying_groups,
+            profile=profile, 
+            msg=msg, 
+            err=err,
+            list_to_comma_delimited_string=ui_methods.list_to_comma_delimited_string)
 
 
 ########################
@@ -88,7 +88,7 @@ class UserWelcome(app.basic.BaseHandler):
                 group_invites.append(g)
 
         return self.render('user/user_welcome.html', user=user, 
-                                                    group_invites=group_invites)
+            group_invites=group_invites)
 
 
 
