@@ -98,8 +98,30 @@ class Search(app.basic.BaseHandler):
             num_pages=num_pages,
             get_domain=ui_methods.get_domain,
             truncate=ui_methods.truncate)
+<<<<<<< Updated upstream
     else:
         return self.redirect('/')
+=======
+    
+    elif company:
+        companies = Company.objects(clearbit__name__icontains=company)
+        logging.info(companies)
+        #if len(companies) == 1:
+            # If only one company found, then also show all Profiles of that company
+
+        return self.render('public/search.html', 
+            profiles=None,
+            profile_connection_set=None,
+            group_connection_set=None,
+            companies=companies,
+            page=None,
+            num_pages=None,
+            get_domain=ui_methods.get_domain,
+            truncate=ui_methods.truncate)
+    
+    # Default
+    return self.redirect('/')
+>>>>>>> Stashed changes
 
 
 ########################
