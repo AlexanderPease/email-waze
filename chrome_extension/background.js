@@ -17,13 +17,16 @@ chrome.extension.onMessage.addListener(function(request, sender, callback) {
     }
 });
 
-// when browser action icon is clicked
+// When browser action icon is clicked. Instead of default_popup
+/*
 chrome.browserAction.onClicked.addListener(function(callback){
+    console.log('clicked');
     chrome.tabs.getSelected(null,function(tab) {
         var domain = get_domain(tab.url);
         window.open("https://ansatz.me/search?domain=" + domain);
     });
 });
+*/
 
 // Just splits out base url from href
 function get_domain(url) {
