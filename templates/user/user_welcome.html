@@ -50,12 +50,9 @@
             by inviting your friends!
           {% end %}
 
-
-
-
         </div>
         <div class="modal-footer">
-          <button type="button" id="modal-submit" class="btn btn-primary btn-inline">Next</button>
+          <button type="button" id="modal-next" class="btn btn-primary btn-inline">Next</button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -65,7 +62,8 @@
 
 {% block user_welcome_js %}
 <script>
-  var ROOT_URL = '{{ settings.get("base_url") }}/'
+  var ROOT_URL = '{{ settings.get("base_url") }}/';
+  var MODAL_STATE = 'group';
   $(document).ready(function(){
     // First modal
     $('#user-welcome-modal').modal({
@@ -93,11 +91,51 @@
     console.log('Requesting: ' + options.url)
     $.ajax(options);
     });
+
+    // Next button in modal
+    $('#modal-next').click(function(){
+      if (MODAL_STATE == 'group') {
+        // Check if Chrome browser. Real code is in base.html
+        var browser_info = navigator.sayswho;
+        if (browser_info.indexOf('Chrome') > -1) {
+          var chrome_plug = 'Download the {{ settings.get("company_name") }} Chrome extension \
+            <a href="https://chrome.google.com/webstore/detail/ansatz/fhmfdjnooicibclghoophehldkeeloje" \
+            target="_blank">here</a>!</br></br> \
+            Our extension gives you a quick way to check your connections to a \
+            person or company as you browse the web. It also pulls all your \
+            connection info right into the native Gmail web client.';
+          $('.modal-body').html(chrome_plug);
+          MODAL_STATE = 'chrome_extension'
+        }
+      } else if (MODAL_STATE = 'chrome_extension') {
+
+      }
+     
+    });
   });
 
   //var foo = '''Welcome {{ current_user_casual_name() }}! Before we get started, we just
   //        want to remind you that we never store emails on our server. Our email
   //        magic is always safe for you to use.'''
 
+
+  /* This is redundant, also in base.html, but confined to separate script */
+  /* Returns string with info on users's browser type
+      Ex: Chrome 38 */
+    navigator.sayswho= (function(){
+        var ua= navigator.userAgent, tem, 
+        M= ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+        if(/trident/i.test(M[1])){
+            tem=  /\brv[ :]+(\d+)/g.exec(ua) || [];
+            return 'IE '+(tem[1] || '');
+        }
+        if(M[1]=== 'Chrome'){
+            tem= ua.match(/\bOPR\/(\d+)/)
+            if(tem!= null) return 'Opera '+tem[1];
+        }
+        M= M[2]? [M[1], M[2]]: [navigator.appName, navigator.appVersion, '-?'];
+        if((tem= ua.match(/version\/(\d+)/i))!= null) M.splice(1, 1, tem[1]);
+        return M.join(' ');
+    })();
 </script>
 {% end %}
