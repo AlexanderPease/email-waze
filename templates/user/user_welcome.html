@@ -16,10 +16,11 @@
           address book and enabling you to see connections.</br></br>
 
           {% if group_invites %}
-            You have pending invites to these teams:
+            You've already been invited to join these teams:
             <ul>
               {% for g in group_invites %}
-                <li>{{ g }} ({{ len(g.users) }} 
+                <li><div class="group-invite" data-group-id="{{ g.id }}">
+                  {{ g }} ({{ len(g.users) }} 
                   {% if len(g.users) == 1 %}
                     member): 
                   {% else %}
@@ -34,8 +35,11 @@
                     {% set first = False %}
                   {% end %}
                   </br>
-                  <a href="/group/{{ g.id }}/acceptinvite">Accept invitation</a>
-                </li>
+                  <button type="button" class="btn btn-primary btn-inline group-accept-invite" data-group-id="{{ g.id }}">
+                    Join team
+                  </button>
+
+                </div></li>
               {% end %}
             </ul>
             Or, <a href="/group/create">create a new team</a> 
@@ -51,7 +55,7 @@
 
         </div>
         <div class="modal-footer">
-          <button type="button" id="modal-submit" class="btn btn-primary">Next</button>
+          <button type="button" id="modal-submit" class="btn btn-primary btn-inline">Next</button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -61,13 +65,33 @@
 
 {% block user_welcome_js %}
 <script>
+  var ROOT_URL = '{{ settings.get("base_url") }}/'
   $(document).ready(function(){
-
-    //$('#user-welcome-modal .modal-body').html(modalBody);
-
+    // First modal
     $('#user-welcome-modal').modal({
       backdrop: 'static',
       keyboard: false
+    });
+
+    // Accept group invites
+    $('.group-accept-invite').click(function(){
+      var current_btn = $(this);
+      var group_id = $(this).attr('data-group-id');
+      var options = {
+        type: 'POST',
+        url: ROOT_URL + 'api/group/' + encodeURIComponent(group_id) + '/acceptinvite',
+        dataType: 'json',
+        success: function(response) {
+          console.log(response);
+          current_btn.text('Success!');
+          current_btn.attr('disabled', 'disabled');
+        },
+        error: function(response) {
+          console.warn(response);
+        }
+    };
+    console.log('Requesting: ' + options.url)
+    $.ajax(options);
     });
   });
 

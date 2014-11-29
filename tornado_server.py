@@ -42,7 +42,7 @@ class Application(tornado.web.Application):
       #(r"/api/gmailinboxsearch", app.api.GmailInboxSearch),
       (r"/api/test", app.api.Test),
 
-      (r"/api/group/(?P<group>[A-z-+0-9]+)/acceptinvite", app.group_api.AcceptInvite),
+      (r"/api/group/(?P<group_id>[A-z-+0-9]+)/acceptinvite", app.group_api.AcceptInvite),
 
       # Stripe billing
       (r"/stripe/basic", app.stripe_handler.StripeBasic),

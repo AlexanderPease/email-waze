@@ -1,31 +1,33 @@
 import app.basic, settings, ui_methods, tornado.web
 import logging
-from db.profiledb import Profile
 from db.userdb import User
-from db.connectiondb import Connection
 from db.groupdb import Group
-from connectionsets import GroupConnectionSet, ProfileConnectionSet
-import connectionsets
+
 
 ########################
 ### User accepts a group invitation
-### /api/(?P<group>[A-z-+0-9]+)/acceptinvite
+### /api/group/(?P<group>[A-z-+0-9]+)/acceptinvite
 ########################
 class AcceptInvite(app.basic.BaseHandler):
     @tornado.web.authenticated
-    def post(self):
+    def post(self, group_id):
+        """
+        User accepts a Group invite request. Adds User to the group, and sends
+        emails both to the User as well as existing Group members
+        """
         if not self.current_user:
             return self.api_error(401, 'User is not logged in')
         try:
             u = User.objects.get(email=self.current_user)
         except:
             return self.api_error(500, 'Could not find client user in database')
-        group_id = self.get_argument('group_id', '')
         try:
             g = Group.objects.get(id=group_id)
         except:
             return self.api_error(500, 'Could not find group in database')
 
+        logging.info(u.email)
+        logging.info(g.invited_emails)
         if u.email in g.invited_emails or u.get_domain() in g.domain_setting:
             # Send emails to new member and existing members
             self.send_email(from_address='Ansatz.me <postmaster@ansatz.me>',
@@ -56,7 +58,7 @@ class AcceptInvite(app.basic.BaseHandler):
             if u.email in g.invited_emails:
                 g.invited_emails.remove(u.email)
             g.save()
-            return self.api_response()
+            return self.api_response(data={})
         else:
             return self.api_error(401, 'User is not allowed to join that team')
 
