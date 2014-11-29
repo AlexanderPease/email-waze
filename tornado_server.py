@@ -11,7 +11,8 @@ import settings
 import templates
 
 import app.basic, app.public, app.admin, app.email_handler
-import app.googleauth, app.api, app.user, app.group, app.stripe_handler
+import app.googleauth, app.user, app.group, app.stripe_handler
+import app.api, app.group_api
 
 #import newrelic.agent I also deleted newrelic.ini. Need to re-add if we want 
 #path = os.path.join(settings.get("project_root"), 'newrelic.ini')
@@ -40,6 +41,8 @@ class Application(tornado.web.Application):
       (r"/api/connectionbyemailforextension", app.api.ConnectionByEmailForExtension),
       #(r"/api/gmailinboxsearch", app.api.GmailInboxSearch),
       (r"/api/test", app.api.Test),
+
+      (r"/api/group/(?P<group>[A-z-+0-9]+)/acceptinvite", app.group_api.AcceptInvite),
 
       # Stripe billing
       (r"/stripe/basic", app.stripe_handler.StripeBasic),
