@@ -2,9 +2,78 @@
 {% block page-title %}Welcome{% end %}
 {% block page-description %}Ansatz is a simple way to find someone's email address while still respecting their privacy.{% end %}
 
+{% block user_welcome_html %}
+  <div id="user-welcome-modal" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <!--<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>-->
+          <h4 class="modal-title">Welcome to {{ settings.get('company_name') }}!</h4>
+        </div>
+        <div class="modal-body">
+          First, you should join a "team." 
+          Teams connect you with colleagues and friends, expanding your 
+          address book and enabling you to see connections.</br></br>
+
+          {% if group_invites %}
+            You have pending invites to these teams:
+            <ul>
+              {% for g in group_invites %}
+                <li>{{ g }} ({{ len(g.users) }} 
+                  {% if len(g.users) == 1 %}
+                    member): 
+                  {% else %}
+                    members): 
+                  {% end %}
+                  {% set first = True %}
+                  {% for u in g.users %}
+                    {% if not first %}
+                      , 
+                    {% end %}
+                    {{ u.name }} ({{ u.email }})
+                    {% set first = False %}
+                  {% end %}
+                  </br>
+                  <a href="/group/{{ g.id }}/acceptinvite">Accept invitation</a>
+                </li>
+              {% end %}
+            </ul>
+            Or, <a href="/group/create">create a new team</a> 
+            by inviting your friends!
+          {% else %}
+            You do not have any pending team invitations. 
+            <a href="/group/create">Create a new team</a> 
+            by inviting your friends!
+          {% end %}
+
+
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="modal-submit" class="btn btn-primary">Next</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+{% end %}
+
 
 {% block user_welcome_js %}
 <script>
-  console.log('foo');
+  $(document).ready(function(){
+
+    //$('#user-welcome-modal .modal-body').html(modalBody);
+
+    $('#user-welcome-modal').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+  });
+
+  //var foo = '''Welcome {{ current_user_casual_name() }}! Before we get started, we just
+  //        want to remind you that we never store emails on our server. Our email
+  //        magic is always safe for you to use.'''
+
 </script>
 {% end %}

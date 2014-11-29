@@ -42,6 +42,23 @@ class Group(Document):
         if user in self.users:
             return self.users.remove(user)
 
+    # TODO: fix users and admin, they are currently worthless entries
+    # Just using name and id in user_welcome currently
+    def to_json(self):
+        """
+        Converts instance into JSON dict
+        """
+        json = {'id': str(self.id),
+            'users': [],
+            'name': self.name,
+            'admin': self.admin.to_json(),
+            'invited_emails': self.invited_emails,
+            'domain_setting': self.domain_setting
+            }
+        for u in self.users:
+            json['users'].append(u.to_json())
+        return json
+
 
 
 

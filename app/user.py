@@ -1,4 +1,5 @@
 import app.basic, settings, ui_methods
+import simplejson as json
 import logging
 import tornado.web
 from mongoengine.queryset import Q, DoesNotExist, MultipleObjectsReturned
@@ -87,7 +88,8 @@ class UserWelcome(app.basic.BaseHandler):
             if g not in groups:
                 group_invites.append(g)
 
-        return self.render('user/user_welcome.html', user=user, 
+        return self.render('user/user_welcome.html', 
+            user=user, 
             group_invites=group_invites)
 
 

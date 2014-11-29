@@ -65,6 +65,15 @@ class User(Document):
     def __str__(self):
         return self.name + ' <' + self.email + '>'
 
+    def to_json(self):
+        """
+        JSON representation of instance
+        """
+        return {
+            'email': self.email,
+            'name': self.name
+        }
+
     def casual_name(self):
         if self.given_name and self.given_name is not "":
             return self.given_name

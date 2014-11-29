@@ -94,6 +94,8 @@
     </section>
   {% end %}<!--current user-->
 
+  {% block user_welcome_html %}{% end %}
+
 {% end %}
 
 {% block javascript %}
@@ -117,6 +119,5 @@
     }
   </script>
 
-  {% block user_welcome_js %}
-  {% end %}
+  {% block user_welcome_js %}{% end %}
 {% end %}
