@@ -6,12 +6,14 @@
       <table class="table table-striped">
         <tr>
           <th>Name</th>
+          <th>ID</th>
           <th>Admin</th>
           <th>Users</th>
         </tr>
         {% for g in groups %}
           <tr>
             <td>{{ g.name }}</td>
+            <td>{{ g.id }}</td>
             <td>{{ g.admin }}</td>
             <td> 
               {% for u in g.users %}
