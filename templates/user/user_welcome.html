@@ -94,21 +94,24 @@
 
     // Next button in modal
     $('#modal-next').click(function(){
-      if (MODAL_STATE == 'group') {
-        // Check if Chrome browser. Real code is in base.html
-        var browser_info = navigator.sayswho;
-        if (browser_info.indexOf('Chrome') > -1) {
-          var chrome_plug = 'Download the {{ settings.get("company_name") }} Chrome extension \
-            <a href="https://chrome.google.com/webstore/detail/ansatz/fhmfdjnooicibclghoophehldkeeloje" \
-            target="_blank">here</a>!</br></br> \
-            Our extension gives you a quick way to check your connections to a \
-            person or company as you browse the web. It also pulls all your \
-            connection info right into the native Gmail web client.';
-          $('.modal-body').html(chrome_plug);
-          MODAL_STATE = 'chrome_extension'
-        }
-      } else if (MODAL_STATE = 'chrome_extension') {
-
+      if (MODAL_STATE == 'group' && navigator.sayswho.indexOf('Chrome') > -1) {
+        // Second step if Chrome
+        var chrome_plug = 'Download the {{ settings.get("company_name") }} Chrome extension \
+          <a href="https://chrome.google.com/webstore/detail/ansatz/fhmfdjnooicibclghoophehldkeeloje" \
+          target="_blank">here</a>!</br></br> \
+          Our extension gives you a quick way to check your connections to a \
+          person or company as you browse the web. It also pulls all your \
+          connection info right into the native Gmail web client.';
+        $('.modal-body').html(chrome_plug);
+        MODAL_STATE = 'chrome_extension'
+      } else if (MODAL_STATE == 'group' || MODAL_STATE == 'chrome_extension') {
+        // Third step if Chrome, second step otherwise
+        var finished = "You're finished! We hope you enjoy using {{ settings.get('company_name') }}!";
+        $('.modal-body').html(finished);
+        $('#modal-next').text('Close');
+        MODAL_STATE = 'finished'
+      } else if (MODAL_STATE == 'finished') {
+        $('#user-welcome-modal').modal('hide');
       }
      
     });
