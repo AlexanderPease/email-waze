@@ -95,7 +95,7 @@ def onboard_user(u):
                                                         user = u,
                                                         gmail_service=gmail_service)
     else:
-        logging.warning('User %s could not log in to Gmail or Contacts API', user)
+        logging.warning('User %s could not log in to Gmail or Contacts API', u)
 
     u.last_updated = datetime.datetime.now()
     u.onboarded = True
