@@ -74,7 +74,7 @@ class UserWelcome(app.basic.BaseHandler):
             raise tornado.web.HTTPError(404)
 
         if user.welcomed:
-            pass #return self.redirect('/')
+            return self.redirect('/')
         else:
             user.welcomed = True
             user.save()
