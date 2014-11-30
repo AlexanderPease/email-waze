@@ -15,7 +15,7 @@ class Test(app.basic.BaseHandler):
     def get(self):
         logging.info(self.current_user)
         logging.info('HIT TEST API!!!!!!!!!!!')
-        return self.api_response(data=None)
+        return self.api_response(data={'result': 'hit test api'}})
 
 
 ########################
@@ -70,6 +70,20 @@ class ProfileSearch(app.basic.BaseHandler):
                 return self.api_response(data=results.to_json())
 
         return self.api_response(data=None)
+
+########################
+### DomainConnections
+### /api/domainconnections
+########################
+class DomainConnections(app.basic.BaseHandler):
+    """
+    Shows user's connections (if any) to a particular domain (website)
+    Returns:
+        A dict with 
+    """
+    def get(self):
+
+
 
 
 ########################

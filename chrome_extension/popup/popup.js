@@ -3,7 +3,7 @@ var ROOT_URL = 'http://ansatz.me/'
 $(document).ready(function(){
   chrome.tabs.getSelected(null, function(tab) {
     var domain = get_domain(tab.url);
-    $('#title').text('Searching for...' + domain);
+    $('#title').text('Searching for connections to "' + domain + '"');
     var options = {
       type: 'GET',
       url: ROOT_URL + 'api/test',

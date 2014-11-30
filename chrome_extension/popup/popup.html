@@ -4,16 +4,8 @@
     <title>Ansatz</title>
     <style>
       body {
-        min-width: 200px;
-        overflow-x: hidden;
-      }
-
-      img {
-        margin: 5px;
-        border: 2px solid black;
-        vertical-align: middle;
-        width: 75px;
-        height: 75px;
+        width: auto;
+        /*min-width: 400px;*/
       }
     </style>
 
@@ -23,10 +15,17 @@
       -
       - [1]: http://developer.chrome.com/extensions/contentSecurityPolicy.html
      -->
+    <link rel="stylesheet" href="../libs/scoped-twbs.css">
     <script src="../libs/jquery.js"></script>
     <script src="popup.js"></script>
   </head>
   <body>
-    <h3 id="title">Text before JS</h3>
+    <div class="twbs">
+      <table class="table table-striped">
+        <tbody>
+          <tr><td id="title">Searching for connections...</td></tr>
+        </tbody>
+      </table>
+    </div><!--twbs-->
   </body>
 </html>
