@@ -3,6 +3,7 @@
 {% block page-description %}Ansatz is a simple way to find someone's email address while still respecting their privacy.{% end %}
 
 {% block user_welcome_html %}
+  {% set g = None %}
   <div id="user-welcome-modal" class="modal fade">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -10,7 +11,7 @@
           <!--<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>-->
           <h4 class="modal-title">Welcome to {{ settings.get('company_name') }}!</h4>
         </div>
-        <div class="modal-body">
+        <div id="group-invite" class="modal-body">
           First, you should join a "team." 
           Teams connect you with colleagues and friends, expanding your 
           address book and enabling you to see connections.</br></br>
@@ -50,7 +51,10 @@
             by inviting your friends!
           {% end %}
 
-        </div>
+        </div><!--group-setup modal-body-->
+        <div id="group-create" class="modal-body" style="display:none">
+          {% include ../group/group_edit_snippet.html %}
+        </div><!--group-create modal-body-->
         <div class="modal-footer">
           <button type="button" id="modal-next" class="btn btn-primary btn-inline">Next</button>
         </div>
@@ -71,6 +75,13 @@
       keyboard: false
     });
 
+    $('#group-invite').hide();
+    $('#group-create').show();
+    $('#group-edit-btn').addClass('btn-inline');
+    $('#group-edit-btn').text('Create Team');
+    $('#modal-next').text('Skip');
+
+
     // Accept group invites
     $('.group-accept-invite').click(function(){
       var current_btn = $(this);
@@ -90,6 +101,30 @@
     };
     console.log('Requesting: ' + options.url)
     $.ajax(options);
+    });
+
+    // Create group
+    $('#group-edit-btn').click(function(){
+      var options = {
+        type: 'POST',
+        url: ROOT_URL + 'api/group/create',
+        data: {
+          name: $('#name').val(), 
+          invited_emails: $('#invited_emails').val(), 
+          domain_setting: $('#domain_setting').val()
+        },
+        dataType: 'json',
+        success: function(response) {
+          console.log(response);
+          current_btn.text('Success!');
+          current_btn.attr('disabled', 'disabled');
+        },
+        error: function(response) {
+          console.warn(response);
+        }
+    };
+    console.log('Requesting: ' + options.url)
+    //$.ajax(options);
     });
 
     // Next button in modal
