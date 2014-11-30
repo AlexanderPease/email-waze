@@ -11,9 +11,33 @@ $(document).ready(function(){
       success: function(response) {
         console.log(response);
         var connectionset_list = response.data;
-        var num_connections = connectionset_list.length;
-        $('#title').html('You have ' + num_connections + 'connections to ' + domain);
-      },
+        if (connectionset_list == null) {
+          $('#title').html('You have no connections to ' + domain);
+        } else {
+          var num_connections = connectionset_list.length;
+          var tbody_html = "<thead><tr><th>Name</th><th>Email</th><th>Connections</th></tr></thead>"
+          tbody_html = tbody_html + "<tbody>"
+          for (var i=0; i<num_connections; i++) {
+            connectionset = connectionset_list[i]
+            tbody_html = tbody_html + "<tr><td>" + 
+              connectionset['name'] + "</td><td>" + '<a href="mailto:' +
+              connectionset['email'] + '">' + 
+              connectionset['email'] + "</a></td><td>"
+            for (var j=0; j<connectionset['connections'].length; j++) {
+              tbody_html = tbody_html + 
+                connectionset['connections'][j]['connected_user_name'] + " (" +
+                connectionset['connections'][j]['connected_user_email'] + ")</br>"
+            }
+            tbody_html = tbody_html + "</td></tr>"
+          }
+          tbody_html = tbody_html + "</tbody>"
+          title_html = 'Showing all ' + num_connections + ' connections to ' 
+            + domain + '</br><a href="' + ROOT_URL + 'search?domain=' +
+            domain + '" target="_blank">' + 'Click here</a> for more info'
+          $('#title').html(title_html);
+          $('#table-body').html(tbody_html);
+        }
+      }, //success
       error: function(response) {
         if (response.status_code == 401 || response.status_code == 500) {
           // User not logged in || couldn't find user in database

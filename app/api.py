@@ -81,8 +81,7 @@ class DomainConnections(app.basic.BaseHandler):
     to display Profiles that a User is connected to. 
 
     Returns:
-        A dict with a list of connections, i.e. a ProfileConnectionSet
-        This places Profiles as the most important key to show
+        A list of ProfileConnectionSets
     """
     def get(self):
         # Authenticate user
