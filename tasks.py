@@ -94,12 +94,13 @@ def onboard_user(u):
                                                         name=name,
                                                         user = u,
                                                         gmail_service=gmail_service)
+        u.last_updated = datetime.datetime.now()
+        u.onboarded = True
+        u.save()
     else:
         logging.warning('User %s could not log in to Gmail or Contacts API', u)
-
-    u.last_updated = datetime.datetime.now()
-    u.onboarded = True
-    u.save()
+        logging.warning(gd_client)
+        logging.warning(gmail_service)
 
 
 @app.task
