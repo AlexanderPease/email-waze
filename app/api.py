@@ -15,7 +15,7 @@ class Test(app.basic.BaseHandler):
     def get(self):
         logging.info(self.current_user)
         logging.info('HIT TEST API!!!!!!!!!!!')
-        return self.api_response(data={'result': 'hit test api'}})
+        return self.api_response(data={'result': 'hit test api'})
 
 
 ########################
@@ -77,11 +77,35 @@ class ProfileSearch(app.basic.BaseHandler):
 ########################
 class DomainConnections(app.basic.BaseHandler):
     """
-    Shows user's connections (if any) to a particular domain (website)
+    Shows User's Connections (if any) to a particular domain (website). Easy
+    to display Profiles that a User is connected to. 
+
     Returns:
-        A dict with 
+        A dict with a list of connections, i.e. a ProfileConnectionSet
+        This places Profiles as the most important key to show
     """
     def get(self):
+        # Authenticate user
+        if not self.current_user:
+            return self.api_error(401, 'User is not logged in')
+        try:
+            current_user = User.objects.get(email=self.current_user)
+        except:
+            return self.api_error(500, 'Could not find client user in database')
+
+        # Query
+        domain = self.get_argument('domain', '')
+        if not domain:
+            return self.api_error(400, 'No domain query given')
+        profiles = Profile.objects(email__icontains=domain)
+        group_users = current_user.all_group_users()
+        connections = Connection.objects(profile__in=profiles, user__in=group_users)
+        if connections and len(connections) > 0:
+            results = ProfileConnectionSet.package_connections(connections)
+            results = connectionsets.list_to_json_list(results)
+            return self.api_response(data=results[0]) # Return single Connection
+
+        return self.api_response(data=None)
 
 
 

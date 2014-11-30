@@ -4,15 +4,27 @@ $(document).ready(function(){
   chrome.tabs.getSelected(null, function(tab) {
     var domain = get_domain(tab.url);
     $('#title').text('Searching for connections to "' + domain + '"');
+    console.log($('#title').text());
+    console.log('fooo');
     var options = {
       type: 'GET',
-      url: ROOT_URL + 'api/test',
+      url: ROOT_URL + 'api/domainconnections?domain=' + encodeURIComponent(domain),
       dataType: 'json',
       success: function(response) {
         console.log(response);
       },
       error: function(response) {
-        console.warn(response);
+        if (response.status_code == 401 || response.status_code == 500) {
+          // User not logged in || couldn't find user in database
+          var login_prompt = 'Please <a href="' + ROOT_URL
+          login_prompt = '/auth/google" ' + 
+            'target="_blank">log in</a> to use the Ansatz extension'
+          $('#title').html(login_prompt);
+        } else {
+          var err = 'There was an error! Please try ' +
+          '<a href="' + ROOT_URL + '">' + ROOT_URL + '</a> instead.'
+          $('#title').html(err);
+        }
       }
     };
     console.log('Requesting: ' + options.url)
