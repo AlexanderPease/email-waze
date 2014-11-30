@@ -57,7 +57,7 @@ class CreateGroup(app.basic.BaseHandler):
 
     def send_invite_email_new_user(self, to_address, current_user):
         """
-        Sends invite email to a group to a new Ansatz user
+        Sends invite email to a new Ansatz user
         """
         self.send_email(from_address='Ansatz.me <postmaster@ansatz.me>',
             to_address=to_address,
@@ -73,7 +73,7 @@ class CreateGroup(app.basic.BaseHandler):
 
     def send_invite_email_existing_user(self, group, to_address, current_user):
         """
-        Sends invite email to a group to an existing Ansatz user
+        Sends invite email to an existing Ansatz user
         """
         # Print string of existing team members
         group_members = ""

@@ -115,16 +115,15 @@
         },
         dataType: 'json',
         success: function(response) {
-          console.log(response);
-          current_btn.text('Success!');
-          current_btn.attr('disabled', 'disabled');
+          $('#group-create').html('Success! You created a team. Hit next to continue.');
+          $('#group-edit-btn').text('Next');
         },
         error: function(response) {
           console.warn(response);
         }
     };
     console.log('Requesting: ' + options.url)
-    //$.ajax(options);
+    $.ajax(options);
     });
 
     // Next button in modal
