@@ -46,7 +46,7 @@
         ],
     "browser_action":{
         "default_title": "Ansatz",
-        "default_icon": "img/Aicon19x19.jpg",
+        "default_icon": "img/Aicon19x19.jpeg",
         "default_popup": "popup/popup.html"
     },
     "manifest_version": 2
