@@ -3,7 +3,7 @@
 
     "name": "Ansatz",
     "short_name": "Ansatz",
-    "version": "0.0.24",
+    "version": "0.0.25",
     "description": "Stop connecting. Start emailing.",
     "background": {
         "persistent": false,
