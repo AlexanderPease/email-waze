@@ -95,8 +95,13 @@ class User(Document):
         exclude_self = False.
         """
         groups = self.get_groups()
-        all_users = set([u for g in groups for u in g.users])
+        if len(groups) == 0:
+            # If user has no groups, include self as only user
+            all_users = [self]
+        else:
+            all_users = set([u for g in groups for u in g.users])
 
+        # Flag to exclude self from list of users
         if not include_self:
             try:
                 all_users.remove(self)
