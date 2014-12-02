@@ -29,7 +29,6 @@ class Auth(app.basic.BaseHandler):
     def get(self):
         logging.info('Entered Auth')
         approval_prompt = self.get_argument('approval_prompt', '')
-        logging.info(approval_prompt)
         if approval_prompt:
             # Manual request for refresh token is necessary
             # approval_prompt causes 'offline access' dialog box
@@ -66,11 +65,6 @@ class AuthReturn(app.basic.BaseHandler):
                                 # "offline consent"
                                 #approval_prompt='force') 
         credentials = flow.step2_exchange(oauth_code)
-        logging.info("New credentials returned by Google:")
-        logging.info("Credentials: %s" % credentials)
-        logging.info("Access token: %s" % credentials.access_token)
-        logging.info("Refresh token: %s" % credentials.refresh_token)
-        logging.info("Token expiry: %s" % credentials.token_expiry)
         if credentials is None or credentials.invalid:
             logging.warning('Credentials DNE or invalid')
             return self.redirect('/')

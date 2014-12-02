@@ -91,7 +91,7 @@ def GetMessageHeader(msg):
     msg_header = {}
 
     for header in headers:
-        logging.info(header)
+        #logging.info(header)
         if header['name'] in header_list:
             msg_header[header['name']] = header['value']
 

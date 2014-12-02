@@ -94,6 +94,8 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
+
+        '''
         will = Profile.objects.get(email="will@stayinyourprime.com")
         tyler = User.objects.get(email="tyler@stayinyourprime.com")
         fred = Profile.objects.get(email="fred@usv.com")
@@ -105,7 +107,7 @@ class Scratch(app.basic.BaseHandler):
         logging.info(cs)
         cs = Connection.objects(user=tyler, profile=alexander)
         logging.info(cs)
-
+        '''
         """
         # Checks flow for getting all user credentials, refreshing if necessary
         # and executing Gmail API calls
