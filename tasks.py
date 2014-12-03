@@ -17,9 +17,6 @@ from db.statsdb import Stats
 import gdata.contacts.client
 import app.gmail as gmail
 
-#from app.gmail import GmailJob
-#from scripts.google_contacts_job import main as google_contacts_job
-
 app = Celery('tasks', 
     broker=settings.get('rabbitmq_bigwig_url'),
     backend='amqp')
