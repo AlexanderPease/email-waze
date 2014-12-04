@@ -343,8 +343,14 @@ $disabled-color: #428bca;
   background-color: #F8F8FA;
 }
 
+.popover-content {
+  max-height: 300px; 
+  overflow-y: scroll;
+}
+
 .popover-medium {
     max-width:1000px;
     width: auto;
 }
+
 
