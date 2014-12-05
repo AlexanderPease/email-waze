@@ -5,6 +5,7 @@ import simplejson as json
 import os
 import httplib
 import logging
+import datetime
 from db.userdb import User
 
 
@@ -22,6 +23,12 @@ class BaseHandler(tornado.web.RequestHandler):
 
 
     def render(self, template, **kwargs):
+        
+        current_user = self.current_user_instance()
+        if current_user:
+            current_user.last_web_action = datetime.datetime.now()
+            current_user.save()
+
         # add any variables or functions we want available in all templates
         kwargs['user_obj'] = None
         kwargs['settings'] = settings 
