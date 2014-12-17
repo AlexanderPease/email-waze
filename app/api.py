@@ -23,7 +23,6 @@ class Test(app.basic.BaseHandler):
 ### /api/currentuseremail
 ########################
 class CurrentUserEmail(app.basic.BaseHandler):
-    #@tornado.web.authenticated
     def get(self):
         if not self.current_user:
             return self.api_error(401, 'User is not logged in')
@@ -40,7 +39,6 @@ class CurrentUserEmail(app.basic.BaseHandler):
 ### /api/profilebyemail
 ########################
 class ProfileByEmail(app.basic.BaseHandler):
-    #@tornado.web.authenticated
     def get(self):
         if not self.current_user:
             return self.api_error(401, 'User is not logged in')
@@ -57,7 +55,6 @@ class ProfileByEmail(app.basic.BaseHandler):
 ### /api/profilesearch
 ########################
 class ProfileSearch(app.basic.BaseHandler):
-    #@tornado.web.authenticated
     def get(self):
         if not self.current_user:
             return self.api_error(401, 'User is not logged in')
@@ -77,7 +74,6 @@ class ProfileSearch(app.basic.BaseHandler):
 ### /api/connectionsearch
 ########################
 class ConnectionSearch(app.basic.BaseHandler):
-    #@tornado.web.authenticated
     def get(self):
         if not self.current_user:
             return self.api_error(401, 'User is not logged in')
@@ -115,7 +111,6 @@ class ConnectionSearch(app.basic.BaseHandler):
 ### /api/connectionbyemail
 ########################
 class ConnectionByEmail(app.basic.BaseHandler):
-    #@tornado.web.authenticated
     def get(self):
         # Authenticate user
         if not self.current_user:
