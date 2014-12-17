@@ -3,14 +3,21 @@ import logging
 from db.profiledb import Profile
 from db.userdb import User
 from db.connectiondb import Connection
-from connectionsets import GroupConnectionSet, ProfileConnectionSet
-import connectionsets
+from connectionsets import GroupConnectionSet
+from connectionsets import ProfileConnectionSet
+from connectionsets import BaseProfileConnection
+from connectionsets import list_to_json_list
+import math
+
+RESULTS_PER_PAGE = 20
+
+
 
 ########################
 ### SearchBaseConnectionSet
-### /api/searchbaseconnectionset
+### /api/1/searchbaseconnectionset
 ########################
-class SearchBaseConnectionSet(app.basic.BaseHandler):
+class SearchBaseProfileConnection(app.basic.BaseHandler):
     def get(self):
         if not self.current_user:
             return self.api_error(401, 'User is not logged in')
@@ -60,13 +67,10 @@ class SearchBaseConnectionSet(app.basic.BaseHandler):
                 ps.append(bp)
 
             data = {
-                "profiles": ps,
+                "profiles": list_to_json_list(ps),
                 "page": page,
                 "num_pages": num_pages,
-                "get_domain": ui_methods.get_domain,
-                "truncate": ui_methods.truncate
             }
-
             return self.api_response(data=data)
 
         else:

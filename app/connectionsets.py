@@ -33,6 +33,21 @@ class BaseProfileConnection:
         """
         return self.email.split('@')[1]
 
+    def to_json(self):
+        '''
+        Returns JSON dict of GroupConnectionSet instance
+        '''
+        json = {
+            'email': self.email, 
+            'name': self.name, 
+            'burner': self.burner,
+        }
+        if self.connections:
+            json['connections'] = []
+            for c in self.connections:
+                json['connections'].append(c.to_json())
+            return json
+
 class GroupConnectionSet:
     """
     Class that groups Connections together by User
