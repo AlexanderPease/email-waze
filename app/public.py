@@ -29,6 +29,8 @@ class Index(app.basic.BaseHandler):
 class Search(app.basic.BaseHandler):
   @tornado.web.authenticated
   def get(self):
+    return self.render('public/search_empty.html')
+    """
     name = self.get_argument('name', '')
     domain = self.get_argument('domain', '')
     page = self.get_argument('page', '')
@@ -101,6 +103,7 @@ class Search(app.basic.BaseHandler):
 
     else:
         return self.redirect('/')
+    """
 
 
 ########################
