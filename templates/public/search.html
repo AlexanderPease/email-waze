@@ -71,7 +71,8 @@
       <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="AllConnections">
           <!-- Table for All -->
-            <table class="table table-condensed table-hover">
+          <!--table table-condensed table-hover-->
+            <table id="search_table" class="row-border">
               <thead>
                 <tr>
                   <th>Name</th>
@@ -350,6 +351,11 @@
 {% block javascript %}
   <script>
     $(document).ready(function(){
+      // Datatables
+      $('#search_table').DataTable({
+        searching: false
+      });
+
       // Results message
       queryParameters = getQueryParameters()
       var terms = "";
