@@ -120,7 +120,8 @@
         error: function(response) {
           console.warn(response);
           current_btn.text('Try again!');
-          current_btn.attr('disabled', 'none');
+          current_btn.removeAttr('disabled');
+          console.log(options);
         }
     };
     console.log('Requesting: ' + options.url)

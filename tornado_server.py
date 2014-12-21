@@ -49,10 +49,10 @@ class Application(tornado.web.Application):
       (r"/api/group/create", app.group_api.CreateGroup),
 
       # Public API v1
-      (r"/api/1.0/profilesearch", app.api.ProfileSearch),
-      (r"/api/1.0/profilebyemail", app.api.ProfileByEmail),
-      (r"/api/1.0/connectionsearch", app.api.ConnectionSearch),
-      (r"/api/1.0/connectionbyemail", app.api.ConnectionByEmail),
+      (r"/api/1/profilesearch", app.api.ProfileSearch),
+      (r"/api/1/profilebyemail", app.api.ProfileByEmail),
+      (r"/api/1/connectionsearch", app.api.ConnectionSearch),
+      (r"/api/1/connectionbyemail", app.api.ConnectionByEmail),
 
 
       # Stripe billing
