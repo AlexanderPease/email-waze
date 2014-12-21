@@ -3,7 +3,7 @@
   <div class="feature">
     <div class="container">
       <h2>{{ len(users) }} entries</h2>
-      <table class="table table-striped">
+      <table id="search_table" class="">
         <tr>
           <th>Email</th>
           <th>Name</th>
@@ -49,6 +49,14 @@
       </table>
     </div>
   </div>
+{% end %}
+
+{% block javascript %}
+<script>
+  $(document).ready( function () {
+    $('#search_table').DataTable();
+} );
+</script>
 {% end %}
 
 
