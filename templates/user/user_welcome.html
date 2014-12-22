@@ -109,7 +109,7 @@
       var group_id = $(this).attr('data-group-id');
       var options = {
         type: 'POST',
-        url: ROOT_URL + 'api/group/' + encodeURIComponent(group_id) + '/acceptinvite',
+        url: '/api/group/' + encodeURIComponent(group_id) + '/acceptinvite',
         dataType: 'json',
         success: function(response) {
           console.log(response);
