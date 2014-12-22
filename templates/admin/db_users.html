@@ -11,6 +11,7 @@
             <th>Name</th>
             <th>Groups</th>
             <th>Date Joined</th>
+            <th>Last Web Action</th>
             <th>Onboarded?</th>
             <th>Date last updated</th>
             <th>Refresh Token</th>
@@ -34,6 +35,11 @@
               </td>
               {% if u.joined %}
                 <td>{{ u.joined.strftime('%Y/%m/%d') }}</td>
+              {% else %}
+                <td>None</td>
+              {% end %}
+              {% if u.last_web_action %}
+                <td>{{ u.last_web_action.strftime('%Y/%m/%d') }}</td>
               {% else %}
                 <td>None</td>
               {% end %}
