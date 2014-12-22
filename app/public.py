@@ -32,7 +32,7 @@ class Search(app.basic.BaseHandler):
     #return self.render('public/search_empty.html')
     name = self.get_argument('name', '')
     domain = self.get_argument('domain', '')
-    page = self.get_argument('page', '')
+    #page = self.get_argument('page', '')
 
     if name or domain:
         # Global profile results
@@ -41,6 +41,7 @@ class Search(app.basic.BaseHandler):
         # Pagination and no results
         if len(profiles) == 0:
             return self.redirect('/?err=no_results')
+        '''
         elif len(profiles) > RESULTS_PER_PAGE:
             # Get page number
             num_pages = int(math.ceil(float(len(profiles)) / RESULTS_PER_PAGE))
@@ -55,6 +56,7 @@ class Search(app.basic.BaseHandler):
         else:
             page = None
             num_pages = None
+        '''
 
         # Connections
         current_user = User.objects.get(email=self.current_user)
@@ -95,8 +97,8 @@ class Search(app.basic.BaseHandler):
             profiles=ps,
             profile_connection_set=profile_connection_set,
             group_connection_set=group_connection_set,
-            page=page,
-            num_pages=num_pages,
+            #page=page,
+            #num_pages=num_pages,
             get_domain=ui_methods.get_domain,
             truncate=ui_methods.truncate)
 
