@@ -92,7 +92,6 @@
 
 {% block user_welcome_js %}
 <script>
-  var ROOT_URL = '{{ settings.get("base_url") }}/';
   var MODAL_STATE = 'start';
   $(document).ready(function(){
     // First modal
@@ -146,7 +145,7 @@
       MODAL_STATE = 'group-create';
       var options = {
         type: 'POST',
-        url: ROOT_URL + 'api/group/create',
+        url: '/api/group/create',
         data: {
           name: $('#name').val(), 
           invited_emails: $('#invited_emails').val(), 
