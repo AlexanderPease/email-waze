@@ -41,7 +41,7 @@
               {% if u.last_web_action %}
                 <td>{{ u.last_web_action.strftime('%Y/%m/%d') }}</td>
               {% else %}
-                <td>None</td>
+                <td></td>
               {% end %}
               <td>{{ u.onboarded }}</td>
               {% if u.last_updated %}
