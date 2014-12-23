@@ -1,118 +1,226 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Ansatz - {% block page-title %}{% end %}</title>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="{% block page-description %}{% end %}">
-  <link rel="shortcut icon" href="{{ static_url("img/ansatz-favicon.png") }}" type="image/png" />
-
-  <link href='//fonts.googleapis.com/css?family=Lato:300,400,400italic,700|Titillium+Web:600,400' rel='stylesheet' type='text/css'>
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-  <link rel="stylesheet" href="//cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css">
-  <link href="{{ static_url("css/screen.css") }}" rel="stylesheet" type="text/css" />
+  <title>Ember Starter Kit</title>
+  <link rel="stylesheet" href="{{ static_url("css/normalize.css") }}">
+  <link rel="stylesheet" href="{{ static_url("js/css/style.css") }}">
+  <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
 </head>
 <body>
-  <nav class="navbar navbar-default" role="navigation">
-    <div class="container">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="/">Ansatz</a>
-      </div>
-
-      <div class="collapse navbar-collapse" id="main-navbar-collapse">
-        <ul class="nav navbar-nav navbar-right">
-          <li id="nav-chrome-extension" class="hidden"><a href="https://chrome.google.com/webstore/detail/ansatz/fhmfdjnooicibclghoophehldkeeloje">Install the Chrome Extension!</a></li>
-          <li><a href="/about">About</a></li>
-          <li><a href="http://ansatz.readme.io/v1.0/docs">API Docs</a></li>
-          {% if not current_user %}
-          <li><a href="/auth/google">Sign Up</a></li>
-          <li><a href="/auth/google">Log In</a></li>
-          {% else %}
-            {% if current_user_staff() %}<li><a href="/admin">Admin</a></li>{% end %}
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <span class="caret"></span></a>
-            <ul class="dropdown-menu" role="menu">
-              <li><a href="/user/settings">Settings</a></li>
-              <li><a href="/user/settings">Join a Team</a></li>
-              <li class="divider"></li>
-              {% if current_user %}
-              <li><a href="/auth/logout/">Logout</a></li>
-              {% end %}
-            </ul>
-          </li>
-          {% end %}
+  <script type="text/x-handlebars">
+    <div class="navbar">
+      <div class="navbar-inner">
+        {{!#link-to 'index' class='brand'}}Bloggr{{!/link-to}}
+        <ul class="nav">
+          <li>{{!#link-to 'posts'}}Posts{{!/link-to}}</li>
+          <li>{{!#link-to 'about'}}About{{!/link-to}}</li>
+          <li>{{!#link-to 'search'}}Search{{!/link-to}}</li>
         </ul>
-      </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-  </nav>
-  <main class="page-content">{% block body %}{% end %}</main>
-  <footer>
-    <span>Made in New York City</span>
-  </footer>
+      </div>
+    </div>
 
-  <script type="text/javascript" src="//code.jquery.com/jquery-1.10.1.min.js"></script>
-  <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
+    {{!outlet}}
+  </script>
+
+  <script type="text/x-handlebars" id="search">
+    <section class="js-stretch-height search-background thin-search">
+    <div class="container">
+      <form id="main-search" class="form-inline" action="/search" method="GET">
+        <div class="form-group">
+          <div class="input-group">
+            <input name="name" type="text" class="form-control" placeholder="Name" id="rounded-name">
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group">
+            <span class="input-group-addon">@</span>
+            <input name="domain" type="text" class="form-control" placeholder="Domain">
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group">
+            <button type="submit" class="btn btn-primary btn-inline">Search</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+
+  
+  <section class="feature">
+    <div class="container">
+      <h3 id="results"></h3> 
+
+      <!-- Nav tabs on top of results table -->
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active">
+          <a href="#AllConnections" role="tab" data-toggle="tab">All</a>
+        </li>
+        <li role="presentation">
+          <a href="#GroupConnections" role="tab" data-toggle="tab">By Teammate</a>
+        </li>
+        <li role="presentation">
+          <a href="#ProfileConnections" role="tab" data-toggle="tab">By Connection</a>
+        </li>
+      </ul>
+
+      <!-- Tab panes -->
+      <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="AllConnections">
+          <!-- Table for All -->
+            <table class="table table-condensed table-hover">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Connections</th>
+                </tr>
+              </thead>
+              <tbody>
+                
+              </tbody>
+            </table>
+          <!-- End table for GroupConnections -->
+        </div>
+
+        <div role="tabpanel" class="tab-pane" id="GroupConnections">
+          <!-- Table for GroupConnections -->
+            <table class="table table-condensed table-hover">
+              <thead>
+                <tr>
+                  <th>Teammate</th>
+                  <th>Connection</th>
+                  <th>Most Recently</th>
+                </tr>
+              </thead>
+              <tbody>
+                
+              </tbody>
+            </table>
+          <!-- End table for GroupConnections -->
+        </div>
+        
+        <div role="tabpanel" class="tab-pane" id="ProfileConnections">
+          <!-- Table for GroupConnections -->
+          <table class="table table-condensed table-hover">
+            <thead>
+              <tr>
+                <th>Connection</th>
+                <th>Teammates</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+            </tbody>
+          </table>
+          <!-- End table for ProfileConnections -->
+        </div> <!-- Profile Connections -->
+
+
+
+      </div>
+    </div> <!-- container -->
+  </section> <!-- feature -->
+  </script>
+
+
+  <script type="text/x-handlebars" id="posts">
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span3">
+          <table class='table'>
+            <thead>
+              <tr><th>Recent Posts</th></tr>
+            </thead>
+
+            <tbody>
+              {{!#each model}}
+                <tr>
+                  <td>
+                    {{!#link-to 'post' this}}{{!title}} <small class='muted'>by {{!author.name}}</small>{{!/link-to}}
+                  </td>
+                </tr>
+              {{!/each}}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="span9">
+          {{!outlet}}
+        </div>
+      </div>
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" id="posts/index">
+    <p class="text-warning">Please select a post</p>
+  </script>
+
+  <script type="text/x-handlebars" id="post">
+    {{!#if isEditing}}
+      {{!partial 'post/edit'}}
+      <button {{!action 'doneEditing'}}>Done</button>
+    {{!else}}
+      <button {{!action 'edit'}}>Edit</button>
+    {{!/if}}
+
+    <h1>{{!title}}</h1>
+    <h2>by {{!author.name}} <small class='muted'>({{!format-date date}})</small></h2>
+
+    <hr>
+
+    <div class='intro'>
+      {{!format-markdown excerpt}}
+    </div>
+
+    <div class='below-the-fold'>
+      {{!format-markdown body}}
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" id="post/_edit">
+    <p>{{!input type="text" value=title}}</p>
+    <p>{{!input type="text" value=excerpt}}</p>
+    <p>{{!textarea value=body}}</p>
+  </script>
+
+  <script type="text/x-handlebars" id="about">
+    <div class='about'>
+      <p>
+        Yehuda Katz is a member of the <a href="http://emberjs.com">Ember.js</a>, <a href="http://rubyonrails.org">Ruby on Rails</a>
+        and <a href="http://www.jquery.com">jQuery</a> Core Teams; he spends his daytime hours at the startup he founded,
+        <a href="http://www.tilde.io">Tilde Inc.</a>.
+      </p>
+
+      <p>
+        Yehuda is co-author of best-selling <a href="http://affiliate.manning.com/idevaffiliate.php?id=485_176">jQuery in Action</a> and
+        <a href="http://affiliate.manning.com/idevaffiliate.php?id=485_145">Rails 3 in Action</a>.
+      </p>
+
+      <p>
+        He spends most of his time hacking on open source—his main projects, along with others, like <a href="https://github.com/wycats/thor">Thor</a>,
+        <a href="http://www.handlebarsjs.com">Handlebars</a> and <a href="https://github.com/carlhuda/janus">Janus</a>—or traveling the world doing evangelism work.
+      </p>
+
+      <p>He can be found on Twitter as <a href="http://www.twitter.com/wycats">@wycats</a>.</p>
+    </div>
+
+    <div class='about'>
+      <p>My name is Tom Dale. I helped create <a href="http://www.emberjs.com/">Ember.js</a>, a JavaScript framework that brings sanity to the web.</p>
+
+      <p>In October of 2011, I co-founded <a href="http://www.tilde.io">Tilde</a> with Yehuda Katz, Leah Silber and Carl Lerche.</p>
+
+      <p>In my spare time I run a cash-for-beer exchange program at many local San Francisco dive bars.</p>
+    </div>
+  </script>
+
+  <script src="{{ static_url("js/libs/jquery-v1.11.1.js") }}"></script>
   <script src="{{ static_url("js/libs/handlebars-v1.3.0.js") }}"></script>
   <script src="{{ static_url("js/libs/ember-v1.6.1.js") }}"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/showdown/0.3.1/showdown.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.1.0/moment.min.js"></script>
   <script src="{{ static_url("js/app.js") }}"></script>
-
-  <script>
-    $(document).ready(function () {
-      fixFooter();
-
-      var browser_info = navigator.sayswho;
-      if (browser_info.indexOf('Chrome') > -1) {
-        showChromeExtension();
-      }
-    });
-
-    $(window).resize(function () {
-      fixFooter();
-    });
-
-    var fixFooter = function () {
-    // sticky footer if page is not tall enough to fill the window
-      if ($(".page-content").height() > $(window).innerHeight()) {
-        $("footer").removeClass("fixed");
-      } else {
-        $("footer").addClass("fixed");
-      }
-    }
-
-    /* Displays prompt to download Chrome Extension */
-    function showChromeExtension() {
-      $('#nav-chrome-extension').removeClass('hidden');
-    }
-
-    /* Returns string with info on users's browser type
-      Ex: Chrome 38 */
-    navigator.sayswho= (function(){
-        var ua= navigator.userAgent, tem, 
-        M= ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
-        if(/trident/i.test(M[1])){
-            tem=  /\brv[ :]+(\d+)/g.exec(ua) || [];
-            return 'IE '+(tem[1] || '');
-        }
-        if(M[1]=== 'Chrome'){
-            tem= ua.match(/\bOPR\/(\d+)/)
-            if(tem!= null) return 'Opera '+tem[1];
-        }
-        M= M[2]? [M[1], M[2]]: [navigator.appName, navigator.appVersion, '-?'];
-        if((tem= ua.match(/version\/(\d+)/i))!= null) M.splice(1, 1, tem[1]);
-        return M.join(' ');
-    })();
-
-  </script>
-  {% block javascript %}{% end %}
 </body>
 </html>
