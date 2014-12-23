@@ -210,20 +210,10 @@ Ember.Handlebars.helper('connections_popover', function(profile) {
     if (i > 0) {
       html += "</br>"
     }
-    console.log('boom')
     if (c.total_emails_out == 0 && c.total_emails_in == 0) {
-      html += c.user.email + " <--> " + p.email + ":</br>";
-      console.log(html);
+      html += c.connected_user_email + " <--> " + p.email + ":</br>";
     } else {
-      console.log('here')
-      console.log(c);
-      console.log(p);
-      console.log(html);
-      console.log(c.user.email);
-      console.log(p.email);
-      html += c.user.email + " --> " + p.email;
-      console.log('HURRR');
-      console.log(html);
+      html += c.connected_user_email + " --> " + p.email;
       if (c.total_emails_out == 0) {
         html += "0 emails"
       } else if (c.total_emails_out == 1) {
@@ -232,7 +222,7 @@ Ember.Handlebars.helper('connections_popover', function(profile) {
         html += c.total_emails_out + "emails, most recently on " + c.latest_email_out_date;
       }
       html += "</br>";
-      html += p.email + " --> " + c.user.email;
+      html += p.email + " --> " + c.connected_user_email;
       if (c.total_emails_in == 0) {
         html += "0 emails"
       } else if (c.total_emails_in == 1) {
