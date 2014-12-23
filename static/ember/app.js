@@ -54,8 +54,42 @@ App.SearchView = Ember.View.extend({
         html: true,
         template: '<div class="popover popover-medium"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>'
       });
-    });//ready
 
+      /* Load new page when pagination is clicked */
+      $('.page-link').click(function(){
+        queryParameters = getQueryParameters();
+         
+        // Add new parameters or update existing ones
+        var pageNum = $(this).attr('data-page-number');
+        var currentPageNum = parseInt(getQueryParameters['page']);
+        if (pageNum == 'prev') {
+          if (currentPageNum) {
+            queryParameters['page'] = currentPageNum - 1;
+          } else {
+            // If there is no currentPageNum, then it's on page 1
+            queryParameters['page'] = 2
+          }
+        } else if (pageNum == 'next' ) {
+          if (currentPageNum) {
+            queryParameters['page'] = currentPageNum + 1;
+          } else {
+            // If there is no currentPageNum, then it's on page 1
+            queryParameters['page'] = 2
+          }
+        }
+        else {
+          queryParameters['page'] = pageNum;
+        }
+         
+        /*
+         * Replace the query portion of the URL.
+         * jQuery.param() -> create a serialized representation of an array or
+         *     object, suitable for use in a URL query string or Ajax request.
+         */
+        location.search = $.param(queryParameters); // Causes page to reload
+      });
+
+    });//ready
     function getQueryParameters() {
        /* queryParameters -> handles the query string parameters
        * queryString -> the query string without the fist '?' character
@@ -161,4 +195,48 @@ Ember.Handlebars.helper('display_num_connections', function(profile) {
   } else{
     return profile.connections.length + " Connections"
   }
+});
+
+Ember.Handlebars.helper('connections_popover', function(profile) {
+  /*
+  Writes popover body html for all connections for a single profile
+  */
+  console.log('connections_popover');
+  var p = profile;
+  var html = "";
+  for (i=0; i<p.connections.length; i++) {
+    var c = p.connections[i];
+    console.log(c)
+    if (i > 0) {
+      html += "</br>"
+    }
+    console.log('boom')
+    if (c.total_emails_out == 0 && c.total_emails_in == 0) {
+      html += c.user.email + " <--> " + p.email + ":</br>";
+      console.log(html);
+    } else {
+      html += c.user.email + " --> " + p.email;
+      console.log('HURRR');
+      console.log(html);
+      if (c.total_emails_out == 0) {
+        html += "0 emails"
+      } else if (c.total_emails_out == 1) {
+        html += c.total_emails_out + "email, most recently on " + c.latest_email_out_date;
+      } else {
+        html += c.total_emails_out + "emails, most recently on " + c.latest_email_out_date;
+      }
+      html += "</br>";
+      html += p.email + " --> " + c.user.email;
+      if (c.total_emails_in == 0) {
+        html += "0 emails"
+      } else if (c.total_emails_in == 1) {
+        html += c.total_emails_in + "email, most recently on " + c.latest_email_in_date;
+      } else {
+        html += c.total_emails_in + "emails, most recently on " + c.latest_email_in_date;
+      }
+      html += "</br>";
+    }
+  }
+  console.log(html);
+  return "ZANDER"
 });
