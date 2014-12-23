@@ -1,372 +1,344 @@
-{% extends "../base.html" %}
-{% block page-title %}Home{% end %}
-{% block page-description %}Ansatz is a simple way to find someone's email address while still respecting their privacy.{% end %}
+{{! err }}
+{{! msg }}
 
-{% block body %}
-  {{ err }}
-  {{ msg }}
-
-  <!--
-  <section class="search-background">
-    <form id="main-search" class="form-group container" action="/search" method="GET">
-      <div class="row">
-        <div class="input-group-lg col-sm-4 col-lg-4 col-xs-12">
-          <input name="name" type="text" class="form-control" placeholder="Name">
+<section class="js-stretch-height search-background thin-search">
+  <div class="container">
+    <form id="main-search" class="form-inline" action="/search" method="GET">
+      <div class="form-group">
+        <div class="input-group">
+          <input name="name" type="text" class="form-control" placeholder="Name" id="rounded-name">
         </div>
-        <div class="input-group input-group-lg col-sm-4 col-lg-4 col-xs-12">
+      </div>
+      <div class="form-group">
+        <div class="input-group">
           <span class="input-group-addon">@</span>
           <input name="domain" type="text" class="form-control" placeholder="Domain">
         </div>
-        <div class="col-sm-4 col-lg-4 col-xs-12 search-btn-wrap">
-          <button type="submit" class="btn btn-primary">Search</button>
+      </div>
+      <div class="form-group">
+        <div class="input-group">
+          <button type="submit" class="btn btn-primary btn-inline">Search</button>
         </div>
       </div>
     </form>
-  </section>
--->
-
-  <section class="js-stretch-height search-background thin-search">
-    <div class="container">
-      <form id="main-search" class="form-inline" action="/search" method="GET">
-        <div class="form-group">
-          <div class="input-group">
-            <input name="name" type="text" class="form-control" placeholder="Name" id="rounded-name">
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="input-group">
-            <span class="input-group-addon">@</span>
-            <input name="domain" type="text" class="form-control" placeholder="Domain">
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="input-group">
-            <button type="submit" class="btn btn-primary btn-inline">Search</button>
-          </div>
-        </div>
-      </form>
-    </div>
-  </section>
+  </div>
+</section>
 
 
-  
-  <section class="feature">
-    <div class="container">
-      <h3 id="results"></h3> 
 
-      <!-- Nav tabs on top of results table -->
-      <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active">
-          <a href="#AllConnections" role="tab" data-toggle="tab">All</a>
-        </li>
-        <li role="presentation">
-          <a href="#GroupConnections" role="tab" data-toggle="tab">By Teammate</a>
-        </li>
-        <li role="presentation">
-          <a href="#ProfileConnections" role="tab" data-toggle="tab">By Connection</a>
-        </li>
-      </ul>
+<section class="feature">
+  <div class="container">
+    <h3 id="results"></h3> 
 
-      <!-- Tab panes -->
-      <div class="tab-content">
-        <div role="tabpanel" class="tab-pane active" id="AllConnections">
-          <!-- Table for All -->
-          <!--table table-condensed table-hover-->
-            <table id="search_table" class="row-border hover">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Connections</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for p in profiles %}
-                  {% if p.connections %}
-                    <tr id="popover-row" 
-                      data-container="body" 
-                      tabindex="0" 
-                      data-content="
-                      <h3>Connection to {{ p.name }}</h3>
-                      {% set first = True %}
-                      {% for c in p.connections %}
-                        {% if not first %}
-                          </br>
-                        {% end %}
+    <!-- Nav tabs on top of results table -->
+    <ul class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#AllConnections" role="tab" data-toggle="tab">All</a>
+      </li>
+      <li role="presentation">
+        <a href="#GroupConnections" role="tab" data-toggle="tab">By Teammate</a>
+      </li>
+      <li role="presentation">
+        <a href="#ProfileConnections" role="tab" data-toggle="tab">By Connection</a>
+      </li>
+    </ul>
 
-                        {% if c.total_emails_out == 0 and c.total_emails_in == 0 %}
-                          {{ c.user.email }} <--> {{ p.email }}</br>
-                        {% else %}
-                          {{ c.user.email }} --> {{ p.email }}: 
-                          {% if c.total_emails_out == 0 %}
-                            {{ c.total_emails_out }} emails
-                          {% elif c.total_emails_out == 1 %}
-                            {{ c.total_emails_out }} email, most recently on {{ c.latest_email_out_date_string() }}
-                          {% else %}
-                            {{ c.total_emails_out }} emails, most recently on {{ c.latest_email_out_date_string() }}
-                          {% end %}</br>
-                          {{ p.email }} --> {{ c.user.email }}: 
-                          {% if c.total_emails_in == 0 %}
-                            {{ c.total_emails_in }} emails
-                          {% elif c.total_emails_in == 1 %}
-                            {{ c.total_emails_in }} email, most recently on {{ c.latest_email_in_date_string() }}
-                          {% else %}
-                            {{ c.total_emails_in }} emails, most recently on {{ c.latest_email_in_date_string() }}
-                          {% end %}</br>
-                        {% end %}
-                        {% set first = False %}
-                      {% end %}
-                    ">
-                      <td>{{ truncate(p.name) }} ({{ p.get_domain() }})</td>
-                      <td><a href="mailto:{{ p.email }}">{{ p.email }}<a></td>
-                      <td>
-                        {% if len(p.connections) == 1 %}
-                          {{ len(p.connections)}} connection
-                        {% else %}
-                          {{ len(p.connections)}} connections
-                        {% end %}
-                      </td>
-                    </tr>
-                  {% else %}
-                    <tr id="popover-row" data-container="body" data-content="You do not have a connection to {{ p.name }}. </br>
-                      But, you can send an email directly to his/her inbox using this public email address: {{ p.burner }}@{{ settings.get('domain_name') }}">
-                      <td>{{ truncate(p.name) }} ({{ p.get_domain() }})</td>
-                      <td>
-                        <a href="{{ p.burner }}@{{ settings.get('domain_name') }}">{{ p.burner }}@{{ settings.get('domain_name') }}</a>
-                      </td>
-                      <td>N/A</td>
-                    </tr>
-                  {% end %} <!-- if connections -->
-                {% end %} <!-- p in profiles -->
-              </tbody>
-            </table>
-          <!-- End table for GroupConnections -->
-        </div>
-
-        <div role="tabpanel" class="tab-pane" id="GroupConnections">
-          <!-- Table for GroupConnections -->
-            <table class="table table-condensed table-hover">
-              <thead>
-                <tr>
-                  <th>Teammate</th>
-                  <th>Connection</th>
-                  <th>Most Recently</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for sc in group_connection_set %}
-                  {% set first = True %}
-                  {% for c in sc.connections %}
-                    <tr id="popover-row" data-container="body" data-content="
-                      {{ sc.email }} --> {{ c.profile.email}}: 
-                      {% if c.total_emails_out == 0 %}
-                        {{ c.total_emails_out }} emails
-                      {% elif c.total_emails_out == 1 %}
-                        {{ c.total_emails_out }} email, most recently on {{ c.latest_email_out_date_string() }}
-                      {% else %}
-                        {{ c.total_emails_out }} emails, most recently on {{ c.latest_email_out_date_string() }}
-                      {% end %}</br>
-                      {{ c.profile.email}} --> {{ sc.email }}: 
-                      {% if c.total_emails_in == 0 %}
-                        {{ c.total_emails_in }} emails
-                      {% elif c.total_emails_in == 1 %}
-                        {{ c.total_emails_in }} email, most recently on {{ c.latest_email_in_date_string() }}
-                      {% else %}
-                        {{ c.total_emails_in }} emails, most recently on {{ c.latest_email_in_date_string() }}
-                      {% end %}
-                    ">
-                      
-                      {% if first %}
-                        <td>
-                          {% if sc.email == current_user %}
-                            You 
-                          {% else %}
-                            {{ truncate(sc.name) }} 
-                          {% end %}
-                          (<a href="mailto:{{ sc.email }}">{{ sc.email }}</a>) emailed...
-                        </td>
-                      {% else %}
-                        <td></td>
-                      {% end %}
-                      <td>
-                        {% set days_since_emailed_out = c.days_since_emailed_out() %}
-                         {{ truncate(c.profile.name) }} (<a href="mailto:{{ c.profile.email }}">{{ c.profile.email }}</a>)...
-                      </td>
-                      <td> 
-                        {% if days_since_emailed_out == 'Today' %}
-                          Today
-                        {% elif days_since_emailed_out %}
-                            {{ days_since_emailed_out }} days ago
-                        {% else %}
-                          N/A
-                        {% end %}
-                      </td>
-                    </tr>
-
-                    {% set first = False %}
-                  {% end %} <!-- c in sc.connections -->
-                {% end %} <!-- sc in group_connection_set -->
-              </tbody>
-            </table>
-          <!-- End table for GroupConnections -->
-        </div>
-        
-        <div role="tabpanel" class="tab-pane" id="ProfileConnections">
-          <!-- Table for GroupConnections -->
-          <table class="table table-condensed table-hover">
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane active" id="AllConnections">
+        <!-- Table for All -->
+        <!--table table-condensed table-hover-->
+          <table id="search_table" class="row-border hover">
             <thead>
               <tr>
-                <th>Connection</th>
-                <th>Teammates</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Connections</th>
               </tr>
             </thead>
             <tbody>
-              {% for sc in profile_connection_set %}
+              {% for p in profiles %}
+                {% if p.connections %}
+                  <tr id="popover-row" 
+                    data-container="body" 
+                    tabindex="0" 
+                    data-content="
+                    <h3>Connection to {{ p.name }}</h3>
+                    {% set first = True %}
+                    {% for c in p.connections %}
+                      {% if not first %}
+                        </br>
+                      {% end %}
+
+                      {% if c.total_emails_out == 0 and c.total_emails_in == 0 %}
+                        {{ c.user.email }} <--> {{ p.email }}</br>
+                      {% else %}
+                        {{ c.user.email }} --> {{ p.email }}: 
+                        {% if c.total_emails_out == 0 %}
+                          {{ c.total_emails_out }} emails
+                        {% elif c.total_emails_out == 1 %}
+                          {{ c.total_emails_out }} email, most recently on {{ c.latest_email_out_date_string() }}
+                        {% else %}
+                          {{ c.total_emails_out }} emails, most recently on {{ c.latest_email_out_date_string() }}
+                        {% end %}</br>
+                        {{ p.email }} --> {{ c.user.email }}: 
+                        {% if c.total_emails_in == 0 %}
+                          {{ c.total_emails_in }} emails
+                        {% elif c.total_emails_in == 1 %}
+                          {{ c.total_emails_in }} email, most recently on {{ c.latest_email_in_date_string() }}
+                        {% else %}
+                          {{ c.total_emails_in }} emails, most recently on {{ c.latest_email_in_date_string() }}
+                        {% end %}</br>
+                      {% end %}
+                      {% set first = False %}
+                    {% end %}
+                  ">
+                    <td>{{ truncate(p.name) }} ({{ p.get_domain() }})</td>
+                    <td><a href="mailto:{{ p.email }}">{{ p.email }}<a></td>
+                    <td>
+                      {% if len(p.connections) == 1 %}
+                        {{ len(p.connections)}} connection
+                      {% else %}
+                        {{ len(p.connections)}} connections
+                      {% end %}
+                    </td>
+                  </tr>
+                {% else %}
+                  <tr id="popover-row" data-container="body" data-content="You do not have a connection to {{ p.name }}. </br>
+                    But, you can send an email directly to his/her inbox using this public email address: {{ p.burner }}@{{ settings.get('domain_name') }}">
+                    <td>{{ truncate(p.name) }} ({{ p.get_domain() }})</td>
+                    <td>
+                      <a href="{{ p.burner }}@{{ settings.get('domain_name') }}">{{ p.burner }}@{{ settings.get('domain_name') }}</a>
+                    </td>
+                    <td>N/A</td>
+                  </tr>
+                {% end %} <!-- if connections -->
+              {% end %} <!-- p in profiles -->
+            </tbody>
+          </table>
+        <!-- End table for GroupConnections -->
+      </div>
+
+      <div role="tabpanel" class="tab-pane" id="GroupConnections">
+        <!-- Table for GroupConnections -->
+          <table class="table table-condensed table-hover">
+            <thead>
+              <tr>
+                <th>Teammate</th>
+                <th>Connection</th>
+                <th>Most Recently</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for sc in group_connection_set %}
                 {% set first = True %}
                 {% for c in sc.connections %}
                   <tr id="popover-row" data-container="body" data-content="
-                    {{ sc.email }} --> {{ c.user.email}}:
-                    {% if c.total_emails_in == 0 %}
-                      {{ c.total_emails_in }} emails
-                    {% elif c.total_emails_in == 1 %}
-                      {{ c.total_emails_in }} email, most recently on {{ c.latest_email_in_date_string() }}</br>
-                    {% else %}
-                      {{ c.total_emails_in }} emails, most recently on {{ c.latest_email_in_date_string() }}</br>
-                    {% end %}
-                    {{ c.user.email}} --> {{ sc.email }}:
+                    {{ sc.email }} --> {{ c.profile.email}}: 
                     {% if c.total_emails_out == 0 %}
                       {{ c.total_emails_out }} emails
                     {% elif c.total_emails_out == 1 %}
-                      {{ c.total_emails_out }} email, most recently on {{ c.latest_email_out_date_string() }}</br>
+                      {{ c.total_emails_out }} email, most recently on {{ c.latest_email_out_date_string() }}
                     {% else %}
-                      {{ c.total_emails_out }} emails, most recently on {{ c.latest_email_out_date_string() }}</br>
+                      {{ c.total_emails_out }} emails, most recently on {{ c.latest_email_out_date_string() }}
+                    {% end %}</br>
+                    {{ c.profile.email}} --> {{ sc.email }}: 
+                    {% if c.total_emails_in == 0 %}
+                      {{ c.total_emails_in }} emails
+                    {% elif c.total_emails_in == 1 %}
+                      {{ c.total_emails_in }} email, most recently on {{ c.latest_email_in_date_string() }}
+                    {% else %}
+                      {{ c.total_emails_in }} emails, most recently on {{ c.latest_email_in_date_string() }}
                     {% end %}
                   ">
+                    
                     {% if first %}
-                      <td>{{ truncate(sc.name) }} (<a href="mailto:{{ sc.email }}">{{ sc.email }}</a>) emailed...</td>
+                      <td>
+                        {% if sc.email == current_user %}
+                          You 
+                        {% else %}
+                          {{ truncate(sc.name) }} 
+                        {% end %}
+                        (<a href="mailto:{{ sc.email }}">{{ sc.email }}</a>) emailed...
+                      </td>
                     {% else %}
                       <td></td>
                     {% end %}
                     <td>
-                      {% set days_since_emailed_in = c.days_since_emailed_in() %}
-                      {% if c.user.email == current_user %}
-                        You 
-                      {% else %}
-                        {{ truncate(c.user.name) }} 
-                      {% end %}
-                      (<a href="mailto:{{ c.user.email }}">{{ c.user.email }}</a>) 
-                      {% if days_since_emailed_in == 'Today' %}
+                      {% set days_since_emailed_out = c.days_since_emailed_out() %}
+                       {{ truncate(c.profile.name) }} (<a href="mailto:{{ c.profile.email }}">{{ c.profile.email }}</a>)...
+                    </td>
+                    <td> 
+                      {% if days_since_emailed_out == 'Today' %}
                         Today
-                      {% elif days_since_emailed_in == 1 %}
-                          {{ days_since_emailed_in }} day ago
-                      {% elif days_since_emailed_in %}
-                        {{ days_since_emailed_in }} days ago
+                      {% elif days_since_emailed_out %}
+                          {{ days_since_emailed_out }} days ago
                       {% else %}
                         N/A
                       {% end %}
                     </td>
                   </tr>
+
                   {% set first = False %}
                 {% end %} <!-- c in sc.connections -->
-              {% end %} <!-- sc in profile_connection_set -->
+              {% end %} <!-- sc in group_connection_set -->
             </tbody>
           </table>
-          <!-- End table for ProfileConnections -->
-        </div> <!-- Profile Connections -->
-
-
-
+        <!-- End table for GroupConnections -->
       </div>
-    </div> <!-- container -->
-  </section> <!-- feature -->
+      
+      <div role="tabpanel" class="tab-pane" id="ProfileConnections">
+        <!-- Table for GroupConnections -->
+        <table class="table table-condensed table-hover">
+          <thead>
+            <tr>
+              <th>Connection</th>
+              <th>Teammates</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for sc in profile_connection_set %}
+              {% set first = True %}
+              {% for c in sc.connections %}
+                <tr id="popover-row" data-container="body" data-content="
+                  {{ sc.email }} --> {{ c.user.email}}:
+                  {% if c.total_emails_in == 0 %}
+                    {{ c.total_emails_in }} emails
+                  {% elif c.total_emails_in == 1 %}
+                    {{ c.total_emails_in }} email, most recently on {{ c.latest_email_in_date_string() }}</br>
+                  {% else %}
+                    {{ c.total_emails_in }} emails, most recently on {{ c.latest_email_in_date_string() }}</br>
+                  {% end %}
+                  {{ c.user.email}} --> {{ sc.email }}:
+                  {% if c.total_emails_out == 0 %}
+                    {{ c.total_emails_out }} emails
+                  {% elif c.total_emails_out == 1 %}
+                    {{ c.total_emails_out }} email, most recently on {{ c.latest_email_out_date_string() }}</br>
+                  {% else %}
+                    {{ c.total_emails_out }} emails, most recently on {{ c.latest_email_out_date_string() }}</br>
+                  {% end %}
+                ">
+                  {% if first %}
+                    <td>{{ truncate(sc.name) }} (<a href="mailto:{{ sc.email }}">{{ sc.email }}</a>) emailed...</td>
+                  {% else %}
+                    <td></td>
+                  {% end %}
+                  <td>
+                    {% set days_since_emailed_in = c.days_since_emailed_in() %}
+                    {% if c.user.email == current_user %}
+                      You 
+                    {% else %}
+                      {{ truncate(c.user.name) }} 
+                    {% end %}
+                    (<a href="mailto:{{ c.user.email }}">{{ c.user.email }}</a>) 
+                    {% if days_since_emailed_in == 'Today' %}
+                      Today
+                    {% elif days_since_emailed_in == 1 %}
+                        {{ days_since_emailed_in }} day ago
+                    {% elif days_since_emailed_in %}
+                      {{ days_since_emailed_in }} days ago
+                    {% else %}
+                      N/A
+                    {% end %}
+                  </td>
+                </tr>
+                {% set first = False %}
+              {% end %} <!-- c in sc.connections -->
+            {% end %} <!-- sc in profile_connection_set -->
+          </tbody>
+        </table>
+        <!-- End table for ProfileConnections -->
+      </div> <!-- Profile Connections -->
 
-{% end %}
 
-{% block javascript %}
-  <script>
-    $(document).ready(function(){
-      // Datatables
-      $('#search_table').DataTable({
-        searching: false,
-        pageLength: 20,
-        lengthChange: false
-      });
 
-      // Results message
-      queryParameters = getQueryParameters()
-      var terms = "";
-      var firstParam = true;
-      for (var k in queryParameters) {
-        if (k != 'page') {
-          if (queryParameters[k]) {
-            if (!firstParam) {
-              terms = terms + ", " // Comma-delimitation after first parameter listed
-            }
-            terms = terms + '"' + queryParameters[k] + '"';
-            firstParam = false;
+    </div>
+  </div> <!-- container -->
+</section> <!-- feature -->
+
+<script>
+  $(document).ready(function(){
+    // Datatables
+    $('#search_table').DataTable({
+      searching: false,
+      pageLength: 20,
+      lengthChange: false
+    });
+
+    // Results message
+    queryParameters = getQueryParameters()
+    var terms = "";
+    var firstParam = true;
+    for (var k in queryParameters) {
+      if (k != 'page') {
+        if (queryParameters[k]) {
+          if (!firstParam) {
+            terms = terms + ", " // Comma-delimitation after first parameter listed
           }
+          terms = terms + '"' + queryParameters[k] + '"';
+          firstParam = false;
         }
       }
-      $('#results').text('Results for ' + terms);
-
-
-      // Popovers for each results row
-      $('body').popover({
-        placement: "top",
-        trigger: "focus",
-        selector: "tr[id=popover-row]",
-        container: "body",
-        html: true,
-        template: '<div class="popover popover-medium"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>'
-      });
-
-      /* Load new page when pagination is clicked */
-      $('.page-link').click(function(){
-        queryParameters = getQueryParameters();
-         
-        // Add new parameters or update existing ones
-        var pageNum = $(this).attr('data-page-number');
-        var currentPageNum = parseInt(getQueryParameters['page']);
-        if (pageNum == 'prev') {
-          if (currentPageNum) {
-            queryParameters['page'] = currentPageNum - 1;
-          } else {
-            // If there is no currentPageNum, then it's on page 1
-            queryParameters['page'] = 2
-          }
-        } else if (pageNum == 'next' ) {
-          if (currentPageNum) {
-            queryParameters['page'] = currentPageNum + 1;
-          } else {
-            // If there is no currentPageNum, then it's on page 1
-            queryParameters['page'] = 2
-          }
-        }
-        else {
-          queryParameters['page'] = pageNum;
-        }
-         
-        /*
-         * Replace the query portion of the URL.
-         * jQuery.param() -> create a serialized representation of an array or
-         *     object, suitable for use in a URL query string or Ajax request.
-         */
-        location.search = $.param(queryParameters); // Causes page to reload
-      });
-
-    });//ready
-
-    function getQueryParameters() {
-       /* queryParameters -> handles the query string parameters
-       * queryString -> the query string without the fist '?' character
-       * re -> the regular expression
-       * m -> holds the string matching the regular expression */
-      var queryParameters = {}, queryString = location.search.substring(1), re = /([^&=]+)=([^&]*)/g, m;
-      // Creates a map with the query string parameters
-      while (m = re.exec(queryString)) {
-          queryParameters[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
-      }
-      return queryParameters
     }
-  </script>
-{% end %}
+    $('#results').text('Results for ' + terms);
+
+
+    // Popovers for each results row
+    $('body').popover({
+      placement: "top",
+      trigger: "focus",
+      selector: "tr[id=popover-row]",
+      container: "body",
+      html: true,
+      template: '<div class="popover popover-medium"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>'
+    });
+
+    /* Load new page when pagination is clicked */
+    $('.page-link').click(function(){
+      queryParameters = getQueryParameters();
+       
+      // Add new parameters or update existing ones
+      var pageNum = $(this).attr('data-page-number');
+      var currentPageNum = parseInt(getQueryParameters['page']);
+      if (pageNum == 'prev') {
+        if (currentPageNum) {
+          queryParameters['page'] = currentPageNum - 1;
+        } else {
+          // If there is no currentPageNum, then it's on page 1
+          queryParameters['page'] = 2
+        }
+      } else if (pageNum == 'next' ) {
+        if (currentPageNum) {
+          queryParameters['page'] = currentPageNum + 1;
+        } else {
+          // If there is no currentPageNum, then it's on page 1
+          queryParameters['page'] = 2
+        }
+      }
+      else {
+        queryParameters['page'] = pageNum;
+      }
+       
+      /*
+       * Replace the query portion of the URL.
+       * jQuery.param() -> create a serialized representation of an array or
+       *     object, suitable for use in a URL query string or Ajax request.
+       */
+      location.search = $.param(queryParameters); // Causes page to reload
+    });
+
+  });//ready
+
+  function getQueryParameters() {
+     /* queryParameters -> handles the query string parameters
+     * queryString -> the query string without the fist '?' character
+     * re -> the regular expression
+     * m -> holds the string matching the regular expression */
+    var queryParameters = {}, queryString = location.search.substring(1), re = /([^&=]+)=([^&]*)/g, m;
+    // Creates a map with the query string parameters
+    while (m = re.exec(queryString)) {
+        queryParameters[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+    }
+    return queryParameters
+  }
+</script>
