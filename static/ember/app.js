@@ -201,12 +201,10 @@ Ember.Handlebars.helper('connections_popover', function(profile) {
   /*
   Writes popover body html for all connections for a single profile
   */
-  console.log('connections_popover');
   var p = profile;
-  var html = "";
+  var html = "<h3>Connection to " + p.name + "</h3>";
   for (i=0; i<p.connections.length; i++) {
     var c = p.connections[i];
-    console.log(c)
     if (i > 0) {
       html += "</br>"
     }
@@ -233,6 +231,5 @@ Ember.Handlebars.helper('connections_popover', function(profile) {
       html += "</br>";
     }
   }
-  console.log(html);
-  return "ZANDER"
+  return html;
 });
