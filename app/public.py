@@ -6,6 +6,7 @@ from db.userdb import User
 from db.groupdb import Group
 from db.connectiondb import Connection
 from app.connectionsets import GroupConnectionSet, ProfileConnectionSet, BaseProfileConnection
+from app.connectionsets import list_to_json_list
 from mongoengine.queryset import Q
 import math
 
@@ -37,7 +38,6 @@ class Index(app.basic.BaseHandler):
 class Search(app.basic.BaseHandler):
   @tornado.web.authenticated
   def get(self):
-    #return self.render('public/search_empty.html')
     name = self.get_argument('name', '')
     domain = self.get_argument('domain', '')
     #page = self.get_argument('page', '')
@@ -101,6 +101,14 @@ class Search(app.basic.BaseHandler):
         profile_connection_set = ProfileConnectionSet.package_connections(connections)
         group_connection_set = GroupConnectionSet.package_connections(connections)
 
+        data = {
+            'profiles': list_to_json_list(ps),
+            'profile_connection_set': list_to_json_list(profile_connection_set),
+            'group_connection_set': list_to_json_list(group_connection_set),
+        }
+        return self.api_response(data=data)
+
+        '''
         return self.render('public/search.html', 
             profiles=ps,
             profile_connection_set=profile_connection_set,
@@ -109,9 +117,11 @@ class Search(app.basic.BaseHandler):
             #num_pages=num_pages,
             get_domain=ui_methods.get_domain,
             truncate=ui_methods.truncate)
+        '''
 
     else:
-        return self.redirect('/')
+        return self.api_error(400, 'No domain query given')
+        #return self.redirect('/')
 
 ########################
 ### About 

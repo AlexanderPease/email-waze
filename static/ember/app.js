@@ -18,7 +18,7 @@ Search
 *******************************************************************************/
 App.SearchRoute = Ember.Route.extend({
   model: function() {
-    return $.getJSON('/admin').then(function(resp){
+    return $.getJSON('/search?domain=usv.com&name=').then(function(resp){
       console.log(resp);
       return resp.data;
     });

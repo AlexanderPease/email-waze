@@ -56,7 +56,63 @@
               </tr>
             </thead>
             <tbody>
-              
+              {{! #each p in profiles }}
+                {{! #if p.connections }}
+                  <tr id="popover-row" 
+                    data-container="body" 
+                    tabindex="0" 
+                    data-content="
+                    <h3>Connection to {{! p.name }}</h3>
+                    {{! #each c in p.connections }}
+                      {{! #if not @first }}
+                        </br>
+                      {{! /if }
+
+                      {% if c.total_emails_out == 0 and c.total_emails_in == 0 %}
+                        {{ c.user.email }} <--> {{ p.email }}</br>
+                      {% else %}
+                        {{ c.user.email }} --> {{ p.email }}: 
+                        {% if c.total_emails_out == 0 %}
+                          {{ c.total_emails_out }} emails
+                        {% elif c.total_emails_out == 1 %}
+                          {{ c.total_emails_out }} email, most recently on {{ c.latest_email_out_date_string() }}
+                        {% else %}
+                          {{ c.total_emails_out }} emails, most recently on {{ c.latest_email_out_date_string() }}
+                        {% end %}</br>
+                        {{ p.email }} --> {{ c.user.email }}: 
+                        {% if c.total_emails_in == 0 %}
+                          {{ c.total_emails_in }} emails
+                        {% elif c.total_emails_in == 1 %}
+                          {{ c.total_emails_in }} email, most recently on {{ c.latest_email_in_date_string() }}
+                        {% else %}
+                          {{ c.total_emails_in }} emails, most recently on {{ c.latest_email_in_date_string() }}
+                        {% end %}</br>
+                      {% end %}
+                      {% set first = False %}
+                    {% end %}
+                  ">
+                    <td>{{ truncate(p.name) }} ({{ p.get_domain() }})</td>
+                    <td><a href="mailto:{{ p.email }}">{{ p.email }}<a></td>
+                    <td>
+                      {% if len(p.connections) == 1 %}
+                        {{ len(p.connections)}} connection
+                      {% else %}
+                        {{ len(p.connections)}} connections
+                      {% end %}
+                    </td>
+                  </tr>
+                {% else %}
+                  <tr id="popover-row" data-container="body" data-content="You do not have a connection to {{ p.name }}. </br>
+                    But, you can send an email directly to his/her inbox using this public email address: {{ p.burner }}@{{ settings.get('domain_name') }}">
+                    <td>{{ truncate(p.name) }} ({{ p.get_domain() }})</td>
+                    <td>
+                      <a href="{{ p.burner }}@{{ settings.get('domain_name') }}">{{ p.burner }}@{{ settings.get('domain_name') }}</a>
+                    </td>
+                    <td>N/A</td>
+                  </tr>
+                {% end %} <!-- if connections -->
+
+              {{! /each }}
             </tbody>
           </table>
         <!-- End table for GroupConnections -->
