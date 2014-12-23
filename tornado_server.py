@@ -87,6 +87,8 @@ class Application(tornado.web.Application):
       (r"/google077100c16d33120b.html", app.admin.GoogleWebmaster), # Google Webmaster verification
 
       # Public
+      (r'/test', app.public.Test),
+
       (r'/about', app.public.About),
       (r'/search/?', app.public.Search),
       (r'/', app.public.Index),
