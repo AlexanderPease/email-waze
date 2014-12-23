@@ -54,41 +54,6 @@ App.SearchView = Ember.View.extend({
         html: true,
         template: '<div class="popover popover-medium"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>'
       });
-
-      /* Load new page when pagination is clicked */
-      $('.page-link').click(function(){
-        queryParameters = getQueryParameters();
-         
-        // Add new parameters or update existing ones
-        var pageNum = $(this).attr('data-page-number');
-        var currentPageNum = parseInt(getQueryParameters['page']);
-        if (pageNum == 'prev') {
-          if (currentPageNum) {
-            queryParameters['page'] = currentPageNum - 1;
-          } else {
-            // If there is no currentPageNum, then it's on page 1
-            queryParameters['page'] = 2
-          }
-        } else if (pageNum == 'next' ) {
-          if (currentPageNum) {
-            queryParameters['page'] = currentPageNum + 1;
-          } else {
-            // If there is no currentPageNum, then it's on page 1
-            queryParameters['page'] = 2
-          }
-        }
-        else {
-          queryParameters['page'] = pageNum;
-        }
-         
-        /*
-         * Replace the query portion of the URL.
-         * jQuery.param() -> create a serialized representation of an array or
-         *     object, suitable for use in a URL query string or Ajax request.
-         */
-        location.search = $.param(queryParameters); // Causes page to reload
-      });
-
     });//ready
 
     function getQueryParameters() {
@@ -156,4 +121,44 @@ Ember.Handlebars.helper('format-markdown', function(input) {
 
 Ember.Handlebars.helper('format-date', function(date) {
   return moment(date).fromNow();
+});
+
+Ember.Handlebars.helper('truncate', function(string) {
+  /*
+  Truncates long strings and adds ellipses at end
+  */
+  var MAX_LENGTH = 40;
+  if (string.length > MAX_LENGTH) {
+    string = string.substring(0, MAX_LENGTH);
+    string = string + "...";
+  }
+  return string;
+});
+
+Ember.Handlebars.helper('domain', function(string) {
+  /*
+  Returns just the domain name of self.email
+  Ex: reply.craigslist.com from foo@reply.craigslist.com
+  */
+  return string.split('@')[1]
+});
+
+Ember.Handlebars.helper('unity', function(integer) {
+  /*
+  Returns True if integer is 1, False if not
+  */
+  return integer == 1;
+});
+
+Ember.Handlebars.helper('display_num_connections', function(profile) {
+  /*
+  Ex: "2 connections" or "1 connection" or "N/A"
+  */
+  if (profile.connections.length == 1) {
+    return "1 Connection"
+  } else if (profile.connections.length == 0) {
+    return "N/A"
+  } else{
+    return profile.connections.length + " Connections"
+  }
 });

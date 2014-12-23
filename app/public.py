@@ -38,6 +38,7 @@ class Index(app.basic.BaseHandler):
 class Search(app.basic.BaseHandler):
   @tornado.web.authenticated
   def get(self):
+    logging.info("Entered /search...")
     name = self.get_argument('name', '')
     domain = self.get_argument('domain', '')
     #page = self.get_argument('page', '')
@@ -101,11 +102,16 @@ class Search(app.basic.BaseHandler):
         profile_connection_set = ProfileConnectionSet.package_connections(connections)
         group_connection_set = GroupConnectionSet.package_connections(connections)
 
+        logging.info("Right before data dict creation...")
+
         data = {
             'profiles': list_to_json_list(ps),
             'profile_connection_set': list_to_json_list(profile_connection_set),
             'group_connection_set': list_to_json_list(group_connection_set),
         }
+
+        logging.info("Writing api_response...")
+
         return self.api_response(data=data)
 
         '''
