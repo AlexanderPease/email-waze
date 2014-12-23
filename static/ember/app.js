@@ -215,6 +215,12 @@ Ember.Handlebars.helper('connections_popover', function(profile) {
       html += c.user.email + " <--> " + p.email + ":</br>";
       console.log(html);
     } else {
+      console.log('here')
+      console.log(c);
+      console.log(p);
+      console.log(html);
+      console.log(c.user.email);
+      console.log(p.email);
       html += c.user.email + " --> " + p.email;
       console.log('HURRR');
       console.log(html);
