@@ -12,12 +12,12 @@ import math
 RESULTS_PER_PAGE = 20
 
 ########################
-### tets
+### test
 ### /
 ########################
 class Test(app.basic.BaseHandler):
   def get(self):
-    return self.render('test.html')
+    return self.render('../ember/base.html')
 
 ########################
 ### Homepage
