@@ -139,7 +139,8 @@ class AcceptInvite(app.basic.BaseHandler):
                         html_text='''%s (%s) has joined you as a member of team "%s".
                         This means that you are now sharing contacts and email metadata
                         with %s. If you want to remove yourself from the team, 
-                        <a href="%s/group/%s/view">click here</a>. </br>
+                        <a href="%s/group/%s/view">click here</a> to view the 
+                        team settings. </br>
                         Team "%s" now has %s members and is administered by %s 
                         (%s)''' % (u.name, u.email, g.name, u.name, settings.get('base_url'), g.id, g.name, len(g.users) + 1, g.admin.name, g.admin.email)
                         )
