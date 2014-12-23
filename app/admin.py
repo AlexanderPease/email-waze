@@ -18,7 +18,8 @@ class AdminHome(app.basic.BaseHandler):
     @tornado.web.authenticated
     def get(self):
         recent_stats = Stats.objects.order_by("-date")[0]
-        return self.render('admin/admin_home.html', stats=recent_stats)
+        data = {'stats': recent_stats.to_json()}
+        return self.api_response(data=data)
 
 
 ###########################

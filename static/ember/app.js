@@ -3,6 +3,7 @@ App = Ember.Application.create({});
 App.Router.map(function() {
   this.resource('search');
   this.resource('about');
+  this.resource('admin');
   this.resource('posts', function() {
     this.resource('post', { path: ':post_id' });
   });
@@ -17,6 +18,16 @@ App.SearchRoute = Ember.Route.extend({
     return 'foo';
   }
 });
+
+App.AdminRoute = Ember.Route.extend({
+  model: function() {
+    return $.getJSON('/admin').then(function(resp){
+      console.log(resp);
+      return resp.data;
+    });
+  }
+});
+
 
 App.PostsRoute = Ember.Route.extend({
   model: function() {

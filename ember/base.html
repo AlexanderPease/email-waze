@@ -37,18 +37,20 @@
           <li>{{!#link-to 'about'}}About{{!/link-to}}</li>
           <li><a href="http://ansatz.readme.io/v1.0/docs">API Docs</a></li>
           {% if not current_user %}
-          <li><a href="/auth/google">Sign Up</a></li>
-          <li><a href="/auth/google">Log In</a></li>
+            <li><a href="/auth/google">Sign Up</a></li>
+            <li><a href="/auth/google">Log In</a></li>
           {% else %}
-            {% if current_user_staff() %}<li><a href="/admin">Admin</a></li>{% end %}
-          <li class="dropdown">
+            {% if current_user_staff() %}
+              <li>{{!#link-to 'admin'}}Admin{{!/link-to}}</li>
+            {% end %}
+            <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
               <li><a href="/user/settings">Settings</a></li>
               <li><a href="/user/settings">Join a Team</a></li>
               <li class="divider"></li>
               {% if current_user %}
-              <li><a href="/auth/logout/">Logout</a></li>
+                <li><a href="/auth/logout/">Logout</a></li>
               {% end %}
             </ul>
           </li>
@@ -169,6 +171,18 @@
   </section> <!-- feature -->
   </script>
 
+  <script type="text/x-handlebars" id="about">
+    {% include 'public/about.html' %}
+  </script>
+
+  <script type="text/x-handlebars" id="admin">
+    {% include 'admin/admin_home.html' %}
+  </script>
+
+  <script type="text/x-handlebars" id="user">
+    
+  </script>
+
 
   <script type="text/x-handlebars" id="posts">
     <div class="container-fluid">
@@ -228,10 +242,6 @@
     <p>{{!input type="text" value=title}}</p>
     <p>{{!input type="text" value=excerpt}}</p>
     <p>{{!textarea value=body}}</p>
-  </script>
-
-  <script type="text/x-handlebars" id="about">
-    {% include 'public/about.html' %}
   </script>
 
   <script src="{{ static_url("ember/libs/jquery-v1.11.1.js") }}"></script>

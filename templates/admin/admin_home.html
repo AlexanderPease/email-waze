@@ -1,26 +1,13 @@
-{% extends "../base.html" %}
+<div class="feature">
+  <div class="container">
+    <h4>Administrative Dashboard</h4>
 
-{% block body %}
-  <div class="feature">
-    <div class="container">
-      <h4>Administrative Dashboard</h4>
-
-        {% if msg %}
-          <p class="text-success">{{ msg }}</p>
-        {% end %}
-
-        {% if err %}
-          <p class="text-success">{{ err }}</p>
-        {% end %}
-
-      Stats from {{ stats.date }}
-      <ul>
-        <li><a href="/admin/db_profiles">Profiles Database</a> ({{ stats.profiles }} documents)</li>
-        <li><a href="/admin/db_users">Users Database</a> ({{ stats.users }} documents)</li>
-        <li><a href="/admin/db_connections">Connections Database</a> ({{ stats.connections }} documents)</li>
-        <li><a href="/admin/db_groups">Groups Database</a> ({{ stats.groups }} documents)</li>
-      </ul>
-    </div>
+    Stats from {{! stats.date }}
+    <ul>
+      <li><a href="/admin/db_profiles">Profiles Database</a> ({{! stats.profiles }} documents)</li>
+      <li><a href="/admin/db_users">Users Database</a> ({{! stats.users }} documents)</li>
+      <li><a href="/admin/db_connections">Connections Database</a> ({{! stats.connections }} documents)</li>
+      <li><a href="/admin/db_groups">Groups Database</a> ({{! stats.groups }} documents)</li>
+    </ul>
   </div>
-
-{% end %}
+</div>
