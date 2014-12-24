@@ -29,9 +29,6 @@ App.SearchController = Ember.Controller.extend({
       this.set('name', this.get('nameField'));
       this.set('domain', this.get('domainField'));
       //this.send('refresh');
-      Ember.Logger.log('transition');
-      this.transitionToRoute("search", {queryParams: {domain: 'foooo'}});
-      Ember.Logger.log('transition');
     }
   }
 
