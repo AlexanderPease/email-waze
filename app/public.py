@@ -13,23 +13,17 @@ import math
 RESULTS_PER_PAGE = 20
 
 ########################
-### test
-### /
-########################
-class Test(app.basic.BaseHandler):
-  def get(self):
-    return self.render('../ember/base.html')
-
-########################
 ### Homepage
 ### /
 ########################
+"""
 class Index(app.basic.BaseHandler):
   def get(self):
     err = self.get_argument('err', '')
     if err == 'no_results':
         err = 'No results found! Try another search'
     return self.render('public/index.html', err=err)
+"""
 
 ########################
 ### Search
@@ -133,7 +127,9 @@ class Search(app.basic.BaseHandler):
 ### About 
 ### /about
 ########################
+"""
 class About(app.basic.BaseHandler):
   def get(self):
     return self.render('public/about.html')
+"""
 

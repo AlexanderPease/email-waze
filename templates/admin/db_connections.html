@@ -1,32 +1,30 @@
-{% extends "../base.html" %}
-{% block body %}
-  <div class="feature">
-    <div class="container">
-      <h2>{{ len(connections) }} entries</h2>
-      <table class="table table-striped">
+<div class="feature">
+  <div class="container">
+    <h2>{{!connections.length}} entries</h2>
+    <table class="table table-striped">
+      <tr>
+        <th>User</th>
+        <th>Profile</th>
+        <th>Total Emails In</th>
+        <th>Latest Email In Date</th>
+        <th>Total Emails Out</th>
+        <th>Latest Email Out Date</th>
+        <th>Last Updated</th>
+      </tr>
+      {% for c in connections %}
         <tr>
-          <th>User</th>
-          <th>Profile</th>
-          <th>Total Emails In</th>
-          <th>Latest Email In Date</th>
-          <th>Total Emails Out</th>
-          <th>Latest Email Out Date</th>
-          <th>Last Updated</th>
+          <td>{{ c.user.email }}</td>
+          <td>{{ c.profile.email }}</td>
+          <td>{{ c.total_emails_in }}</td>
+          <td>{{ c.latest_email_in_date }}</td>
+          <td>{{ c.total_emails_out }}</td>
+          <td>{{ c.latest_email_out_date }}</td>
+          <td>{{ c.last_updated }}</td>
         </tr>
-        {% for c in connections %}
-          <tr>
-            <td>{{ c.user.email }}</td>
-            <td>{{ c.profile.email }}</td>
-            <td>{{ c.total_emails_in }}</td>
-            <td>{{ c.latest_email_in_date }}</td>
-            <td>{{ c.total_emails_out }}</td>
-            <td>{{ c.latest_email_out_date }}</td>
-            <td>{{ c.last_updated }}</td>
-          </tr>
-        {% end %}
-      </table>
-    </div>
+      {% end %}
+    </table>
   </div>
-{% end %}
+</div>
+
 
 

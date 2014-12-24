@@ -12,7 +12,7 @@ import templates
 
 import app.basic, app.public, app.admin, app.email_handler
 import app.googleauth, app.user, app.group, app.stripe_handler
-import app.api, app.group_api, app.public_api
+import app.api, app.group_api, app.public_api, app.front_end
 
 #import newrelic.agent I also deleted newrelic.ini. Need to re-add if we want 
 #path = os.path.join(settings.get("project_root"), 'newrelic.ini')
@@ -61,11 +61,15 @@ class Application(tornado.web.Application):
       # Email handling
       (r"/email/forward", app.email_handler.Forward),
 
-      # Google auth
+      # Auth & Other
       (r"/auth/google/?", app.googleauth.Auth),
       (r"/auth/google/return/?", app.googleauth.AuthReturn),
       (r"/auth/logout/?", app.googleauth.LogOut),
+      (r"/google077100c16d33120b.html", app.admin.GoogleWebmaster), # Google Webmaster verification
 
+      ##########################################################################
+      # App API endpoints, i.e. hit by Ember data models
+      ##########################################################################
       # User pages
       (r"/user/settings", app.user.UserSettings),
       (r"/user/welcome", app.user.UserWelcome),
@@ -78,20 +82,39 @@ class Application(tornado.web.Application):
       (r"/group/(?P<group>[A-z-+0-9]+)/delete", app.group.DeleteGroup),
 
       # Admin
-      (r"/admin", app.admin.AdminHome),
+      (r"/app/admin", app.admin.AdminHome),
       (r"/admin/db_profiles", app.admin.DB_Profiles),
       (r"/admin/db_users", app.admin.DB_Users),
       (r"/admin/db_connections", app.admin.DB_Connections),
       (r"/admin/db_groups", app.admin.DB_Groups),
       (r"/admin/scratch", app.admin.Scratch), # for ad hoc testing
-      (r"/google077100c16d33120b.html", app.admin.GoogleWebmaster), # Google Webmaster verification
 
       # Public
-      (r'/test', app.public.Test),
+      #(r'/app/about', app.public.About),
+      (r'/app/search/?', app.public.Search),
+      #(r'/app/', app.public.Index),
 
-      (r'/about', app.public.About),
-      (r'/search/?', app.public.Search),
-      (r'/', app.public.Index),
+      ##########################################################################
+      # Front end framework URLs
+      ##########################################################################
+      # User pages
+      #(r"/user/settings", app.user.UserSettings),
+      #(r"/user/welcome", app.user.UserWelcome),
+
+      # Group pages
+      #(r"/group/create", app.group.CreateGroup),
+      #(r"/group/(?P<group>[A-z-+0-9]+)/view", app.group.ViewGroup),
+      #(r"/group/(?P<group>[A-z-+0-9]+)/edit", app.group.EditGroup),
+      #r"/group/(?P<group>[A-z-+0-9]+)/acceptinvite", app.group.AcceptGroupInvite),
+      #(r"/group/(?P<group>[A-z-+0-9]+)/delete", app.group.DeleteGroup),
+
+      # Admin
+      (r"/admin", app.front_end.Ember),
+
+      # Public
+      (r'/about', app.front_end.Ember),
+      (r'/search/?', app.front_end.Ember),
+      (r'/', app.front_end.Ember),
     ]
 
     tornado.web.Application.__init__(self, handlers, **app_settings)
