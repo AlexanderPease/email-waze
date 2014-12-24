@@ -55,7 +55,9 @@ class User(Document):
         """
         return {
             'email': self.email,
-            'name': self.name
+            'name': self.name,
+            'given_name': self.given_name,
+            'family_name': self.family_name
         }
 
     def casual_name(self):

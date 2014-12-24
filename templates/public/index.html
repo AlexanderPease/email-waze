@@ -1,123 +1,92 @@
-{% extends "../base.html" %}
-{% block page-title %}Home{% end %}
-{% block page-description %}Ansatz is a simple way to find someone's email address while still respecting their privacy.{% end %}
-
-{% block body %}
-
-  {% if not current_user %}
-    <section class="hero">
-      <div class="container">
-        <h1>Stop Tracking. Start Connecting.</h1>
-        <div class="group">
-          <div class="span6">
-            <h2>Effortlessly email new leads, and know instantly <br>their existing relationship to your team.</h2>
-            <p>We don't store any emails. Oh, and it's free.</p>
-            <p><a href="/auth/google" class="btn-primary btn-cta">Sign up with Google</a></p>
-          </div>
+{{!#unless current_user}}
+  <section class="hero">
+    <div class="container">
+      <h1>Stop Tracking. Start Connecting.</h1>
+      <div class="group">
+        <div class="span6">
+          <h2>Effortlessly email new leads, and know instantly <br>their existing relationship to your team.</h2>
+          <p>We don't store any emails. Oh, and it's free.</p>
+          <p><a href="/auth/google" class="btn-primary btn-cta">Sign up with Google</a></p>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="feature">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-4 text-center">
-            <p><span class="img-anti"></span></p>
-            <h3>The Anti-CRM</h3>
-            <p>Leverage your team’s network without tedious data entry or customer tracking.</p>
-          </div>
-          <div class="col-sm-4 text-center">
-            <p><span class="img-team"></span></p>
-            <h3>Integrated Team Features</h3>
-            <p>See who has a preexisting connection before reaching out. </p>
-          </div>
-          <div class="col-sm-4 text-center">
-            <p><span class="img-target"></span></p>
-            <h3>Powerful Search</h3>
-            <p>Reliably find anyone in the world. Even if your team doesn't have a previous connection.</p>
-          </div>
+  <section class="feature">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-4 text-center">
+          <p><span class="img-anti"></span></p>
+          <h3>The Anti-CRM</h3>
+          <p>Leverage your team’s network without tedious data entry or customer tracking.</p>
         </div>
-
-      </br></br></br>
-        <h3 style="text-align:center">Web App &amp; Gmail Web Client Integration</h3>
-        <div align="center">
-          <img src="{{ static_url('img/index/combined-nov5.jpg') }}" alt="..." class="img-round" width="1000px">
+        <div class="col-sm-4 text-center">
+          <p><span class="img-team"></span></p>
+          <h3>Integrated Team Features</h3>
+          <p>See who has a preexisting connection before reaching out. </p>
+        </div>
+        <div class="col-sm-4 text-center">
+          <p><span class="img-target"></span></p>
+          <h3>Powerful Search</h3>
+          <p>Reliably find anyone in the world. Even if your team doesn't have a previous connection.</p>
         </div>
       </div>
-    </section>
 
-  {% else %}
-    <section class="js-stretch-height search-background">
-      <div class="container">
-        {{ msg }}
-        
-        {% if err %}
-          <div class="alert alert-danger" role="alert">
-            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-            <span class="sr-only">Error:</span>
-            {{ err }}
-          </div>
-        {% else %}
-          <h2>Hi {{ current_user_casual_name() }}!</h2>
-        {% end %}
+    </br></br></br>
+      <h3 style="text-align:center">Web App &amp; Gmail Web Client Integration</h3>
+      <div align="center">
+        <img src="{{ static_url('img/index/combined-nov5.jpg') }}" alt="..." class="img-round" width="1000px">
+      </div>
+    </div>
+  </section>
 
-        {% if current_user_instance().get_groups() == [] %}
-          <div class="alert alert-danger" role="alert">
-            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-            <span class="sr-only">Error:</span>
-            You aren't part of a team yet! 
-            <a href="/settings">Click here</a> to join a team or create a new one!
-            This will make Ansatz much more useful to you.
-            </a>
-          </div>
-        {% end %}
-
-        <p>Enter a name and domain to find an email</p>
-      </div> <!--container-->
-      <form id="main-search" class="form-horizontal container" action="/search" method="GET">
-        <div class="row">
-          <div class="input-group-lg col-sm-6 col-lg-4 col-xs-12">
-            <input name="name" type="text" class="form-control" placeholder="Name">
-          </div>
-          <div class="input-group input-group-lg col-sm-6 col-lg-4 col-xs-12">
-            <span class="input-group-addon">@</span>
-            <input name="domain" type="text" class="form-control" placeholder="Domain">
-          </div>
+{{!else}}
+  <section class="js-stretch-height search-background">
+    <div class="container">
+      {{! msg }}
+      
+      {{!#if err}}
+        <div class="alert alert-danger" role="alert">
+          <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+          <span class="sr-only">Error:</span>
+          {{ err }}
         </div>
+      {{!else}}
+        <h2>Hi {{! casual_name current_user }}!</h2>
+      {{!/if}}
 
-        <div class="row">
-          <div class="col-sm-6 col-lg-4 col-xs-12 search-btn-wrap">
-            <button type="submit" class="btn btn-primary">Search</button>
-          </div>
+      {{!#unless current_user.groups}}
+        <div class="alert alert-danger" role="alert">
+          <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+          <span class="sr-only">Error:</span>
+          You aren't part of a team yet! 
+          <a href="/settings">Click here</a> to join a team or create a new one!
+          </a>
         </div>
-      </form>
-    </section>
-  {% end %}<!--current user-->
+      {{!/unless}}
 
-  {% block user_welcome_html %}{% end %}
+      <p>Enter a name and domain to find an email</p>
+    </div> <!--container-->
+    <form id="main-search" class="form-horizontal container" action="/search" method="GET">
+      <div class="row">
+        <div class="input-group-lg col-sm-6 col-lg-4 col-xs-12">
+          <input name="name" type="text" class="form-control" placeholder="Name">
+        </div>
+        <div class="input-group input-group-lg col-sm-6 col-lg-4 col-xs-12">
+          <span class="input-group-addon">@</span>
+          <input name="domain" type="text" class="form-control" placeholder="Domain">
+        </div>
+      </div>
 
-{% end %}
+      <div class="row">
+        <div class="col-sm-6 col-lg-4 col-xs-12 search-btn-wrap">
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </div>
+    </form>
+  </section>
+{{!/unless}}<!--current user-->
 
-{% block javascript %}
-  <script>
-    $(document).ready(function(){
-      fixSearchBg();
-    });
+<!--block user_wlecome_html-->
 
-    $(window).resize(function () {
-      fixFooter();
-      fixSearchBg();
-    });
 
-    var fixSearchBg = function() {
-    //fixes gradient background div height for search results page
-      if ($('.search-background.js-stretch-height').length && $(window).innerWidth() > 767) {
-        var padTop = parseInt($('.search-background').css('padding-top').split('px')[0]);
-        var padBottom = parseInt($('.search-background').css('padding-bottom').split('px')[0]);
-        $('.search-background').height($(window).innerHeight() - $('.nav').height() - $('footer').height() - padTop - padBottom);
-      }
-    }
-  </script>
-
-  {% block user_welcome_js %}{% end %}
-{% end %}

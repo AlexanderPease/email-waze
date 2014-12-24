@@ -15,6 +15,55 @@ App.Router.reopen({
 });
 
 /*******************************************************************************
+Index
+*******************************************************************************/
+App.IndexRoute = Ember.Route.extend({
+  model: function(params) {
+    Ember.Logger.log('Loading current user info...');
+    return Ember.$.getJSON('/app').then(function(resp){
+      console.log(resp);
+      return resp.data;
+    });
+  }
+});
+
+App.IndexView = Ember.View.extend({
+  didInsertElement: function() {
+    $(document).ready(function(){
+      fixSearchBg();
+    });
+
+    $(window).resize(function () {
+      fixFooter();
+      fixSearchBg();
+    });
+
+    var fixSearchBg = function() {
+    //fixes gradient background div height for search results page
+      if ($('.search-background.js-stretch-height').length && $(window).innerWidth() > 767) {
+        var padTop = parseInt($('.search-background').css('padding-top').split('px')[0]);
+        var padBottom = parseInt($('.search-background').css('padding-bottom').split('px')[0]);
+        $('.search-background').height($(window).innerHeight() - $('.nav').height() - $('footer').height() - padTop - padBottom);
+      }
+    }
+
+    //{% block user_welcome_js %}{% end %}
+  }
+});
+
+Ember.Handlebars.helper('casual_name', function(user) {
+  /*
+  Returns casual name for User instance
+  */
+  if (user.given_name && user.given_name != ""){
+    return user.given_name
+  } else {
+    return user.name
+  }
+});
+
+
+/*******************************************************************************
 Search
 *******************************************************************************/
 App.SearchController = Ember.Controller.extend({

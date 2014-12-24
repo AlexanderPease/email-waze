@@ -16,14 +16,23 @@ RESULTS_PER_PAGE = 20
 ### Homepage
 ### /
 ########################
-"""
 class Index(app.basic.BaseHandler):
   def get(self):
+    logging.info('index')
+    if not self.current_user:
+        return self.api_response(data={'current_user':None})
+    else:
+        logging.info(self.current_user)
+        current_user = User.objects.get(email=self.current_user)
+        data = {'current_user': current_user.to_json()}
+        data['current_user']['groups'] = list_to_json_list(current_user.get_groups())
+    return self.api_response(data=data)
+    """
     err = self.get_argument('err', '')
     if err == 'no_results':
         err = 'No results found! Try another search'
     return self.render('public/index.html', err=err)
-"""
+    """
 
 ########################
 ### Search

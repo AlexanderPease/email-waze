@@ -92,7 +92,7 @@ class Application(tornado.web.Application):
       # Public
       #(r'/app/about', app.public.About),
       (r'/app/search/?', app.public.Search),
-      #(r'/app/', app.public.Index),
+      (r'/app', app.public.Index),
 
       ##########################################################################
       # Front end framework URLs
