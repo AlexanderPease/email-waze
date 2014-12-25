@@ -1,3 +1,5 @@
+{{!current_user}}
+
 {{!#unless current_user}}
   <section class="hero">
     <div class="container">
@@ -67,14 +69,14 @@
 
       <p>Enter a name and domain to find an email</p>
     </div> <!--container-->
-    <form id="main-search" class="form-horizontal container" action="/search" method="GET">
+    <form id="main-search" class="form-horizontal container" {{!action "searchSubmit" on="submit"}}>
       <div class="row">
         <div class="input-group-lg col-sm-6 col-lg-4 col-xs-12">
-          <input name="name" type="text" class="form-control" placeholder="Name">
+          {{!input value=nameField id="rounded-name" type="text"  class="form-control" placeholder="Name"}}
         </div>
         <div class="input-group input-group-lg col-sm-6 col-lg-4 col-xs-12">
           <span class="input-group-addon">@</span>
-          <input name="domain" type="text" class="form-control" placeholder="Domain">
+          {{!input value=domainField type="text" class="form-control" placeholder="Domain"}}
         </div>
       </div>
 
