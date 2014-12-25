@@ -276,7 +276,7 @@ Admin
 *******************************************************************************/
 App.AdminRoute = Ember.Route.extend({
   model: function() {
-    return $.getJSON('/app/admin').then(function(resp){
+    return Ember.$.getJSON('/app/admin').then(function(resp){
       console.log(resp);
       return resp.data;
     });
@@ -285,7 +285,7 @@ App.AdminRoute = Ember.Route.extend({
 
 App.PostsRoute = Ember.Route.extend({
   model: function() {
-    return $.getJSON('http://tomdale.net/api/get_recent_posts/?callback=?').then(function(data){
+    return Ember.$.getJSON('http://tomdale.net/api/get_recent_posts/?callback=?').then(function(data){
       console.log(data);
       return data.posts.map(function(post){
         post.body = post.content;
