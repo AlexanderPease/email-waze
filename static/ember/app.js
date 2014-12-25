@@ -29,10 +29,6 @@ App.IndexRoute = Ember.Route.extend({
 
 App.IndexView = Ember.View.extend({
   didInsertElement: function() {
-    $(document).ready(function(){
-      fixSearchBg();
-    });
-
     $(window).resize(function () {
       fixFooter();
       fixSearchBg();
@@ -46,6 +42,9 @@ App.IndexView = Ember.View.extend({
         $('.search-background').height($(window).innerHeight() - $('.nav').height() - $('footer').height() - padTop - padBottom);
       }
     }
+    $(document).ready(function() {
+      fixSearchBg();
+    });
 
     //{% block user_welcome_js %}{% end %}
   }
