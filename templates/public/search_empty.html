@@ -26,8 +26,6 @@
 
 <section class="feature">
   <div class="container">
-    
-    {{!debug}}
 
     <h3 id="results"></h3> 
 
@@ -59,20 +57,22 @@
             <tbody>
               {{!#each p in profiles}}
                 {{!#if p.connections}}
-                  <tr id="popover-row" 
-                    data-container="body" 
-                    tabindex="0" 
-                    data-content="{{! connections_popover p }}"
+                  <tr data-container="body" 
+                    tabindex="0"
+                    data-content="" 
                   >
-                    <td>{{!truncate p.name}} ({{!domain p.email}})</td>
-                    <td><a href="mailto:{{! p.email }}">{{!p.email}}<a></td>
-                    <td>
+                    <td>{{! truncate p.name}} ({{! domain p.email}})</td>
+                    <td><a>{{!p.email}}<a></td>
+                    <td>{{! connections_popover p }}
                       {{! display_num_connections p}}
                     </td>
                   </tr>
                 {{! else }}
-                  <tr id="popover-row" data-container="body" data-content="You do not have a connection to {{! p.name }}. </br>
-                    But, you can send an email directly to his/her inbox using this public email address: {{! p.burner }}@{{ settings.get('domain_name') }}">
+                  <tr id="popover-row" 
+                  data-container="body" 
+                  data-content="You do not have a connection to {{! p.name }}. </br>
+                    But, you can send an email directly to his/her inbox using this public email address: {{! p.burner }}@{{ settings.get('domain_name') }}"
+                  >
                     <td>{{! truncate p.name }} ({{! domain p.email }})</td>
                     <td>
                       <a href="{{! p.burner }}@{{ settings.get('domain_name') }}">{{! p.burner }}@{{ settings.get('domain_name') }}</a>

@@ -14,7 +14,7 @@ App.Router.reopen({
   location: 'history'
 });
 
-// Debugger
+// Debugger helper
 Handlebars.registerHelper("debug", function(optionalValue) {
   console.log("Current Context");
   console.log("====================");
@@ -26,14 +26,6 @@ Handlebars.registerHelper("debug", function(optionalValue) {
     console.log(optionalValue);
   }
 });
-
-App.AboutRoute = Ember.Route.extend({
-  model: function() {
-    Ember.Logger.log('Loading about model');
-    return {'foo': 'fooValue'};
-  }
-});
-
 
 /*******************************************************************************
 Index
@@ -113,7 +105,6 @@ App.SearchController = Ember.ObjectController.extend({
       Ember.Logger.log('Search button submitted...');
       this.set('name', this.get('nameField'));
       this.set('domain', this.get('domainField'));
-      //this.send('refresh');
     }
   }
 });
@@ -131,11 +122,13 @@ App.SearchRoute = Ember.Route.extend({
   model: function(params) {
     var name = params.name;
     var domain = params.domain;
-    var url = '/app/search?name=' + name + '?domain=' + domain
+    var url = '/app/search?name=' + name + '&domain=' + domain
     Ember.Logger.log('Loading search model from: ' + url);
     return {"group_connection_set": [{"name": "Albert Wenger", "connections": [{"total_emails_out": 4115, "connected_user_email": "albert@usv.com", "total_emails_in": 4893, "connected_user_name": "Albert Wenger", "connected_profile_name": "Fred Wilson", "connected_profile_email": "fred@usv.com", "latest_email_in_date": "2014/11/05", "latest_email_out_date": "2014/11/05"}], "email": "albert@usv.com"}, {"name": "Joel Monegro", "connections": [{"total_emails_out": 171, "connected_user_email": "joel@usv.com", "total_emails_in": 158, "connected_user_name": "Joel Monegro", "connected_profile_name": "Fred Wilson", "connected_profile_email": "fred@usv.com", "latest_email_in_date": "2014/11/04", "latest_email_out_date": "2014/11/04"}], "email": "joel@usv.com"}, {"name": "Jonathan Libov", "connections": [{"total_emails_out": 124, "connected_user_email": "jonathan@usv.com", "total_emails_in": 113, "connected_user_name": "Jonathan Libov", "connected_profile_name": "Fred Wilson", "connected_profile_email": "fred@usv.com", "latest_email_in_date": "2014/11/04", "latest_email_out_date": "2014/11/04"}], "email": "jonathan@usv.com"}, {"name": "Brittany Laughlin", "connections": [{"total_emails_out": 492, "connected_user_email": "brittany@usv.com", "total_emails_in": 539, "connected_user_name": "Brittany Laughlin", "connected_profile_name": "Fred Wilson", "connected_profile_email": "fred@usv.com", "latest_email_in_date": "2014/11/06", "latest_email_out_date": "2014/11/04"}], "email": "brittany@usv.com"}, {"name": "Alexander Pease", "connections": [{"total_emails_out": 859, "connected_user_email": "alexander@usv.com", "total_emails_in": 1116, "connected_user_name": "Alexander Pease", "connected_profile_name": "Fred Wilson", "connected_profile_email": "fred@usv.com", "latest_email_in_date": "2014/11/03", "latest_email_out_date": "2014/11/03"}], "email": "alexander@usv.com"}, {"name": "Alexander Pease", "connections": [{"total_emails_out": 2, "connected_user_email": "me@alexanderpease.com", "total_emails_in": 2, "connected_user_name": "Alexander Pease", "connected_profile_name": "Fred Wilson", "connected_profile_email": "fred@usv.com", "latest_email_in_date": "2013/09/10", "latest_email_out_date": "2013/09/10"}], "email": "me@alexanderpease.com"}], "profiles": [{"name": "Fred Wilson", "burner": "fredwilson", "connections": [{"total_emails_out": 4115, "connected_user_email": "albert@usv.com", "total_emails_in": 4893, "connected_user_name": "Albert Wenger", "connected_profile_name": "Fred Wilson", "connected_profile_email": "fred@usv.com", "latest_email_in_date": "2014/11/05", "latest_email_out_date": "2014/11/05"}, {"total_emails_out": 171, "connected_user_email": "joel@usv.com", "total_emails_in": 158, "connected_user_name": "Joel Monegro", "connected_profile_name": "Fred Wilson", "connected_profile_email": "fred@usv.com", "latest_email_in_date": "2014/11/04", "latest_email_out_date": "2014/11/04"}, {"total_emails_out": 124, "connected_user_email": "jonathan@usv.com", "total_emails_in": 113, "connected_user_name": "Jonathan Libov", "connected_profile_name": "Fred Wilson", "connected_profile_email": "fred@usv.com", "latest_email_in_date": "2014/11/04", "latest_email_out_date": "2014/11/04"}, {"total_emails_out": 492, "connected_user_email": "brittany@usv.com", "total_emails_in": 539, "connected_user_name": "Brittany Laughlin", "connected_profile_name": "Fred Wilson", "connected_profile_email": "fred@usv.com", "latest_email_in_date": "2014/11/06", "latest_email_out_date": "2014/11/04"}, {"total_emails_out": 859, "connected_user_email": "alexander@usv.com", "total_emails_in": 1116, "connected_user_name": "Alexander Pease", "connected_profile_name": "Fred Wilson", "connected_profile_email": "fred@usv.com", "latest_email_in_date": "2014/11/03", "latest_email_out_date": "2014/11/03"}, {"total_emails_out": 2, "connected_user_email": "me@alexanderpease.com", "total_emails_in": 2, "connected_user_name": "Alexander Pease", "connected_profile_name": "Fred Wilson", "connected_profile_email": "fred@usv.com", "latest_email_in_date": "2013/09/10", "latest_email_out_date": "2013/09/10"}], "email": "fred@usv.com"}], "profile_connection_set": [{"name": "Fred Wilson", "connections": [{"total_emails_out": 4115, "connected_user_email": "albert@usv.com", "total_emails_in": 4893, "connected_user_name": "Albert Wenger", "connected_profile_name": "Fred Wilson", "connected_profile_email": "fred@usv.com", "latest_email_in_date": "2014/11/05", "latest_email_out_date": "2014/11/05"}, {"total_emails_out": 171, "connected_user_email": "joel@usv.com", "total_emails_in": 158, "connected_user_name": "Joel Monegro", "connected_profile_name": "Fred Wilson", "connected_profile_email": "fred@usv.com", "latest_email_in_date": "2014/11/04", "latest_email_out_date": "2014/11/04"}, {"total_emails_out": 124, "connected_user_email": "jonathan@usv.com", "total_emails_in": 113, "connected_user_name": "Jonathan Libov", "connected_profile_name": "Fred Wilson", "connected_profile_email": "fred@usv.com", "latest_email_in_date": "2014/11/04", "latest_email_out_date": "2014/11/04"}, {"total_emails_out": 492, "connected_user_email": "brittany@usv.com", "total_emails_in": 539, "connected_user_name": "Brittany Laughlin", "connected_profile_name": "Fred Wilson", "connected_profile_email": "fred@usv.com", "latest_email_in_date": "2014/11/06", "latest_email_out_date": "2014/11/04"}, {"total_emails_out": 859, "connected_user_email": "alexander@usv.com", "total_emails_in": 1116, "connected_user_name": "Alexander Pease", "connected_profile_name": "Fred Wilson", "connected_profile_email": "fred@usv.com", "latest_email_in_date": "2014/11/03", "latest_email_out_date": "2014/11/03"}, {"total_emails_out": 2, "connected_user_email": "me@alexanderpease.com", "total_emails_in": 2, "connected_user_name": "Alexander Pease", "connected_profile_name": "Fred Wilson", "connected_profile_email": "fred@usv.com", "latest_email_in_date": "2013/09/10", "latest_email_out_date": "2013/09/10"}], "email": "fred@usv.com"}]}
 
-    return Ember.$.getJSON('/app/search?domain=usv.com&name=').then(function(resp){
+    return Ember.$.getJSON(url).then(function(resp){
+      // TODO: handle no results
+
       console.log(resp);
       return resp.data;
     });
@@ -261,6 +254,7 @@ Ember.Handlebars.helper('connections_popover', function(profile) {
   /*
   Writes popover body html for all connections for a single profile
   */
+  console.log('entered connections popover');
   var p = profile;
   var html = "<h3>Connection to " + p.name + "</h3>";
   for (i=0; i<p.connections.length; i++) {
