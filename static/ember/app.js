@@ -21,10 +21,10 @@ App.IndexController = Ember.Controller.extend({
   actions: {  
     searchSubmit: function() {
       Ember.Logger.log('Search button submitted...');
-      var name = this.get('nameField');
-      var domain = this.get('domainField');
-      var search_url = '/search?name=' + name + '&domain=' + domain;
-      this.transitionToRoute(search_url);
+      //var name = this.get('nameField');
+      //var domain = this.get('domainField');
+      //var search_url = '/search?name=' + name + '&domain=' + domain;
+      //this.transitionToRoute(search_url);
     }
   }
 
@@ -35,14 +35,13 @@ App.IndexRoute = Ember.Route.extend({
     Ember.Logger.log('Loading current user info...');
     return Ember.$.getJSON('/app').then(function(resp){
       console.log(resp);
-      console.log(resp.data);
-      console.log(resp.data.current_user);
       return resp.data;
     });
   }
 });
 
 App.IndexView = Ember.View.extend({
+  /*
   didInsertElement: function() {
     $(window).resize(function () {
       fixFooter();
@@ -61,8 +60,9 @@ App.IndexView = Ember.View.extend({
       fixSearchBg();
     });
 
+
     //{% block user_welcome_js %}{% end %}
-  }
+  }*/
 });
 
 Ember.Handlebars.helper('casual_name', function(user) {
