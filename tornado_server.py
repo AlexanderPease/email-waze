@@ -71,7 +71,7 @@ class Application(tornado.web.Application):
       # App API endpoints, i.e. hit by Ember data models
       ##########################################################################
       # User pages
-      (r"/user/settings", app.user.UserSettings),
+      (r"/app/user/settings", app.user.UserSettings),
       (r"/user/welcome", app.user.UserWelcome),
 
       # Group pages
@@ -98,7 +98,7 @@ class Application(tornado.web.Application):
       # Front end framework URLs
       ##########################################################################
       # User pages
-      #(r"/user/settings", app.user.UserSettings),
+      (r"/user/settings", app.front_end.Ember),
       #(r"/user/welcome", app.user.UserWelcome),
 
       # Group pages

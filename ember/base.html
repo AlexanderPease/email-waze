@@ -28,7 +28,7 @@
       <div class="collapse navbar-collapse" id="main-navbar-collapse">
         <ul class="nav navbar-nav navbar-right">
           <li>{{!#link-to 'search'}}Search{{!/link-to}}</li>
-          
+
           <li id="nav-chrome-extension" class="hidden"><a href="https://chrome.google.com/webstore/detail/ansatz/fhmfdjnooicibclghoophehldkeeloje">Install the Chrome Extension!</a></li>
           <li>{{!#link-to 'about'}}About{{!/link-to}}</li>
           <li><a href="http://ansatz.readme.io/v1.0/docs">API Docs</a></li>
@@ -42,8 +42,8 @@
             <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
-              <li><a href="/user/settings">Settings</a></li>
-              <li><a href="/user/settings">Join a Team</a></li>
+              <li>{{!#link-to 'user_settings'}}Settings{{!/link-to}}</li>
+              <li>{{!#link-to 'user_settings'}}Join a Team!{{!/link-to}}</li>
               <li class="divider"></li>
               {% if current_user %}
                 <li><a href="/auth/logout/">Logout</a></li>
@@ -81,6 +81,10 @@
 
   <script type="text/x-handlebars" id="admin">
     {% include 'admin/admin_home.html' %}
+  </script>
+
+  <script type="text/x-handlebars" id="user_settings">
+    {% include 'user/user_settings.html' %}
   </script>
 
   <script type="text/x-handlebars" id="posts">

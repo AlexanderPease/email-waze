@@ -4,7 +4,10 @@ App.Router.map(function() {
   this.resource('search');
   this.resource('about');
   this.resource('admin');
-    
+  this.resource('user', function() {
+    this.resource('user_settings', { path:'settings' });
+  });
+
   this.resource('posts', function() {
     this.resource('post', { path: ':post_id' });
   });
@@ -88,6 +91,20 @@ Ember.Handlebars.helper('casual_name', function(user) {
     return user.name
   }
 });
+
+/*
+Handlebars.registerHelper('if_eq', function(a, b, opts) {
+    console.log(this.current_user);
+    console.log(this.g);
+    console.log(a);
+    console.log(b);
+    if (a == b) {
+        return opts.fn(this);
+    } else {
+        return opts.inverse(this);
+    }
+});
+*/
 
 
 /*******************************************************************************
@@ -289,10 +306,12 @@ Ember.Handlebars.helper('display_num_connections', function(profile) {
   }
 });
 
-Ember.Handlebars.helper('connections_popover', function(profile) {
+
+//Ember.Handlebars.helper('connections_popover', function(profile) {
   /*
   Writes popover body html for all connections for a single profile
   */
+  /*
   console.log('entered connections popover');
   var p = profile;
   var html = "<h3>Connection to " + p.name + "</h3>";
@@ -325,6 +344,84 @@ Ember.Handlebars.helper('connections_popover', function(profile) {
     }
   }
   return html;
+});
+*/
+
+/*******************************************************************************
+User
+*******************************************************************************/
+App.UserSettingsRoute = Ember.Route.extend({
+  model: function() {
+    var url = '/app/user/settings'
+    Ember.Logger.log('Loading model from: ' + url);
+    return Ember.$.getJSON(url).then(function(resp){
+      console.log(resp);
+      return resp.data;
+    });
+  }
+});
+
+App.UserSettingsView = Ember.View.extend({
+  didInsertElement: function() {
+    /*
+    var ROOT_URL = 'http://localhost:8001/';
+
+    var handler = StripeCheckout.configure({
+      key: 'pk_test_RMlPjQ0uu36oDd6TRWXSFmWh',
+      image: '/square-image.png',
+      token: function(token) {
+        // Use the token to create the charge with a server-side script.
+        // You can access the token ID with `token.id`
+        //$('#stripeButton').attr('disabled', true);
+        //$('#stripeButton').removeClass('btn-primary').addClass('btn-success');
+        var options = {
+            type: 'POST',
+            url: ROOT_URL + 'stripe/basic?token_id=' + token.id + '&email=' + token.email,
+            dataType: 'json',
+            success: function(response) {
+                console.log(response);
+            },
+            error: function(response) {
+                console.warn(response);
+            }
+        };
+        console.log('Requesting: ' + options.url)
+        $.ajax(options);
+      }
+    });
+
+    document.getElementById('stripeButton').addEventListener('click', function(e) {
+      // Open Checkout with further options
+      handler.open({
+        name: '{{ settings.get("company_name") }}',
+        description: 'Monthly subscription billing info',
+        email: '{{ user.email }}',
+        panelLabel: "Update Card"
+      });
+      e.preventDefault();
+    });
+  */
+  }
+});
+
+Ember.Handlebars.helper('list_to_comma_delimited_string', function(string) {
+    /*
+    Takes a list and turns into comma-delimited string.
+    Used for turning Group.invited_emails into correct form for template display.
+
+    Args: 
+      list: A list, ex: ["alex@usv.com", "bob@usv.com"] or Group.users
+
+    Returns
+      A string , ex: "alex@usv.com, bob@usv.com"
+    */
+    var long_string = ""
+    for (i=0; i<long_string.length-1; i++) {
+      long_string += string(i) + ", "
+    }
+
+    long_string = long_string.slice(0, -2) // Remove last ", "
+    return long_string
 });
 
 /*******************************************************************************

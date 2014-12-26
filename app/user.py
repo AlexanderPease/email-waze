@@ -6,6 +6,7 @@ from mongoengine.queryset import Q, DoesNotExist, MultipleObjectsReturned
 from db.userdb import User
 from db.groupdb import Group
 from db.profiledb import Profile
+from connectionsets import list_to_json_list
 
 
 ########################
@@ -48,6 +49,21 @@ class UserSettings(app.basic.BaseHandler):
         msg = self.get_argument('msg', '')
         err = self.get_argument('err', '')
 
+        data = {
+
+        }
+
+        return self.api_response(data={
+            'user': user.to_json(), 
+            'groups': list_to_json_list(groups), 
+            'group_invites': list_to_json_list(group_invites),
+            'paying_groups': list_to_json_list(paying_groups),
+            'profile': profile.to_json(), 
+            'msg': msg, 
+            'err': err
+            })
+
+        """
         return self.render('user/user_settings.html', user=user, 
             groups=groups, 
             group_invites=group_invites,
@@ -56,7 +72,7 @@ class UserSettings(app.basic.BaseHandler):
             msg=msg, 
             err=err,
             list_to_comma_delimited_string=ui_methods.list_to_comma_delimited_string)
-
+        """
 
 ########################
 ### Welcome page for a new user

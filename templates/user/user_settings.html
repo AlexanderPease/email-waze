@@ -1,144 +1,83 @@
-{% extends "../base.html" %}
-{% block page-title %}Settings{% end %}
-{% block page-description %}Manage your teams on Ansatz{% end %}
-{% block body %}
-  <section class="feature">
-    <div class="container">
+<section class="feature">
+  <div class="container">
+      {{!#if msg }}
+        {{! msg }}</br>
+      {{!/if}}
 
-        {% if msg %}
-          {{ msg }}</br>
-        {% end %}
+      {{!#if err }}
+        {{! err }}</br>
+      {{!/if}}
 
-        {% if err %}
-          {{ msg }}</br>
-        {% end %}
+      <h2>Settings for {{! casual_name user }}</h2>
 
-        <h2>Settings for {{ user.casual_name() }}</h2>
+      Email: {{! user.email }}
+      </br>
 
-        Email: {{ user.email }}
+      {{!#if profile}}
+        Ansatz email: {{! profile.burner }}@{{ settings.get('domain_name') }}
+        <!--<span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> Star-->
+      </br></br>
+      {{!/if}}
+      <!--<ul>
+        <li>Update your Ansatz email</li>
+      </ul>-->
+
+      <a href="/group/create">Create a new team</a>
+      </br>
+
+      {{!#if groups}}
+        Edit Your Teams: 
+        <ul>
+          {{!#each g in groups }}
+            <li>
+              {{! g.name }} ({{! g.users.length }} members): 
+              {{!#each u in g.users}}
+                {{!#if @last}}
+                  {{! u.name }} ({{! u.email }})
+                {{! else }}
+                  {{! u.name }} ({{! u.email }}),
+                {{!/if}}
+              {{!/each}}
+            </li>
+          {{!/each}}
+        </ul>
+      {{!else}}
+        You're not yet in any teams! Teams are a great way to collaborate
+        with friends or coworkers while expanding your address book. </br>
+      {{!/if}}
+
+      {{!#if group_invites}}
+        You have pending invites to these teams:
+        <ul>
+          {{!#each g in group_invites}}
+            <li>{{! g }} ({{! g.users.length }} members): 
+              {{!#each u in g.users}}
+                {{! u.name }} ({{! u.email }}), 
+              {{!/each}}
+              - <a href="/group/{{! g.id }}/acceptinvite">Accept invitation</a>
+            </li>
+          {{!/each}}
+        </ul>
+      {{!/if}}
+
+      {{!#if null}}
+        Billing info:</br>
+        All teams up to 5 users are free! 
+
+        {{!#if paying_groups}}
+          You are the admin of {{! paying_groups.length }} team ({{! list_to_comma_delimited_string paying_groups }}) that qualifies for our Basic tier of $5/month for each user.
+        {{!else}}
+          None of your teams exceed the free tier, but you can update your billing info if you'd like. 
+        {{!/if}}
+
         </br>
-
-        {% if profile %}
-          Ansatz email: {{ profile.burner }}@{{ settings.get('domain_name') }}
-          <!--<span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> Star-->
-        </br></br>
-        {% end %}
-        <!--<ul>
-          <li>Update your Ansatz email</li>
-        </ul>-->
-
-        <a href="/group/create">Create a new team</a>
-        </br>
-
-        {% if groups %}
-          Edit Your Teams: 
-          <ul>
-            {% for g in groups %}
-              <li> 
-                {% if current_user == g.admin.email %}
-                  <a href="/group/{{ g.id }}/edit">{{ g }}</a>
-                {% else %}
-                  {{ g }}
-                {% end %}
-
-                ({{ len(g.users) }} members): 
-                {% set first_user = True %}
-                {% for u in g.users %}
-                  {% if not first_user %}
-                  , 
-                  {% end %}
-                  {{ u.name }} ({{ u.email }})
-                  {% set first_user = False %}
-                {% end %}
-              </li>
-            {% end %}
-          </ul>
-        {% else %}
-          You're not yet in any teams! Teams are a great way to collaborate
-          with friends or coworkers while expanding your address book. </br>
-        {% end %}
-
-        {% if group_invites %}
-          You have pending invites to these teams:
-          <ul>
-            {% for g in group_invites %}
-              <li>{{ g }} ({{ len(g.users) }} members): 
-                {% for u in g.users %}
-                  {{ u.name }} ({{ u.email }}), 
-                {% end %}
-                - <a href="/group/{{ g.id }}/acceptinvite">Accept invitation</a>
-              </li>
-            {% end %}
-          </ul>
-        {% end %}
-
-        {% if 0 %}
-          Billing info:</br>
-          All teams up to 5 users are free! 
-
-          {% if paying_groups %}
-            You are the admin of {{ len(paying_groups) }} team ({{ list_to_comma_delimited_string(paying_groups) }}) that qualifies for our Basic tier of $5/month for each user.
-          {% else %}
-            None of your teams exceed the free tier, but you can update your billing info if you'd like. 
-          {% end %}
-
-          </br>
-          <button id="stripeButton" trype="button" class="btn-primary">
-            {% if user.stripe_id %}
-              Update Billing Info
-            {% else %}
-              Enter Billing Info
-            {% end %}
-          </button>
-        {% end %}
-
-
-    </div><!--container-->
-  </section>
-
-{% end %}
-
-{% block javascript %}
-
-<script src="https://checkout.stripe.com/checkout.js"></script>
-<script>
-/*
-  var ROOT_URL = 'http://localhost:8001/';
-
-  var handler = StripeCheckout.configure({
-    key: 'pk_test_RMlPjQ0uu36oDd6TRWXSFmWh',
-    image: '/square-image.png',
-    token: function(token) {
-      // Use the token to create the charge with a server-side script.
-      // You can access the token ID with `token.id`
-      //$('#stripeButton').attr('disabled', true);
-      //$('#stripeButton').removeClass('btn-primary').addClass('btn-success');
-      var options = {
-          type: 'POST',
-          url: ROOT_URL + 'stripe/basic?token_id=' + token.id + '&email=' + token.email,
-          dataType: 'json',
-          success: function(response) {
-              console.log(response);
-          },
-          error: function(response) {
-              console.warn(response);
-          }
-      };
-      console.log('Requesting: ' + options.url)
-      $.ajax(options);
-    }
-  });
-
-  document.getElementById('stripeButton').addEventListener('click', function(e) {
-    // Open Checkout with further options
-    handler.open({
-      name: '{{ settings.get("company_name") }}',
-      description: 'Monthly subscription billing info',
-      email: '{{ user.email }}',
-      panelLabel: "Update Card"
-    });
-    e.preventDefault();
-  });
-*/
-</script> 
-{% end %}
+        <button id="stripeButton" trype="button" class="btn-primary">
+          {{!#if user.stripe_id}}
+            Update Billing Info
+          {{!else}}
+            Enter Billing Info
+          {{!/if}}
+        </button>
+      {{!/if}}
+  </div><!--container-->
+</section>
