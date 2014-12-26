@@ -106,7 +106,46 @@ App.SearchController = Ember.ObjectController.extend({
       this.set('name', this.get('nameField'));
       this.set('domain', this.get('domainField'));
     }
+  },
+  popover: function (profile) {
+  /*
+  Writes popover body html for all connections for a single profile
+  */
+  console.log("in popoverHtml func");
+  var p = profile;
+  console.log(profile)
+  var html = "<h3>Connection to " + p.name + "</h3>";
+  for (i=0; i<p.connections.length; i++) {
+    var c = p.connections[i];
+    if (i > 0) {
+      html += "</br>"
+    }
+    if (c.total_emails_out == 0 && c.total_emails_in == 0) {
+      html += c.connected_user_email + " <--> " + p.email + ":</br>";
+    } else {
+      html += c.connected_user_email + " --> " + p.email + ": ";
+      if (c.total_emails_out == 0) {
+        html += "0 emails"
+      } else if (c.total_emails_out == 1) {
+        html += c.total_emails_out + " email, most recently on " + c.latest_email_out_date;
+      } else {
+        html += c.total_emails_out + " emails, most recently on " + c.latest_email_out_date;
+      }
+      html += "</br>";
+      html += p.email + " --> " + c.connected_user_email + ": ";
+      if (c.total_emails_in == 0) {
+        html += "0 emails"
+      } else if (c.total_emails_in == 1) {
+        html += c.total_emails_in + " email, most recently on " + c.latest_email_in_date;
+      } else {
+        html += c.total_emails_in + " emails, most recently on " + c.latest_email_in_date;
+      }
+      html += "</br>";
+    }
   }
+  console.log(html);
+  return html;
+  }.property('popover')
 });
 
 
