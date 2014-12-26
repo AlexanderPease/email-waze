@@ -113,3 +113,13 @@ class About(app.basic.BaseHandler):
   def get(self):
     return self.render('public/about.html')
 
+
+########################
+### Pricing
+### /pricing
+########################
+class Pricing(app.basic.BaseHandler):
+  def get(self):
+    return self.render('public/pricing.html')
+
+

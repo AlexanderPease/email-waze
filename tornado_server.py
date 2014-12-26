@@ -88,6 +88,7 @@ class Application(tornado.web.Application):
 
       # Public
       (r'/about', app.public.About),
+      (r'/pricing', app.public.Pricing),
       (r'/search/?', app.public.Search),
       (r'/', app.public.Index),
     ]
