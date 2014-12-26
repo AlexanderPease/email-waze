@@ -28,7 +28,7 @@
 
       <div class="collapse navbar-collapse" id="main-navbar-collapse">
         <ul class="nav navbar-nav navbar-right">
-          {% if not current_user %}
+          {% if current_user %}
             <li id="nav-chrome-extension" class="hidden"><a href="https://chrome.google.com/webstore/detail/ansatz/fhmfdjnooicibclghoophehldkeeloje">Install the Chrome Extension!</a></li>
           {% end %}
           <li><a href="/about">About</a></li>
