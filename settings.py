@@ -49,7 +49,10 @@ default_options = {
     'staff':[
         "alexander@usv.com",
         "me@alexanderpease.com",
-        "jqgorelick@gmail.com"
+        "jqgorelick@gmail.com",
+        "florian@fangohr.com",
+        "albert@usv.com",
+        "nick@usv.com"
     ],
 
     'module_dir': os.path.join(PROJECT_ROOT, 'templates/modules') #delete!
