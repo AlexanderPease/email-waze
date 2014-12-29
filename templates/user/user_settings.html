@@ -36,7 +36,29 @@
             {% for g in groups %}
               <li> 
                 {% if current_user == g.admin.email %}
-                  <a href="/group/{{ g.id }}/edit">{{ g }}</a>
+                  <!--<a href="/group/{{ g.id }}/edit">{{ g }}</a>-->
+                  <a group-id="{{ g.id }}" class="group-edit-link">{{ g }}</a>
+                  <!-- Group edit Modal -->
+                  <div group-id="{{ g.id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                          <h4 class="modal-title" id="myModalLabel">Edit "{{ g }}"</h4>
+                        </div>
+                        <div class="modal-body">
+                          <div id="group-create-err" class="alert alert-danger" role="alert" style="display:none">
+                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                            <span class="sr-only">Error:</span>
+                            Error! Please try submitting again.
+                          </div>
+                          {% include ../group/group_edit_snippet.html %}
+                        </div><!--group-modal modal-body-->
+                      </div>
+                    </div>
+                  </div>
+
+
                 {% else %}
                   {{ g }}
                 {% end %}
@@ -95,13 +117,19 @@
 
     </div><!--container-->
   </section>
-
 {% end %}
 
 {% block javascript %}
 
 <script src="https://checkout.stripe.com/checkout.js"></script>
 <script>
+  $(document).ready(function(){
+    $(".group-edit-link").click(function() {
+      var group_id = $(this).attr('group-id');
+      console.log(group_id);
+      $("div[group-id='" + group_id + "']").modal();
+    });
+  });
 /*
   var ROOT_URL = 'http://localhost:8001/';
 
