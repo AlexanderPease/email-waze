@@ -1,9 +1,9 @@
 <div class="form-group">
   <label for="name">Team Name*</label>
   {% if g %}
-    <input type="text" class="form-control" id="name" name="name" value="{{ g.name }}">
+    <input type="text" class="form-control name" id="name" name="name" value="{{ g.name }}">
   {% else %}
-    <input type="text" class="form-control" id="name" name="name" placeholder="Ex: My Awesome Team">
+    <input type="text" class="form-control name" id="name" name="name" placeholder="Ex: My Awesome Team">
   {% end %}
 </div>
 {% if g %}
@@ -21,25 +21,27 @@
 <div class="form-group">
   <label for="invited_emails">Invites*</label>
   (Comma-delimited emails only)
-  <textarea class="form-control" rows="3" id="invited_emails" name="invited_emails" placeholder="Ex: bob@company.com, fred@company.com, etc.">{% try %}{{ list_to_comma_delimited_string(g.invited_emails) }}{% except %}{% end %}</textarea>
+  <textarea class="form-control invited_emails" rows="3" id="invited_emails" name="invited_emails" placeholder="Ex: bob@company.com, fred@company.com, etc.">{% try %}{{ list_to_comma_delimited_string(g.invited_emails) }}{% except %}{% end %}</textarea>
 </div>
 <div class="form-group">
   <label for="domain_setting">Domain Setting</label>
-  (Any user with an email address of this domain can find and join this group)
+  (Any user with an email address of this domain can find and join this team)
   {% try %}
     {% set domain_setting = g.domain_setting %}
   {% except %}
     {% set domain_setting = None %}
   {% end %}
   {% if domain_setting %}
-    <input type="text" class="form-control" id="domain_setting" name="domain_setting" value="{{ domain_setting }}">
+    <input type="text" class="form-control domain_setting" id="domain_setting" name="domain_setting" value="{{ domain_setting }}">
   {% else %}
-    <input type="text" class="form-control" id="domain_setting" name="domain_setting" placeholder="Ex: usv.com">
+    <input type="text" class="form-control domain_setting" id="domain_setting" name="domain_setting" placeholder="Ex: usv.com">
   {% end %}
 </div>
 * Fields marked with an asterisk are required
 </br>
-<button id="group-edit-btn" type="submit" class="btn btn-primary">
+<button id="group-edit-btn" type="submit" class="btn btn-primary group-edit-btn" 
+  {% if g %}group-id="{{ g.id }}"{% end %}
+>
   {% if g %}
     Save
   {% else %}

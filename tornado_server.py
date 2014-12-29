@@ -47,6 +47,7 @@ class Application(tornado.web.Application):
       (r"/api/searchbaseprofileconnection", app.public_api.SearchBaseProfileConnection),
       (r"/api/group/(?P<group_id>[A-z-+0-9]+)/acceptinvite", app.group_api.AcceptInvite),
       (r"/api/group/create", app.group_api.CreateGroup),
+      (r"/api/group/(?P<group_id>[A-z-+0-9]+)/edit", app.group_api.EditGroup),
 
       # Public API v1
       (r"/api/1/profilesearch", app.api.ProfileSearch),

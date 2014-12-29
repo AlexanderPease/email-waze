@@ -98,6 +98,64 @@ class CreateGroup(app.basic.BaseHandler):
             Team "%s" has %s members: %s.''' % (current_user.name, current_user.email, group.name, settings.get('base_url'), group.id, group.name, len(group.users), group_members)
             )
 
+########################
+### Edit a group. Use group document id string as identifier. 
+### /api/group/(?P<group>[A-z-+0-9]+)/edit
+########################
+class EditGroup(CreateGroup):
+    @tornado.web.authenticated
+    def post(self, group_id):
+        if not self.current_user:
+            return self.api_error(401, 'User is not logged in')
+        try:
+            current_user = User.objects.get(email=self.current_user)
+        except:
+            return self.api_error(500, 'Could not find client user in database')
+
+        name = self.get_argument('name', '')
+        invited_emails = self.get_argument('invited_emails', '')
+        domain_setting = self.get_argument('domain_setting', '')
+
+        # Only allow Group admin to make changes to Group
+        try:
+            g = Group.objects.get(id=group_id)
+        except:
+            return self.api_error(500, 'Could not find group of id %s' % group_id)
+        if not current_user.same_user(g.admin):
+            return self.api_error(400, 'User is not a group admin')
+
+        g.name = name
+        g.domain_setting = domain_setting 
+        if not g.admin:
+            g.admin = current_user
+        g.save()
+
+        # Add email invites
+        if invited_emails:
+            invited_emails = invited_emails.split(", ")
+            # Send invites to only newly invited emails
+            old_invited_emails = g.invited_emails
+            for e in invited_emails:
+                if e not in old_invited_emails:
+                    try:
+                        existing_user = User.objects.get(email=e)
+                    except:
+                        existing_user = None
+                    if existing_user:
+                        self.send_invite_email_existing_user(group=g, 
+                            to_address=e, 
+                            current_user=current_user)
+                    else:
+                        self.send_invite_email_new_user(to_address=e,
+                            current_user=current_user)
+            # Set new invited_emails
+            g.invited_emails = invited_emails
+        elif g.invited_emails and invited_emails == "":
+            g.invited_emails = []
+
+        g.save()
+        return self.api_response(data={})
+
 
 ########################
 ### User accepts a group invitation
