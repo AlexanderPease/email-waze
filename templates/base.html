@@ -31,8 +31,8 @@
           {% if current_user %}
             <li id="nav-chrome-extension" class="hidden"><a href="https://chrome.google.com/webstore/detail/ansatz/fhmfdjnooicibclghoophehldkeeloje">Install the Chrome Extension!</a></li>
           {% end %}
-          <li><a href="/about">About</a></li>
           {% if not current_user %}
+            <li><a href="/about">About</a></li>
             <li><a href="/pricing">Pricing</a></li>
           {% end %}
           <li><a href="http://ansatz.readme.io/v1.0/docs">API Docs</a></li>
