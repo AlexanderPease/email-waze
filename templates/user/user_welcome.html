@@ -139,32 +139,9 @@
       });
 
     // Create group
-    $('#group-edit-btn').click(function(){
-      $(this).text('Creating...');
-      $(this).attr('disabled', 'disabled');
-      MODAL_STATE = 'group-create';
-      var options = {
-        type: 'POST',
-        url: '/api/group/create',
-        data: {
-          name: $('#name').val(), 
-          invited_emails: $('#invited_emails').val(), 
-          domain_setting: $('#domain_setting').val()
-        },
-        dataType: 'json',
-        success: function(response) {
-          $('#group-create').html('Success! You created a team. Hit next to continue.');
-          $('#modal-next').text('Next');
-        },
-        error: function(response) {
-          $('#group-create-err').show();
-          $(this).text('Create Team');
-          $(this).attr('disabled', 'none');
-          console.warn(response);
-        }
-    };
-    console.log('Requesting: ' + options.url)
-    $.ajax(options);
+    $('.group-edit-btn').click(function(){
+      var CURRENT_MODAL = $('#user-welcome-modal'); // Necessary for js/group_create_edit.js
+      {% include group_create_edit.js %}
     });
 
     // Next button in modal

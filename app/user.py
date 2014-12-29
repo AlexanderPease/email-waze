@@ -73,7 +73,7 @@ class UserWelcome(app.basic.BaseHandler):
         except DoesNotExist:
             raise tornado.web.HTTPError(404)
 
-        if user.welcomed:
+        if user.welcomed and user.email not in settings.get('staff'):
             return self.redirect('/')
         else:
             user.welcomed = True
