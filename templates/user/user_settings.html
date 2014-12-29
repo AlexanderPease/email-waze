@@ -47,7 +47,7 @@
                           <h4 class="modal-title" id="myModalLabel">Edit "{{ g }}" Team</h4>
                         </div>
                         <div class="modal-body">
-                          <div id="group-create-err" class="alert alert-danger" role="alert" style="display:none">
+                          <div class="alert alert-danger group-edit-err" role="alert" style="display:none">
                             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                             <span class="sr-only">Error:</span>
                             Error! Please try submitting again.
@@ -132,6 +132,7 @@
   });
 
   // Create group
+  /*
     $('.group-create-btn').click(function(){
       $(this).text('Creating...');
       $(this).attr('disabled', 'disabled');
@@ -146,11 +147,11 @@
         },
         dataType: 'json',
         success: function(response) {
-          $('#group-create').html('Success! You created a team. Hit next to continue.');
+          $('group-create').html('Success! You created a team. Hit next to continue.');
           $('#modal-next').text('Next');
         },
         error: function(response) {
-          $('#group-create-err').show();
+          //$('.group-create-err').show();
           $(this).text('Create Team');
           $(this).attr('disabled', 'none');
           console.warn(response);
@@ -159,20 +160,18 @@
     console.log('Requesting: ' + options.url)
     $.ajax(options);
     });
+*/
 
     // Edit group
     $('.group-edit-btn').click(function(){
       $(this).text('Editing...');
       $(this).attr('disabled', 'disabled');
-      //var group_id = $(this).closest('.modal fade').attr('group-id');
-      //console.log($(this).closest('.modal .fade'));
       var group_id = $(this).attr('group-id');
-      var parent = $(this).parent();
-      var name = parent.children('.name').val();
-      var invited_emails = parent.children('.invited_emails').val();
-      var domain_setting = parent.children('.domain_setting').val();
-      console.log(name);
-      console.log(domain_setting);
+      var parent = $(this).closest('.modal-body');
+      var name = parent.find('.name').val();
+      var invited_emails = parent.find('.invited_emails').val();
+      var domain_setting = parent.find('.domain_setting').val();
+      var btn = $(this);
       var options = {
         type: 'POST',
         url: '/api/group/' + group_id + '/edit',
@@ -183,15 +182,21 @@
         },
         dataType: 'json',
         success: function(response) {
-          //$('#group-create').html('Success! You created a team. Hit next to continue.');
-          console.log('success')
           console.log(response);
+          if (response.status_code == 200) {
+            btn.text('Success! Reloading page...')
+            location.reload();
+          } else {
+            btn.closest('.group-edit-err').show();
+            $(btn).text('Save');
+            $(btn).attr('disabled', 'none');
+          }
         },
         error: function(response) {
-          //$('#group-create-err').show();
-          //$(this).text('Create Team');
-          //$(this).attr('disabled', 'none');
           console.warn(response);
+          btn.closest('.group-edit-err').show();
+          $(btn).text('Save');
+          $(btn).attr('disabled', 'none');
         }
     };
     console.log('Requesting: ' + options.url)

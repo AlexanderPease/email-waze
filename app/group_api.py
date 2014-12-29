@@ -124,7 +124,8 @@ class EditGroup(CreateGroup):
         if not current_user.same_user(g.admin):
             return self.api_error(400, 'User is not a group admin')
 
-        g.name = name
+        if name:
+            g.name = name
         g.domain_setting = domain_setting 
         if not g.admin:
             g.admin = current_user
