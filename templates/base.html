@@ -57,27 +57,11 @@
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
   </nav>
+
   <main class="page-content">
     {% block body %}{% end %}
-
-
-    <!-- Privacy Modal -->
-    <div id="privacy-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">Privacy & Security</h4>
-          </div>
-          <div class="modal-body">
-            Ansatz scans your email's metadata for business connections.</br>
-            We never store your emails. </br>
-            We never look at your email content.
-          </div>
-        </div>
-      </div>
-    </div>
   </main>
+
   <footer>
     <div class="row" style="text-align:left;">
       <div class="col-md-8 col-md-offset-2" style="border-bottom: 1px white solid;">
@@ -109,12 +93,29 @@
     </div>
   </footer>
 
+   <!-- Privacy Modal -->
+  <div id="privacy-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Privacy & Security</h4>
+        </div>
+        <div class="modal-body">
+          Ansatz scans your email's metadata for business connections.</br>
+          We never store your emails. </br>
+          We never look at your email content.
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script type="text/javascript" src="//code.jquery.com/jquery-1.10.1.min.js"></script>
   <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
   <script>
     $(document).ready(function () {
-      fixFooter();
+      //fixFooter();
 
       var browser_info = navigator.sayswho;
       if (browser_info.indexOf('Chrome') > -1) {
@@ -128,7 +129,7 @@
     });
 
     $(window).resize(function () {
-      fixFooter();
+      //fixFooter();
     });
 
     var fixFooter = function () {
