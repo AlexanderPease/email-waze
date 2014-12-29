@@ -50,7 +50,7 @@
         </div>
 
         {% if groups %}
-          Edit Your Teams: 
+          View & Edit Your Teams: 
           <ul>
             {% for g in groups %}
               <li> 
@@ -76,21 +76,21 @@
                       </div>
                     </div>
                   </div>
-
-
                 {% else %}
                   {{ g }}
                 {% end %}
 
-                ({{ len(g.users) }} members): 
-                {% set first_user = True %}
-                {% for u in g.users %}
-                  {% if not first_user %}
-                  , 
-                  {% end %}
-                  {{ u.name }} ({{ u.email }})
-                  {% set first_user = False %}
+                : {{ len(g.users) }} 
+                {% if len(g.users) == 1 %}
+                  member
+                {% else %}
+                  members
                 {% end %}
+
+                {% if current_user == g.admin.email %}
+                  (You are the Team Admin)
+                {% end %}
+
               </li>
             {% end %}
           </ul>
