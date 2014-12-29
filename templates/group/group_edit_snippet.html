@@ -1,14 +1,19 @@
 <div class="form-group">
   <label for="name">Team Name*</label>
+  <div class="alert alert-danger err err-name" role="alert" style="display:none">
+    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+    <span class="sr-only">Error:</span>
+  </div>
   {% if g %}
     <input type="text" class="form-control name" id="name" name="name" value="{{ g.name }}">
   {% else %}
     <input type="text" class="form-control name" id="name" name="name" placeholder="Ex: My Awesome Team">
   {% end %}
 </div>
+
 {% if g %}
   <div class="form-group">
-    <label for="invited_emails">Members ({{ len(g.users) }} members)</label>
+    <label for="members">Members ({{ len(g.users) }} members)</label>
     <ul> 
       {% for u in g.users %}
         <li>
@@ -18,13 +23,23 @@
     </ul>
   </div>
 {% end %}
+
 <div class="form-group">
   <label for="invited_emails">Invites*</label>
+  <div class="alert alert-danger err err-invited-emails" role="alert" style="display:none">
+    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+    <span class="sr-only">Error:</span>
+  </div>
   (Comma-delimited emails only)
   <textarea class="form-control invited_emails" rows="3" id="invited_emails" name="invited_emails" placeholder="Ex: bob@company.com, fred@company.com, etc.">{% try %}{{ list_to_comma_delimited_string(g.invited_emails) }}{% except %}{% end %}</textarea>
 </div>
+
 <div class="form-group">
   <label for="domain_setting">Domain Setting</label>
+  <div class="alert alert-danger err err-domain-setting" role="alert" style="display:none">
+    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+    <span class="sr-only">Error:</span>
+  </div>
   (Any user with an email address of this domain can find and join this team)
   {% try %}
     {% set domain_setting = g.domain_setting %}
@@ -39,12 +54,5 @@
 </div>
 * Fields marked with an asterisk are required
 </br>
-<button id="group-edit-btn" type="submit" class="btn btn-primary group-edit-btn" 
-  {% if g %}group-id="{{ g.id }}"{% end %}
->
-  {% if g %}
-    Save
-  {% else %}
-    Submit
-  {% end %}
-</button>
+
+<button type="submit" class="btn btn-primary group-edit-btn">Save</button>

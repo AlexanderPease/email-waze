@@ -69,7 +69,7 @@ class User(Document):
         Returns a list of Groups the User is in
         """
         from groupdb import Group # B/c of circular dependency
-        return Group.objects(users=self)
+        return Group.objects(users=self).order_by('name')
 
 
     def all_group_users(self, include_self=True):

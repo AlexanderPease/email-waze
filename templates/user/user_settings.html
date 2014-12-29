@@ -27,8 +27,27 @@
           <li>Update your Ansatz email</li>
         </ul>-->
 
-        <a href="/group/create">Create a new team</a>
-        </br>
+        <a class="group-create-link">Create A New Team</a></br>
+        <!-- Group edit Modal -->
+        <div id="group-create-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Create A Team</h4>
+              </div>
+              <div class="modal-body">
+                <div class="alert alert-danger err err-modal" role="alert" style="display:none">
+                  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                  <span class="sr-only">Error:</span>
+                  Error! Please try submitting again.
+                </div>
+                {% set g = None %}
+                {% include ../group/group_edit_snippet.html %}
+              </div><!--group-modal modal-body-->
+            </div>
+          </div>
+        </div>
 
         {% if groups %}
           Edit Your Teams: 
@@ -47,7 +66,7 @@
                           <h4 class="modal-title" id="myModalLabel">Edit "{{ g }}" Team</h4>
                         </div>
                         <div class="modal-body">
-                          <div class="alert alert-danger group-edit-err" role="alert" style="display:none">
+                          <div class="alert alert-danger err err-modal" role="alert" style="display:none">
                             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                             <span class="sr-only">Error:</span>
                             Error! Please try submitting again.
@@ -123,84 +142,84 @@
 
 <script src="https://checkout.stripe.com/checkout.js"></script>
 <script>
+  CURRENT_MODAL = ""; // Hold state for which modal/group is being modified
+
   $(document).ready(function(){
+    $(".group-create-link").click(function() {
+      CURRENT_MODAL = $("#group-create-modal");
+      $("#group-create-modal").modal();
+    });
     $(".group-edit-link").click(function() {
       var group_id = $(this).attr('group-id');
-      console.log(group_id);
+      CURRENT_MODAL = $("div[group-id='" + group_id + "']");
       $("div[group-id='" + group_id + "']").modal();
     });
   });
 
-  // Create group
-  /*
-    $('.group-create-btn').click(function(){
-      $(this).text('Creating...');
-      $(this).attr('disabled', 'disabled');
-      MODAL_STATE = 'group-create';
-      var options = {
-        type: 'POST',
-        url: '/api/group/create',
-        data: {
-          name: $('#name').val(), 
-          invited_emails: $('#invited_emails').val(), 
-          domain_setting: $('#domain_setting').val()
-        },
-        dataType: 'json',
-        success: function(response) {
-          $('group-create').html('Success! You created a team. Hit next to continue.');
-          $('#modal-next').text('Next');
-        },
-        error: function(response) {
-          //$('.group-create-err').show();
-          $(this).text('Create Team');
-          $(this).attr('disabled', 'none');
-          console.warn(response);
-        }
-    };
-    console.log('Requesting: ' + options.url)
-    $.ajax(options);
-    });
-*/
-
-    // Edit group
+    // Create or edit group
     $('.group-edit-btn').click(function(){
-      $(this).text('Editing...');
-      $(this).attr('disabled', 'disabled');
-      var group_id = $(this).attr('group-id');
-      var parent = $(this).closest('.modal-body');
-      var name = parent.find('.name').val();
-      var invited_emails = parent.find('.invited_emails').val();
-      var domain_setting = parent.find('.domain_setting').val();
-      var btn = $(this);
-      var options = {
-        type: 'POST',
-        url: '/api/group/' + group_id + '/edit',
-        data: {
-          name: name, 
-          invited_emails: invited_emails,
-          domain_setting: domain_setting
-        },
-        dataType: 'json',
-        success: function(response) {
-          console.log(response);
-          if (response.status_code == 200) {
-            btn.text('Success! Reloading page...')
-            location.reload();
-          } else {
-            btn.closest('.group-edit-err').show();
-            $(btn).text('Save');
-            $(btn).attr('disabled', 'none');
-          }
-        },
-        error: function(response) {
-          console.warn(response);
-          btn.closest('.group-edit-err').show();
-          $(btn).text('Save');
-          $(btn).attr('disabled', 'none');
+      $('.err').hide();
+      var name = CURRENT_MODAL.find('.name').val();
+      var invited_emails = CURRENT_MODAL.find('.invited_emails').val();
+      var domain_setting = CURRENT_MODAL.find('.domain_setting').val();
+      var group_id = CURRENT_MODAL.attr('group-id');
+      var this_btn = $(this);
+      // Client-side error checking
+      err_flag = false;
+      if (!name) {
+        console.log(CURRENT_MODAL);
+        CURRENT_MODAL.find('.err-name').text('Name cannot be blank!');
+        CURRENT_MODAL.find('.err-name').show();
+        err_flag = true;
+      }
+      if (!invited_emails && !domain_setting) {
+        CURRENT_MODAL.find('.err-invited-emails').text('You either need to invite people or create a domain setting!');
+        CURRENT_MODAL.find('.err-invited-emails').show();
+        err_flag = true;
+      }
+      // Hit API if no client-side errors
+      if (!err_flag) {
+        if (group_id) {
+          var url = '/api/group/' + group_id + '/edit'
+        } else {
+          var url = '/api/group/create'
         }
-    };
-    console.log('Requesting: ' + options.url)
-    $.ajax(options);
+        $(this).text('Creating...');
+        $(this).attr('disabled', 'disabled');
+        var options = {
+          type: 'POST',
+          url: url,
+          data: {
+            name: name, 
+            invited_emails: invited_emails, 
+            domain_setting: domain_setting
+          },
+          dataType: 'json',
+          success: function(response) {
+            console.log(response);
+            if (response.status_code == 200) {
+              this_btn.text('Success! Reloading page...')
+              location.reload();
+            } else {
+              if (response.status_txt.indexOf('err-invited-emails') > -1) {
+              CURRENT_MODAL.find('.err-invited-emails').text('Error in invited emails! Check your commas!');
+              CURRENT_MODAL.find('.err-invited-emails').show();
+              } 
+              CURRENT_MODAL.find('.err-modal').show();
+              this_btn.text('Save');
+              this_btn.removeAttr('disabled');
+            }
+          },
+          error: function(response) {
+            console.warn(response);
+            CURRENT_MODAL.find('.err-modal').show();
+            this_btn.text('Create Team');
+            this_btn.removeAttr('disabled');
+          }
+        };
+        console.log('Requesting: ' + options.url)
+        $.ajax(options);
+      } // if (!err_flag)
     });
 /*
   var ROOT_URL = 'http://localhost:8001/';

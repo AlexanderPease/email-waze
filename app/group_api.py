@@ -56,7 +56,13 @@ class CreateGroup(app.basic.BaseHandler):
         elif g.invited_emails and invited_emails == "":
             g.invited_emails = []
 
-        g.save()
+        try:
+            g.save()
+        except:
+            logging.warning("Error saving invited_emails")
+            g.delete()
+            return self.api_error(400, "err-invited-emails")
+
         return self.api_response(data={})
 
     def send_invite_email_new_user(self, to_address, current_user):
@@ -154,8 +160,14 @@ class EditGroup(CreateGroup):
         elif g.invited_emails and invited_emails == "":
             g.invited_emails = []
 
-        g.save()
+        try:
+            g.save()
+        except:
+            logging.warning("Error saving invited_emails")
+            return self.api_error(400, "Invited emails error")
+
         return self.api_response(data={})
+
 
 
 ########################
