@@ -1,0 +1,42 @@
+<div class="form-group">
+  <label for="name">Team Name</label>: {{ g.name }}
+</div>
+
+<div class="form-group">
+  <label for="members">Team Admin</label>: 
+  {{ g.admin.name }} ({{ g.admin.email }})</br>
+  *Only team admins can edit team settings
+</div>
+
+<div class="form-group">
+  <label for="members">Members: {{ len(g.users) }} members</label>
+  <ul> 
+    {% for u in g.users %}
+      <li>
+        {{ u.name }} ({{ u.email }})
+      </li>
+    {% end %}
+  </ul>
+</div>
+
+<div class="form-group">
+  <label for="invited_emails">Invites</label>: 
+  {% if g.invited_emails %}
+    <ul>
+      {% for e in g.invited_emails %}
+        <li>{{ e }}</li>
+      {% end %}
+    </ul>
+  {% else %}
+    None
+  {% end %}
+</div>
+
+<div class="form-group">
+  <label for="domain_setting">Domain Setting</label>: 
+  {% if g.domain_setting %}
+    {{ g.domain_setting }}
+  {% else %}
+    None
+  {% end %}
+</div>

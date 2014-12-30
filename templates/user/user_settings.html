@@ -55,7 +55,6 @@
             {% for g in groups %}
               <li> 
                 {% if current_user == g.admin.email %}
-                  <!--<a href="/group/{{ g.id }}/edit">{{ g }}</a>-->
                   <a group-id="{{ g.id }}" class="group-edit-link">{{ g }}</a>
                   <!-- Group edit Modal -->
                   <div group-id="{{ g.id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -77,7 +76,21 @@
                     </div>
                   </div>
                 {% else %}
-                  {{ g }}
+                  <a group-id="{{ g.id }}" class="group-view-link">{{ g }}</a>
+                  <!-- Group edit Modal -->
+                  <div group-id="{{ g.id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                          <h4 class="modal-title" id="myModalLabel">"{{ g }}" Team</h4>
+                        </div>
+                        <div class="modal-body">
+                          {% include ../group/group_view_snippet.html %}
+                        </div><!--group-modal modal-body-->
+                      </div>
+                    </div>
+                  </div>
                 {% end %}
 
                 : {{ len(g.users) }} 
@@ -150,6 +163,11 @@
       $("#group-create-modal").modal();
     });
     $(".group-edit-link").click(function() {
+      var group_id = $(this).attr('group-id');
+      CURRENT_MODAL = $("div[group-id='" + group_id + "']");
+      $("div[group-id='" + group_id + "']").modal();
+    });
+    $(".group-view-link").click(function() {
       var group_id = $(this).attr('group-id');
       CURRENT_MODAL = $("div[group-id='" + group_id + "']");
       $("div[group-id='" + group_id + "']").modal();
