@@ -175,8 +175,40 @@
   });
 
     // Create or edit group
-    $('.group-edit-btn').click(function(){
+    $('.group-edit-btn').click(function() {
       {% include group_create_edit.js %}
+    });
+
+    // Leave group. Must hit button twice to execute
+    $('.group-leave-btn').click(function() {
+      if (!$(this).hasClass('group-leave-btn-final')) {
+        $(this).text('Are you sure you want to remove yourself from this team?')
+        $(this).addClass('group-leave-btn-final')
+      } else {
+        var group_id = CURRENT_MODAL.attr('group-id');
+        var url = '/api/group/' + group_id + '/leave'
+        var this_btn = $(this);
+        $(this).text('Removing you from team...');
+        $(this).attr('disabled', 'disabled');
+        var options = {
+          type: 'POST',
+          url: url,
+          success: function(response) {
+            console.log(response);
+            if (response.status_code == 200) {
+              this_btn.text('Success! Reloading page...')
+              location.reload();
+            } else { }
+          },
+          error: function(response) {
+            console.warn(response);
+            this_btn.text('There was an error! Please press again to leave this team.');
+            this_btn.removeAttr('disabled');
+          }
+        };
+        console.log('Requesting: ' + options.url)
+        $.ajax(options);
+      }
     });
 /*
   var ROOT_URL = 'http://localhost:8001/';

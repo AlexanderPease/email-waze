@@ -40,3 +40,14 @@
     None
   {% end %}
 </div>
+
+<div class="form-group">
+  <label for="domain_setting">Domain Setting</label>: 
+  {% if g.domain_setting %}
+    {{ g.domain_setting }}
+  {% else %}
+    None
+  {% end %}
+</div>
+
+<button type="submit" class="btn btn-primary btn-inline group-leave-btn">Leave Group</button>

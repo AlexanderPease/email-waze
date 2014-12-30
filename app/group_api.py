@@ -227,6 +227,29 @@ class AcceptInvite(app.basic.BaseHandler):
         else:
             return self.api_error(401, 'User is not allowed to join that team')
 
+########################
+### User accepts a group invitation
+### /api/group/(?P<group>[A-z-+0-9]+)/leave
+########################
+class Leave(app.basic.BaseHandler):
+    @tornado.web.authenticated
+    def post(self, group_id):
+        """
+        User removes him/herself from the group
+        """
+        if not self.current_user:
+            return self.api_error(401, 'User is not logged in')
+        try:
+            u = User.objects.get(email=self.current_user)
+        except:
+            return self.api_error(500, 'Could not find client user in database')
+        try:
+            g = Group.objects.get(id=group_id)
+        except:
+            return self.api_error(500, 'Could not find group in database')
+        g.remove_user(u)
+        return self.api_response(data={})
+
 
 
 

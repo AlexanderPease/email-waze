@@ -48,6 +48,7 @@ class Application(tornado.web.Application):
       (r"/api/group/(?P<group_id>[A-z-+0-9]+)/acceptinvite", app.group_api.AcceptInvite),
       (r"/api/group/create", app.group_api.CreateGroup),
       (r"/api/group/(?P<group_id>[A-z-+0-9]+)/edit", app.group_api.EditGroup),
+      (r"/api/group/(?P<group_id>[A-z-+0-9]+)/leave", app.group_api.Leave),
 
       # Public API v1
       (r"/api/1/profilesearch", app.api.ProfileSearch),
