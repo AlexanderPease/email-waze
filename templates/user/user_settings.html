@@ -71,6 +71,7 @@
                             Error! Please try submitting again.
                           </div>
                           {% include ../group/group_edit_snippet.html %}
+                          <button type="submit" class="btn btn-primary btn-inline group-delete-btn" style="float:right;">Delete</button>
                         </div><!--group-modal modal-body-->
                       </div>
                     </div>
@@ -196,13 +197,45 @@
           success: function(response) {
             console.log(response);
             if (response.status_code == 200) {
+              this_btn.text('Deleted forever! Reloading page...')
+              location.reload();
+            } else { }
+          },
+          error: function(response) {
+            console.warn(response);
+            this_btn.text('There was an error! Please try again.');
+            this_btn.removeAttr('disabled');
+          }
+        };
+        console.log('Requesting: ' + options.url)
+        $.ajax(options);
+      }
+    });
+
+    // Delete group. Must hit button twice to execute
+    $('.group-delete-btn').click(function() {
+      if (!$(this).hasClass('group-delete-btn-final')) {
+        $(this).text('Are you sure you want to delete this team? This action cannot be undone.')
+        $(this).addClass('group-delete-btn-final')
+      } else {
+        var group_id = CURRENT_MODAL.attr('group-id');
+        var url = '/api/group/' + group_id + '/delete'
+        var this_btn = $(this);
+        $(this).text('Deleting team...');
+        $(this).attr('disabled', 'disabled');
+        var options = {
+          type: 'POST',
+          url: url,
+          success: function(response) {
+            console.log(response);
+            if (response.status_code == 200) {
               this_btn.text('Success! Reloading page...')
               location.reload();
             } else { }
           },
           error: function(response) {
             console.warn(response);
-            this_btn.text('There was an error! Please press again to leave this team.');
+            this_btn.text('There was an error! Please try again.');
             this_btn.removeAttr('disabled');
           }
         };
