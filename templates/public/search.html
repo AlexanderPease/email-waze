@@ -117,7 +117,7 @@
                     ">
                       <td>{{ truncate(p.name) }} ({{ p.get_domain() }})</td>
                       <td>
-                        <a href="mailto:{{ p.email }}">{{ p.email }}</a>
+                        {{ p.email }}
                         <a>
                           <span class="glyphicon glyphicon-paperclip copy-to-clipboard" data-clipboard-text="{{ p.email }}" aria-hidden="true"></span>
                         </a>
@@ -136,7 +136,7 @@
                       But, you can send an email directly to his/her inbox using this public email address: {{ p.burner }}@{{ settings.get('domain_name') }}">
                       <td>{{ truncate(p.name) }} ({{ p.get_domain() }})</td>
                       <td>
-                        <a href="{{ p.burner }}@{{ settings.get('domain_name') }}">{{ p.burner }}@{{ settings.get('domain_name') }}</a>
+                        {{ p.burner }}@{{ settings.get('domain_name') }}
                         <a>
                           <span class="glyphicon glyphicon-paperclip copy-to-clipboard" data-clipboard-text="{{ p.burner }}@{{ settings.get('domain_name') }}" aria-hidden="true"></span>
                         </a>
