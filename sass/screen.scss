@@ -341,6 +341,16 @@ $disabled-color: #428bca;
   font-size: 20px;
 }
 
+
+.copy-to-clipboard-check {
+  opacity: 0;
+}
+
+.copy-to-clipboard-check.transition {
+  opacity: 1;
+  -webkit-transition: opacity 1.5s;
+}
+
 // User settings
 .user-settings {
   padding: 20px 20px;

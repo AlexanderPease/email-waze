@@ -48,8 +48,6 @@
     </div>
   </section>
 
-
-  
   <section class="feature">
     <div class="container">
       <h3 id="results"></h3> 
@@ -118,7 +116,11 @@
                       {% end %}
                     ">
                       <td>{{ truncate(p.name) }} ({{ p.get_domain() }})</td>
-                      <td><a href="mailto:{{ p.email }}">{{ p.email }}<a></td>
+                      <td>
+                        <a href="mailto:{{ p.email }}">{{ p.email }}<a>
+                          <span class="glyphicon glyphicon-paperclip copy-to-clipboard" data-clipboard-text="{{ p.email }}" aria-hidden="true"></span>
+                          <span class="glyphicon glyphicon-ok copy-to-clipboard-check" data-clipboard-text-check="{{ p.email }}" aria-hidden="true"></span>
+                      </td>
                       <td>
                         {% if len(p.connections) == 1 %}
                           {{ len(p.connections)}} connection
@@ -285,6 +287,25 @@
 {% block javascript %}
   <script>
     $(document).ready(function(){
+      // Clipboard
+      //var moviePath = $('#copy-button').text();
+      var moviePath = '{{ static_url("ZeroClipboard.swf") }}';
+      ZeroClipboard.config({
+        swfPath: moviePath
+      });
+      var client = new ZeroClipboard( $(".copy-to-clipboard") );
+      client.on('ready', function(readyEvent) {
+        client.on('aftercopy', function(event) {
+          // `this` === `client`
+          // `event.target` === the element that was clicked. Won't work with jquery though. 
+          //alert("Copied text to clipboard: " + event.data["text/plain"] );
+          $('.copy-to-clipboard-check').removeClass('transition');
+          var dataClipboardText = event.data['text/plain'];
+          var checkmark = $('.copy-to-clipboard-check[data-clipboard-text-check="' + dataClipboardText + '"]');
+          checkmark.addClass('transition');
+        });
+      });
+
       // Datatables
       $('#search_table').DataTable({
         searching: false,
@@ -370,3 +391,4 @@
     }
   </script>
 {% end %}
+  
