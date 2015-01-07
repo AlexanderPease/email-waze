@@ -11,11 +11,9 @@ import math
 
 RESULTS_PER_PAGE = 20
 
-
-
 ########################
 ### SearchBaseConnectionSet
-### /api/1/searchbaseconnectionset
+### /api/searchbaseprofileconnection
 ########################
 class SearchBaseProfileConnection(app.basic.BaseHandler):
     def get(self):

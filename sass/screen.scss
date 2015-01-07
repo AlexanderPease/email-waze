@@ -273,7 +273,7 @@ $disabled-color: #428bca;
     width: 250px;
   }
   /* CSS was cascading before bootstrap for some horrible reason, so this is a hack */
-  #rounded-name {
+  #form-name {
     border-top-right-radius: 3px;
     border-top-left-radius: 3px;
     border-bottom-right-radius: 3px;
@@ -281,8 +281,6 @@ $disabled-color: #428bca;
   }
 
 }
-
-
 
 .btn-inline {
   // .btn in bootstrap. Basically revert inline button to regular bootstrap

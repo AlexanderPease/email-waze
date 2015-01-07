@@ -6,42 +6,23 @@
   {{ err }}
   {{ msg }}
 
-  <!--
-  <section class="search-background">
-    <form id="main-search" class="form-group container" action="/search" method="GET">
-      <div class="row">
-        <div class="input-group-lg col-sm-4 col-lg-4 col-xs-12">
-          <input name="name" type="text" class="form-control" placeholder="Name">
-        </div>
-        <div class="input-group input-group-lg col-sm-4 col-lg-4 col-xs-12">
-          <span class="input-group-addon">@</span>
-          <input name="domain" type="text" class="form-control" placeholder="Domain">
-        </div>
-        <div class="col-sm-4 col-lg-4 col-xs-12 search-btn-wrap">
-          <button type="submit" class="btn btn-primary">Search</button>
-        </div>
-      </div>
-    </form>
-  </section>
--->
-
   <section class="js-stretch-height search-background thin-search">
     <div class="container">
-      <form id="main-search" class="form-inline" action="/search" method="GET">
+      <form id="main-search" class="form-inline">
         <div class="form-group">
           <div class="input-group">
-            <input name="name" type="text" class="form-control" placeholder="Name" id="rounded-name" autocomplete="off">
+            <input id="form-name" name="name" type="text" class="form-control" placeholder="Name" autocomplete="off">
           </div>
         </div>
         <div class="form-group">
           <div class="input-group">
             <span class="input-group-addon">@</span>
-            <input name="domain" type="text" class="form-control" placeholder="Domain" autocomplete="off">
+            <input id="form-domain" name="domain" type="text" class="form-control" placeholder="Domain" autocomplete="off">
           </div>
         </div>
         <div class="form-group">
           <div class="input-group">
-            <button type="submit" class="btn btn-primary btn-inline">Search</button>
+            <button id="form-button" class="btn btn-primary btn-inline" type="button">Search</button>
           </div>
         </div>
       </form>
@@ -293,6 +274,28 @@
 {% block javascript %}
   <script>
     $(document).ready(function(){
+      // AJAX search
+      $('#form-button').click(function(){
+        var name = $('#form-name').val();
+        var domain = $('#form-domain').val();
+        var url = 'api/searchbaseprofileconnection?name=' + name + '&domain=' + domain;
+        var options = {
+          type: 'GET',
+          url: url,
+          success: function(response) {
+            console.log(response);
+            if (response.status_code == 200) {
+              fillBaseProfileConnectionTable(response.data);
+            }
+          },
+          error: function(response) {
+            console.warn(response);
+          }
+        };
+        console.log('Requesting: ' + options.url)
+        $.ajax(options);
+      });
+
       // Clipboard
       //var moviePath = $('#copy-button').text();
       var moviePath = '{{ static_url("ZeroClipboard.swf") }}';
@@ -348,7 +351,9 @@
       });
 
       /* Load new page when pagination is clicked */
+      /*
       $('.page-link').click(function(){
+        console.log('page-link')
         queryParameters = getQueryParameters();
          
         // Add new parameters or update existing ones
@@ -373,15 +378,19 @@
           queryParameters['page'] = pageNum;
         }
          
-        /*
-         * Replace the query portion of the URL.
-         * jQuery.param() -> create a serialized representation of an array or
-         *     object, suitable for use in a URL query string or Ajax request.
-         */
+        // Replace the query portion of the URL.
+        // jQuery.param() -> create a serialized representation of an array or
+        //     object, suitable for use in a URL query string or Ajax request.
+        //
         location.search = $.param(queryParameters); // Causes page to reload
       });
+      */
 
     });//ready
+
+    function fillBaseProfileConnectionTable(data) {
+      $('#search_table').remove();
+    }
 
     function getQueryParameters() {
        /* queryParameters -> handles the query string parameters
