@@ -1,17 +1,19 @@
 {% extends "../base.html" %}
 {% block page-title %}Home{% end %}
-{% block page-description %}Ansatz is a simple way to find someone's email address while still respecting their privacy.{% end %}
+{% block page-description %}{% end %}
 
 {% block body %}
 
   {% if not current_user %}
     <section class="hero">
       <div class="container">
-        <h1>Stop Tracking. Start Connecting.</h1>
+        <h1 style="margin-bottom:0px;">You've built your network</h1>
+        <h1>Why pay big to use it?</h1>
         <div class="group">
           <div class="span6">
-            <h2>Effortlessly email new leads, and know instantly <br>their existing relationship to your team.</h2>
-            <p>We don't store any emails. Oh, and it's free.</p>
+            <h4>NTWRK scans your team's email metadata for connections,</h4>
+            <h4>Enabling your team to track its most valued contacts.<h4>
+            <h4>Oh, and we never store your emails.</h4>
             <p><a href="/auth/google" class="btn-primary btn-cta">Sign up with Google</a></p>
           </div>
         </div>
