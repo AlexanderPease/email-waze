@@ -67,13 +67,6 @@
         drawCallback: function(settings) {
           // Gets called every time redrawn, including just to say "loading"
           $('td').addClass('datatables-row');
-          // Get form inputs
-          var name = $("#form-name").val();
-          var domain = $("#form-domain").val();
-          console.log('drawCallback')
-          updateResultsMessage([name, domain]);
-          $('#form-button').prop('disabled', false);
-          $('#form-button').text('Search');
         },
         ajax: {
           url: url,
@@ -94,13 +87,16 @@
               p_list.push(p.connections.length);
               json_list.push(p_list)
             }
+
+            // Once data is returned, remove loading display
+            displayLoaded();
+
             return json_list;
           }
         } 
       });
 
-      // Initial loading results message
-      $('#results').text('Loading...');
+      displayLoading();
 
       // Search button is pressed, causes AJAX reload
       $('#form-button').click(function() {
@@ -115,9 +111,7 @@
         // Reload datatable
         var new_url = 'api/searchbaseprofileconnection?name=' + name + '&domain=' + domain;
         $("#search_table").DataTable().ajax.url(new_url).load();
-        $('#results').text('Loading...');
-        $('#form-button').prop('disabled', true);
-        $('#form-button').text('Loading...');
+        displayLoading();
         //window.location.href.replace("name="+name, "domain="+domain); // not working
       });
 
@@ -150,6 +144,26 @@
         template: '<div class="popover popover-medium"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>'
       });
     });//ready
+
+    /* Displays everything once data is loaded */
+    function displayLoaded() {
+      var name = $("#form-name").val();
+      var domain = $("#form-domain").val();
+      updateResultsMessage([name, domain]);
+      $('#form-button').prop('disabled', false);
+      $('#form-button').text('Search');
+      $('#form-name').prop('disabled', false);
+      $('#form-domain').prop('disabled', false);
+    }
+
+    /* Displays loading messages and disables form */
+    function displayLoading() {
+      $('#results').text('Loading...');
+      $('#form-button').prop('disabled', true);
+      $('#form-button').text('Loading...');
+      $('#form-name').prop('disabled', true);
+      $('#form-domain').prop('disabled', true);
+    }
 
     /* Updates the results message. If an array of queryParameters is supplied,
       it will display those values. If not, it pulls from the href parameters */
