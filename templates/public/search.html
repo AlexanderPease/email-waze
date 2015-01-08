@@ -84,15 +84,7 @@
             json_list = [];
             for (var i=0; i<profiles.length; i++) {
               var p = new Profile(profiles[i]);
-              p_list = [];
-              p_list.push(p.name);
-              p_list.push(p.email);
-              if (p.connections) {
-                p_list.push(p.connections.length);
-              } else {
-                p_list.push('N/A');
-              }
-              json_list.push(p_list);
+              json_list.push(p.rowArray());
             }
 
             // Once data is returned, remove loading display
@@ -211,17 +203,48 @@
       if (dict['connections']) {
         this.connections = dict['connections'];
       } else {
-        this.connections = null
+        this.connections = null;
       }
+    }
       
 
-      Profile.prototype.cleanName = function() {
-        return 'foo';
+    Profile.prototype.cleanName = function() {
+      // Change "last, first" to "first last"
+      var name = this.name;
+      if (name.indexOf(',') > -1) {
+        var name_array = name.split(',');
+        name = name_array[1] + ' ' + name_array[0];
       }
+      if (name.indexOf('[') > -1 && name.indexOf(']') > -1) {
+        var opening = name.indexOf(' [');
+        var closing = name.indexOf(']');
+        bracketString = name.substring(opening, closing+1);
+        var splitNameArray = name.split(bracketString);
+        var splitName = '';
+        for (var i=0; i<splitNameArray.length; i++) {
+          splitName += splitNameArray[i];
+        }
+        name = splitName + bracketString;
+      }
+      return name;
+    }
 
-      Profile.prototype.domain = function() {
-        return 'domainMethod';
-      }
+    Profile.prototype.domain = function() {
+      return this.email.split('@')[1];
+    }
+
+    // Put instance properties into array for displaying in table
+    Profile.prototype.rowArray = function() {
+      rowArray = [];
+      rowArray.push(this.cleanName());
+      if (this.connections) {
+        rowArray.push(this.email);
+        rowArray.push(this.connections.length);
+      } else {
+        rowArray.push(this.burner + '@' + '{{ settings.get("domain_name") }}');
+        rowArray.push('N/A');
+      }      
+      return rowArray;
     }
 
   </script>
