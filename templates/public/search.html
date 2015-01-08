@@ -83,7 +83,7 @@
             var profiles = json.data.profiles;
             json_list = [];
             for (var i=0; i<profiles.length; i++) {
-              var p = profiles[i];
+              var p = new Profile(profiles[i]);
               p_list = [];
               p_list.push(p.name);
               p_list.push(p.email);
@@ -173,8 +173,6 @@
     /* Updates the results message. If an array of queryParameters is supplied,
       it will display those values. If not, it pulls from the href parameters */
     function updateResultsMessage(queryParameters) {
-      console.log('query parameters:')
-      console.log(queryParameters);
       if (!queryParameters || (queryParameters[0] == "" && queryParameters[1] == "")) {
         queryParameters = getQueryParameters();
       } 
@@ -206,6 +204,27 @@
       }
       return queryParameters
     }
+
+    var Profile = function(dict) {
+      this.name = dict['name'];
+      this.email = dict['email'];
+      this.burner = dict['burner'];
+      if (dict['connections']) {
+        this.connections = dict['connections'];
+      } else {
+        this.connections = null
+      }
+      
+
+      Profile.prototype.cleanName = function() {
+        return 'foo';
+      }
+
+      Profile.prototype.domain = function() {
+        return 'domainMethod';
+      }
+    }
+
   </script>
 {% end %}
   
