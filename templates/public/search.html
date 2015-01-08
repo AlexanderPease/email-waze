@@ -121,7 +121,6 @@
       $('#search_table tbody').on('click', 'tr', function() {
         //var data = dataTable.fnGetData('tr'); // fnGetData undefined. Hack around
         p_id = $('td', this).parent().attr('id');
-        console.log(p_id);
         $('#modal-' + p_id).modal();
       })
 
@@ -284,9 +283,9 @@
             modalHtml += '</br>'
           }
           if (c.total_emails_out == 0 && c.total_emails_in == 0) {
-            modalHtml += c.connected_user_email + '<-->' + this.email + '</br>';
+            modalHtml += c.connected_user_email + ' <--> ' + this.email + '</br>';
           } else {
-            modalHtml += c.connected_user_email + '-->' + this.email + ': '
+            modalHtml += c.connected_user_email + ' --> ' + this.email + ': '
             if (c.total_emails_out == 0) {
               modalHtml += c.total_emails_out + ' emails';
             } else if (c.total_emails_out == 1) {
@@ -295,7 +294,7 @@
               modalHtml += c.total_emails_out + ' emails, most recently on ' + c.latest_email_out_date;
             }
             modalHtml += '</br>';
-            modalHtml += this.email + '-->' + c.connected_user_email + ': '
+            modalHtml += this.email + ' --> ' + c.connected_user_email + ': '
             if (c.total_emails_in == 0) {
               modalHtml += c.total_emails_in + ' emails';
             } else if (c.total_emails_in == 1) {
