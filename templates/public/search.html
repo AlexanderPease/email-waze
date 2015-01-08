@@ -53,6 +53,9 @@
 {% block javascript %}
   <script>
     $(document).ready(function(){
+      // Page inits to display loading
+      displayLoading();
+
       // Init DataTable
       params = getQueryParameters();
       var name = params['name'];
@@ -84,8 +87,12 @@
               p_list = [];
               p_list.push(p.name);
               p_list.push(p.email);
-              p_list.push(p.connections.length);
-              json_list.push(p_list)
+              if (p.connections) {
+                p_list.push(p.connections.length);
+              } else {
+                p_list.push('N/A');
+              }
+              json_list.push(p_list);
             }
 
             // Once data is returned, remove loading display
@@ -95,8 +102,6 @@
           }
         } 
       });
-
-      displayLoading();
 
       // Search button is pressed, causes AJAX reload
       $('#form-button').click(function() {

@@ -46,7 +46,7 @@ class BaseProfileConnection:
             json['connections'] = []
             for c in self.connections:
                 json['connections'].append(c.to_json())
-            return json
+        return json
 
 class GroupConnectionSet:
     """
