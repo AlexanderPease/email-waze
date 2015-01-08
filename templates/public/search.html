@@ -45,6 +45,10 @@
         <tbody id="search_table_body">
         </tbody>
       </table>
+
+      <!-- Detail view modals inserted here -->
+      <div id="modalsDiv"></div>
+
     </div> <!-- container -->
   </section> <!-- feature -->
 
@@ -62,7 +66,7 @@
       var domain = params['domain'];
       var url = 'api/searchbaseprofileconnection?name=' + name + '&domain=' + domain;
       console.log(url);
-      $('#search_table').DataTable({
+      var dataTable = $('#search_table').DataTable({
         searching: false,
         pageLength: 20,
         lengthChange: false,
@@ -114,8 +118,11 @@
       });
 
       // Display detail modal when row is clicked on
-      $('#search_table tbody').on('click', 'tr', function(e) {
-        console.log('click');
+      $('#search_table tbody').on('click', 'tr', function() {
+        //var data = dataTable.fnGetData('tr'); // fnGetData undefined. Hack around
+        p_id = $('td', this).parent().attr('id');
+        console.log(p_id);
+        $('#modal-' + p_id).modal();
       })
 
       // Clipboard
@@ -138,6 +145,7 @@
       });
 
       // Popovers for each results row
+      /*
       $('body').popover({
         placement: "top",
         trigger: "focus",
@@ -146,6 +154,7 @@
         html: true,
         template: '<div class="popover popover-medium"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>'
       });
+      */
     });//ready
 
     /* Displays everything once data is loaded */
@@ -261,7 +270,25 @@
 
     // Creates a detail view modal for this Profile instance
     Profile.prototype.addModal = function() {
-      
+      var modalHtml = '<div id="modal-' + this.profile_id + '" ';
+      modalHtml += 'class="modal fade" tabindex="-1" \
+        role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"> \
+          <div class="modal-dialog modal-lg"> \
+            <div class="modal-content"> \
+              <div class="modal-header"> \
+                <button type="button" class="close" data-dismiss="modal" \
+                aria-label="Close"><span aria-hidden="true">&times;</span></button> \
+                <h4 class="modal-title" id="detailModalTitle">';
+      modalHtml += this.name;
+      modalHtml += '</h4> \
+              </div> \
+              <div class="modal-body">';
+      modalHtml += 'foo \
+              </div><!--group-modal modal-body--> \
+            </div> \
+          </div> \
+        </div>';
+      $('#modalsDiv').append(modalHtml);
     }
 
   </script>
