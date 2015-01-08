@@ -74,7 +74,7 @@
         //processing: true, // ugly
         drawCallback: function(settings) {
           // Gets called every time redrawn, including just to say "loading"
-          $('td').addClass('datatables-row');
+          $('td').addClass('datatables-cell');
         },
         ajax: {
           url: url,
@@ -112,6 +112,11 @@
         displayLoading();
         //window.location.href.replace("name="+name, "domain="+domain); // not working
       });
+
+      // Display detail modal when row is clicked on
+      $('#search_table tbody').on('click', 'tr', function(e) {
+        console.log('click');
+      })
 
       // Clipboard
       //var moviePath = $('#copy-button').text();
@@ -251,13 +256,12 @@
         rowDict['connections'] = 'N/A';
       }
       rowDict['DT_RowId'] = this.profile_id;
-      console.log(rowDict)
       return rowDict;
     }
 
     // Creates a detail view modal for this Profile instance
     Profile.prototype.addModal = function() {
-      return;
+      
     }
 
   </script>
