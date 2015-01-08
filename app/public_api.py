@@ -34,7 +34,7 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
 
             # Pagination and no results
             if len(profiles) == 0:
-                return self.redirect('/?err=no_results')
+                return self.api_response(data={})
             elif len(profiles) > RESULTS_PER_PAGE:
                 # Get page number
                 num_pages = int(math.ceil(float(len(profiles)) / RESULTS_PER_PAGE))
