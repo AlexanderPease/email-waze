@@ -26,7 +26,6 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
 
         name = self.get_argument('name', '')
         domain = self.get_argument('domain', '')
-        page = self.get_argument('page', '')
 
         if name or domain:
             # Global profile results

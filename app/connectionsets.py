@@ -15,6 +15,7 @@ class BaseProfileConnection:
         latest_email_out_date is a Connection instance with the most recent email out
     """
     def __init__(self, profile, connections=None, latest_email_out_date=None):
+        self.profile_id = str(profile.id) ## .id is ObjectId
         self.name = profile.name
         self.email = profile.email
         self.burner = profile.burner
@@ -38,6 +39,7 @@ class BaseProfileConnection:
         Returns JSON dict of GroupConnectionSet instance
         '''
         json = {
+            'profile_id': self.profile_id,
             'email': self.email, 
             'name': self.name, 
             'burner': self.burner,

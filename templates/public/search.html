@@ -66,6 +66,11 @@
         searching: false,
         pageLength: 20,
         lengthChange: false,
+        columns: [
+          {'data': 'name'},
+          {'data': 'email'},
+          {'data': 'connections'}
+        ],
         //processing: true, // ugly
         drawCallback: function(settings) {
           // Gets called every time redrawn, including just to say "loading"
@@ -85,6 +90,7 @@
             for (var i=0; i<profiles.length; i++) {
               var p = new Profile(profiles[i]);
               json_list.push(p.rowArray());
+              p.addModal();
             }
 
             // Once data is returned, remove loading display
@@ -197,6 +203,7 @@
     }
 
     var Profile = function(dict) {
+      this.profile_id = dict['profile_id'];
       this.name = dict['name'];
       this.email = dict['email'];
       this.burner = dict['burner'];
@@ -206,7 +213,6 @@
         this.connections = null;
       }
     }
-      
 
     Profile.prototype.cleanName = function() {
       // Change "last, first" to "first last"
@@ -235,16 +241,23 @@
 
     // Put instance properties into array for displaying in table
     Profile.prototype.rowArray = function() {
-      rowArray = [];
-      rowArray.push(this.cleanName());
+      rowDict = {};
+      rowDict['name'] = this.cleanName();
       if (this.connections) {
-        rowArray.push(this.email);
-        rowArray.push(this.connections.length);
+        rowDict['email'] = this.email;
+        rowDict['connections'] = this.connections.length;
       } else {
-        rowArray.push(this.burner + '@' + '{{ settings.get("domain_name") }}');
-        rowArray.push('N/A');
-      }      
-      return rowArray;
+        rowDict['email'] = this.burner + '@' + '{{ settings.get("domain_name") }}';
+        rowDict['connections'] = 'N/A';
+      }
+      rowDict['DT-RowId'] = this.profile_id;
+      console.log(rowDict)
+      return rowDict;
+    }
+
+    // Creates a detail view modal for this Profile instance
+    Profile.prototype.addModal = function() {
+      return;
     }
 
   </script>

@@ -60,9 +60,10 @@ class Profile(Document):
 
     def to_json(self):
         return {
+            'id': str(self.id),
             'email': self.email,
             'name': self.name,
-            'burner': self.burner
+            'burner': self.burner,
         }
 
 
