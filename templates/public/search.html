@@ -205,8 +205,32 @@
 {% block javascript %}
   <script>
     $(document).ready(function(){
-      // AJAX search
-      $('#form-button').click(function(){
+      // Init DataTable
+      var name = 'fred'
+      var domain = 'usv';
+      var url = 'api/searchbaseprofileconnection?name=' + name + '&domain=' + domain;
+      console.log(url);
+      $('#search_table').DataTable({
+        searching: false,
+        pageLength: 20,
+        lengthChange: false,
+        //processing: true,
+        ajax: {
+          url: url,
+          dataSrc: function(json) {
+            return [['fred', '5', '7'], ['fred', '5', '7']]
+          }
+        } 
+      });
+
+      // Search button is pressed, causes AJAX reload
+      $('#form-button').click(function() {
+        var name = $('#form-name').val();
+        var domain = $('#form-domain').val();
+        var url = 'api/searchbaseprofileconnection?name=' + name + '&domain=' + domain;
+        $("#search_table").ajax.url(url).load(); //reload datatable
+      });
+      /*$('#form-button').click(function() {
         var name = $('#form-name').val();
         var domain = $('#form-domain').val();
         var url = 'api/searchbaseprofileconnection?name=' + name + '&domain=' + domain;
@@ -216,7 +240,7 @@
           success: function(response) {
             console.log(response);
             if (response.status_code == 200) {
-              fillBaseProfileConnectionTable(response.data);
+              //fillBaseProfileConnectionTable(response.data);
             }
           },
           error: function(response) {
@@ -226,8 +250,7 @@
         console.log('Requesting: ' + options.url)
         $.ajax(options);
       });
-
-
+      */
 
       // Clipboard
       //var moviePath = $('#copy-button').text();
@@ -315,6 +338,7 @@
 
 
     //Fills search table with html from data 
+    /*
     function fillBaseProfileConnectionTable(data) {
       $('#search_table').DataTable().destroy();
       $('#search_table_body').remove('tr');
@@ -344,7 +368,7 @@
         pageLength: 20,
         lengthChange: false
       });
-    }
+    }*/
 
     /*
     function initSearchTable() {

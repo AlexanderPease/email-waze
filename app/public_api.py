@@ -73,3 +73,4 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
 
         else:
             return self.api_error(400, 'Did not include query parameters')
+
