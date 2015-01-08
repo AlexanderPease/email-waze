@@ -218,7 +218,18 @@
         ajax: {
           url: url,
           dataSrc: function(json) {
-            return [['fred', '5', '7'], ['fred', '5', '7']]
+            console.log(json);
+            var profiles = json.data.profiles;
+            json_list = [];
+            for (var i=0; i<profiles.length; i++) {
+              var p = profiles[i];
+              p_list = [];
+              p_list.push(p.name);
+              p_list.push(p.email);
+              p_list.push(p.connections.length);
+              json_list.push(p_list)
+            }
+            return json_list;
           }
         } 
       });
@@ -227,8 +238,8 @@
       $('#form-button').click(function() {
         var name = $('#form-name').val();
         var domain = $('#form-domain').val();
-        var url = 'api/searchbaseprofileconnection?name=' + name + '&domain=' + domain;
-        $("#search_table").ajax.url(url).load(); //reload datatable
+        var new_url = 'api/searchbaseprofileconnection?name=' + name + '&domain=' + domain;
+        $("#search_table").DataTable().ajax.url(new_url).load(); //reload datatable
       });
       /*$('#form-button').click(function() {
         var name = $('#form-name').val();
