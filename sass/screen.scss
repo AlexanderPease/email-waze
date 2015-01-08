@@ -349,6 +349,10 @@ $disabled-color: #428bca;
   -webkit-transition: opacity 1.5s;
 }
 
+.datatables-row {
+  padding-left: 18px !important;
+}
+
 // User settings
 .user-settings {
   padding: 20px 20px;

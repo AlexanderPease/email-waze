@@ -215,6 +215,10 @@
         pageLength: 20,
         lengthChange: false,
         //processing: true,
+        drawCallback: function(settings) {
+          console.log('drawcallback')
+          $('td').addClass('datatables-row');
+        },
         ajax: {
           url: url,
           dataSrc: function(json) {
