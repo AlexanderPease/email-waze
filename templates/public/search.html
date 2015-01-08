@@ -143,18 +143,6 @@
           checkmark.addClass('transition');
         });
       });
-
-      // Popovers for each results row
-      /*
-      $('body').popover({
-        placement: "top",
-        trigger: "focus",
-        selector: "tr[id=popover-row]",
-        container: "body",
-        html: true,
-        template: '<div class="popover popover-medium"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>'
-      });
-      */
     });//ready
 
     /* Displays everything once data is loaded */
@@ -280,11 +268,47 @@
                 aria-label="Close"><span aria-hidden="true">&times;</span></button> \
                 <h4 class="modal-title" id="detailModalTitle">';
       modalHtml += this.name;
+      if (this.connections) {
+        modalHtml += ' (' + this.email +')'
+      } else {
+        modalHtml += ' (' + this.burner + '@{{ settings.get("domain_name") }})'
+      }
       modalHtml += '</h4> \
               </div> \
               <div class="modal-body">';
-      modalHtml += 'foo \
-              </div><!--group-modal modal-body--> \
+      // Body of modal
+      if (this.connections) {
+        for (var i=0; i<this.connections.length; i++) {
+          var c = this.connections[i];
+          if (i > 0) {
+            modalHtml += '</br>'
+          }
+          if (c.total_emails_out == 0 && c.total_emails_in == 0) {
+            modalHtml += c.connected_user_email + '<-->' + this.email + '</br>';
+          } else {
+            modalHtml += c.connected_user_email + '-->' + this.email + ': '
+            if (c.total_emails_out == 0) {
+              modalHtml += c.total_emails_out + ' emails';
+            } else if (c.total_emails_out == 1) {
+              modalHtml += c.total_emails_out + ' email';
+            } else {
+              modalHtml += c.total_emails_out + ' emails, most recently on ' + c.latest_email_out_date;
+            }
+            modalHtml += '</br>';
+            modalHtml += this.email + '-->' + c.connected_user_email + ': '
+            if (c.total_emails_in == 0) {
+              modalHtml += c.total_emails_in + ' emails';
+            } else if (c.total_emails_in == 1) {
+              modalHtml += c.total_emails_in + ' email';
+            } else {
+              modalHtml += c.total_emails_in + ' emails, most recently on ' + c.latest_email_in_date;
+            }
+            modalHtml += '</br>';
+          }
+        }
+      }
+      // Close modal
+      modalHtml += '</div><!--group-modal modal-body--> \
             </div> \
           </div> \
         </div>';
