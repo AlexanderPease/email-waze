@@ -81,7 +81,7 @@
             console.log(json);
             // Redirect if no results
             if (json.data.profiles == null) {
-              console.log("{{ settings.get('base_url') }}" + "err=no_results");
+              window.location.href = "{{ settings.get('base_url') }}" + "?err=no_results";
             }
             // Process results
             var profiles = json.data.profiles;
@@ -104,10 +104,16 @@
 
       // Search button is pressed, causes AJAX reload
       $('#form-button').click(function() {
+        // Get form values
         var name = $('#form-name').val();
         var domain = $('#form-domain').val();
-        var new_url = 'api/searchbaseprofileconnection?name=' + name + '&domain=' + domain;
+        // Reset form
+        $('#form-name').val('');
+        $('#form-domain').val('');
+        $('#form-name').attr('placeholder', 'Name');
+        $('#form-domain').attr('placeholder', 'Domain');
         // Reload datatable
+        var new_url = 'api/searchbaseprofileconnection?name=' + name + '&domain=' + domain;
         $("#search_table").DataTable().ajax.url(new_url).load();
         $('#results').text('Loading...');
         $('#form-button').prop('disabled', true);
