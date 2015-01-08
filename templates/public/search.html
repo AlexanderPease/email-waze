@@ -50,86 +50,17 @@
       <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="AllConnections">
           <!-- Table for All -->
-          <!--table table-condensed table-hover-->
-            <table id="search_table" class="row-border hover">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Connections</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for p in profiles %}
-                  {% if p.connections %}
-                    <tr id="popover-row" 
-                      data-container="body" 
-                      tabindex="0" 
-                      data-content="
-                      <h3>Connection to {{ p.name }}</h3>
-                      {% set first = True %}
-                      {% for c in p.connections %}
-                        {% if not first %}
-                          </br>
-                        {% end %}
-
-                        {% if c.total_emails_out == 0 and c.total_emails_in == 0 %}
-                          {{ c.user.email }} <--> {{ p.email }}</br>
-                        {% else %}
-                          {{ c.user.email }} --> {{ p.email }}: 
-                          {% if c.total_emails_out == 0 %}
-                            {{ c.total_emails_out }} emails
-                          {% elif c.total_emails_out == 1 %}
-                            {{ c.total_emails_out }} email, most recently on {{ c.latest_email_out_date_string() }}
-                          {% else %}
-                            {{ c.total_emails_out }} emails, most recently on {{ c.latest_email_out_date_string() }}
-                          {% end %}</br>
-                          {{ p.email }} --> {{ c.user.email }}: 
-                          {% if c.total_emails_in == 0 %}
-                            {{ c.total_emails_in }} emails
-                          {% elif c.total_emails_in == 1 %}
-                            {{ c.total_emails_in }} email, most recently on {{ c.latest_email_in_date_string() }}
-                          {% else %}
-                            {{ c.total_emails_in }} emails, most recently on {{ c.latest_email_in_date_string() }}
-                          {% end %}</br>
-                        {% end %}
-                        {% set first = False %}
-                      {% end %}
-                    ">
-                      <td>{{ truncate(p.name) }} ({{ p.get_domain() }})</td>
-                      <td>
-                        {{ p.email }}
-                        <a>
-                          <span class="glyphicon glyphicon-paperclip copy-to-clipboard" data-clipboard-text="{{ p.email }}" aria-hidden="true"></span>
-                        </a>
-                        <span class="glyphicon glyphicon-ok copy-to-clipboard-check" data-clipboard-text-check="{{ p.email }}" aria-hidden="true"></span>
-                      </td>
-                      <td>
-                        {% if len(p.connections) == 1 %}
-                          {{ len(p.connections)}} connection
-                        {% else %}
-                          {{ len(p.connections)}} connections
-                        {% end %}
-                      </td>
-                    </tr>
-                  {% else %}
-                    <tr id="popover-row" data-container="body" data-content="You do not have a connection to {{ p.name }}. </br>
-                      But, you can send an email directly to his/her inbox using this public email address: {{ p.burner }}@{{ settings.get('domain_name') }}">
-                      <td>{{ truncate(p.name) }} ({{ p.get_domain() }})</td>
-                      <td>
-                        {{ p.burner }}@{{ settings.get('domain_name') }}
-                        <a>
-                          <span class="glyphicon glyphicon-paperclip copy-to-clipboard" data-clipboard-text="{{ p.burner }}@{{ settings.get('domain_name') }}" aria-hidden="true"></span>
-                        </a>
-                        <span class="glyphicon glyphicon-ok copy-to-clipboard-check" data-clipboard-text-check="{{ p.burner }}@{{ settings.get('domain_name') }}" aria-hidden="true"></span>
-                      </td>
-                      <td>N/A</td>
-                    </tr>
-                  {% end %} <!-- if connections -->
-                {% end %} <!-- p in profiles -->
-              </tbody>
-            </table>
-          <!-- End table for GroupConnections -->
+          <table id="search_table" class="row-border hover">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Connections</th>
+              </tr>
+            </thead>
+            <tbody id="search_table_body">
+            </tbody>
+          </table>
         </div>
 
         <div role="tabpanel" class="tab-pane" id="GroupConnections">
@@ -296,6 +227,8 @@
         $.ajax(options);
       });
 
+
+
       // Clipboard
       //var moviePath = $('#copy-button').text();
       var moviePath = '{{ static_url("ZeroClipboard.swf") }}';
@@ -315,13 +248,6 @@
         });
       });
 
-      // Datatables
-      $('#search_table').DataTable({
-        searching: false,
-        pageLength: 20,
-        lengthChange: false
-      });
-
       // Results message
       queryParameters = getQueryParameters()
       var terms = "";
@@ -338,7 +264,6 @@
         }
       }
       $('#results').text('Results for ' + terms);
-
 
       // Popovers for each results row
       $('body').popover({
@@ -388,9 +313,53 @@
 
     });//ready
 
+
+    //Fills search table with html from data 
     function fillBaseProfileConnectionTable(data) {
-      $('#search_table').remove();
+      $('#search_table').DataTable().destroy();
+      $('#search_table_body').remove('tr');
+      var profiles = data.profiles;
+      for (var i=0; i<profiles.length; i++) {
+        var p = profiles[i];
+        var row_html = "<tr>";
+        var name = p.name; //truncate
+        var domain = 'domain'; //get_domain
+        row_html += "<td>" + name + " (" + domain + ")</td>";
+        if (p.connections) {
+          row_html += "<td>" + p.email + "</td>"; //add copy email ability
+          if (p.connections.length == 1) {
+            row_html += "<td>" + p.connections.length + " connection</td>";
+          } else {
+            row_html += "<td>" + p.connections.length + " connections</td></tr>";
+          }
+        } else {
+          row_html += "<td>" + p.burner + "</td>"; //add copy email ability
+          row_html += "<td>N/A</td></tr>"
+        }
+        $('#search_table_body').append(row_html);
+      }
+      // Datatables
+      $('#search_table').DataTable({
+        searching: false,
+        pageLength: 20,
+        lengthChange: false
+      });
     }
+
+    /*
+    function initSearchTable() {
+      var table_html = '<table id="search_table" class="row-border hover"> \
+        <thead> \
+          <tr> \
+            <th>Name</th> \
+            <th>Email</th> \
+            <th>Connections</th> \
+          </tr> \
+        </thead> \
+        <tbody id="search_table_body"></tbody> \
+      </table>'
+      $('#AllConnections').append(table_html);
+    }*/
 
     function getQueryParameters() {
        /* queryParameters -> handles the query string parameters
