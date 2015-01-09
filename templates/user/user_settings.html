@@ -147,6 +147,7 @@
                   <div class="alert alert-danger err err-domain-setting" role="alert" style="display:none">
                     <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                     <span class="sr-only">Error:</span>
+                    Error! Please try refreshing & submitting again.
                   </div>
                   <input id="delete-account-email-input" type="email" class="form-control" placeholder="{{ user.email}}">
                   <button id="delete-account-submit" class="btn btn-primary btn-inline" disabled>Delete Account</button>
@@ -248,7 +249,7 @@
         $(this).addClass('group-delete-btn-final')
       } else {
         var group_id = CURRENT_MODAL.attr('group-id');
-        var url = '/api/group/' + group_id + '/delete'
+        var url = '/api/group/' + group_id + '/delete';
         var this_btn = $(this);
         $(this).text('Deleting team...');
         $(this).attr('disabled', 'disabled');
@@ -278,15 +279,29 @@
       $("#delete-account-modal").modal();
     });
     $("#delete-account-email-input").bind('change paste keyup', function() {
-      console.log(this.value)
-      if (this.value == "{{ user.email }}") {
+      if (this.value == "{{ user.email }}" && $("#delete-account-submit").text() == 'Delete Account') {
         $("#delete-account-submit").attr('disabled', false);
       } else {
         $("#delete-account-submit").attr('disabled', true);
       }
     });
     $("#delete-account-submit").click(function() {
-      console.log('account deleted');
+      $(this).attr('disabled', true);
+      $(this).text('Deleting...');
+      var url = '/api/user/' + '{{ user.id }}' + '/deleteaccount';
+      var options = {
+        type: 'POST',
+        url: url,
+        success: function(response) {
+          console.log(response);
+          window.location.href = "{{ settings.get('base_url') }}" + "/auth/logout";
+        },
+        error: function(response) {
+          console.warn(response);
+        }
+      };
+      console.log('Requesting: ' + options.url)
+      $.ajax(options);
     });
 /*
   var ROOT_URL = 'http://localhost:8001/';

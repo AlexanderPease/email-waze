@@ -17,10 +17,13 @@ RESULTS_PER_PAGE = 20
 ########################
 class Index(app.basic.BaseHandler):
   def get(self):
+    msg = self.get_argument('msg', '')
+    if msg == 'welcome_back':
+        msg = "Welcome back! It will take another few minutes to reextract your email metadata from Gmail"
     err = self.get_argument('err', '')
     if err == 'no_results':
         err = 'No results found! Try another search'
-    return self.render('public/index.html', err=err)
+    return self.render('public/index.html', msg=msg, err=err)
 
 ########################
 ### Search

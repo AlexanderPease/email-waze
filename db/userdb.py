@@ -45,6 +45,9 @@ class User(Document):
     # Date the user last took an action in the web app
     last_web_action = DateTimeField()
 
+    # True if user has deleted account
+    deleted = BooleanField()
+
 
     def __str__(self):
         return self.name + ' <' + self.email + '>'

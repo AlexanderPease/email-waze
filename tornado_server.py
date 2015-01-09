@@ -12,7 +12,7 @@ import templates
 
 import app.basic, app.public, app.admin, app.email_handler
 import app.googleauth, app.user, app.group, app.stripe_handler
-import app.api, app.group_api, app.public_api
+import app.api, app.group_api, app.public_api, app.user_api
 
 #import newrelic.agent I also deleted newrelic.ini. Need to re-add if we want 
 #path = os.path.join(settings.get("project_root"), 'newrelic.ini')
@@ -50,6 +50,7 @@ class Application(tornado.web.Application):
       (r"/api/group/(?P<group_id>[A-z-+0-9]+)/edit", app.group_api.EditGroup),
       (r"/api/group/(?P<group_id>[A-z-+0-9]+)/leave", app.group_api.Leave),
       (r"/api/group/(?P<group_id>[A-z-+0-9]+)/delete", app.group_api.Delete),
+      (r"/api/user/(?P<user_id>[A-z-+0-9]+)/deleteaccount", app.user_api.DeleteAccount),
 
       # Public API v1
       (r"/api/1/profilesearch", app.api.ProfileSearch),

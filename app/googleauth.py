@@ -131,7 +131,13 @@ class AuthReturn(app.basic.BaseHandler):
         if not user.welcomed:
             return self.redirect('/user/welcome')
         else:
-            return self.redirect('/')
+            if user.deleted:
+                # Reactivate account. No actual account data was deleted
+                user.deleted = False
+                user.save()
+                return self.redirect('/?msg=welcome_back')
+            else:
+                return self.redirect('/')
 
 
     def add_given_family_names(self, user, user_info):

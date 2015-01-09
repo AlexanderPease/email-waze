@@ -40,7 +40,13 @@ class Group(Document):
         Removes a User in the Group
         """
         if user in self.users:
-            return self.users.remove(user)
+            if len(self.users) == 1:
+                self.delete()
+            elif self.admin.same_user(user):
+                self.users.remove(user)
+                self.admin = self.users[0]
+            else:
+                return self.users.remove(user)
 
     # TODO: fix users and admin, they are currently worthless entries
     # Just using name and id in user_welcome currently
