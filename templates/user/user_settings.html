@@ -15,17 +15,9 @@
 
         <h2>Settings for {{ user.casual_name() }}</h2>
 
+        Name: {{ user.name }}</br>
         Email: {{ user.email }}
-        </br>
-
-        {% if profile %}
-          Ansatz email: {{ profile.burner }}@{{ settings.get('domain_name') }}
-          <!--<span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> Star-->
         </br></br>
-        {% end %}
-        <!--<ul>
-          <li>Update your Ansatz email</li>
-        </ul>-->
 
         <a class="group-create-link">Create A New Team</a></br>
         <!-- Group edit Modal -->

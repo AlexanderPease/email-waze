@@ -38,12 +38,6 @@ class UserSettings(app.basic.BaseHandler):
             if len(g.users) > 5:
                 paying_groups.append(g)
 
-        # Display User's ansatz email
-        try:
-            profile = Profile.objects.get(email=user.email)
-        except: 
-            profile = None
-
         # Possible message or error
         msg = self.get_argument('msg', '')
         err = self.get_argument('err', '')
@@ -52,7 +46,6 @@ class UserSettings(app.basic.BaseHandler):
             groups=groups, 
             group_invites=group_invites,
             paying_groups=paying_groups,
-            profile=profile, 
             msg=msg, 
             err=err,
             list_to_comma_delimited_string=ui_methods.list_to_comma_delimited_string)
