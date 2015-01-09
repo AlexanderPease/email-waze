@@ -127,6 +127,35 @@
           </ul>
         {% end %}
 
+        <!-- For user to delete their account -->
+        <a id="delete-account-link">Delete My Account</a></br>
+        <div id="delete-account-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title" id="myModalLabel">Warning!</h3>
+              </div>
+              <div class="modal-body">
+                Are you sure you want to delete your account?</br>
+                All your email metadata will be deleted and you will removed from all teams.</br>
+                This action cannot be undone.</br></br>
+                
+
+                <div class="form-group">
+                  <label for="domain_setting">Enter your email address to delete your account:</label>
+                  <div class="alert alert-danger err err-domain-setting" role="alert" style="display:none">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                  </div>
+                  <input id="delete-account-email-input" type="email" class="form-control" placeholder="{{ user.email}}">
+                  <button id="delete-account-submit" class="btn btn-primary btn-inline" disabled>Delete Account</button>
+                </div>
+              </div><!--group-modal modal-body-->
+            </div>
+          </div>
+        </div>
+
         {% if 0 %}
           Billing info:</br>
           All teams up to 5 users are free! 
@@ -242,6 +271,22 @@
         console.log('Requesting: ' + options.url)
         $.ajax(options);
       }
+    });
+
+    // For user to delete his/her account
+    $("#delete-account-link").click(function() {
+      $("#delete-account-modal").modal();
+    });
+    $("#delete-account-email-input").bind('change paste keyup', function() {
+      console.log(this.value)
+      if (this.value == "{{ user.email }}") {
+        $("#delete-account-submit").attr('disabled', false);
+      } else {
+        $("#delete-account-submit").attr('disabled', true);
+      }
+    });
+    $("#delete-account-submit").click(function() {
+      console.log('account deleted');
     });
 /*
   var ROOT_URL = 'http://localhost:8001/';
