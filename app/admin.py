@@ -1,3 +1,4 @@
+
 import app.basic, ui_methods
 import tornado.web
 import settings
@@ -93,7 +94,6 @@ class Scratch(app.basic.BaseHandler):
     def get(self):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
-
 
         '''
         will = Profile.objects.get(email="will@stayinyourprime.com")

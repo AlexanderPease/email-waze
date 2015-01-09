@@ -233,6 +233,11 @@
         }
         name = splitName + bracketString;
       }
+      if (name.indexOf('<') > -1 && name.indexOf('>') > -1) {
+        // only replaces first instance
+        name = name.replace('<', '')
+        name = name.replace('>', '') 
+      }
       return name;
     }
 
