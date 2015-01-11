@@ -95,12 +95,14 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
+        '''
         from db.companydb import Company
         company, flag = Company.objects.get_or_create(domain='uber.com')
         company.update_clearbit()
         company.save()
         logging.info(company)
         return
+        '''
 
         # Count number of distinct domains in all Profile email addresses
         profiles = Profile.objects
