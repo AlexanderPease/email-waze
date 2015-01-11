@@ -95,19 +95,27 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
-        '''
-        will = Profile.objects.get(email="will@stayinyourprime.com")
-        tyler = User.objects.get(email="tyler@stayinyourprime.com")
-        fred = Profile.objects.get(email="fred@usv.com")
-        alexander = Profile.objects.get(email="alexander@usv.com")
-        cs = Connection.objects(user=tyler, profile=will)
-        logging.info(will)
-        logging.info(cs)
-        cs = Connection.objects(user=tyler, profile=fred)
-        logging.info(cs)
-        cs = Connection.objects(user=tyler, profile=alexander)
-        logging.info(cs)
-        '''
+        from db.companydb import Company
+        company, flag = Company.objects.get_or_create(domain='uber.com')
+        company.update_clearbit()
+        company.save()
+        logging.info(company)
+        return
+
+        # Count number of distinct domains in all Profile email addresses
+        profiles = Profile.objects
+        domains = []
+        num_profiles = len(profiles)
+        counter = 1
+        for p in profiles:
+            logging.info(str(counter) + " / " + str(num_profiles))
+            domain = p.get_domain()
+            if domain not in domains:
+                domains.append(domain)
+            counter = counter + 1
+        logging.info(domains)
+        logging.info(str(len(domains)) + " distinct domains in database")
+
         """
         # Checks flow for getting all user credentials, refreshing if necessary
         # and executing Gmail API calls

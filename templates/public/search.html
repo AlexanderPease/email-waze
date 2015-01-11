@@ -16,6 +16,11 @@
         </div>
         <div class="form-group">
           <div class="input-group">
+            <input name="company" type="text" class="form-control" placeholder="Company" id="rounded-name">
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group">
             <span class="input-group-addon">@</span>
             <input id="form-domain" name="domain" type="text" class="form-control" placeholder="Domain" autocomplete="off">
           </div>
@@ -31,6 +36,32 @@
 
   <section class="feature">
     <div class="container">
+
+      <!-- Companies panel -->
+      {% if companies %}
+        <div class="panel panel-default">
+          <div class="panel-body">
+            {% if len(companies) == 1 %}
+              {% set c = companies[0] %}
+                <img src="{{ c.clearbit['logo'] }}" height="32" weight="32" style="margin-bottom:4px">
+                <a href="{{ c.clearbit['url'] }}" target="_blank">{{ c.clearbit['name'] }}</a> - 
+                {{ c.clearbit['location'] }}
+            {% else %}
+              Found {{ len(companies) }} companies. Limit results to:</br>
+              {% for c in companies %}
+                <a class="limit-company" id="{{ c.domain }}">
+                  <img src="{{ c.clearbit['logo'] }}" height="32" weight="32" style="margin-bottom:4px">
+                  {{ c.clearbit['name'] }} 
+                  ({{ c.domain }}) 
+                </a> - 
+                {{ c.clearbit['location'] }}</br>
+              {% end %}
+              </ul>
+            {% end %}
+          </div>
+        </div>
+      {% end %}
+
       <h3 id="results"></h3> 
 
       <!-- Table for All -->
@@ -99,7 +130,6 @@
               json_list.push(p.rowArray());
               p.addModal();
             }
-
             // Once data is returned, remove loading display
             displayLoaded();
 

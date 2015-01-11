@@ -6,6 +6,7 @@ from db.userdb import User
 from db.groupdb import Group
 from db.connectiondb import Connection
 from app.connectionsets import GroupConnectionSet, ProfileConnectionSet, BaseProfileConnection
+from db.companydb import Company
 from mongoengine.queryset import Q
 import math
 
@@ -32,7 +33,8 @@ class Index(app.basic.BaseHandler):
 class Search(app.basic.BaseHandler):
   @tornado.web.authenticated
   def get(self):
-    return self.render('public/search.html')
+    companies = Company.objects()
+    return self.render('public/search.html', companies=companies)
 
 """
 class Search(app.basic.BaseHandler):
@@ -101,6 +103,12 @@ class Search(app.basic.BaseHandler):
         # connected to the same email
         profile_connection_set = ProfileConnectionSet.package_connections(connections)
         group_connection_set = GroupConnectionSet.package_connections(connections)
+
+        # Company info
+        if domain:
+            companies = Company.objects(domain__icontains=domain)
+        else:
+            companies = None
 
         return self.render('public/search.html', 
             profiles=ps,
