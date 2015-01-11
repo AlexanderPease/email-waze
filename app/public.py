@@ -113,7 +113,8 @@ class Search(app.basic.BaseHandler):
         companies = Company.objects(clearbit__name__icontains=company)
         if len(companies) == 1:
             # If only one company found, then also show all Profiles of that company
-
+            pass
+            
         return self.render('public/search.html', 
             profiles=None,
             profile_connection_set=None,
