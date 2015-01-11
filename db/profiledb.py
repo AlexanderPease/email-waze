@@ -9,7 +9,10 @@ connect('profile', host=mongo_database['host'])
 
 class Profile(Document):
     # Email is the unique key. Search and create based on email. 
-    email = EmailField(required=True, unique=True) # This will have to become a list at some point, or have a secondary email list
+    email = EmailField(required=True, unique=True)
+    # Field derived from canonical email field via function get_domain()
+    # Saved in DB for querying
+    domain = StringField()
 
     # Name, ex. Alexander Pease
     name = StringField() 
@@ -80,8 +83,7 @@ class Profile(Document):
         Returns domain name minus extension of self.email
         Ex: reply.craigslist from foo@reply.craigslist.com
         """
-        domain = self.get_domain()
-        return domain.split('.')[-2]
+        return self.domain.split('.')[-2]
 
     def set_burner_by_algo(self, overwrite=False):
         """
@@ -144,15 +146,18 @@ class Profile(Document):
         """
         try:
             # Email is the unique key
-            p, created = Profile.objects.get_or_create(email=email) 
+            p, created = Profile.objects.get_or_create(email=email)
 
             if p and created:
+                # Only add attributes here. Don't overwrite attributes if already created
+                p.name = name
+                p.domain = p.get_domain()
+                p.save() 
                 # Brief set of rules to ignore certain emails
-                if 'reply' in p.email or 'info' in p.get_domain() or len(p.email) > 40 or 'ansatz.me' in p.get_domain():
+                if 'reply' in p.email or 'notify' in p.email or 'notification' in p.email or 'info' in p.domain or len(p.email) > 40 or 'ansatz.me' in p.domain:
                     p.delete()
                     logging.info("%s did not pass tests, not added to database" % email)
                 else:
-                    p.name = name
                     p.set_burner_by_algo()
                     p.save()
                     logging.info('Added to database: %s %s' % (p.name, p.email))

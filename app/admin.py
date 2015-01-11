@@ -96,6 +96,13 @@ class Scratch(app.basic.BaseHandler):
             return self.redirect('/')
 
         '''
+        for p in Profile.objects():
+            logging.info(p)
+            if not p.domain: 
+                p.domain = p.get_domain()
+                p.save()
+        '''
+        '''
         will = Profile.objects.get(email="will@stayinyourprime.com")
         tyler = User.objects.get(email="tyler@stayinyourprime.com")
         fred = Profile.objects.get(email="fred@usv.com")
