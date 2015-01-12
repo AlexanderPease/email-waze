@@ -23,6 +23,15 @@ class Company(Document):
         else:
             return 'Company: %s' % self.domain
 
+    def get_name(self):
+        """ 
+        Gets the name of this doc. Only option atm is from Clearbit
+        """
+        if self.clearbit:
+            if 'name' in self.clearbit.keys():
+                return self.clearbit['name']
+        return 'N/A'
+
     def update_clearbit(self, overwrite=False):
         """
         Updates info by calling Clearbit API. 

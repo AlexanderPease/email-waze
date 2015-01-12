@@ -109,10 +109,43 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
+        '''
+        for c in Company.objects():
+            if c.clearbit == None:
+                c.date_queried_clearbit = None
+                c.save()
+                logging.info('set date to zero')
+        '''
+        '''
+        num_name = 0
+        num_clearbit = 0
+        num_queried_clearbit = 0
+        for c in Company.objects():
+            if c.date_queried_clearbit:
+                num_queried_clearbit += 1
+            if c.clearbit:
+                num_clearbit += 1
+                if 'name' in c.clearbit.keys():
+                    num_name += 1
+        logging.info("Name/Queried/Total: %s/%s/%s" %(num_name, num_queried_clearbit, num_clearbit))
+        '''
+
+
+
+        '''
         for c in Company.objects():
             c.update_clearbit()
             logging.info(c)
-        
+        '''
+        '''
+        for c in Company.objects():
+            if c.clearbit:
+                if 'name' not in c.clearbit.keys():
+                    c.clearbit = None
+                    c.date_queried_clearbit = None
+                    c.save()
+        '''
+
 
         # Count number of distinct domains in all Profile email addresses
         '''

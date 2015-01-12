@@ -18,6 +18,8 @@ from db.companydb import Company
 import gdata.contacts.client
 import app.gmail as gmail
 
+import json
+
 app = Celery('tasks', 
     broker=settings.get('rabbitmq_bigwig_url'),
     backend='amqp')
@@ -43,6 +45,21 @@ def add_stats():
     stats.groups = len(Group.objects)
     stats.companies = len(Company.objects)
     stats.save()
+
+
+#@periodic_task(run_every=timedelta(hours=24))
+def company_list():
+    """
+    Update company list JSON doc for typeahead service
+    """
+    with open('static/company_list.json', 'w') as f:
+        json_list = []
+        for c in Company.objects():
+            name = c.get_name()
+            if name and "N/A" not in name:
+                json_list.append({"name": name})
+        logging.info(json_list)
+        json.dump(json_list, f)
 
 
 @app.task

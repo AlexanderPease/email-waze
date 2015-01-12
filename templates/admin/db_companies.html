@@ -36,7 +36,9 @@
 {% block javascript %}
   <script>
     $(document).ready(function(){
-      $('#companies_table').DataTable();
+      $('#companies_table').DataTable({
+        processing: true
+      });
     });
   </script>
 {% end %}
