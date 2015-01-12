@@ -10,8 +10,13 @@ from db.companydb import Company
 class ListCompanies(app.basic.BaseHandler):
     def get(self):
         logging.info('called listcompanies')
-        logging.info(json_encode(["Facebook","Google","Union Square Ventures"]))
-        return self.write(json_encode(["Facebook","Google","Union Square Ventures"]))
+        json_list = []
+        for c in Company.objects:
+          if c.clearbit:
+            logging.info(c.clearbit)
+            json_list.append(json_encode(c.clearbit['name']))
+        logging.info(json_list)
+        return self.write(json_list)
 
 
 
