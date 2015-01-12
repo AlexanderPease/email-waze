@@ -90,34 +90,36 @@
       displayLoading();
 
       // Init typeahead.js
-      var countries = new Bloodhound({
-        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+      var companies = new Bloodhound({
+        datumTokenizer: function (datum) {
+          return Bloodhound.tokenizers.whitespace(datum.value);
+        },
         queryTokenizer: Bloodhound.tokenizers.whitespace,
-        limit: 10,
-        prefetch: {
-          // url points to a json file that contains an array of country names, see
-          // https://github.com/twitter/typeahead.js/blob/gh-pages/data/countries.json
-          url: '/api/company/list',
-          // the json file contains an array of strings, but the Bloodhound
-          // suggestion engine expects JavaScript objects so this converts all of
-          // those strings
-          filter: function(list) {
-            return $.map(list, function(country) { return { name: country }; });
+        remote: {
+          url: '/json/company_list.json',
+          filter: function (companies_list) {
+            // Map the remote source JSON array to a JavaScript object array
+            return $.map(companies_list, function (company) {
+              console.log('mapping')
+              return {
+                name: company.name
+              };
+            });
           }
         }
       });
-       
-      // kicks off the loading/processing of `local` and `prefetch`
-      countries.initialize();
+
+      // Initialize the Bloodhound suggestion engine
+      companies.initialize();
        
       // passing in `null` for the `options` arguments will result in the default
       // options being used
       $('#form-company').typeahead(null, {
-        name: 'countries',
+        //name: 'countries',
         displayKey: 'name',
         // `ttAdapter` wraps the suggestion engine in an adapter that
         // is compatible with the typeahead jQuery plugin
-        source: countries.ttAdapter()
+        source: companies.ttAdapter()
       });
 
       // Init DataTable
