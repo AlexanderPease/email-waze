@@ -13,6 +13,7 @@ from db.userdb import User
 from db.connectiondb import Connection
 from db.groupdb import Group
 from db.statsdb import Stats
+from db.companydb import Company
 
 import gdata.contacts.client
 import app.gmail as gmail
@@ -40,6 +41,7 @@ def add_stats():
     stats.users = len(User.objects)
     stats.connections = len(Connection.objects)
     stats.groups = len(Group.objects)
+    stats.companies = len(Company.objects)
     stats.save()
 
 

@@ -9,6 +9,7 @@ from db.userdb import User
 from db.groupdb import Group
 from db.connectiondb import Connection
 from db.statsdb import Stats
+from db.companydb import Company
 
 
 ###########################
@@ -76,6 +77,19 @@ class DB_Groups(app.basic.BaseHandler):
             g = Group.objects
             return self.render('admin/db_groups.html', groups=g, encode=ui_methods.encode)
 
+###########################
+### ASCII view of database
+### /admin/db_companies
+###########################
+class DB_Companies(app.basic.BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        if self.current_user not in settings.get('staff'):
+            self.redirect('/')
+        else:
+            c = Company.objects
+            return self.render('admin/db_companies.html', companies=c, encode=ui_methods.encode)
+
 
 ###########################
 ### Google Webmaster Verification
@@ -95,16 +109,14 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
-        '''
-        from db.companydb import Company
-        company, flag = Company.objects.get_or_create(domain='uber.com')
-        company.update_clearbit()
-        company.save()
-        logging.info(company)
-        return
-        '''
+        
+        c.update_clearbit()
+        c.save()
+        logging.info(c)
+        
 
         # Count number of distinct domains in all Profile email addresses
+        '''
         profiles = Profile.objects
         domains = []
         num_profiles = len(profiles)
@@ -117,6 +129,7 @@ class Scratch(app.basic.BaseHandler):
             counter = counter + 1
         logging.info(domains)
         logging.info(str(len(domains)) + " distinct domains in database")
+        '''
 
         """
         # Checks flow for getting all user credentials, refreshing if necessary

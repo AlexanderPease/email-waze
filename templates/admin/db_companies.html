@@ -1,0 +1,20 @@
+{% extends "../base.html" %}
+{% block body %}
+  <div class="feature">
+    <div class="container">
+      <h2>{{ len(companies) }} entries</h2>
+      <table class="table table-striped">
+        <tr>
+          <th>Domain</th>
+        </tr>
+        {% for c in companies %}
+          <tr>
+            <td>{{ c.domain }}</td>
+          </tr>
+        {% end %}
+      </table>
+    </div>
+  </div>
+{% end %}
+
+

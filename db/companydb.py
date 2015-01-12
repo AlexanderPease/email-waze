@@ -44,6 +44,8 @@ class Company(Document):
                 info = None
                 logging.info('Clearbit error code: %s' % e)
 
+            # Set date even if clearbit returns nothing.
+            # Prevents multiple pings to Clearbit for companies he has no info on
             self.date_queried_clearbit = datetime.datetime.now()
             if info:
                 self.clearbit = json.loads(info)
