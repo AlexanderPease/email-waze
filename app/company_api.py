@@ -1,15 +1,25 @@
-import app.basic, settings, ui_methods, tornado.web
+import settings
+import tornado.web
+import os
 import logging
 from tornado.escape import json_encode
-from db.companydb import Company
 
 ########################
 ### Returns JSON list of all companies in companydb
 ### /api/company/list
 ########################
-class ListCompanies(app.basic.BaseHandler):
-    def get(self):
-      return self.write(self.static_url('company_list.json'))
+class ListCompanies(tornado.web.StaticFileHandler):
+    def initialize(self, path):
+        self.dirname, self.filename = os.path.split(path)
+        logging.info(self.dirname)
+        logging.info(self.filename)
+        super(ListCompanies, self).initialize(self.dirname)
+
+    def get(self, path=None, include_body=True):
+        logging.info('get')
+        logging.info(self.filename)
+        # Ignore 'path'.
+        super(ListCompanies, self).get(self.filename, include_body)
 
 
 

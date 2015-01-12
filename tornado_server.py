@@ -51,7 +51,7 @@ class Application(tornado.web.Application):
       (r"/api/group/(?P<group_id>[A-z-+0-9]+)/leave", app.group_api.Leave),
       (r"/api/group/(?P<group_id>[A-z-+0-9]+)/delete", app.group_api.Delete),
       (r"/api/user/(?P<user_id>[A-z-+0-9]+)/deleteaccount", app.user_api.DeleteAccount),
-      (r"/api/company/list", app.company_api.ListCompanies),
+      (r"/json/(.*)", tornado.web.StaticFileHandler, {'path': r'static/json'}),
 
       # Public API v1
       (r"/api/1/profilesearch", app.api.ProfileSearch),
