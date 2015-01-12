@@ -109,10 +109,9 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
-        
-        c.update_clearbit()
-        c.save()
-        logging.info(c)
+        for c in Company.objects():
+            c.update_clearbit()
+            logging.info(c)
         
 
         # Count number of distinct domains in all Profile email addresses

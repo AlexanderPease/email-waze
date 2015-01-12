@@ -3,18 +3,42 @@
   <div class="feature">
     <div class="container">
       <h2>{{ len(companies) }} entries</h2>
-      <table class="table table-striped">
-        <tr>
-          <th>Domain</th>
-        </tr>
-        {% for c in companies %}
+      <table id="companies_table" class="row-border">
+        <thead>
           <tr>
-            <td>{{ c.domain }}</td>
+            <th>Domain</th>
+            <th>Date Queried (Clearbit)</th>
+            <th>Name</th>
+            <th>Description</th>
           </tr>
-        {% end %}
+        </thead>
+        <tbody>
+          {% for c in companies %}
+            <tr>
+              <td>{{ c.domain }}</td>
+              <td>{{ c.date_queried_clearbit }}</td>
+              {% if c.clearbit %}
+                {% if 'name' in c.clearbit.keys() %}
+                  <td>{{ c.clearbit['name'] }}</td>
+                {% end %}
+                {% if 'description' in c.clearbit.keys() %}
+                  <td>{{ c.clearbit['description'] }}</td>
+                {% end %}
+              {% end %}
+            </tr>
+          {% end %}
+        </tbody>
       </table>
     </div>
   </div>
+{% end %}
+
+{% block javascript %}
+  <script>
+    $(document).ready(function(){
+      $('#companies_table').DataTable();
+    });
+  </script>
 {% end %}
 
 
