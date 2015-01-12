@@ -354,6 +354,54 @@ $disabled-color: #428bca;
   padding-left: 18px !important;
 }
 
+// typeahead.js
+$tt-width: 400px;
+.tt-input, .tt-hint {
+    width: $tt-width;
+    //height: 30px;
+    //padding: 8px 12px;
+    //font-size: 24px;
+    //line-height: 30px;
+    //border: 2px solid #ccc;
+    //border-radius: 8px;
+    //outline: none;
+}
+
+.tt-input { 
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.tt-hint {
+  color: purple;//#999
+}
+
+.tt-dropdown-menu {
+  width: $tt-width;
+  //margin-top: 12px;
+  padding: 8px 4px;
+  background-color: green;//#fff;
+  border: 3px solid red; //#ccc;
+  //border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  //box-shadow: 0 5px 10px rgba(0,0,0,.2);
+  z-index: 999;
+}
+
+.tt-suggestion { // Styling of each suggestion
+  //padding: 3px 20px;
+  //font-size: 18px;
+  //line-height: 24px;
+}
+
+.tt-suggestion.tt-cursor { // When suggestion is moused over
+  color: red; //#fff;
+  background-color: black; //#0097cf;
+}
+
+.tt-suggestion p {
+  margin: 0;
+}
+
 // User settings
 .user-settings {
   padding: 20px 20px;
