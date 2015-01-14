@@ -125,7 +125,15 @@
       $('#form-q').typeahead(null, {
         name: 'companies',
         displayKey: 'name',
-        source: companies.ttAdapter()
+        source: companies.ttAdapter(),
+        templates: {
+          suggestion: Handlebars.compile('foo {{!name}}')
+        }
+      });
+
+      $(".tt-dataset-companies").on("click", function(){
+        console.log('clicked company');
+        console.log($(this));
       });
 
       // Init DataTable
