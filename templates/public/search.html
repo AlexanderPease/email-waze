@@ -119,8 +119,6 @@
       $('#form-company').typeahead(null, {
         name: 'companies',
         displayKey: 'name',
-        // `ttAdapter` wraps the suggestion engine in an adapter that
-        // is compatible with the typeahead jQuery plugin
         source: companies.ttAdapter()
       });
 
