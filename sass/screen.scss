@@ -264,6 +264,10 @@ $disabled-color: #428bca;
     position: relative;
     z-index: 2;
   }
+  .centered {
+      margin-left: auto;
+      margin-right: auto; 
+    }
 }
 
 /* CSS for the thin search bar */
