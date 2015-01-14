@@ -123,17 +123,28 @@
       // passing in `null` for the `options` arguments will result in the default
       // options being used
       $('#form-q').typeahead(null, {
-        name: 'companies',
+        name: 'company',
         displayKey: 'name',
         source: companies.ttAdapter(),
         templates: {
-          suggestion: Handlebars.compile('foo {{!name}}')
+          header: '<div class="tt-suggestion-heading"><strong>Companies</strong></div>',
+          suggestion: Handlebars.compile('{{!name}}')
         }
       });
 
-      $(".tt-dataset-companies").on("click", function(){
-        console.log('clicked company');
-        console.log($(this));
+      /* Trigger search when a suggestion is selected */
+      $('#form-q').bind('typeahead:selected', function(obj, datum, name){
+        // obj is event, datum is what I've given typeahead, name is "companies"
+        return
+        var field = name; 
+        var q = datum['name']
+        // Reload datatable
+        var new_url = 'api/searchbaseprofileconnection?' + field + '=' + q;
+        console.log(new_url)
+        $("#search_table").DataTable().ajax.url(new_url).load();
+        displayLoading();
+        //window.location.href.replace("name="+name, "domain="+domain); // not working
+      });
       });
 
       // Init DataTable

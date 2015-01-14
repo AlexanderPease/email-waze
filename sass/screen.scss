@@ -403,18 +403,24 @@ $bootstrap-text-color: #555;
   // z-index hardcoded to 100 by typeahead.js
 }
 
+$tt-suggestion-padding: 3px;
 .tt-suggestion { // Styling of each suggestion
-  //padding: 3px 20px;
+  padding-left: $tt-suggestion-padding;
   //font-size: 18px;
   //line-height: 24px;
 }
 
 .tt-suggestion.tt-cursor { // When suggestion is moused over
-  color: $navbar-blue;
+  background-color: $navbar-blue;
+  color: white;
 }
 
 .tt-suggestion p {
   margin: 0;
+}
+
+.tt-suggestion-header {
+  padding-left: $tt-suggestion-padding;
 }
 
 // User settings
