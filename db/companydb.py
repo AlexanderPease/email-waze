@@ -47,11 +47,16 @@ class Company(Document):
             request.add_header("Authorization", "Basic %s" % base64string)
             try:
                 response = urlopen(request)
+                logging.info(response)
+                logging.info('response')
                 info = response.read()
+                logging.info('info')
                 logging.info(info)
             except URLError, e:
                 info = None
                 logging.info('Clearbit error code: %s' % e)
+
+            info.
 
             # Set date even if clearbit returns nothing.
             # Prevents multiple pings to Clearbit for companies he has no info on

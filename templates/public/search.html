@@ -92,7 +92,7 @@
       // Init typeahead.js
       var companies = new Bloodhound({
         datumTokenizer: function (datum) {
-          return Bloodhound.tokenizers.whitespace(datum.value);
+          return Bloodhound.tokenizers.whitespace(datum.name);
         },
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         remote: {
@@ -110,12 +110,13 @@
       });
 
       // Initialize the Bloodhound suggestion engine
-      companies.initialize();
+      var promise = companies.initialize();
+      promise.done(function() {console.log('Bloodhound initialized!')});
        
       // passing in `null` for the `options` arguments will result in the default
       // options being used
       $('#form-company').typeahead(null, {
-        //name: 'countries',
+        name: 'companies',
         displayKey: 'name',
         // `ttAdapter` wraps the suggestion engine in an adapter that
         // is compatible with the typeahead jQuery plugin
