@@ -24,6 +24,9 @@
           </div>
         </div>
         <div class="form-group">
+          <input id="form-q" name="q" type="text" class="form-control" placeholder="Anything!">
+        </div>
+        <div class="form-group">
           <div class="input-group">
             <button id="form-button" class="btn btn-primary btn-inline" type="button">Search</button>
           </div>
@@ -172,10 +175,13 @@
       // Search button is pressed, causes AJAX reload
       $('#form-button').click(function() {
         // Get form values
-        var name = $('#form-name').val();
-        var domain = $('#form-domain').val();
+        //var name = $('#form-name').val();
+        //var domain = $('#form-domain').val();
+        var q = $('#form-q').val();
         // Reload datatable
-        var new_url = 'api/searchbaseprofileconnection?name=' + name + '&domain=' + domain;
+        //var new_url = 'api/searchbaseprofileconnection?name=' + name + '&domain=' + domain;
+        var new_url = 'api/searchbaseprofileconnection?q=' + q;
+        console.log(new_url)
         $("#search_table").DataTable().ajax.url(new_url).load();
         displayLoading();
         //window.location.href.replace("name="+name, "domain="+domain); // not working
