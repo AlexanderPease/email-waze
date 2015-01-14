@@ -109,8 +109,12 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
+        for c in Company.objects():
+            
+
         # Counts number of profiles that have an email address
         # that is duplicated (via capitalization) in the database
+        '''
         num_wrong = 0
         total_len = len(Profile.objects())
         current_num = 1
@@ -124,6 +128,7 @@ class Scratch(app.basic.BaseHandler):
                     logging.info(d)
                 num_wrong += 1
         logging.info('Num emails duplicated: %s' % num_wrong)
+        '''
 
         # Counts number of profiles that have an email address
         # this is not all undercase

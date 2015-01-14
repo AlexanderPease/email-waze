@@ -64,6 +64,9 @@ class Company(Document):
                 # API doesn't count multiple pings against monthly limit!
                 self.date_queried_clearbit = datetime.datetime.now()
                 self.clearbit = info
+                name = self.clearbit['name']
+                if name:
+                    self.name = clearbit['name']
                 logging.info('Added clearbit for company: %s' % self)
                 self.save()
 
