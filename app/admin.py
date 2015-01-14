@@ -109,9 +109,6 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
-        for c in Company.objects():
-            
-
         # Counts number of profiles that have an email address
         # that is duplicated (via capitalization) in the database
         '''

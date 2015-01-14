@@ -9,6 +9,7 @@ connect('company', host=mongo_database['host'])
 CLEARBIT_COMPANY_URL = 'https://company.clearbit.co/v1/companies/domain/'
 
 class Company(Document):
+    # I've forced domains to be lowercase
     domain = StringField(required=True, unique=True)
     # Date queried Clearbit
     date_queried_clearbit = DateTimeField()
@@ -17,6 +18,12 @@ class Company(Document):
 
     # Derivative fields:
     name = StringField()
+
+    def __init__(self, *args, **kwargs):
+        logging.info('init')
+        # Force lowercase domain field
+        kwargs['domain'] = kwargs['domain'].lower()
+        Document.__init__(self, *args, **kwargs)
 
     def __str__(self):
         if self.clearbit:
