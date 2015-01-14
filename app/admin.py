@@ -109,6 +109,11 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
+        # Update all Company docs if needed
+        for c in Company.objects():
+            c.update_clearbit()
+            logging.info(c)
+
         # Counts number of profiles that have an email address
         # that is duplicated (via capitalization) in the database
         '''
@@ -142,13 +147,6 @@ class Scratch(app.basic.BaseHandler):
         '''
         for p in Profile.objects(email__contains="techstars.com"):
             ps = Profile.objects(email__icontains)
-        '''
-
-        # Update all Company docs if needed
-        '''
-        for c in Company.objects():
-            c.update_clearbit()
-            logging.info(c)
         '''
 
         # Script to check how many Company documents from clearbit have a name field

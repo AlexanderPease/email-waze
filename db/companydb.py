@@ -20,7 +20,6 @@ class Company(Document):
     name = StringField()
 
     def __init__(self, *args, **kwargs):
-        logging.info('init')
         # Force lowercase domain field
         kwargs['domain'] = kwargs['domain'].lower()
         Document.__init__(self, *args, **kwargs)
@@ -29,7 +28,7 @@ class Company(Document):
         if self.clearbit:
             return 'Company: %s (%s)' % (self.clearbit['name'], self.domain)
         elif self.date_queried_clearbit:
-            return 'Company: %s. Clearbit returned no info on %s' % (self.id, self.date_queried_clearbit)
+            return 'Company: %s. Clearbit returned no info on %s' % (self.domain, self.date_queried_clearbit)
         else:
             return 'Company: %s' % self.domain
 
@@ -50,6 +49,8 @@ class Company(Document):
             overwrite is a flag that will call Clearbit API even if data
             has already been returned before. This is to minimize expensive API
             calls. 
+
+        Note: API doesn't count redundant pings against monthly limit!
         """
         if not self.date_queried_clearbit or overwrite:
             request = Request(CLEARBIT_COMPANY_URL + self.domain)
@@ -60,21 +61,26 @@ class Company(Document):
                 info = response.read()
                 info = json.loads(info)
             except URLError, e:
+                if e.code == 404:
+                    # No data for this company was found. Mark as queried
+                    self.date_queried_clearbit = datetime.datetime.now()
+                    self.save()
                 logging.info('Clearbit error code: %s' % e)
                 return 
 
             if 'error' in info.keys():
-                logging.warning('Error in info dict:')
+                # Look up is queued. Just ignore for now and it will execute
+                # next time script is run
                 logging.warning(info)
-            else:
-                # Prevents multiple pings to Clearbit for companies he has no info on
-                # API doesn't count multiple pings against monthly limit!
-                self.date_queried_clearbit = datetime.datetime.now()
-                self.clearbit = info
-                name = self.clearbit['name']
-                if name:
-                    self.name = clearbit['name']
-                logging.info('Added clearbit for company: %s' % self)
-                self.save()
+                return
+
+            self.date_queried_clearbit = datetime.datetime.now()
+            self.clearbit = info
+            logging.info(self.clearbit)
+            name = self.clearbit['name']
+            if name:
+                self.name = name
+            logging.info('Added clearbit for company: %s' % self)
+            self.save()
 
 
