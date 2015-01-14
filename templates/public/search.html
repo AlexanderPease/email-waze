@@ -9,6 +9,7 @@
   <section class="js-stretch-height search-background thin-search">
     <div class="container">
       <form id="main-search" class="form-inline">
+        <!--
         <div class="form-group">
           <div class="input-group">
             <input id="form-name" name="name" type="text" class="form-control" placeholder="Name" autocomplete="off">
@@ -23,8 +24,9 @@
             <input id="form-domain" name="domain" type="text" class="form-control" placeholder="Domain" autocomplete="off">
           </div>
         </div>
+        -->
         <div class="form-group">
-          <input id="form-q" name="q" type="text" class="form-control" placeholder="Anything!">
+          <input id="form-q" name="q" type="text" class="form-control">
         </div>
         <div class="form-group">
           <div class="input-group">
@@ -91,6 +93,7 @@
     $(document).ready(function(){
       // Page inits to display loading
       displayLoading();
+      setFormQPlaceholder();
 
       // Init typeahead.js
       var companies = new Bloodhound({
@@ -119,7 +122,7 @@
        
       // passing in `null` for the `options` arguments will result in the default
       // options being used
-      $('#form-company').typeahead(null, {
+      $('#form-q').typeahead(null, {
         name: 'companies',
         displayKey: 'name',
         source: companies.ttAdapter()
@@ -127,9 +130,14 @@
 
       // Init DataTable
       params = getQueryParameters();
+      var q = params['q']
       var name = params['name'];
       var domain = params['domain'];
-      var url = 'api/searchbaseprofileconnection?name=' + name + '&domain=' + domain;
+      if (q) {
+        var url = 'api/searchbaseprofileconnection?q=' + q;
+      } else {
+        var url = 'api/searchbaseprofileconnection?name=' + name + '&domain=' + domain;
+      }
       console.log(url);
       var dataTable = $('#search_table').DataTable({
         searching: false,
@@ -174,12 +182,8 @@
 
       // Search button is pressed, causes AJAX reload
       $('#form-button').click(function() {
-        // Get form values
-        //var name = $('#form-name').val();
-        //var domain = $('#form-domain').val();
         var q = $('#form-q').val();
         // Reload datatable
-        //var new_url = 'api/searchbaseprofileconnection?name=' + name + '&domain=' + domain;
         var new_url = 'api/searchbaseprofileconnection?q=' + q;
         console.log(new_url)
         $("#search_table").DataTable().ajax.url(new_url).load();
@@ -216,17 +220,13 @@
 
     /* Displays everything once data is loaded */
     function displayLoaded() {
-      var name = $("#form-name").val();
-      var domain = $("#form-domain").val();
-      updateResultsMessage([name, domain]);
+      var q = $("#form-q").val();
+      updateResultsMessage(q.split(" "));
       $('#form-button').prop('disabled', false);
       $('#form-button').text('Search');
-      $('#form-name').prop('disabled', false);
-      $('#form-domain').prop('disabled', false);
-      $('#form-name').val('');
-      $('#form-domain').val('');
-      $('#form-name').attr('placeholder', 'Name');
-      $('#form-domain').attr('placeholder', 'Domain');
+      $('#form-q').prop('disabled', false);
+      $('#form-q').val('');
+      setFormQPlaceholder();
     }
 
     /* Displays loading messages and disables form */
@@ -234,14 +234,14 @@
       $('#results').text('Loading...');
       $('#form-button').prop('disabled', true);
       $('#form-button').text('Loading...');
-      $('#form-name').prop('disabled', true);
-      $('#form-domain').prop('disabled', true);
+      $('#form-q').prop('disabled', true);
+      setFormQPlaceholder();
     }
 
     /* Updates the results message. If an array of queryParameters is supplied,
       it will display those values. If not, it pulls from the href parameters */
     function updateResultsMessage(queryParameters) {
-      if (!queryParameters || (queryParameters[0] == "" && queryParameters[1] == "")) {
+      if (!queryParameters || queryParameters == "") {
         queryParameters = getQueryParameters();
       } 
       var terms = "";
@@ -268,9 +268,14 @@
       var queryParameters = {}, queryString = location.search.substring(1), re = /([^&=]+)=([^&]*)/g, m;
       // Creates a map with the query string parameters
       while (m = re.exec(queryString)) {
-          queryParameters[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+          queryParameters[decodeURIComponent(m[1])] = decodeURIComponent(m[2]).replace("+", " ");
       }
       return queryParameters
+    }
+
+    // Sets form-q input placeholder
+    function setFormQPlaceholder() {
+      $("#form-q").attr('placeholder', 'Search for a person, company, or website');
     }
 
     var Profile = function(dict) {
@@ -288,6 +293,7 @@
     Profile.prototype.cleanName = function() {
       // Change "last, first" to "first last"
       var name = this.name;
+      name = name.charAt(0).toUpperCase() + name.slice(1);
       if (name.indexOf(',') > -1) {
         var name_array = name.split(',');
         name = name_array[1] + ' ' + name_array[0];

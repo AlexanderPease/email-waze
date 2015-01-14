@@ -270,6 +270,12 @@ $disabled-color: #428bca;
 .thin-search {
   padding: 30px;
   
+  // Input field
+  .form-group {
+    width: 400px;
+  }
+
+  // Search button
   .input-group {
     width: 250px;
   }
@@ -280,7 +286,6 @@ $disabled-color: #428bca;
     border-bottom-right-radius: 3px;
     border-bottom-left-radius: 3px;
   }
-
 }
 
 .btn-inline {
@@ -359,15 +364,19 @@ $disabled-color: #428bca;
 $tt-width: 400px;
 $bootstrap-text-color: #555;
 .tt-input, .tt-hint {
-    width: $tt-width;
+    width: $tt-width !important;
     color: $bootstrap-text-color;
+    background-color: white !important; //override
+    font-size: 18px;
     //height: 30px;
     //padding: 8px 12px;
-    //font-size: 24px;
     //line-height: 30px;
     //border: 2px solid #ccc;
     //border-radius: 8px;
     //outline: none;
+    &:disabled {
+      background-color: darken(white, 20%) !important;
+    }
 }
 
 .tt-input { 
