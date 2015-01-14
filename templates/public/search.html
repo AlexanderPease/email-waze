@@ -92,10 +92,11 @@
       // Init typeahead.js
       var companies = new Bloodhound({
         datumTokenizer: function (datum) {
+          console.log(datum);
           return Bloodhound.tokenizers.whitespace(datum.name);
         },
         queryTokenizer: Bloodhound.tokenizers.whitespace,
-        remote: {
+        prefetch: {
           url: '/json/company_list.json',
           filter: function (companies_list) {
             // Map the remote source JSON array to a JavaScript object array

@@ -56,7 +56,8 @@ class Company(Document):
                 info = None
                 logging.info('Clearbit error code: %s' % e)
 
-            info.
+            if info.id:
+                logging.info(info.id)
 
             # Set date even if clearbit returns nothing.
             # Prevents multiple pings to Clearbit for companies he has no info on
