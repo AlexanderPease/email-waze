@@ -110,15 +110,19 @@ def update_user(u):
         u is an existing User to the app. If u is a new User this function will
         take a long time. 
     """
+    # KEVIN NOTE: instead of logging.info; log this to a mongo collection (perhaps call it api_log?)
+    # db.api_log.insert({'timestamp':datetime.utcnow(), 'code':'start updating', 'msg':'Updating %s in tasks.update_user()' % u}) 
     logging.info("Updating %s in tasks.update_user()" % u)
     gmail_service = u.get_service(service_type='gmail')
     if not gmail_service:
+        # KEVIN NOTE: db.api_log.insert({'timestamp':datetime.utcnow(), 'code':'bad auth', 'msg':'Could not instantiate authenticated service for %s' % u})
         logging.info("Could not instantiate authenticated service for %s" % u)
         return
     messages = gmail.ListMessagesMatchingQuery(service=gmail_service,
                                                 user_id='me',
                                                 query='after:%s' % u.last_updated.strftime('%Y/%m/%d'))
     if not messages:
+        # KEVIN NOTE: db.api_log.insert({'timestamp':datetime.utcnow(), 'code':'no messages', 'msg':'Could not pull messages for %s' % u})
         return
 
     # Track list of emails that have been updated by this function
@@ -126,6 +130,7 @@ def update_user(u):
     msg_counter = 0
     total_num = len(messages)
     for msg_info in messages:
+        # KEVIN NOTE: db.api_log.insert({'timestamp':datetime.utcnow(), 'code':'check message', 'msg':'checking message of id: %s (%s of %s total)' % (msg_info['id'], msg_counter, total_num)})
         logging.info("Checking message of id: %s (%s of %s total)" % (msg_info['id'], msg_counter, total_num))
         msg = gmail.GetMessage(gmail_service, 'me', msg_info['id'])
         if msg:
@@ -149,11 +154,27 @@ def update_user(u):
                                                             name=name,
                                                             user=u,
                                                             gmail_service=gmail_service)
+                            else:
+                              # KEVIN NOTE: db.api_log.insert({'timestamp':datetime.utcnow(), 'code':'missing required data', 'msg':'Name: %s; email: %s for msg %s' % (name, email, msg_info['id'])})
+                              place_holder = 1
+                        else:
+                          # KEVIN NOTE: db.api_log.insert({'timestamp':datetime.utcnow(), 'code':'email exists', 'msg':'%s has already been updated for %' % (email, u)})
+                          place_holder = 1
+                    else:
+                      # KEVIN NOTE: db.api_log.insert({'timestamp':datetime.utcnow(), 'code':'header trouble', 'msg':'%s missing in header for %s' % (header, msg_info['id'])})
+                      place_holder = 1
+            else:
+              # KEVIN NOTE: db.api_log.insert({'timestamp':datetime.utcnow(), 'code':'no msg header', 'msg':'Trouble getting message header for %s' % msg_info['id']})
+              place_holder = 1           
+        else:
+          # KEVIN NOTE: db.api_log.insert({'timestamp':datetime.utcnow(), 'code':'no msg', 'msg':'No message found for %s' % msg_info['id']})
+          place_holder = 1
         msg_counter = msg_counter + 1
 
     # Save completed job specs to user
     u.last_updated = datetime.datetime.now()
     u.save()
+    # KEVIN NOTE: db.api_log.insert({'timestamp':datetime.utcnow(), 'code':'finish updating', 'msg':'Finished updating %s in tasks.update_user()' % u})
     logging.info("Finished updating %s in tasks.update_user()" % u)
     return
 
