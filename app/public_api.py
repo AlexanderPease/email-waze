@@ -40,27 +40,12 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
         # Default to simple search if present
         if q:
             q_array = q.split(" ") # whitespace delimited
-            q_array = ["Fred Wilson", "Albert Wenger"]
             logging.info(q_array)
-
-
-            '''
-            profiles = Profile._get_collection()
-            logging.info(profiles)
-            p = profiles.find_one({"name": "Fred Wilson"})
-            logging.info(p)
-            return
-            '''
-
-
             q_regex_array = []
             # Case-insensitive regexs
             for f in q_array:
-                pass#q_regex_array.append(re.compile('/Fred/i'))
-            q_regex_array = [re.compile('fRed Wilson', re.IGNORECASE), re.compile('Albert Wenger', re.IGNORECASE)]
+                q_regex_array.append(re.compile(f, re.IGNORECASE))
             q_array = q_regex_array
-            logging.info(q_array)
-
             # Construct query
             profiles = Profile.objects(__raw__={
                 "$or": [
@@ -72,9 +57,7 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
                     }
                 ]
             })
-            
-            logging.info(profiles)
-
+        # Advanced search query. Specific fields are searched
         else:
             # Global profile results
             profiles = Profile.objects(name__icontains=name, email__icontains=domain).order_by('name') # case-insensitive contains
