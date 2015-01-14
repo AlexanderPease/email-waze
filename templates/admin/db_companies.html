@@ -20,10 +20,17 @@
               {% if c.clearbit %}
                 {% if 'name' in c.clearbit.keys() %}
                   <td>{{ c.clearbit['name'] }}</td>
+                {% else %}
+                  <td>Clearbit but no name</td>
                 {% end %}
                 {% if 'description' in c.clearbit.keys() %}
                   <td>{{ c.clearbit['description'] }}</td>
+                {% else %}
+                  <td>Clearbit but no description</td>
                 {% end %}
+              {% else %}
+                <td>No Clearbit</td>
+                <td>No Clearbit</td>
               {% end %}
             </tr>
           {% end %}

@@ -87,7 +87,7 @@ class DB_Companies(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             self.redirect('/')
         else:
-            c = Company.objects
+            c = Company.objects()
             return self.render('admin/db_companies.html', companies=c, encode=ui_methods.encode)
 
 
@@ -109,13 +109,47 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
+        # Counts number of profiles that have an email address
+        # that is duplicated (via capitalization) in the database
+        num_wrong = 0
+        total_len = len(Profile.objects())
+        current_num = 1
+        for p in Profile.objects():
+            logging.info('%s/%s' % (current_num, total_len))
+            current_num += 1
+
+            ps = Profile.objects(email__contains=p.email)
+            if len(ps) > 1:
+                for d in ps:
+                    logging.info(d)
+                num_wrong += 1
+        logging.info('Num emails duplicated: %s' % num_wrong)
+
+        # Counts number of profiles that have an email address
+        # this is not all undercase
+        '''
+        num_wrong = 0
+        for p in Profile.objects():
+            if not p.email.islower():
+                num_wrong += 1
+                logging.info(p.email)
+        logging.info('Num emails not all undercase: %s' % num_wrong)
+        '''
+
+        # Count all profiles that have a capitalized duplicate
+        '''
+        for p in Profile.objects(email__contains="techstars.com"):
+            ps = Profile.objects(email__icontains)
+        '''
+
+        # Update all Company docs if needed
         '''
         for c in Company.objects():
-            if c.clearbit == None:
-                c.date_queried_clearbit = None
-                c.save()
-                logging.info('set date to zero')
+            c.update_clearbit()
+            logging.info(c)
         '''
+
+        # Script to check how many Company documents from clearbit have a name field
         '''
         num_name = 0
         num_clearbit = 0
@@ -125,27 +159,10 @@ class Scratch(app.basic.BaseHandler):
                 num_queried_clearbit += 1
             if c.clearbit:
                 num_clearbit += 1
-                if 'name' in c.clearbit.keys():
+                if c.clearbit['name']:
                     num_name += 1
         logging.info("Name/Queried/Total: %s/%s/%s" %(num_name, num_queried_clearbit, num_clearbit))
         '''
-
-
-
-        '''
-        for c in Company.objects():
-            c.update_clearbit()
-            logging.info(c)
-        '''
-        '''
-        for c in Company.objects():
-            if c.clearbit:
-                if 'name' not in c.clearbit.keys():
-                    c.clearbit = None
-                    c.date_queried_clearbit = None
-                    c.save()
-        '''
-
 
         # Count number of distinct domains in all Profile email addresses
         '''

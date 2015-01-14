@@ -15,6 +15,9 @@ class Company(Document):
     # Company info from clearbit
     clearbit = DictField()
 
+    # Derivative fields:
+    name = StringField()
+
     def __str__(self):
         if self.clearbit:
             return 'Company: %s (%s)' % (self.clearbit['name'], self.domain)
@@ -39,7 +42,7 @@ class Company(Document):
         Args:
             overwrite is a flag that will call Clearbit API even if data
             has already been returned before. This is to minimize expensive API
-            calls
+            calls. 
         """
         if not self.date_queried_clearbit or overwrite:
             request = Request(CLEARBIT_COMPANY_URL + self.domain)
@@ -47,21 +50,21 @@ class Company(Document):
             request.add_header("Authorization", "Basic %s" % base64string)
             try:
                 response = urlopen(request)
-                logging.info(response)
-                logging.info('response')
                 info = response.read()
-                logging.info('info')
-                logging.info(info)
+                info = json.loads(info)
             except URLError, e:
-                info = None
                 logging.info('Clearbit error code: %s' % e)
+                return 
 
-            if info.id:
-                logging.info(info.id)
+            if 'error' in info.keys():
+                logging.warning('Error in info dict:')
+                logging.warning(info)
+            else:
+                # Prevents multiple pings to Clearbit for companies he has no info on
+                # API doesn't count multiple pings against monthly limit!
+                self.date_queried_clearbit = datetime.datetime.now()
+                self.clearbit = info
+                logging.info('Added clearbit for company: %s' % self)
+                self.save()
 
-            # Set date even if clearbit returns nothing.
-            # Prevents multiple pings to Clearbit for companies he has no info on
-            self.date_queried_clearbit = datetime.datetime.now()
-            if info:
-                self.clearbit = json.loads(info)
-            self.save()
+
