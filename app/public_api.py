@@ -3,6 +3,7 @@ import logging
 from mongoengine.queryset import Q
 from db.profiledb import Profile
 from db.userdb import User
+from db.companydb import Company
 from db.connectiondb import Connection
 from connectionsets import GroupConnectionSet
 from connectionsets import ProfileConnectionSet
@@ -33,10 +34,15 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
         domain = self.get_argument('domain', '')
         company = self.get_argument('company', '')
 
+        # Exact ID search
+        company_id = self.get_argument('company_id', '')
+
         # Check for no parameters
-        if not q and not name and not domain:
+        if not q and not name and not domain and not company_id:
             return self.api_error(400, 'Did not include query parameters')
 
+        results = {}
+        ### Profiles
         # Default to simple search if present
         if q:
             q_array = q.split(" ") # whitespace delimited
@@ -57,28 +63,35 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
                     }
                 ]
             })
+        # Exact ID search
+        elif company_id:
+            logging.info(company_id)
+            c = Company.objects.get(id=company_id)
+            profiles = Profile.objects(email__icontains=c.domain)
+            # Add Company-level stats for this type of search
+            c_stats = {'strongest_connection': 'foo'}
+            results['company_stats'] = c_stats
         # Advanced search query. Specific fields are searched
         else:
             # Global profile results
-            profiles = Profile.objects(name__icontains=name, email__icontains=domain).order_by('name') # case-insensitive contains
+            profiles = Profile.objects(name__icontains=name, email__icontains=domain) # case-insensitive contains
 
             # No results
             if len(profiles) == 0:
                 return self.api_response(data={})
 
-        # Connections
+        ### BaseProfileConnections
         group_users = current_user.all_group_users()
-        connections = Connection.objects(profile__in=profiles, user__in=group_users).order_by('-latest_email_out_date')
-
-        # BaseProfileConnections
         ps = []
         for p in profiles:
             bp = BaseProfileConnection(p)
-            cs = Connection.objects(profile=p, user__in=group_users).order_by('-latest_email_out_date')
+            cs = Connection.objects(profile=p, user__in=group_users)
             if len(cs) > 0:
                 bp.connections = cs
                 bp.latest_email_out_date = cs[0]
                 ps.append(bp)
 
-        return self.api_response(data={"profiles": list_to_json_list(ps)})
+        results['profiles'] = list_to_json_list(ps)
+        return self.api_response(results)
+
 

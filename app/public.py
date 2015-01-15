@@ -33,8 +33,7 @@ class Index(app.basic.BaseHandler):
 class Search(app.basic.BaseHandler):
   @tornado.web.authenticated
   def get(self):
-    companies = Company.objects(domain="usv.com")
-    return self.render('public/search.html', companies=companies)
+    return self.render('public/search.html')
 
 """
 class Search(app.basic.BaseHandler):

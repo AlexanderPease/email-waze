@@ -41,29 +41,10 @@
     <div class="container">
 
       <!-- Companies panel -->
-      {% if companies %}
-        <div class="panel panel-default">
-          <div class="panel-body">
-            {% if len(companies) == 1 %}
-              {% set c = companies[0] %}
-                <img src="{{ c.clearbit['logo'] }}" height="32" weight="32" style="margin-bottom:4px">
-                <a href="{{ c.clearbit['url'] }}" target="_blank">{{ c.clearbit['name'] }}</a> - 
-                {{ c.clearbit['location'] }}
-            {% else %}
-              Found {{ len(companies) }} companies. Limit results to:</br>
-              {% for c in companies %}
-                <a class="limit-company" id="{{ c.domain }}">
-                  <img src="{{ c.clearbit['logo'] }}" height="32" weight="32" style="margin-bottom:4px">
-                  {{ c.clearbit['name'] }} 
-                  ({{ c.domain }}) 
-                </a> - 
-                {{ c.clearbit['location'] }}</br>
-              {% end %}
-              </ul>
-            {% end %}
-          </div>
+      <div id="company-panel" class="panel panel-default" style="display:none">
+        <div class="panel-body">
         </div>
-      {% end %}
+      </div>
 
       <h3 id="results"></h3> 
 
@@ -92,7 +73,7 @@
   <script>
     $(document).ready(function(){
       // Page inits to display loading
-      //displayLoading();
+      displayLoading();
       setFormQPlaceholder();
 
       // Init typeahead.js
@@ -109,7 +90,8 @@
             return $.map(companies_list, function (company) {
               return {
                 name: company.name,
-                logo: company.logo
+                logo: company.logo,
+                id: company.id
               };
             });
           }
@@ -133,17 +115,17 @@
         }
       });
 
-      /* Trigger search when a suggestion is selected */
+      /* Trigger search when a suggestion is selected 
+        Sends a request using <field>_id to specify exact document to look up */
       $('#form-q').bind('typeahead:selected', function(obj, datum, name){
         // obj is event, datum is what I've given typeahead, name is "company"
-        return
         var field = name; 
-        var q = datum['name']
         // Reload datatable
-        var new_url = 'api/searchbaseprofileconnection?' + field + '=' + q;
+        var new_url = 'api/searchbaseprofileconnection?' + field + '_id=' + datum['id'];
         console.log(new_url)
         $("#search_table").DataTable().ajax.url(new_url).load();
         displayLoading();
+        showCompanyPanel(datum);
         //window.location.href.replace("name="+name, "domain="+domain); // not working
       });
 
@@ -190,6 +172,13 @@
               var p = new Profile(profiles[i]);
               json_list.push(p.rowArray());
               p.addModal();
+            }
+
+            // Company panel results if included
+            if (json.data.company_stats) {
+              var company_stats = json.data.company_stats;
+              var companyStatsHtml = "Strongest Connection: " + company_stats['strongest_connection'];
+              $("#company-stats").text(companyStatsHtml)
             }
             // Once data is returned, remove loading display
             displayLoaded();
@@ -295,6 +284,17 @@
     // Sets form-q input placeholder
     function setFormQPlaceholder() {
       $("#form-q").attr('placeholder', 'Search for a person, company, or website');
+    }
+
+    // Loads and displays Company panel for a given company dict
+    function showCompanyPanel(c) {
+      console.log(c)
+      panelHtml = '<div><img src="' + c['logo'] + '" height="32" weight="32" \
+        style="margin-bottom:4px"><a href="http://';
+      panelHtml += c['domain'] + '" target="_blank">';
+      panelHtml += c['name'] + '</a><div id="company-stats">Loading...</div></div>';
+      $('#company-panel .panel-body').append(panelHtml);
+      $('#company-panel').show();
     }
 
     var Profile = function(dict) {

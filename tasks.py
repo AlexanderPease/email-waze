@@ -57,7 +57,11 @@ def company_list():
         for c in Company.objects():
             name = c.get_name()
             if name and "N/A" not in name:
-                c_json = {"name": name}
+                c_json = {
+                "name": name,
+                "id": str(c.id),
+                "domain": c.domain
+                }
                 if 'logo' in c.clearbit.keys():
                     c_json['logo'] = c.clearbit['logo']
                 else:
