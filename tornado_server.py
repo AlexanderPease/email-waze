@@ -12,7 +12,7 @@ import templates
 
 import app.basic, app.public, app.admin, app.email_handler
 import app.googleauth, app.user, app.group, app.stripe_handler
-import app.api, app.group_api, app.public_api, app.user_api, app.company_api
+import app.api, app.group_api, app.public_api, app.user_api
 
 #import newrelic.agent I also deleted newrelic.ini. Need to re-add if we want 
 #path = os.path.join(settings.get("project_root"), 'newrelic.ini')

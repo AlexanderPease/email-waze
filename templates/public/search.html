@@ -145,7 +145,6 @@
         displayLoading();
         //window.location.href.replace("name="+name, "domain="+domain); // not working
       });
-      });
 
       // Init DataTable
       params = getQueryParameters();
@@ -215,7 +214,7 @@
         //var data = dataTable.fnGetData('tr'); // fnGetData undefined. Hack around
         p_id = $('td', this).parent().attr('id');
         $('#modal-' + p_id).modal();
-      })
+      });
 
       // Clipboard
       //var moviePath = $('#copy-button').text();

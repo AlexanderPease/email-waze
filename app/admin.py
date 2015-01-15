@@ -111,6 +111,7 @@ class Scratch(app.basic.BaseHandler):
 
         # Update all Company docs if needed
         for c in Company.objects():
+            logging.info(c)
             c.update_clearbit()
 
         # Counts number of profiles that have an email address
