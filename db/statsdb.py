@@ -13,6 +13,7 @@ class Stats(Document):
     connections = IntField()
     users = IntField()
     groups = IntField()
+    companies = IntField()
 
     def __str__(self):
         return "Stats from %s" % self.date

@@ -51,6 +51,7 @@ class Application(tornado.web.Application):
       (r"/api/group/(?P<group_id>[A-z-+0-9]+)/leave", app.group_api.Leave),
       (r"/api/group/(?P<group_id>[A-z-+0-9]+)/delete", app.group_api.Delete),
       (r"/api/user/(?P<user_id>[A-z-+0-9]+)/deleteaccount", app.user_api.DeleteAccount),
+      (r"/json/(.*)", tornado.web.StaticFileHandler, {'path': r'static/json'}),
 
       # Public API v1
       (r"/api/1/profilesearch", app.api.ProfileSearch),
@@ -87,6 +88,7 @@ class Application(tornado.web.Application):
       (r"/admin/db_users", app.admin.DB_Users),
       (r"/admin/db_connections", app.admin.DB_Connections),
       (r"/admin/db_groups", app.admin.DB_Groups),
+      (r"/admin/db_companies", app.admin.DB_Companies),
       (r"/admin/scratch", app.admin.Scratch), # for ad hoc testing
       (r"/google077100c16d33120b.html", app.admin.GoogleWebmaster), # Google Webmaster verification
 

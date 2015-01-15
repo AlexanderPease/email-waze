@@ -132,6 +132,20 @@ class Profile(Document):
 
 
     @classmethod
+    def email_exists(cls, email):
+        """
+        Checks if case-insensitive email exists as a Profile instance
+
+        Returns number of instances if exists, or False
+        """
+        ps = Profile.objects(email__icontains=email)
+        if len(ps) > 0:
+            logging.info('%s profiles contain the case-insensitive email: %s' % (len(ps), email))
+            return len(ps)
+        else:
+            return False
+
+    @classmethod
     def add_new(cls, name, email):
         """
         Creates a new Profile in database (if DNE) and goes through
@@ -176,8 +190,9 @@ class Profile(Document):
             logging.warning("Couldn't add Profile: %s <%s>" % (name, email))
 
 
-    @classmethod
-    def add_from_gmail_message_header(cls, msg_header):
+    # UNUSED
+    # @classmethod
+    # def add_from_gmail_message_header(cls, msg_header):
         """
         Takes a dict message header from GetMessageHeader() and 
         adds to/creates entries in Profile database if necessary
@@ -188,6 +203,7 @@ class Profile(Document):
         Returns:
             True if a new Profile document was added to database.
         """ 
+        """
         header_list = ['Delivered-To', 'Return-Path', 'From', 'To', 'Cc'] # Also Date
         for header in header_list:
             if header in msg_header.keys():
@@ -200,6 +216,7 @@ class Profile(Document):
             else:
                 logging.debug('No %s field in header (output in line below)' % header)
                 logging.debug(msg_header)
+        """
 
 
 

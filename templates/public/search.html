@@ -9,16 +9,24 @@
   <section class="js-stretch-height search-background thin-search">
     <div class="container">
       <form id="main-search" class="form-inline">
+        <!--
         <div class="form-group">
           <div class="input-group">
             <input id="form-name" name="name" type="text" class="form-control" placeholder="Name" autocomplete="off">
           </div>
         </div>
         <div class="form-group">
+          <input id="form-company" name="company" type="text" class="form-control typeahead" placeholder="Company">
+        </div>
+        <div class="form-group">
           <div class="input-group">
             <span class="input-group-addon">@</span>
             <input id="form-domain" name="domain" type="text" class="form-control" placeholder="Domain" autocomplete="off">
           </div>
+        </div>
+        -->
+        <div class="form-group">
+          <input id="form-q" name="q" type="text" class="form-control">
         </div>
         <div class="form-group">
           <div class="input-group">
@@ -31,6 +39,13 @@
 
   <section class="feature">
     <div class="container">
+
+      <!-- Companies panel -->
+      <div id="company-panel" class="panel panel-default" style="display:none">
+        <div class="panel-body">
+        </div>
+      </div>
+
       <h3 id="results"></h3> 
 
       <!-- Table for All -->
@@ -59,12 +74,71 @@
     $(document).ready(function(){
       // Page inits to display loading
       displayLoading();
+      setFormQPlaceholder();
+
+      // Init typeahead.js
+      var companies = new Bloodhound({
+        datumTokenizer: function (datum) {
+          console.log(datum);
+          return Bloodhound.tokenizers.whitespace(datum.name);
+        },
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        prefetch: {
+          url: '/json/company_list.json',
+          filter: function (companies_list) {
+            // Map the remote source JSON array to a JavaScript object array
+            return $.map(companies_list, function (company) {
+              return {
+                name: company.name,
+                logo: company.logo,
+                id: company.id
+              };
+            });
+          }
+        }
+      });
+
+      // Initialize the Bloodhound suggestion engine
+      //companies.clearPrefetchCache(); // Force reload from server
+      var promise = companies.initialize();
+      promise.done(function() {console.log('Bloodhound initialized!')});
+       
+      // passing in `null` for the `options` arguments will result in the default
+      // options being used
+      $('#form-q').typeahead(null, {
+        name: 'company',
+        displayKey: 'name',
+        source: companies.ttAdapter(),
+        templates: {
+          header: '<div class="tt-suggestion-heading"><strong>Companies</strong></div>',
+          suggestion: Handlebars.compile('<img src="{{!logo}}" width="25px" height="25px"/>{{!name}}')
+        }
+      });
+
+      /* Trigger search when a suggestion is selected 
+        Sends a request using <field>_id to specify exact document to look up */
+      $('#form-q').bind('typeahead:selected', function(obj, datum, name){
+        // obj is event, datum is what I've given typeahead, name is "company"
+        var field = name; 
+        // Reload datatable
+        var new_url = 'api/searchbaseprofileconnection?' + field + '_id=' + datum['id'];
+        console.log(new_url)
+        $("#search_table").DataTable().ajax.url(new_url).load();
+        displayLoading();
+        showCompanyPanel(datum);
+        //window.location.href.replace("name="+name, "domain="+domain); // not working
+      });
 
       // Init DataTable
       params = getQueryParameters();
+      var q = params['q']
       var name = params['name'];
       var domain = params['domain'];
-      var url = 'api/searchbaseprofileconnection?name=' + name + '&domain=' + domain;
+      if (q) {
+        var url = 'api/searchbaseprofileconnection?q=' + q;
+      } else {
+        var url = 'api/searchbaseprofileconnection?name=' + name + '&domain=' + domain;
+      }
       console.log(url);
       var dataTable = $('#search_table').DataTable({
         searching: false,
@@ -100,6 +174,12 @@
               p.addModal();
             }
 
+            // Company panel results if included
+            if (json.data.company_stats) {
+              var company_stats = json.data.company_stats;
+              var companyStatsHtml = "Strongest Connection: " + company_stats['strongest_connection'];
+              $("#company-stats").text(companyStatsHtml)
+            }
             // Once data is returned, remove loading display
             displayLoaded();
 
@@ -110,11 +190,10 @@
 
       // Search button is pressed, causes AJAX reload
       $('#form-button').click(function() {
-        // Get form values
-        var name = $('#form-name').val();
-        var domain = $('#form-domain').val();
+        var q = $('#form-q').val();
         // Reload datatable
-        var new_url = 'api/searchbaseprofileconnection?name=' + name + '&domain=' + domain;
+        var new_url = 'api/searchbaseprofileconnection?q=' + q;
+        console.log(new_url)
         $("#search_table").DataTable().ajax.url(new_url).load();
         displayLoading();
         //window.location.href.replace("name="+name, "domain="+domain); // not working
@@ -125,7 +204,7 @@
         //var data = dataTable.fnGetData('tr'); // fnGetData undefined. Hack around
         p_id = $('td', this).parent().attr('id');
         $('#modal-' + p_id).modal();
-      })
+      });
 
       // Clipboard
       //var moviePath = $('#copy-button').text();
@@ -149,17 +228,13 @@
 
     /* Displays everything once data is loaded */
     function displayLoaded() {
-      var name = $("#form-name").val();
-      var domain = $("#form-domain").val();
-      updateResultsMessage([name, domain]);
+      var q = $("#form-q").val();
+      updateResultsMessage(q.split(" "));
       $('#form-button').prop('disabled', false);
       $('#form-button').text('Search');
-      $('#form-name').prop('disabled', false);
-      $('#form-domain').prop('disabled', false);
-      $('#form-name').val('');
-      $('#form-domain').val('');
-      $('#form-name').attr('placeholder', 'Name');
-      $('#form-domain').attr('placeholder', 'Domain');
+      $('#form-q').prop('disabled', false);
+      $('#form-q').val('');
+      setFormQPlaceholder();
     }
 
     /* Displays loading messages and disables form */
@@ -167,14 +242,14 @@
       $('#results').text('Loading...');
       $('#form-button').prop('disabled', true);
       $('#form-button').text('Loading...');
-      $('#form-name').prop('disabled', true);
-      $('#form-domain').prop('disabled', true);
+      $('#form-q').prop('disabled', true);
+      setFormQPlaceholder();
     }
 
     /* Updates the results message. If an array of queryParameters is supplied,
       it will display those values. If not, it pulls from the href parameters */
     function updateResultsMessage(queryParameters) {
-      if (!queryParameters || (queryParameters[0] == "" && queryParameters[1] == "")) {
+      if (!queryParameters || queryParameters == "") {
         queryParameters = getQueryParameters();
       } 
       var terms = "";
@@ -201,9 +276,25 @@
       var queryParameters = {}, queryString = location.search.substring(1), re = /([^&=]+)=([^&]*)/g, m;
       // Creates a map with the query string parameters
       while (m = re.exec(queryString)) {
-          queryParameters[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+          queryParameters[decodeURIComponent(m[1])] = decodeURIComponent(m[2]).replace("+", " ");
       }
       return queryParameters
+    }
+
+    // Sets form-q input placeholder
+    function setFormQPlaceholder() {
+      $("#form-q").attr('placeholder', 'Search for a person, company, or website');
+    }
+
+    // Loads and displays Company panel for a given company dict
+    function showCompanyPanel(c) {
+      console.log(c)
+      panelHtml = '<div><img src="' + c['logo'] + '" height="32" weight="32" \
+        style="margin-bottom:4px"><a href="http://';
+      panelHtml += c['domain'] + '" target="_blank">';
+      panelHtml += c['name'] + '</a><div id="company-stats">Loading...</div></div>';
+      $('#company-panel .panel-body').append(panelHtml);
+      $('#company-panel').show();
     }
 
     var Profile = function(dict) {
@@ -221,6 +312,7 @@
     Profile.prototype.cleanName = function() {
       // Change "last, first" to "first last"
       var name = this.name;
+      name = name.charAt(0).toUpperCase() + name.slice(1);
       if (name.indexOf(',') > -1) {
         var name_array = name.split(',');
         name = name_array[1] + ' ' + name_array[0];

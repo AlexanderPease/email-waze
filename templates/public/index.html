@@ -50,7 +50,7 @@
 
   {% else %}
     <section class="js-stretch-height search-background">
-      <div class="container">
+      <div class="container centered">
         <h2>{{ msg }}</h2>
         
         {% if err %}
@@ -73,17 +73,11 @@
             </a>
           </div>
         {% end %}
-
-        <p>Enter a name and domain to find an email</p>
       </div> <!--container-->
-      <form id="main-search" class="form-horizontal container" action="/search" method="GET">
+      <form id="main-search" class="container" action="/search" method="GET">
         <div class="row">
-          <div class="input-group-lg col-sm-6 col-lg-4 col-xs-12">
-            <input name="name" type="text" class="form-control" placeholder="Name" autocomplete="off">
-          </div>
-          <div class="input-group input-group-lg col-sm-6 col-lg-4 col-xs-12">
-            <span class="input-group-addon">@</span>
-            <input name="domain" type="text" class="form-control" placeholder="Domain" autocomplete="off">
+          <div class="input-group-lg col-lg-6 col-xs-12">
+            <input name="q" type="text" class="form-control" placeholder="Search for a person, company, or website" autocomplete="off">
           </div>
         </div>
 
@@ -92,6 +86,7 @@
             <button type="submit" class="btn btn-primary">Search</button>
           </div>
         </div>
+
       </form>
     </section>
   {% end %}<!--current user-->

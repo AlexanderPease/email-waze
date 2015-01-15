@@ -9,6 +9,7 @@ from db.userdb import User
 from db.groupdb import Group
 from db.connectiondb import Connection
 from db.statsdb import Stats
+from db.companydb import Company
 
 
 ###########################
@@ -76,6 +77,19 @@ class DB_Groups(app.basic.BaseHandler):
             g = Group.objects
             return self.render('admin/db_groups.html', groups=g, encode=ui_methods.encode)
 
+###########################
+### ASCII view of database
+### /admin/db_companies
+###########################
+class DB_Companies(app.basic.BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        if self.current_user not in settings.get('staff'):
+            self.redirect('/')
+        else:
+            c = Company.objects()
+            return self.render('admin/db_companies.html', companies=c, encode=ui_methods.encode)
+
 
 ###########################
 ### Google Webmaster Verification
@@ -95,26 +109,89 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
+        # Prints out how many companies have queried Clearbit
         '''
+        total = len(Company.objects())
+        todo = len(Company.objects(__raw__={'date_queried_clearbit': {'$exists': True}}))
+        logging.info("%s/%s" % (todo, total))
+        '''
+
+        # Update all Company docs if needed
+        current_num = 1
+        companies = Company.objects(__raw__={'date_queried_clearbit': {'$exists': False}})
+        num_total = len(companies)
+        for c in companies:
+            logging.info("%s, %s/%s" % (c, current_num, num_total))
+            if c.domain != "intuit.com":
+                c.update_clearbit()
+            current_num += 1
+
+        # Counts number of profiles that have an email address
+        # that is duplicated (via capitalization) in the database
+        '''
+        num_wrong = 0
+        total_len = len(Profile.objects())
+        current_num = 1
         for p in Profile.objects():
-            logging.info(p)
-            if not p.domain: 
-                p.domain = p.get_domain()
-                p.save()
+            logging.info('%s/%s' % (current_num, total_len))
+            current_num += 1
+
+            ps = Profile.objects(email__contains=p.email)
+            if len(ps) > 1:
+                for d in ps:
+                    logging.info(d)
+                num_wrong += 1
+        logging.info('Num emails duplicated: %s' % num_wrong)
         '''
+
+        # Counts number of profiles that have an email address
+        # this is not all undercase
         '''
-        will = Profile.objects.get(email="will@stayinyourprime.com")
-        tyler = User.objects.get(email="tyler@stayinyourprime.com")
-        fred = Profile.objects.get(email="fred@usv.com")
-        alexander = Profile.objects.get(email="alexander@usv.com")
-        cs = Connection.objects(user=tyler, profile=will)
-        logging.info(will)
-        logging.info(cs)
-        cs = Connection.objects(user=tyler, profile=fred)
-        logging.info(cs)
-        cs = Connection.objects(user=tyler, profile=alexander)
-        logging.info(cs)
+        num_wrong = 0
+        for p in Profile.objects():
+            if not p.email.islower():
+                num_wrong += 1
+                logging.info(p.email)
+        logging.info('Num emails not all undercase: %s' % num_wrong)
         '''
+
+        # Count all profiles that have a capitalized duplicate
+        '''
+        for p in Profile.objects(email__contains="techstars.com"):
+            ps = Profile.objects(email__icontains)
+        '''
+
+        # Script to check how many Company documents from clearbit have a name field
+        '''
+        num_name = 0
+        num_clearbit = 0
+        num_queried_clearbit = 0
+        for c in Company.objects():
+            if c.date_queried_clearbit:
+                num_queried_clearbit += 1
+            if c.clearbit:
+                num_clearbit += 1
+                if c.clearbit['name']:
+                    num_name += 1
+        logging.info("Name/Queried/Total: %s/%s/%s" %(num_name, num_queried_clearbit, num_clearbit))
+        '''
+
+        # Count number of distinct domains in all Profile email addresses
+        '''
+        profiles = Profile.objects
+        domains = []
+        num_profiles = len(profiles)
+        counter = 1
+        for p in profiles:
+            logging.info(str(counter) + " / " + str(num_profiles))
+            domain = p.get_domain()
+            if domain not in domains:
+                domains.append(domain)
+            counter = counter + 1
+        logging.info(domains)
+        logging.info(str(len(domains)) + " distinct domains in database")
+        '''
+
         """
         # Checks flow for getting all user credentials, refreshing if necessary
         # and executing Gmail API calls
