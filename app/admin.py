@@ -109,10 +109,21 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
+        # Prints out how many companies have queried Clearbit
+        total = len(Company.objects())
+        todo = len(Company.objects(__raw__={'date_queried_clearbit': {'$exists': True}}))
+        logging.info("%s/%s" % (todo, total))
+
         # Update all Company docs if needed
+        '''
+        current_num = 1
+        num_total = len(Company.objects())
         for c in Company.objects():
-            logging.info(c)
-            c.update_clearbit()
+            logging.info("%s, %s/%s" % (c, current_num, num_total))
+            if c.domain != "intuit.com":
+                c.update_clearbit()
+            current_num += 1
+        '''
 
         # Counts number of profiles that have an email address
         # that is duplicated (via capitalization) in the database

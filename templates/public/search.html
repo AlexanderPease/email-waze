@@ -92,7 +92,7 @@
   <script>
     $(document).ready(function(){
       // Page inits to display loading
-      displayLoading();
+      //displayLoading();
       setFormQPlaceholder();
 
       // Init typeahead.js
@@ -107,9 +107,9 @@
           filter: function (companies_list) {
             // Map the remote source JSON array to a JavaScript object array
             return $.map(companies_list, function (company) {
-              console.log('mapping')
               return {
-                name: company.name
+                name: company.name,
+                logo: company.logo
               };
             });
           }
@@ -117,6 +117,7 @@
       });
 
       // Initialize the Bloodhound suggestion engine
+      //companies.clearPrefetchCache(); // Force reload from server
       var promise = companies.initialize();
       promise.done(function() {console.log('Bloodhound initialized!')});
        
@@ -128,7 +129,7 @@
         source: companies.ttAdapter(),
         templates: {
           header: '<div class="tt-suggestion-heading"><strong>Companies</strong></div>',
-          suggestion: Handlebars.compile('{{!name}}')
+          suggestion: Handlebars.compile('<img src="{{!logo}}" width="25px" height="25px"/>{{!name}}')
         }
       });
 

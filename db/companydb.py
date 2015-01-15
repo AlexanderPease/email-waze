@@ -66,19 +66,22 @@ class Company(Document):
                 logging.info('Clearbit error code: %s' % e)
                 return 
 
-            if 'error' in info.keys():
-                # Look up is queued. Just ignore for now and it will execute
-                # next time script is run
-                logging.warning(info)
-                return
-
-            self.date_queried_clearbit = datetime.datetime.now()
-            self.clearbit = info
-            logging.info(self.clearbit)
-            name = self.clearbit['name']
-            if name:
-                self.name = name
-            logging.info('Added clearbit for company: %s' % self)
-            self.save()
+            # Handle none and error
+            if not company:
+                self.date_queried_clearbit = datetime.datetime.now()
+                self.save()
+                logging.info('No company info found')
+            elif 'error' in company.keys():
+                logging.warning(company)
+            # Result returned
+            else:
+                self.date_queried_clearbit = datetime.datetime.now()
+                self.save()
+                self.clearbit = company
+                if self.clearbit['name']:
+                    self.name = self.clearbit['name']
+                logging.info(self.clearbit)
+                self.save()
+                logging.info('Added clearbit for company: %s' % self)
 
 

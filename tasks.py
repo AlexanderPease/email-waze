@@ -52,13 +52,17 @@ def company_list():
     """
     Update company list JSON doc for typeahead service
     """
-    with open('static/company_list.json', 'w') as f:
+    with open('static/json/company_list.json', 'w') as f:
         json_list = []
         for c in Company.objects():
             name = c.get_name()
             if name and "N/A" not in name:
-                json_list.append({"name": name})
-        logging.info(json_list)
+                c_json = {"name": name}
+                if 'logo' in c.clearbit.keys():
+                    c_json['logo'] = c.clearbit['logo']
+                else:
+                    c_json['logo'] = None
+                json_list.append(c_json)
         json.dump(json_list, f)
 
 
