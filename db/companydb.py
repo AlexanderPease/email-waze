@@ -53,6 +53,7 @@ class Company(Document):
         Note: API doesn't count redundant pings against monthly limit!
         """
         if not self.date_queried_clearbit or overwrite:
+            logging.info('Sending request to Clearbit for %s' % self.domain)
             request = Request(CLEARBIT_COMPANY_URL + self.domain)
             base64string = base64.encodestring('%s:' % settings.get('clearbit_key')).replace('\n', '')
             request.add_header("Authorization", "Basic %s" % base64string)
