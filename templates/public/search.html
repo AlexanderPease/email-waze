@@ -107,10 +107,15 @@
 
       // Init DataTable
       params = getQueryParameters();
+      console.log(params)
       var q = params['q']
+      var company_id = params['company_id']
       var name = params['name'];
       var domain = params['domain'];
-      if (q) {
+      if (company_id) {
+        var url = 'api/searchbaseprofileconnection?company_id=' + company_id;
+      }
+      else if (q) {
         var url = 'api/searchbaseprofileconnection?q=' + q;
       } else {
         var url = 'api/searchbaseprofileconnection?name=' + name + '&domain=' + domain;
