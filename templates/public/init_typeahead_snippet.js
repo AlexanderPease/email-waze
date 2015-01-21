@@ -1,4 +1,4 @@
-// Init typeahead.js
+// Init typeahead.js for #form-q input
 var companies = new Bloodhound({
   datumTokenizer: function (datum) {
     console.log(datum);
