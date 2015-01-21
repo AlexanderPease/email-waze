@@ -1,4 +1,5 @@
 // Init typeahead.js for #form-q input
+// Put "include" statement in $(document).ready
 var companies = new Bloodhound({
   datumTokenizer: function (datum) {
     console.log(datum);
@@ -37,16 +38,3 @@ $('#form-q').typeahead(null, {
   }
 });
 
-/* Trigger search when a suggestion is selected 
-  Sends a request using <field>_id to specify exact document to look up */
-$('#form-q').bind('typeahead:selected', function(obj, datum, name){
-  // obj is event, datum is what I've given typeahead, name is "company"
-  var field = name; 
-  // Reload datatable
-  var new_url = 'api/searchbaseprofileconnection?' + field + '_id=' + datum['id'];
-  console.log(new_url)
-  $("#search_table").DataTable().ajax.url(new_url).load();
-  displayLoading();
-  showCompanyPanel(datum);
-  //window.location.href.replace("name="+name, "domain="+domain); // not working
-});

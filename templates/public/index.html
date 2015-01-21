@@ -77,7 +77,7 @@
       <form id="main-search" class="container" action="/search" method="GET">
         <div class="row">
           <div class="input-group-lg col-lg-6 col-xs-12">
-            <input name="q" type="text" class="form-control" placeholder="Search for a person, company, or website" autocomplete="off">
+            <input id="form-q" type="text" class="form-control" placeholder="Search for a person, company, or website" autocomplete="off">
           </div>
         </div>
 
@@ -99,6 +99,17 @@
   <script>
     $(document).ready(function(){
       fixSearchBg();
+
+      // Init code for the searchbar's behavior, incl. typeahead
+      {% include 'init_typeahead_snippet.js' %}
+
+      /* Trigger search when a suggestion is selected 
+        Sends a request using <field>_id to specify exact document to look up */
+      $('#form-q').bind('typeahead:selected', function(obj, datum, name){
+        // obj is event, datum is what I've given typeahead, name is "company"
+        var field = name; 
+        window.location.href = "/search?" + field + "_id=" + datum['id'];
+      });
     });
 
     $(window).resize(function () {
