@@ -89,7 +89,7 @@
         console.log(new_url)
         $("#search_table").DataTable().ajax.url(new_url).load();
         displayLoading();
-        showCompanyPanel(datum);
+        showCompanyPanelLoading(datum);
         //window.location.href.replace("name="+name, "domain="+domain); // not working
       });
 
@@ -120,7 +120,7 @@
       } else {
         var url = 'api/searchbaseprofileconnection?name=' + name + '&domain=' + domain;
       }
-      console.log(url);
+      console.log("Datatables calling: " + url);
       var dataTable = $('#search_table').DataTable({
         searching: false,
         pageLength: 20,
@@ -155,15 +155,13 @@
               p.addModal();
             }
 
-            console.log(json.data.company_stats);
             // Company panel results if included
             if (json.data.company_stats) {
-              var company_stats = json.data.company_stats;
-              var companyStatsHtml = "Strongest Connection: " + company_stats['strongest_connection'];
-              $("#company-stats").text(companyStatsHtml)
+              showCompanyPanel(json.data.company_stats);
+              displayLoaded(json.data.company_stats['name']);
+            } else {
+              displayLoaded();
             }
-            // Once data is returned, remove loading display
-            displayLoaded();
 
             return json_list;
           }
@@ -198,9 +196,13 @@
     }); // ready
 
     /* Displays everything once data is loaded */
-    function displayLoaded() {
-      var q = $("#form-q").val();
-      updateResultsMessage(q.split(" "));
+    function displayLoaded(results_msg) {
+      if (results_msg) {
+        $('#results').text('Results for ' + results_msg);
+      } else {
+        var q = $("#form-q").val();
+        updateResultsMessage(q.split(" "));
+      }
       $('#form-button').prop('disabled', false);
       $('#form-button').text('Search');
       $('#form-q').prop('disabled', false);
@@ -257,15 +259,8 @@
       $("#form-q").attr('placeholder', 'Search for a person, company, or website');
     }
 
-    // Loads and displays Company panel for a given company dict
-    function showCompanyPanel(c) {
-      panelHtml = '<div><img src="' + c['logo'] + '" height="32" weight="32" \
-        style="margin-bottom:4px"><a href="http://';
-      panelHtml += c['domain'] + '" target="_blank">';
-      panelHtml += c['name'] + '</a><div id="company-stats">Loading...</div></div>';
-      $('#company-panel .panel-body').empty().append(panelHtml);
-      $('#company-panel').show();
-    }
+    // JS to handle the company_panel div
+    {% include 'company_panel.js' %}
 
     var Profile = function(dict) {
       this.profile_id = dict['profile_id'];
