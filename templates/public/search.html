@@ -49,16 +49,14 @@
       <h3 id="results"></h3> 
 
       <!-- Filter by -->
-      <div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-          Dropdown
+      <div id="filter_by" class="dropdown">
+        <button class="btn btn-primary btn-inline dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+          Filters
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">People I've Emailed</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">People I Haven't Emailed</a></li>
         </ul>
       </div>
 
@@ -69,7 +67,11 @@
             <th>Name</th>
             <th>Email</th>
             <th>Connections</th>
+            <th>Total Emails Out</th>
             <th>Latest Email Out Date</th>
+            <th>Total Emails In</th>
+            <th>Latest Email In Date</th>
+            <th>Self Connected</th>
           </tr>
         </thead>
         <tbody id="search_table_body">
@@ -147,14 +149,18 @@
           {'data': 'name'},
           {'data': 'email'},
           {'data': 'connections'},
-          {'data': 'latest_email_out_date'}
+          {'data': 'total_emails_out'},
+          {'data': 'latest_email_out_date'},
+          {'data': 'total_emails_in'},
+          {'data': 'latest_email_in_date'},
+          {'data': 'self_connected'},
         ],
-        columnDefs: [
+        /*columnDefs: [
           {
             'targets': [3], // latest_email_out_date
             'visible': false
           }
-        ],
+        ],*/
         //processing: true, // ugly
         drawCallback: function(settings) {
           // Gets called every time redrawn, including just to say "loading"
@@ -289,10 +295,15 @@
       this.name = dict['name'];
       this.email = dict['email'];
       this.burner = dict['burner'];
-      if (dict['connections']) {
-        this.connections = dict['connections'];
+      this.connections = dict['connections']
+      this.total_emails_out = dict['total_emails_out']
+      this.latest_email_out_date = dict['latest_email_out_date']
+      this.total_emails_in = dict['total_emails_in']
+      this.latest_email_in_date = dict['latest_email_in_date']
+      if (dict['self_connected']) {
+        this.self_connected = dict['self_connected'];
       } else {
-        this.connections = null;
+        this.self_connected = null;
       }
     }
 
@@ -338,7 +349,23 @@
         rowDict['email'] = this.burner + '@' + '{{ settings.get("domain_name") }}';
         rowDict['connections'] = 'N/A';
       }
-      rowDict['latest_email_out_date'] = 5;
+      rowDict['total_emails_out'] = this.total_emails_out;
+      rowDict['total_emails_in'] = this.total_emails_in;
+      if (this.latest_email_out_date) {
+        rowDict['latest_email_out_date'] = this.latest_email_out_date;
+      } else {
+        rowDict['latest_email_out_date'] = 'N/A'
+      }
+      if (this.latest_email_in_date) {
+        rowDict['latest_email_in_date'] = this.latest_email_in_date;
+      } else {
+        rowDict['latest_email_in_date'] = 'N/A'
+      }
+      if (this.self_connected) {
+        rowDict['self_connected'] = 'Yes'
+      } else {
+        rowDict['self_connected'] = 'No'
+      }
       rowDict['DT_RowId'] = this.profile_id;
       return rowDict;
     }

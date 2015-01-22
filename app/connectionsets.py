@@ -12,15 +12,40 @@ class BaseProfileConnection:
     Args:
         profile is a Profile instance
         connections is a list of Connection instances
-        latest_email_out_date is a Connection instance with the most recent email out
+        self_connected is connection instance with current user
     """
-    def __init__(self, profile, connections=None, latest_email_out_date=None):
+    def __init__(self, profile, connections, current_user):
         self.profile_id = str(profile.id) ## .id is ObjectId
         self.name = profile.name
         self.email = profile.email
         self.burner = profile.burner
         self.connections = connections
-        self.latest_email_out_date = latest_email_out_date
+
+        # The following fields are processed below
+        self.total_emails_out = 0
+        self.latest_email_out_date = None
+        self.total_emails_in = 0
+        self.latest_email_in_date = None
+        self.self_connected = None
+
+        # Process connections and set other fields
+        for c in self.connections:
+            # emails_out
+            if c.total_emails_out:
+                self.total_emails_out += c.total_emails_out
+            if c.latest_email_out_date:
+                if not self.latest_email_out_date or self.latest_email_out_date > c.latest_email_out_date:
+                    self.latest_email_out_date = c.latest_email_out_date
+            # emails_in
+            if c.total_emails_in:
+                self.total_emails_in += c.total_emails_in
+            if c.latest_email_in_date:
+                if not self.latest_email_in_date or self.latest_email_in_date > c.latest_email_in_date:
+                    self.latest_email_in_date = c.latest_email_in_date
+            # self_connected
+            if current_user:
+                if current_user.same_user(c.user):
+                    self.self_connected = c
 
     def __repr__(self):
         return 'BaseProfileConnection: %s (%s)' % (self.name, self.email)
@@ -43,12 +68,41 @@ class BaseProfileConnection:
             'email': self.email, 
             'name': self.name, 
             'burner': self.burner,
+            'total_emails_out': self.total_emails_out,
+            'total_emails_in': self.total_emails_in
         }
         if self.connections:
             json['connections'] = []
             for c in self.connections:
                 json['connections'].append(c.to_json())
+        if self.self_connected:
+            json['self_connected'] = self.self_connected.to_json()
+        if self.latest_email_out_date:
+            json['latest_email_out_date'] = self.latest_email_out_date_string()
+        else:
+            json['latest_email_out_date'] = None
+        if self.latest_email_in_date:
+            json['latest_email_in_date'] = self.latest_email_in_date_string()
+        else:
+            json['latest_email_in_date'] = None
         return json
+
+    def latest_email_out_date_string(self):
+        if self.latest_email_out_date:
+            return self.latest_email_out_date.strftime('%Y/%m/%d')
+        elif self.total_emails_out:
+            return 'Not found'
+        else:
+            return 'N/A'
+
+    def latest_email_in_date_string(self):
+        if self.latest_email_in_date:
+            return self.latest_email_in_date.strftime('%Y/%m/%d')
+        elif self.total_emails_in:
+            return 'Not found'
+        else:
+            return 'N/A'
+
 
 class GroupConnectionSet:
     """

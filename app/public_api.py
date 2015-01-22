@@ -91,11 +91,9 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
         group_users = current_user.all_group_users()
         ps = []
         for p in profiles:
-            bp = BaseProfileConnection(p)
             cs = Connection.objects(profile=p, user__in=group_users)
             if len(cs) > 0:
-                bp.connections = cs
-                bp.latest_email_out_date = cs[0]
+                bp = BaseProfileConnection(p, cs, current_user)
                 ps.append(bp)
 
         results['profiles'] = list_to_json_list(ps)

@@ -423,6 +423,11 @@ $tt-suggestion-padding: 3px;
   padding-left: $tt-suggestion-padding;
 }
 
+//Filter by
+#filter_by {
+  float: right;
+}
+
 // User settings
 .user-settings {
   padding: 20px 20px;
