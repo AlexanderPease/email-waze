@@ -259,12 +259,11 @@
 
     // Loads and displays Company panel for a given company dict
     function showCompanyPanel(c) {
-      console.log(c)
       panelHtml = '<div><img src="' + c['logo'] + '" height="32" weight="32" \
         style="margin-bottom:4px"><a href="http://';
       panelHtml += c['domain'] + '" target="_blank">';
       panelHtml += c['name'] + '</a><div id="company-stats">Loading...</div></div>';
-      $('#company-panel .panel-body').append(panelHtml);
+      $('#company-panel .panel-body').empty().append(panelHtml);
       $('#company-panel').show();
     }
 
