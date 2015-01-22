@@ -71,7 +71,7 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
             c_stats = {
                 'name': c.name,
                 'domain': c.domain,
-                'strongest_connection': 'foo'
+                'num_connections': len(profiles)
             }
             if c.clearbit:
                 if 'logo' in c.clearbit.keys():
@@ -96,7 +96,31 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
                 bp = BaseProfileConnection(p, cs, current_user)
                 ps.append(bp)
 
+        # More company_stats if applicable
+        if 'company_stats' in results.keys():
+            latest_connection = ps[0]
+            most_connection = ps[0]
+            for bp in ps[1:]:
+                if later_date(latest_connection.latest_email_out_date, bp.latest_email_out_date):
+                    latest_connection = bp
+                if bp.total_emails() > most_connection.total_emails():
+                    most_connection = bp
+            results['company_stats']['latest_connection'] = latest_connection.to_json()
+            results['company_stats']['most_connection'] = most_connection.to_json()
+
         results['profiles'] = list_to_json_list(ps)
         return self.api_response(results)
+
+# Returns True if d2 is later than d1
+def later_date(d1, d2):
+    if not d1:
+        return True
+    elif not d2:
+        return False
+    elif d1 > d2:
+        return False
+    else:
+        return True
+
 
 

@@ -117,6 +117,7 @@ class Scratch(app.basic.BaseHandler):
         '''
 
         # Update all Company docs if needed
+        '''
         current_num = 1
         companies = Company.objects(__raw__={'date_queried_clearbit': {'$exists': False}})
         num_total = len(companies)
@@ -125,6 +126,7 @@ class Scratch(app.basic.BaseHandler):
             if c.domain != "intuit.com":
                 c.update_clearbit()
             current_num += 1
+        '''
 
         # Counts number of profiles that have an email address
         # that is duplicated (via capitalization) in the database

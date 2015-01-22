@@ -7,7 +7,7 @@ from db.connectiondb import Connection
 
 class BaseProfileConnection:
     """
-    Class for all Profiles and relevant Connection info if it exists
+    Class for a Profile and relevant Connection info if it exists
 
     Args:
         profile is a Profile instance
@@ -22,6 +22,7 @@ class BaseProfileConnection:
         self.connections = connections
 
         # The following fields are processed below
+        self.connection_strength = 0
         self.total_emails_out = 0
         self.latest_email_out_date = None
         self.total_emails_in = 0
@@ -58,6 +59,9 @@ class BaseProfileConnection:
         Ex: reply.craigslist.com from foo@reply.craigslist.com
         """
         return self.email.split('@')[1]
+
+    def total_emails(self):
+        return self.total_emails_out + self.total_emails_in
 
     def to_json(self):
         '''

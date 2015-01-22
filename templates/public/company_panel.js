@@ -18,8 +18,10 @@ function showCompanyPanel(c) {
   }
   panelHtml += '<a href="http://';
   panelHtml += c['domain'] + '" target="_blank">';
-  panelHtml += c['name'] + '</a><div>'
-  panelHtml += 'Strongest Connection: ' + c['strongest_connection'] + '</div></div>';
+  panelHtml += c['name'] + '</a><div>';
+  panelHtml += 'Connected To: ' + c['num_connections'] + ' profiles</br>';
+  panelHtml += 'Most Recent Connection: ' + c['latest_connection']['name'] + '</br>';
+  panelHtml += 'Strongest Connection: ' + c['most_connection']['name'] + '</div></div>';
   $('#company-panel .panel-body').empty().append(panelHtml);
   $('#company-panel').show();
 }
