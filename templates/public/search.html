@@ -198,7 +198,7 @@
     /* Displays everything once data is loaded */
     function displayLoaded(results_msg) {
       if (results_msg) {
-        $('#results').text('Results for ' + results_msg);
+        $('#results').text('');
       } else {
         var q = $("#form-q").val();
         updateResultsMessage(q.split(" "));
