@@ -69,6 +69,7 @@
             <th>Name</th>
             <th>Email</th>
             <th>Connections</th>
+            <th>Latest Email Out Date</th>
           </tr>
         </thead>
         <tbody id="search_table_body">
@@ -145,7 +146,14 @@
         columns: [
           {'data': 'name'},
           {'data': 'email'},
-          {'data': 'connections'}
+          {'data': 'connections'},
+          {'data': 'latest_email_out_date'}
+        ],
+        columnDefs: [
+          {
+            'targets': [3], // latest_email_out_date
+            'visible': false
+          }
         ],
         //processing: true, // ugly
         drawCallback: function(settings) {
@@ -330,6 +338,7 @@
         rowDict['email'] = this.burner + '@' + '{{ settings.get("domain_name") }}';
         rowDict['connections'] = 'N/A';
       }
+      rowDict['latest_email_out_date'] = 5;
       rowDict['DT_RowId'] = this.profile_id;
       return rowDict;
     }
