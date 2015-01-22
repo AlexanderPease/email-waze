@@ -65,7 +65,6 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
             })
         # Exact ID search
         elif company_id:
-            logging.info(company_id)
             c = Company.objects.get(id=company_id)
             profiles = Profile.objects(email__icontains=c.domain)
             # Add Company-level stats for this type of search
