@@ -55,12 +55,15 @@
           <!-- Filter by -->
           <div id="filter_by" class="dropdown">
             <button class="btn btn-primary btn-inline dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-              Filters
+              Sort By
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-              <li id="filter_self_emailed" role="presentation"><a role="menuitem" tabindex="-1" href="#">People I've Emailed</a></li>
-              <li role="presentation"><a role="menuitem" tabindex="-1" href="#">People I Haven't Emailed</a></li>
+              <li class="filter-option" data-filter="total_emails_out" role="presentation"><a role="menuitem" tabindex="-1" href="#">Number of Emails Sent</a></li>
+              <li class="filter-option" data-filter="total_emails_in" role="presentation"><a role="menuitem" tabindex="-1" href="#">Number of Emails Received</a></li>
+              <li class="filter-option" data-filter="latest_email_out_date" role="presentation"><a role="menuitem" tabindex="-1" href="#">Most Recent Email Sent</a></li>
+              <li class="filter-option" data-filter="latest_email_in_date" role="presentation"><a role="menuitem" tabindex="-1" href="#">Most Recent Email Received</a></li>
+              <li class="filter-option" data-filter="all_fields" role="presentation"><a role="menuitem" tabindex="-1" href="#">Show All Fields</a></li>
             </ul>
           </div>
         </div>
@@ -154,19 +157,19 @@
         columns: [
           {'data': 'name'},
           {'data': 'email'},
-          {'data': 'connections'},
-          {'data': 'total_emails_out'},
-          {'data': 'latest_email_out_date'},
-          {'data': 'total_emails_in'},
-          {'data': 'latest_email_in_date'},
-          {'data': 'self_connected'},
+          {'name': 'connections', 'data': 'connections'},
+          {'name': 'total_emails_out', 'data': 'total_emails_out'},
+          {'name': 'total_emails_in', 'data': 'total_emails_in'},
+          {'name': 'latest_email_out_date', 'data': 'latest_email_out_date'},
+          {'name': 'latest_email_in_date', 'data': 'latest_email_in_date'},
+          {'name': 'connections', 'data': 'self_connected'},
         ],
-        /*columnDefs: [
+        columnDefs: [
           {
-            'targets': [3], // latest_email_out_date
+            'targets': [3, 4, 5, 6, 7],
             'visible': false
           }
-        ],*/
+        ],
         //processing: true, // ugly
         drawCallback: function(settings) {
           // Gets called every time redrawn, including just to say "loading"
@@ -207,6 +210,16 @@
         //var data = dataTable.fnGetData('tr'); // fnGetData undefined. Hack around
         p_id = $('td', this).parent().attr('id');
         $('#modal-' + p_id).modal();
+      });
+
+      // Filter options
+      $('.filter-option').click(function() {
+        var filterName = $(this).attr('data-filter');
+        if (filterName == 'all_fields') {
+          dataTable.columns().visible(true);
+        } else {
+          dataTable.column(filterName + ':name').visible(true);
+        }
       });
 
       // Clipboard
