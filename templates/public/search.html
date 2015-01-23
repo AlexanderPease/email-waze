@@ -218,7 +218,7 @@
         if (filterName == 'all_fields') {
           dataTable.columns().visible(true);
         } else {
-          dataTable.column(filterName + ':name').visible(true);
+          dataTable.column(filterName + ':name').order('desc').visible(true);
         }
       });
 
