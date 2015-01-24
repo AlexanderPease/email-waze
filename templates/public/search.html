@@ -59,11 +59,11 @@
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-              <li class="filter-option" data-filter="total_emails_out" role="presentation"><a role="menuitem" tabindex="-1" href="#">Number of Emails Sent</a></li>
-              <li class="filter-option" data-filter="total_emails_in" role="presentation"><a role="menuitem" tabindex="-1" href="#">Number of Emails Received</a></li>
-              <li class="filter-option" data-filter="latest_email_out_date" role="presentation"><a role="menuitem" tabindex="-1" href="#">Most Recent Email Sent</a></li>
-              <li class="filter-option" data-filter="latest_email_in_date" role="presentation"><a role="menuitem" tabindex="-1" href="#">Most Recent Email Received</a></li>
-              <li class="filter-option" data-filter="all_fields" role="presentation"><a role="menuitem" tabindex="-1" href="#">Show All Fields</a></li>
+              <li class="filter-option" data-filter="total_emails_out" role="presentation"><a role="menuitem" tabindex="-1">Number of Emails Sent</a></li>
+              <li class="filter-option" data-filter="total_emails_in" role="presentation"><a role="menuitem" tabindex="-1">Number of Emails Received</a></li>
+              <li class="filter-option" data-filter="latest_email_out_date" role="presentation"><a role="menuitem" tabindex="-1">Most Recent Email Sent</a></li>
+              <li class="filter-option" data-filter="latest_email_in_date" role="presentation"><a role="menuitem" tabindex="-1">Most Recent Email Received</a></li>
+              <li class="filter-option" data-filter="all_fields" role="presentation"><a role="menuitem" tabindex="-1">Show All Fields</a></li>
             </ul>
           </div>
         </div>
@@ -218,7 +218,7 @@
         if (filterName == 'all_fields') {
           dataTable.columns().visible(true);
         } else {
-          dataTable.column(filterName + ':name').order('desc').visible(true);
+          dataTable.column(filterName + ':name').order('desc').draw().visible(true);
         }
       });
 
