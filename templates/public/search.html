@@ -76,6 +76,7 @@
             <th>Name</th>
             <th>Email</th>
             <th>Connections</th>
+            <th>Days Since Contact</th>
             <th>Total Emails Out</th>
             <th>Latest Email Out Date</th>
             <th>Total Emails In</th>
@@ -158,6 +159,7 @@
           {'data': 'name'},
           {'data': 'email'},
           {'name': 'connections', 'data': 'connections'},
+          {'name': 'days_since_contact', 'data': 'days_since_contact'},
           {'name': 'total_emails_out', 'data': 'total_emails_out'},
           {'name': 'total_emails_in', 'data': 'total_emails_in'},
           {'name': 'latest_email_out_date', 'data': 'latest_email_out_date'},
@@ -166,7 +168,7 @@
         ],
         columnDefs: [
           {
-            'targets': [3, 4, 5, 6, 7],
+            'targets': [4, 5, 6, 7, 8],
             'visible': false
           }
         ],
@@ -315,6 +317,7 @@
       this.email = dict['email'];
       this.burner = dict['burner'];
       this.connections = dict['connections']
+      this.days_since_contact = dict['days_since_contact']
       this.total_emails_out = dict['total_emails_out']
       this.latest_email_out_date = dict['latest_email_out_date']
       this.total_emails_in = dict['total_emails_in']
@@ -368,22 +371,27 @@
         rowDict['email'] = this.burner + '@' + '{{ settings.get("domain_name") }}';
         rowDict['connections'] = 'N/A';
       }
+      if (this.days_since_contact) {
+        rowDict['days_since_contact'] = this.days_since_contact;
+      } else {
+        rowDict['days_since_contact'] = 'N/A';
+      }
       rowDict['total_emails_out'] = this.total_emails_out;
       rowDict['total_emails_in'] = this.total_emails_in;
       if (this.latest_email_out_date) {
         rowDict['latest_email_out_date'] = this.latest_email_out_date;
       } else {
-        rowDict['latest_email_out_date'] = 'N/A'
+        rowDict['latest_email_out_date'] = 'N/A';
       }
       if (this.latest_email_in_date) {
         rowDict['latest_email_in_date'] = this.latest_email_in_date;
       } else {
-        rowDict['latest_email_in_date'] = 'N/A'
+        rowDict['latest_email_in_date'] = 'N/A';
       }
       if (this.self_connected) {
-        rowDict['self_connected'] = 'Yes'
+        rowDict['self_connected'] = 'Yes';
       } else {
-        rowDict['self_connected'] = 'No'
+        rowDict['self_connected'] = 'No';
       }
       rowDict['DT_RowId'] = this.profile_id;
       return rowDict;

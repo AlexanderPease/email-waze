@@ -1,4 +1,6 @@
-import settings, logging
+import settings
+import logging
+import datetime
 from db.profiledb import Profile
 from db.userdb import User
 from db.groupdb import Group
@@ -22,12 +24,13 @@ class BaseProfileConnection:
         self.connections = connections
 
         # The following fields are processed below
-        self.connection_strength = 0
+        #self.connection_strength = 0
         self.total_emails_out = 0
         self.latest_email_out_date = None
         self.total_emails_in = 0
         self.latest_email_in_date = None
         self.self_connected = None
+        self.days_since_contact = 0
 
         # Process connections and set other fields
         for c in self.connections:
@@ -47,6 +50,9 @@ class BaseProfileConnection:
             if current_user:
                 if current_user.same_user(c.user):
                     self.self_connected = c
+        # days_since_contact
+        if self.latest_email_date():
+            self.days_since_contact = (datetime.datetime.now() - self.latest_email_date()).days
 
     def __repr__(self):
         return 'BaseProfileConnection: %s (%s)' % (self.name, self.email)
@@ -89,6 +95,10 @@ class BaseProfileConnection:
             json['latest_email_in_date'] = self.latest_email_in_date_string()
         else:
             json['latest_email_in_date'] = None
+        if self.days_since_contact:
+            json['days_since_contact'] = self.days_since_contact
+        else:
+            json['days_since_contact'] = None
         return json
 
     def latest_email_out_date_string(self):
@@ -107,6 +117,20 @@ class BaseProfileConnection:
         else:
             return 'N/A'
 
+    def latest_email_date(self):
+        """
+        Returns more recent of latest_email_out/in_date, or None if neither exists
+        """
+        if not self.latest_email_out_date and not self.latest_email_in_date:
+            return None
+        elif not self.latest_email_out_date:
+            return self.latest_email_in_date
+        elif not self.latest_email_in_date:
+            return self.latest_email_out_date
+        elif self.latest_email_out_date > self.latest_email_in_date:
+            return self.latest_email_out_date
+        else:
+            return self.latest_email_in_date
 
 class GroupConnectionSet:
     """
@@ -224,3 +248,4 @@ def list_to_json_list(l):
     for connection_set in l:
         json_list.append(connection_set.to_json())
     return json_list
+
