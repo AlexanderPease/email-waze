@@ -427,8 +427,12 @@ $tt-suggestion-padding: 3px;
   padding-left: $tt-suggestion-padding;
 }
 
-//Filter by
+//Filters
 #filter_by {
+  float: right;
+  margin-left: 10px;
+}
+#group_select {
   float: right;
 }
 

@@ -51,10 +51,10 @@
           <h3 id="results"></h3> 
         </div> 
 
-        <div class="col-sm-6">
+        <div class="col-sm-6 float-right">
           <!-- Filter by -->
           <div id="filter_by" class="dropdown">
-            <button class="btn btn-primary btn-inline dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+            <button class="btn btn-primary btn-inline dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
               Sort By
               <span class="caret"></span>
             </button>
@@ -66,6 +66,20 @@
               <li class="filter-option" data-filter="all_fields" role="presentation"><a role="menuitem" tabindex="-1">Show All Fields</a></li>
             </ul>
           </div>
+          {% if groups %}
+            <div id="group_select" class="dropdown">
+              <button class="btn btn-primary btn-inline dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
+                NTWRKs
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                {% for g in groups %}
+                  <li class="group-option" data-group-id="{{ g.id }}" role="presentation"><a role="menuitem" tabindex="-1">{{ g }}</a></li>
+                {% end %}
+                <li class="group-option" data-group-id="self" role="presentation"><a role="menuitem" tabindex="-1">Just Me</a></li>
+              </ul>
+            </div>
+          {% end %}
         </div>
       </div>
 
@@ -272,6 +286,16 @@
         } else {
           dataTable.column(filterName + ':name').order('desc').draw().visible(true);
         }
+      });
+
+      // Filter options
+      $('.group-option').click(function() {
+        var groupId = $(this).attr('data-group-id');
+        var oldUrl = $("#search_table").DataTable().ajax.url();
+        var newUrl = oldUrl + '&group_id=' + groupId;
+        console.log(newUrl);
+        $("#search_table").DataTable().ajax.url(newUrl).load();
+        
       });
 
     }); // ready

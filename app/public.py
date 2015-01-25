@@ -33,7 +33,9 @@ class Index(app.basic.BaseHandler):
 class Search(app.basic.BaseHandler):
   @tornado.web.authenticated
   def get(self):
-    return self.render('public/search.html')
+    # Groups
+    gs = User.objects.get(email=self.current_user).get_groups()
+    return self.render('public/search.html', groups=gs)
 
 """
 class Search(app.basic.BaseHandler):
