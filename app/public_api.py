@@ -65,19 +65,8 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
             })
         # Exact ID search
         elif company_id:
-            c = Company.objects.get(id=company_id)
-            profiles = Profile.objects(email__icontains=c.domain)
-            # Add Company-level stats for this type of search
-            c_stats = {
-                'name': c.name,
-                'domain': c.domain,
-                'num_connections': len(profiles)
-            }
-            if c.clearbit:
-                if 'logo' in c.clearbit.keys():
-                    c_stats['logo'] = c.clearbit['logo']
-
-            results['company_stats'] = c_stats
+            company = Company.objects.get(id=company_id)
+            profiles = Profile.objects(email__icontains=company.domain)
         # Advanced search query. Specific fields are searched
         else:
             # Global profile results
@@ -95,9 +84,18 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
             if len(cs) > 0:
                 bp = BaseProfileConnection(p, cs, current_user)
                 ps.append(bp)
+        results['profiles'] = list_to_json_list(ps)
 
-        # More company_stats if applicable
-        if 'company_stats' in results.keys():
+        # Company stats if a single company was selected
+        if company_id: 
+            c_stats = {
+                'name': company.name,
+                'domain': company.domain,
+                'num_connections': len(ps)
+            }
+            if company.clearbit:
+                if 'logo' in company.clearbit.keys():
+                    c_stats['logo'] = company.clearbit['logo']
             latest_connection = ps[0]
             most_connection = ps[0]
             for bp in ps[1:]:
@@ -105,10 +103,10 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
                     latest_connection = bp
                 if bp.total_emails() > most_connection.total_emails():
                     most_connection = bp
-            results['company_stats']['latest_connection'] = latest_connection.to_json()
-            results['company_stats']['most_connection'] = most_connection.to_json()
+            c_stats['latest_connection'] = latest_connection.to_json()
+            c_stats['most_connection'] = most_connection.to_json()
+            results['company_stats'] = c_stats
 
-        results['profiles'] = list_to_json_list(ps)
         return self.api_response(results)
 
 # Returns True if d2 is later than d1
