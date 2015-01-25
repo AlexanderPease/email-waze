@@ -185,6 +185,28 @@
         drawCallback: function(settings) {
           // Gets called every time redrawn, including just to say "loading"
           $('td').addClass('datatables-cell');
+
+                // Copy to clipboard icons
+          var moviePath = '{{ static_url("ZeroClipboard.swf") }}';
+          console.log(moviePath)
+          ZeroClipboard.config({
+            swfPath: moviePath
+          });
+          var client = new ZeroClipboard( $(".copy-to-clipboard") );
+          console.log(client)
+          client.on('ready', function(readyEvent) {
+            console.log('ready')
+            client.on('aftercopy', function(event) {
+              console.log('aftercopy')
+              // `this` === `client`
+              // `event.target` === the element that was clicked. Won't work with jquery though. 
+              //alert("Copied text to clipboard: " + event.data["text/plain"] );
+              $('.copy-to-clipboard-check').removeClass('transition');
+              var dataClipboardText = event.data['text/plain'];
+              var checkmark = $('.copy-to-clipboard-check[data-clipboard-text-check="' + dataClipboardText + '"]');
+              checkmark.addClass('transition');
+            });
+          }); // client.on('ready')
         },
         ajax: {
           url: url,
@@ -233,24 +255,6 @@
         }
       });
 
-      // Clipboard
-      //var moviePath = $('#copy-button').text();
-      /*var moviePath = '{{ static_url("ZeroClipboard.swf") }}';
-      ZeroClipboard.config({
-        swfPath: moviePath
-      });
-      var client = new ZeroClipboard( $(".copy-to-clipboard") );
-      client.on('ready', function(readyEvent) {
-        client.on('aftercopy', function(event) {
-          // `this` === `client`
-          // `event.target` === the element that was clicked. Won't work with jquery though. 
-          //alert("Copied text to clipboard: " + event.data["text/plain"] );
-          $('.copy-to-clipboard-check').removeClass('transition');
-          var dataClipboardText = event.data['text/plain'];
-          var checkmark = $('.copy-to-clipboard-check[data-clipboard-text-check="' + dataClipboardText + '"]');
-          checkmark.addClass('transition');
-        });
-      });*/
     }); // ready
 
     /* Displays everything once data is loaded */
