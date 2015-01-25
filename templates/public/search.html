@@ -215,9 +215,6 @@
         $('#modal-' + p_id).modal();
       });
 
-      // Init datatables for each profile modal
-      $('table.table-modal-profile').DataTable();
-
       // Filter options
       $('.filter-option').click(function() {
         var filterName = $(this).attr('data-filter');
@@ -412,68 +409,13 @@
         connections: this.connections 
       }
       $('#modalsDiv').append(template(context));
-      console.log('#table-' + this.profile_id)
-      $('#table-' + this.profile_id).DataTable();
       // Each profile modal has a datatable in it
-
-      /*
-      var modalHtml = '<div id="modal-' + this.profile_id + '" ';
-      modalHtml += 'class="modal fade" tabindex="-1" \
-        role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"> \
-          <div class="modal-dialog modal-lg"> \
-            <div class="modal-content"> \
-              <div class="modal-header"> \
-                <button type="button" class="close" data-dismiss="modal" \
-                aria-label="Close"><span aria-hidden="true">&times;</span></button> \
-                <h4 class="modal-title" id="detailModalTitle">';
-      modalHtml += this.name;
-      if (this.connections) {
-        modalHtml += ' (' + this.email +')'
-      } else {
-        modalHtml += ' (' + this.burner + '@{{ settings.get("domain_name") }})'
-      }
-      modalHtml += '</h4> \
-              </div> \
-              <div class="modal-body">';
-      // Body of modal
-      if (this.connections) {
-        for (var i=0; i<this.connections.length; i++) {
-          var c = this.connections[i];
-          if (i > 0) {
-            modalHtml += '</br>'
-          }
-          if (c.total_emails_out == 0 && c.total_emails_in == 0) {
-            modalHtml += c.connected_user_email + ' <--> ' + this.email + '</br>';
-          } else {
-            modalHtml += c.connected_user_email + ' --> ' + this.email + ': '
-            if (c.total_emails_out == 0) {
-              modalHtml += c.total_emails_out + ' emails';
-            } else if (c.total_emails_out == 1) {
-              modalHtml += c.total_emails_out + ' email';
-            } else {
-              modalHtml += c.total_emails_out + ' emails, most recently on ' + c.latest_email_out_date;
-            }
-            modalHtml += '</br>';
-            modalHtml += this.email + ' --> ' + c.connected_user_email + ': '
-            if (c.total_emails_in == 0) {
-              modalHtml += c.total_emails_in + ' emails';
-            } else if (c.total_emails_in == 1) {
-              modalHtml += c.total_emails_in + ' email';
-            } else {
-              modalHtml += c.total_emails_in + ' emails, most recently on ' + c.latest_email_in_date;
-            }
-            modalHtml += '</br>';
-          }
-        }
-      }
-      // Close modal
-      modalHtml += '</div><!--group-modal modal-body--> \
-            </div> \
-          </div> \
-        </div>';
-      $('#modalsDiv').append(modalHtml);
-    */
+      $('#table-' + this.profile_id).DataTable({
+        searching: false,
+        paging: false
+      });
     }
+
   </script>
 {% end %}
   
