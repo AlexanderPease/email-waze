@@ -38,7 +38,6 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
         company_id = self.get_argument('company_id', '')
         # Select groups
         group_id = self.get_argument('group_id', '')
-        logging.info(group_id)
         # Check for no parameters
         if not q and not name and not domain and not company_id:
             return self.api_error(400, 'Did not include query parameters')
@@ -95,7 +94,10 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
             if len(cs) > 0:
                 bp = BaseProfileConnection(p, cs, current_user)
                 ps.append(bp)
-        results['profiles'] = list_to_json_list(ps)
+        if len(ps) == 0:
+            return self.api_response(data={})
+        else:
+            results['profiles'] = list_to_json_list(ps)
 
         # Company stats if a single company was selected
         if company_id: 

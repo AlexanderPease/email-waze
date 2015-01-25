@@ -294,6 +294,7 @@
         var oldUrl = $("#search_table").DataTable().ajax.url();
         var newUrl = oldUrl + '&group_id=' + groupId;
         console.log(newUrl);
+        displayLoading();
         $("#search_table").DataTable().ajax.url(newUrl).load();
         
       });
