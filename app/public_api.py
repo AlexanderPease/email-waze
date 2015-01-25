@@ -35,6 +35,8 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
         company = self.get_argument('company', '')
         # Exact ID search
         company_id = self.get_argument('company_id', '')
+        # Select groups
+        group_id = self.get_argument('group_id', '')
         # Check for no parameters
         if not q and not name and not domain and not company_id:
             return self.api_error(400, 'Did not include query parameters')
@@ -75,7 +77,10 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
             return self.api_response(data={})
 
         ### BaseProfileConnections
-        group_users = current_user.all_group_users()
+        if group_id == 'self':
+            group_users = [current_user]
+        else:
+            group_users = current_user.all_group_users()
         ps = []
         for p in profiles:
             cs = Connection.objects(profile=p, user__in=group_users)
