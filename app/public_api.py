@@ -5,6 +5,7 @@ from db.profiledb import Profile
 from db.userdb import User
 from db.companydb import Company
 from db.connectiondb import Connection
+from db.groupdb import Group
 from connectionsets import GroupConnectionSet
 from connectionsets import ProfileConnectionSet
 from connectionsets import BaseProfileConnection
@@ -79,6 +80,12 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
         ### BaseProfileConnections
         if group_id == 'self':
             group_users = [current_user]
+        elif group_id:
+            try:
+                group = Group.objects.get(id=group_id, users=current_user)
+                group_users = group.users
+            except:
+                group_users = current_user.all_group_users()
         else:
             group_users = current_user.all_group_users()
         ps = []
