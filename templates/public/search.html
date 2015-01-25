@@ -161,7 +161,7 @@
           {
             'data': 'email', 
             'render': function(data, type, full, meta) { 
-              return '<a class="copy-to-clipboard" data-clipboard-text="' + data + '">' + 
+              return '<a class="copy-to-clipboard" data-clipboard-text="' + data + '" data-toggle="popover" data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">' + 
                 data + '</a>' + 
                 '<span class="glyphicon glyphicon-ok copy-to-clipboard-check" data-clipboard-text-check="' + data + '" aria-hidden="true"></span>';
             }
@@ -204,6 +204,8 @@
           $('.copy-to-clipboard').click(function(event) {
             event.stopPropagation();
           });
+          // Init email link suggestion popover
+          $('[data-toggle="popover"]').popover();
         },
         ajax: {
           url: url,
