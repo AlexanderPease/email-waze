@@ -89,7 +89,9 @@
       </table>
 
       <!-- Detail view modals inserted here -->
-      <div id="modalsDiv"></div>
+      <div id="modalsDiv">
+        {% include 'search_result_modal.html' %}
+      </div>
 
     </div> <!-- container -->
   </section> <!-- feature -->
@@ -399,6 +401,17 @@
 
     // Creates a detail view modal for this Profile instance
     Profile.prototype.addModal = function() {
+      var source   = $("#search-result-modal").html();
+      var template = Handlebars.compile(source);
+      var context = {
+        profile_id: this.profile_id,
+        name: this.name,
+        email: this.email,
+        connections: this.connections 
+      }
+      $('#modalsDiv').append(template(context));
+
+      /*
       var modalHtml = '<div id="modal-' + this.profile_id + '" ';
       modalHtml += 'class="modal fade" tabindex="-1" \
         role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"> \
@@ -454,8 +467,8 @@
           </div> \
         </div>';
       $('#modalsDiv').append(modalHtml);
+    */
     }
-
   </script>
 {% end %}
   
