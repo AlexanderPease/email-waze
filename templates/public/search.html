@@ -221,6 +221,12 @@
           url: url,
           dataSrc: function(json) {
             console.log(json);
+            // Handle errors
+            if (json.status_code != 200) {
+              console.log('Server returned status code: ' + json.status_code);
+              displayLoaded('Error loading data, please try again');
+              return []
+            }
             // Redirect if no results
             if (json.data.profiles == null) {
               window.location.href = "{{ settings.get('base_url') }}" + "?err=no_results";
@@ -243,6 +249,9 @@
             }
 
             return json_list;
+          },
+          error: function(reason) {
+            console.warning('Server threw error to #search_table datatable');
           }
         } 
       });// datatable
@@ -270,7 +279,7 @@
     /* Displays everything once data is loaded */
     function displayLoaded(results_msg) {
       if (results_msg) {
-        $('#results').text('');
+        $('#results').text(results_msg);
       } else {
         var q = $("#form-q").val();
         updateResultsMessage(q.split(" "));

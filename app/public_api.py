@@ -70,9 +70,9 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
             # Global profile results
             profiles = Profile.objects(name__icontains=name, email__icontains=domain) # case-insensitive contains
 
-            # No results
-            if len(profiles) == 0:
-                return self.api_response(data={})
+        # No results
+        if len(profiles) == 0:
+            return self.api_response(data={})
 
         ### BaseProfileConnections
         group_users = current_user.all_group_users()
