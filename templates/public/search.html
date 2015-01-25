@@ -158,7 +158,14 @@
         },
         columns: [
           {'data': 'name'},
-          {'data': 'email'},
+          {
+            'data': 'email', 
+            'render': function(data, type, full, meta) { 
+              return '<a class="copy-to-clipboard" data-clipboard-text="' + data + '">' + 
+                data + '</a>' + 
+                '<span class="glyphicon glyphicon-ok copy-to-clipboard-check" data-clipboard-text-check="' + data + '" aria-hidden="true"></span>';
+            }
+          },
           {'name': 'connections', 'data': 'connections'},
           {'name': 'days_since_contact', 'data': 'days_since_contact'},
           {'name': 'total_emails_out', 'data': 'total_emails_out'},
@@ -177,6 +184,38 @@
         drawCallback: function(settings) {
           // Gets called every time redrawn, including just to say "loading"
           $('td').addClass('datatables-cell');
+          // Copy to clipboard icons for email cells
+          var moviePath = '{{ static_url("ZeroClipboard.swf") }}';
+          ZeroClipboard.config({
+            swfPath: moviePath
+          });
+          var client = new ZeroClipboard( $(".copy-to-clipboard") );
+          client.on('ready', function(event) {
+            client.on('aftercopy', function(event) {
+              // `this` === `client`
+              // `event.target` === the element that was clicked. Won't work with jquery though. 
+              $('.copy-to-clipboard-check').removeClass('transition');
+              var dataClipboardText = event.data['text/plain'];
+              var checkmark = $('.copy-to-clipboard-check[data-clipboard-text-check="' + dataClipboardText + '"]');
+              checkmark.addClass('transition');
+              // Remove email link popovers
+              $('.copy-to-clipboard').popover('destroy');
+            });
+          }); // client.on('ready')
+          // Email link popover
+          $('.copy-to-clipboard').popover({
+            content: 'Click to copy to clipboard',
+            placement: 'top',
+            trigger: 'hover',
+            delay: {
+              show: 800,
+              hide: 100
+            }
+          });
+          $('.copy-to-clipboard').click(function(event) {
+            // Stop tr click event firing when email link is clicked
+            event.stopPropagation();
+          });
         },
         ajax: {
           url: url,
@@ -210,6 +249,7 @@
 
       // Display detail modal when row is clicked on
       $('#search_table tbody').on('click', 'tr', function() {
+        console.log('tr clicked')
         //var data = dataTable.fnGetData('tr'); // fnGetData undefined. Hack around
         p_id = $('td', this).parent().attr('id');
         $('#modal-' + p_id).modal();
@@ -225,24 +265,6 @@
         }
       });
 
-      // Clipboard
-      //var moviePath = $('#copy-button').text();
-      /*var moviePath = '{{ static_url("ZeroClipboard.swf") }}';
-      ZeroClipboard.config({
-        swfPath: moviePath
-      });
-      var client = new ZeroClipboard( $(".copy-to-clipboard") );
-      client.on('ready', function(readyEvent) {
-        client.on('aftercopy', function(event) {
-          // `this` === `client`
-          // `event.target` === the element that was clicked. Won't work with jquery though. 
-          //alert("Copied text to clipboard: " + event.data["text/plain"] );
-          $('.copy-to-clipboard-check').removeClass('transition');
-          var dataClipboardText = event.data['text/plain'];
-          var checkmark = $('.copy-to-clipboard-check[data-clipboard-text-check="' + dataClipboardText + '"]');
-          checkmark.addClass('transition');
-        });
-      });*/
     }); // ready
 
     /* Displays everything once data is loaded */
