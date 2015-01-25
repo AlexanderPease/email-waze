@@ -200,6 +200,10 @@
               checkmark.addClass('transition');
             });
           }); // client.on('ready')
+          // Stop tr click event firing when email link is clicked
+          $('.copy-to-clipboard').click(function(event) {
+            event.stopPropagation();
+          });
         },
         ajax: {
           url: url,
@@ -232,11 +236,6 @@
       });// datatable
 
       // Display detail modal when row is clicked on
-      $('a .copy-to-clipboard').click(function(event) {
-        console.log('a clicked')
-        event.stopPropagation();
-        console.log('after')
-      });
 
       $('#search_table tbody').on('click', 'tr', function() {
         console.log('tr clicked')
