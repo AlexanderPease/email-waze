@@ -10,9 +10,30 @@
           </h4>
         </div>
         <div class="modal-body">
-          {{!#each connections }}
-            {{! total_emails_out }} emails sent
-          {{!/each}}
+          <table id="table-{{! profile_id }}" class="table-modal-profile row-border hover">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Total Emails Out</th>
+                <th>Total Emails In</th>
+                <th>Latest Email Out Date</th>
+                <th>Latest Email In Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{!#each connections }}
+                <tr>
+                  <td>{{! connected_user_name }}</td>
+                  <td>{{! connected_user_email }}</td>
+                  <td>{{! total_emails_out }}</td>
+                  <td>{{! total_emails_in }}</td>
+                  <td>{{! latest_email_out_date }}</td>
+                  <td>{{! latest_email_in_date }}</td>
+                </tr>
+              {{!/each}}
+            </tbody>
+          </table>
         </div><!--group-modal modal-body-->
       </div>
     </div>

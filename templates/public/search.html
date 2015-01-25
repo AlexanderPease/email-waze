@@ -90,7 +90,7 @@
 
       <!-- Detail view modals inserted here -->
       <div id="modalsDiv">
-        {% include 'search_result_modal.html' %}
+        {% include 'search_result_modal.hbs' %}
       </div>
 
     </div> <!-- container -->
@@ -136,7 +136,6 @@
 
       // Init DataTable
       params = getQueryParameters();
-      console.log(params)
       var q = params['q']
       var company_id = params['company_id']
       var name = params['name'];
@@ -215,6 +214,9 @@
         p_id = $('td', this).parent().attr('id');
         $('#modal-' + p_id).modal();
       });
+
+      // Init datatables for each profile modal
+      $('table.table-modal-profile').DataTable();
 
       // Filter options
       $('.filter-option').click(function() {
@@ -410,6 +412,9 @@
         connections: this.connections 
       }
       $('#modalsDiv').append(template(context));
+      console.log('#table-' + this.profile_id)
+      $('#table-' + this.profile_id).DataTable();
+      // Each profile modal has a datatable in it
 
       /*
       var modalHtml = '<div id="modal-' + this.profile_id + '" ';
