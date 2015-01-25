@@ -186,7 +186,7 @@
           // Gets called every time redrawn, including just to say "loading"
           $('td').addClass('datatables-cell');
 
-                // Copy to clipboard icons
+          // Copy to clipboard icons for email cells
           var moviePath = '{{ static_url("ZeroClipboard.swf") }}';
           console.log(moviePath)
           ZeroClipboard.config({
@@ -194,7 +194,7 @@
           });
           var client = new ZeroClipboard( $(".copy-to-clipboard") );
           console.log(client)
-          client.on('ready', function(readyEvent) {
+          client.on('ready', function(event) {
             console.log('ready')
             client.on('aftercopy', function(event) {
               console.log('aftercopy')
@@ -240,6 +240,12 @@
 
       // Display detail modal when row is clicked on
       $('#search_table tbody').on('click', 'tr', function() {
+        // Do not fire if .copy-to-clipboard was clicked
+        if (!$(this).hasClass('copy-to-clipboard')) {
+          console.log('prevent copy to clipboard modal')
+          return;
+        }
+
         //var data = dataTable.fnGetData('tr'); // fnGetData undefined. Hack around
         p_id = $('td', this).parent().attr('id');
         $('#modal-' + p_id).modal();
