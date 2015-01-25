@@ -80,7 +80,7 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
         ### BaseProfileConnections
         if group_id == 'self':
             group_users = [current_user]
-        elif group_id:
+        elif group_id and group_id != 'all':
             try:
                 group = Group.objects.get(id=group_id, users=current_user)
                 group_users = group.users

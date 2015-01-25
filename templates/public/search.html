@@ -73,6 +73,9 @@
                 <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                {% if len(groups) > 1 %}
+                  <li class="group-option" data-group-id="all" role="presentation"><a role="menuitem" tabindex="-1">All My NTWRKs</a></li>
+                {% end %}
                 {% for g in groups %}
                   <li class="group-option" data-group-id="{{ g.id }}" role="presentation"><a role="menuitem" tabindex="-1">{{ g }}</a></li>
                 {% end %}
