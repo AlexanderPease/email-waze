@@ -161,9 +161,8 @@
           {
             'data': 'email', 
             'render': function(data, type, full, meta) { 
-              return data + '<a>' +
-                  '<span class="glyphicon glyphicon-paperclip copy-to-clipboard" data-clipboard-text="' + data + '" aria-hidden="true"></span>' +
-                '</a>' + 
+              return '<a class="copy-to-clipboard" data-clipboard-text="' + data + '">' + 
+                data + '</a>' + 
                 '<span class="glyphicon glyphicon-ok copy-to-clipboard-check" data-clipboard-text-check="' + data + '" aria-hidden="true"></span>';
             }
           },
@@ -185,22 +184,16 @@
         drawCallback: function(settings) {
           // Gets called every time redrawn, including just to say "loading"
           $('td').addClass('datatables-cell');
-
           // Copy to clipboard icons for email cells
           var moviePath = '{{ static_url("ZeroClipboard.swf") }}';
-          console.log(moviePath)
           ZeroClipboard.config({
             swfPath: moviePath
           });
           var client = new ZeroClipboard( $(".copy-to-clipboard") );
-          console.log(client)
           client.on('ready', function(event) {
-            console.log('ready')
             client.on('aftercopy', function(event) {
-              console.log('aftercopy')
               // `this` === `client`
               // `event.target` === the element that was clicked. Won't work with jquery though. 
-              //alert("Copied text to clipboard: " + event.data["text/plain"] );
               $('.copy-to-clipboard-check').removeClass('transition');
               var dataClipboardText = event.data['text/plain'];
               var checkmark = $('.copy-to-clipboard-check[data-clipboard-text-check="' + dataClipboardText + '"]');
@@ -239,13 +232,14 @@
       });// datatable
 
       // Display detail modal when row is clicked on
-      $('#search_table tbody').on('click', 'tr', function() {
-        // Do not fire if .copy-to-clipboard was clicked
-        if (!$(this).hasClass('copy-to-clipboard')) {
-          console.log('prevent copy to clipboard modal')
-          return;
-        }
+      $('a .copy-to-clipboard').click(function(event) {
+        console.log('a clicked')
+        event.stopPropagation();
+        console.log('after')
+      });
 
+      $('#search_table tbody').on('click', 'tr', function() {
+        console.log('tr clicked')
         //var data = dataTable.fnGetData('tr'); // fnGetData undefined. Hack around
         p_id = $('td', this).parent().attr('id');
         $('#modal-' + p_id).modal();
