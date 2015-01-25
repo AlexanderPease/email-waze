@@ -59,8 +59,11 @@ h4, .h4 {
   font-size: 16pt;
 }
 
-// nav
+a:hover {
+  cursor: pointer;
+}
 
+// nav
 .navbar {
   background: #fff;
   @include border-radius(0);
@@ -362,6 +365,7 @@ $disabled-color: #428bca;
 // Datatables
 .datatables-cell {
   padding-left: 18px !important;
+  cursor: pointer;
 }
 
 // typeahead.js

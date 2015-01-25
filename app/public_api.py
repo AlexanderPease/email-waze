@@ -26,17 +26,15 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
         except:
             return self.api_error(500, 'Could not find client user in database')
 
+        ### Search parameters
         # Simple search
         q = self.get_argument('q', '')
-
         # Advanced search
         name = self.get_argument('name', '')
         domain = self.get_argument('domain', '')
         company = self.get_argument('company', '')
-
         # Exact ID search
         company_id = self.get_argument('company_id', '')
-
         # Check for no parameters
         if not q and not name and not domain and not company_id:
             return self.api_error(400, 'Did not include query parameters')
