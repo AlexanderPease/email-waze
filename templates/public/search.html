@@ -160,8 +160,19 @@
 
       // Init DataTable
       params = getQueryParameters();
-      var q = params['q']
+      var url = 'api/searchbaseprofileconnection?'
+      for (var key in params) {
+        console.log(params[key])
+        if (params[key]) {
+          if (url[url.length-1] != '?') {
+            url += '&'
+          }
+          url += key + '=' + params[key];
+        }
+      }
+      /*var q = params['q']
       var company_id = params['company_id']
+      var group_id = params['group_id'];
       var name = params['name'];
       var domain = params['domain'];
       if (company_id) {
@@ -172,6 +183,7 @@
       } else {
         var url = 'api/searchbaseprofileconnection?name=' + name + '&domain=' + domain;
       }
+      */
       console.log("Datatables calling: " + url);
       var dataTable = $('#search_table').DataTable({
         searching: false,
@@ -312,6 +324,18 @@
       // Advanced search
       $('#advanced-search-link').click(function() {
         $('#advanced-search-modal').modal();
+      });
+
+      $('#advanced-search-submit').click(function() {
+        var name = $('#advanced-search-name');
+        var domain = $('#advanced-search-domain');
+        var group_id = $('#advanced-search-group').find(':selected').attr('data-group-id');
+        var newUrl = 'api/searchbaseprofileconnection?name=' + name + 
+          '&domain=' + domain +
+          '&group_id=' + group_id;
+        console.log(newUrl);
+        displayLoading();
+        $("#search_table").DataTable().ajax.url(newUrl).load();
       });
 
     }); // ready
