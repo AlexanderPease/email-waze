@@ -295,12 +295,13 @@ $disabled-color: #428bca;
   }
 }
 
+$btn-inline-font-size: 14px;
 .btn-inline {
   // .btn in bootstrap. Basically revert inline button to regular bootstrap
   display: inline-block;
   padding: 6px 12px;
   margin-bottom: 0;
-  font-size: 14px;
+  font-size: $btn-inline-font-size;
   font-weight: 400;
   line-height: 1.42857143;
   text-align: center;
@@ -317,6 +318,14 @@ $disabled-color: #428bca;
 
   // my single addition to move button up a bit b/c of shadow
   margin-bottom: 2px;
+}
+
+.advanced-search {
+  font-size: $btn-inline-font-size;
+}
+
+a.advanced-search {
+  color: white;
 }
 
 .img-target, .img-team, .img-anti {
