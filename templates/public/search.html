@@ -146,6 +146,13 @@
         //window.location.href.replace("name="+name, "domain="+domain); // not working
       });
 
+      // Submit form if Enter is pressed in text input
+      $('#form-q').keypress(function(event){ 
+        if (event.which == 13) {
+          $('#form-button').click();
+        }
+      });
+
       // Search button is pressed, causes AJAX reload
       $('#form-button').click(function() {
         var q = $('#form-q').val();
@@ -162,7 +169,6 @@
       params = getQueryParameters();
       var url = 'api/searchbaseprofileconnection?'
       for (var key in params) {
-        console.log(params[key])
         if (params[key]) {
           if (url[url.length-1] != '?') {
             url += '&'
