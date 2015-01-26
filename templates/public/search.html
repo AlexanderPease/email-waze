@@ -327,8 +327,9 @@
       });
 
       $('#advanced-search-submit').click(function() {
-        var name = $('#advanced-search-name');
-        var domain = $('#advanced-search-domain');
+        $('#advanced-search-modal').modal('hide');
+        var name = $('#advanced-search-name').val();
+        var domain = $('#advanced-search-domain').val();
         var group_id = $('#advanced-search-group').find(':selected').attr('data-group-id');
         var newUrl = 'api/searchbaseprofileconnection?name=' + name + 
           '&domain=' + domain +
