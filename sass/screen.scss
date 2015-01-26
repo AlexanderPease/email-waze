@@ -320,13 +320,6 @@ $btn-inline-font-size: 14px;
   margin-bottom: 2px;
 }
 
-.advanced-search {
-  font-size: $btn-inline-font-size;
-}
-
-a.advanced-search {
-  color: white;
-}
 
 .img-target, .img-team, .img-anti {
   display: inline-block;
@@ -434,6 +427,32 @@ $tt-suggestion-padding: 3px;
 
 .tt-suggestion-header {
   padding-left: $tt-suggestion-padding;
+}
+
+// Advanced Search
+.advanced-search-link {
+  font-size: $btn-inline-font-size;
+}
+
+a.advanced-search-link {
+  color: white;
+}
+
+.advanced-search {
+  .form-horizontal .control-label {
+    padding-top: 3px;
+  }
+}
+
+.selectpicker {
+  color: $bootstrap-text-color;
+  line-height: 1.42857143;
+  font-size: 14px;
+  padding: 6px 12px;
+  background-color: white;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 //Filters

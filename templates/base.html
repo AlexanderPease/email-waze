@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
   <link rel="stylesheet" href="//cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css">
   <link type="text/css" rel="stylesheet" href="//fast.fonts.net/cssapi/a480d644-65f6-4511-a471-e3a28be69969.css"/>
+  <link rel="stylesheet" href="{{ static_url("css/bootstrap-select.min.css") }}">
   <link href="{{ static_url("css/screen.css") }}" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -114,13 +115,16 @@
   <script type="text/javascript" src="//code.jquery.com/jquery-1.10.1.min.js"></script>
   <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
-  <script type="text/javascript" src="{{ static_url('js/ZeroClipboard.js') }}"></script>
-  <script type="text/javascript" src="{{ static_url('js/typeahead.bundle.min.js') }}"></script>
-  <script type="text/javascript" src="{{ static_url('js/handlebars-v2.0.0.js') }}"></script>
+  <script type="text/javascript" src="{{ static_url("js/ZeroClipboard.js") }}"></script>
+  <script type="text/javascript" src="{{ static_url("js/typeahead.bundle.min.js") }}"></script>
+  <script type="text/javascript" src="{{ static_url("js/handlebars-v2.0.0.js") }}"></script>
   <script type="text/javascript" src="//fast.fonts.net/jsapi/a480d644-65f6-4511-a471-e3a28be69969.js"></script>
+  <script type="text/javascript" src="{{ static_url("js/bootstrap-select.min.js") }}"></script>
   <script>
     $(document).ready(function () {
       //fixFooter();
+      // Initialize all selectpickers
+      $('.selectpicker').selectpicker();
 
       var browser_info = navigator.sayswho;
       if (browser_info.indexOf('Chrome') > -1) {

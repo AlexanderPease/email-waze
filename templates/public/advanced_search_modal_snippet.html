@@ -1,0 +1,68 @@
+<div id="advanced-search-modal" class="modal fade advanced-search" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"
+        aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">
+          Advanced Search
+        </h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="advanced-search-name" placeholder="ex: Alexander Pease">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="inputPassword3" class="col-sm-2 control-label">Email</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="advanced-search-domain" placeholder="ex: usv.com">
+            </div>
+          </div>
+
+          {% if groups %}
+            <div class="form-group">
+              <label for="inputPassword3" class="col-sm-2 control-label">NTWRKs</label>
+              <div class="col-sm-10">
+                <select id="advanced-search-group" class="selectpicker">
+                  <option>All</option>
+                  {% for g in groups %}
+                    <option data-group-id={{ g.id }}>{{ g }}</option>
+                  {% end %}
+                  <option data-group-id='self'>Just Me</option>
+                </select>
+              </div>
+            </div>
+          {% end %}
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <button type="submit" class="btn btn-primary btn-inline">Search</button>
+            </div>
+          </div>
+        </form>
+      </div><!-- modal-body -->
+    </div>
+  </div>
+</div>
+
+
+{% if groups %}
+            <div id="group_select" class="dropdown">
+              <button class="btn btn-primary btn-inline dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
+                NTWRKs
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                {% if len(groups) > 1 %}
+                  <li class="group-option" data-group-id="all" role="presentation"><a role="menuitem" tabindex="-1">All My NTWRKs</a></li>
+                {% end %}
+                {% for g in groups %}
+                  <li class="group-option" data-group-id="{{ g.id }}" role="presentation"><a role="menuitem" tabindex="-1">{{ g }}</a></li>
+                {% end %}
+                <li class="group-option" data-group-id="self" role="presentation"><a role="menuitem" tabindex="-1">Just Me</a></li>
+              </ul>
+            </div>
+          {% end %}

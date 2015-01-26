@@ -34,7 +34,7 @@
           </div>
         </div>
       </form>
-      <a class="advanced-search">
+      <a id="advanced-search-link" class="advanced-search-link">
         <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
         <span>Advanced Search</span>
       </a>
@@ -113,6 +113,9 @@
       <div id="modalsDiv">
         {% include 'search_result_modal.hbs' %}
       </div>
+
+      <!-- Advanced search modal -->
+      {% include 'advanced_search_modal_snippet.html' %}
 
     </div> <!-- container -->
   </section> <!-- feature -->
@@ -304,6 +307,11 @@
         displayLoading();
         $("#search_table").DataTable().ajax.url(newUrl).load();
         
+      });
+
+      // Advanced search
+      $('#advanced-search-link').click(function() {
+        $('#advanced-search-modal').modal();
       });
 
     }); // ready
