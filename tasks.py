@@ -163,13 +163,12 @@ def update_user(u):
                     if header in msg_header.keys():
                         field = parseaddr(msg_header[header]) # Allows local emails addresses unfortunately
                         name = field[0]
-                        email = field[1].lower() 
+                        email = field[1]
 
                         # Only consider email if it hasn't yet been done 
                         # for this user 
                         if email not in updated_emails:
                             updated_emails.append(email)
-                            logging.info(updated_emails)
                             if name and name is not "" and email and email is not "":
                                 logging.info("Good pair: %s <%s>" % (name, email))
                                 update_profile_and_connection(email=email,
@@ -205,7 +204,7 @@ def update_profile_and_connection(email, name, user, gmail_service):
     # The following lines could be condensed if 
     # Profile.get_or_create() was working. 
     try:
-        p = Profile.objects.get(email=email)
+        p = Profile.objects.get(email_lower=email.lower())
         logging.info("Found existing Profile %s" % p)
     except DoesNotExist:
         p = Profile.add_new(name=name, email=email)

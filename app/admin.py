@@ -109,24 +109,18 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
-        # Prints out how many companies have queried Clearbit
-        '''
-        total = len(Company.objects())
-        todo = len(Company.objects(__raw__={'date_queried_clearbit': {'$exists': True}}))
-        logging.info("%s/%s" % (todo, total))
-        '''
+        #p, flag = Profile.objects.get_or_create(name="foo", email="foo@foo.com")
+        #logging.info(p)
+        chris = Profile.add_new(name="Chris1", email="chris@hackNY.org")
+        logging.info(chris)
+        chris2 = Profile.add_new(name="Chris2", email="chris@hackny.org")
+        logging.info(chris2)
 
-        # Update all Company docs if needed
-        '''
-        current_num = 1
-        companies = Company.objects(__raw__={'date_queried_clearbit': {'$exists': False}})
-        num_total = len(companies)
-        for c in companies:
-            logging.info("%s, %s/%s" % (c, current_num, num_total))
-            if c.domain != "intuit.com":
-                c.update_clearbit()
-            current_num += 1
-        '''
+        #zander = Profile.objects.get(email='me@alexanderpease.com')
+        #p = Profile.objects.get(email='ME@alexanderPEASE.com'.lower())
+        #logging.info(p)
+        #zander2 = Profile.add_new(name="foo", email="ME@alexanderpease.com")
+        #logging.info(zander2)
 
         # Counts number of profiles that have an email address
         # that is duplicated (via capitalization) in the database
@@ -144,11 +138,10 @@ class Scratch(app.basic.BaseHandler):
                     logging.info(d)
                 num_wrong += 1
         logging.info('Num emails duplicated: %s' % num_wrong)
-        '''
+        
 
         # Counts number of profiles that have an email address
         # this is not all undercase
-        '''
         num_wrong = 0
         for p in Profile.objects():
             if not p.email.islower():
@@ -157,10 +150,23 @@ class Scratch(app.basic.BaseHandler):
         logging.info('Num emails not all undercase: %s' % num_wrong)
         '''
 
-        # Count all profiles that have a capitalized duplicate
+        # Prints out how many companies have queried Clearbit
         '''
-        for p in Profile.objects(email__contains="techstars.com"):
-            ps = Profile.objects(email__icontains)
+        total = len(Company.objects())
+        todo = len(Company.objects(__raw__={'date_queried_clearbit': {'$exists': True}}))
+        logging.info("%s/%s" % (todo, total))
+        '''
+
+        # Update all Company docs if needed
+        '''
+        current_num = 1
+        companies = Company.objects(__raw__={'date_queried_clearbit': {'$exists': False}})
+        num_total = len(companies)
+        for c in companies:
+            logging.info("%s, %s/%s" % (c, current_num, num_total))
+            if c.domain != "intuit.com":
+                c.update_clearbit()
+            current_num += 1
         '''
 
         # Script to check how many Company documents from clearbit have a name field
