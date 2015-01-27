@@ -223,7 +223,24 @@
                 '<span class="glyphicon glyphicon-copy copy-to-clipboard-check" data-clipboard-text-check="' + data + '" aria-hidden="true"></span>';
             }
           },
-          {'name': 'connection_strength', 'data': 'connection_strength'},
+          {
+            'name': 'connection_strength', 
+            'data': 'connection_strength',
+            'render': function(data, type, full, meta) {
+              if (data == 0) {
+                var icon_url = '{{ static_url("img/signal-0.png") }}';
+              } else if (data == 1) {
+                var icon_url = '{{ static_url("img/signal-1.png") }}';
+              } else if (data == 2) {
+                var icon_url = '{{ static_url("img/signal-2.png") }}';
+              } else if (data == 3) {
+                var icon_url = '{{ static_url("img/signal-3.png") }}';
+              } else {
+                var icon_url = '{{ static_url("img/signal-4.png") }}';
+              } 
+              return '<img class="signal-icon" src="' + icon_url + '">';
+            }
+          },
           {'name': 'connections', 'data': 'connections'},
           {'name': 'days_since_contact', 'data': 'days_since_contact', 'type': 'int-na' },
           {'name': 'total_emails_out', 'data': 'total_emails_out'},

@@ -54,13 +54,16 @@ class BaseProfileConnection:
         if self.latest_email_date():
             self.days_since_contact = (datetime.datetime.now() - self.latest_email_date()).days
         # connection_strength
-        out_multiplier = 2 # emails sent are more important than emails received
-        if not self.days_since_contact:
-            self.connection_strength = 0
-        elif self.days_since_contact > 365:
-            self.connection_strength = (self.total_emails_out * out_multiplier) + self.total_emails_in
+        if self.total_emails_out > 100 and self.days_since_contact < 365:
+            self.connection_strength = 4
+        elif self.total_emails_out > 50 and self.days_since_contact < 365:
+            self.connection_strength = 3
+        elif self.total_emails_out > 25 and self.days_since_contact < 730:
+            self.connection_strength = 2
+        elif self.total_emails_out > 5 or self.total_emails_in > 5:
+            self.connection_strength = 1
         else:
-            self.connection_strength = (365-self.days_since_contact) * ((self.total_emails_out * out_multiplier) + self.total_emails_in)
+            self.connection_strength = 0
 
     def __repr__(self):
         return 'BaseProfileConnection: %s (%s)' % (self.name, self.email)

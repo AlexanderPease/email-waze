@@ -10,3 +10,4 @@ local_db/*
 dump
 dump/*
 chrome_extension.zip
+*.psd
