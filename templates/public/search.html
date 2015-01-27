@@ -96,12 +96,13 @@
           <tr>
             <th>Name</th>
             <th>Email</th>
-            <th>Connections</th>
+            <th>Connection Strength</th>
+            <th># of Connections</th>
             <th>Days Since Contact</th>
-            <th>Total Emails Out</th>
-            <th>Total Emails In</th>
-            <th>Latest Email Out Date</th>
-            <th>Latest Email In Date</th>
+            <th># Emails Sent</th>
+            <th># Emails Received</th>
+            <th>Latest Sent</th>
+            <th>Latest Received</th>
             <th>Self Connected</th>
           </tr>
         </thead>
@@ -219,9 +220,10 @@
             'render': function(data, type, full, meta) { 
               return '<a class="copy-to-clipboard" data-clipboard-text="' + data + '">' + 
                 data + '</a>' + 
-                '<span class="glyphicon glyphicon-ok copy-to-clipboard-check" data-clipboard-text-check="' + data + '" aria-hidden="true"></span>';
+                '<span class="glyphicon glyphicon-copy copy-to-clipboard-check" data-clipboard-text-check="' + data + '" aria-hidden="true"></span>';
             }
           },
+          {'name': 'connection_strength', 'data': 'connection_strength'},
           {'name': 'connections', 'data': 'connections'},
           {'name': 'days_since_contact', 'data': 'days_since_contact', 'type': 'int-na' },
           {'name': 'total_emails_out', 'data': 'total_emails_out'},
@@ -232,7 +234,7 @@
         ],
         columnDefs: [
           {
-            'targets': [4, 5, 6, 7, 8],
+            'targets': [3, 4, 5, 6, 7, 8, 9],
             'visible': false
           }
         ],
@@ -314,7 +316,6 @@
 
       // Display detail modal when row is clicked on
       $('#search_table tbody').on('click', 'tr', function() {
-        console.log('tr clicked')
         //var data = dataTable.fnGetData('tr'); // fnGetData undefined. Hack around
         p_id = $('td', this).parent().attr('id');
         $('#modal-' + p_id).modal();
@@ -433,7 +434,8 @@
       this.profile_id = dict['profile_id'];
       this.name = dict['name'];
       this.email = dict['email'];
-      this.burner = dict['burner'];
+      //this.burner = dict['burner'];
+      this.connection_strength = dict['connection_strength']
       this.connections = dict['connections']
       this.days_since_contact = dict['days_since_contact']
       this.total_emails_out = dict['total_emails_out']
@@ -489,6 +491,7 @@
         rowDict['email'] = this.burner + '@' + '{{ settings.get("domain_name") }}';
         rowDict['connections'] = 'N/A';
       }
+      rowDict['connection_strength'] = this.connection_strength;
       if (this.days_since_contact) {
         rowDict['days_since_contact'] = this.days_since_contact;
       } else {
@@ -521,7 +524,7 @@
       var template = Handlebars.compile(source);
       var context = {
         profile_id: this.profile_id,
-        name: this.name,
+        name: this.cleanName(),
         email: this.email,
         connections: this.connections 
       }

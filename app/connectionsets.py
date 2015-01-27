@@ -24,13 +24,13 @@ class BaseProfileConnection:
         self.connections = connections
 
         # The following fields are processed below
-        #self.connection_strength = 0
+        self.connection_strength = 0
+        self.days_since_contact = 0
         self.total_emails_out = 0
         self.latest_email_out_date = None
         self.total_emails_in = 0
         self.latest_email_in_date = None
         self.self_connected = None
-        self.days_since_contact = 0
 
         # Process connections and set other fields
         for c in self.connections:
@@ -53,6 +53,14 @@ class BaseProfileConnection:
         # days_since_contact
         if self.latest_email_date():
             self.days_since_contact = (datetime.datetime.now() - self.latest_email_date()).days
+        # connection_strength
+        out_multiplier = 2 # emails sent are more important than emails received
+        if not self.days_since_contact:
+            self.connection_strength = 0
+        elif self.days_since_contact > 365:
+            self.connection_strength = (self.total_emails_out * out_multiplier) + self.total_emails_in
+        else:
+            self.connection_strength = (365-self.days_since_contact) * ((self.total_emails_out * out_multiplier) + self.total_emails_in)
 
     def __repr__(self):
         return 'BaseProfileConnection: %s (%s)' % (self.name, self.email)
@@ -79,7 +87,8 @@ class BaseProfileConnection:
             'name': self.name, 
             'burner': self.burner,
             'total_emails_out': self.total_emails_out,
-            'total_emails_in': self.total_emails_in
+            'total_emails_in': self.total_emails_in,
+            'connection_strength': self.connection_strength
         }
         if self.connections:
             json['connections'] = []

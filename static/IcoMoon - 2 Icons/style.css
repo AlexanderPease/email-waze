@@ -1,0 +1,13 @@
+.icon {
+	display: inline-block;
+	color: #444444;
+	fill: currentColor;
+}
+.icon-copy {
+	width: 32px;
+	height: 32px;
+}
+.icon-paste {
+	width: 32px;
+	height: 32px;
+}
