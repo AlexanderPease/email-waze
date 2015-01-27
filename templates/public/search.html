@@ -57,12 +57,13 @@
 
         <div class="col-sm-6 float-right">
           <!-- Filter by -->
-          <div id="filter_by" class="dropdown">
+          <div id="filter-by" class="dropdown">
             <button class="btn btn-primary btn-inline dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
               Sort By
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+              <li class="filter-option" data-filter="connections" role="presentation"><a role="menuitem" tabindex="-1">Number of Connections</a></li>
               <li class="filter-option" data-filter="total_emails_out" role="presentation"><a role="menuitem" tabindex="-1">Number of Emails Sent</a></li>
               <li class="filter-option" data-filter="total_emails_in" role="presentation"><a role="menuitem" tabindex="-1">Number of Emails Received</a></li>
               <li class="filter-option" data-filter="latest_email_out_date" role="presentation"><a role="menuitem" tabindex="-1">Most Recent Email Sent</a></li>
@@ -71,7 +72,7 @@
             </ul>
           </div>
           {% if groups %}
-            <div id="group_select" class="dropdown">
+            <div id="group-select" class="dropdown">
               <button class="btn btn-primary btn-inline dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
                 NTWRKs
                 <span class="caret"></span>
@@ -97,8 +98,8 @@
             <th>Name</th>
             <th>Email</th>
             <th>Connection Strength</th>
-            <th># of Connections</th>
             <th>Days Since Contact</th>
+            <th># of Connections</th>
             <th># Emails Sent</th>
             <th># Emails Received</th>
             <th>Latest Sent</th>
@@ -238,11 +239,11 @@
               } else {
                 var icon_url = '{{ static_url("img/signal-4.png") }}';
               } 
-              return '<img class="signal-icon" src="' + icon_url + '">';
+              return '<img class="signal-icon" src="' + icon_url + '"><span hidden>' + data + '</span>';
             }
           },
-          {'name': 'connections', 'data': 'connections'},
           {'name': 'days_since_contact', 'data': 'days_since_contact', 'type': 'int-na' },
+          {'name': 'connections', 'data': 'connections'},
           {'name': 'total_emails_out', 'data': 'total_emails_out'},
           {'name': 'total_emails_in', 'data': 'total_emails_in'},
           {'name': 'latest_email_out_date', 'data': 'latest_email_out_date', 'type': 'date-na'},
@@ -251,7 +252,7 @@
         ],
         columnDefs: [
           {
-            'targets': [3, 4, 5, 6, 7, 8, 9],
+            'targets': [4, 5, 6, 7, 8, 9],
             'visible': false
           }
         ],
@@ -392,6 +393,8 @@
       $('#form-button').text('Search');
       $('#form-q').prop('disabled', false);
       $('#form-q').val('');
+      $('#filter-by').find('button').prop('disabled', false);
+      $('#group-select-btn').find('button').prop('disabled', false);
       setFormQPlaceholder();
     }
 
@@ -401,6 +404,8 @@
       $('#form-button').prop('disabled', true);
       $('#form-button').text('Loading...');
       $('#form-q').prop('disabled', true);
+      $('#filter-by').find('button').prop('disabled', true);
+      $('#group-select').find('button').prop('disabled', true);
       setFormQPlaceholder();
     }
 

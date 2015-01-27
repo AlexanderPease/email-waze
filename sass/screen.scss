@@ -341,6 +341,7 @@ $btn-inline-font-size: 14px;
 .signal-icon {
   width: 30px;
   height: 30px;
+  margin-left: 20px;
 }
 
 // Index Logged in
@@ -461,11 +462,11 @@ a.advanced-search-link {
 }
 
 //Filters
-#filter_by {
+#filter-by {
   float: right;
   margin-left: 10px;
 }
-#group_select {
+#group-select {
   float: right;
 }
 

@@ -54,13 +54,13 @@ class BaseProfileConnection:
         if self.latest_email_date():
             self.days_since_contact = (datetime.datetime.now() - self.latest_email_date()).days
         # connection_strength
-        if self.total_emails_out > 100 and self.days_since_contact < 365:
+        if self.total_emails_out > 100 and self.days_since_contact < 180:
             self.connection_strength = 4
-        elif self.total_emails_out > 50 and self.days_since_contact < 365:
+        elif self.total_emails_out > 25 and self.days_since_contact < 180:
             self.connection_strength = 3
-        elif self.total_emails_out > 25 and self.days_since_contact < 730:
+        elif self.total_emails_out > 10 and self.days_since_contact < 365:
             self.connection_strength = 2
-        elif self.total_emails_out > 5 or self.total_emails_in > 5:
+        elif self.total_emails_out > 0 or self.total_emails_in > 0:
             self.connection_strength = 1
         else:
             self.connection_strength = 0
