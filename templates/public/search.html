@@ -200,17 +200,15 @@
       };
       $.fn.dataTable.ext.type.order['date-na-pre'] = function ( d ) {
         if ( d == 'N/A' ) {
-          console.log('n/a')
           return '1900/01/01'; //unlikely to be earlier than this
         }
-        console.log(d)
         return d;
       };
       var dataTable = $('#search_table').DataTable({
         searching: false,
         pageLength: 20,
         lengthChange: false,
-        scrollX: true,
+        //scrollX: true,
         oLanguage: {
           sLoadingRecords: '<img src="' + '{{ static_url("img/loading-transparent.png") }}' + '">'
         },
@@ -230,7 +228,7 @@
           {'name': 'total_emails_in', 'data': 'total_emails_in'},
           {'name': 'latest_email_out_date', 'data': 'latest_email_out_date', 'type': 'date-na'},
           {'name': 'latest_email_in_date', 'data': 'latest_email_in_date', 'type': 'date-na'},
-          {'name': 'connections', 'data': 'self_connected'},
+          {'name': 'self_connected', 'data': 'self_connected'},
         ],
         columnDefs: [
           {
@@ -327,7 +325,7 @@
         var filterName = $(this).attr('data-filter');
         if (filterName == 'all_fields') {
           dataTable.columns().visible(true);
-          dataTable.columns('self:name').visible(false);
+          dataTable.columns('self_connected:name').visible(false);
         } else {
           dataTable.column(filterName + ':name').order('desc').draw().visible(true);
         }
