@@ -201,14 +201,9 @@ def update_profile_and_connection(email, name, user, gmail_service):
     Logic to update both Profile and Connection databases for the given 
     User and an email and name
     """ 
-    # The following lines could be condensed if 
-    # Profile.get_or_create() was working. 
-    try:
-        p = Profile.objects.get(email_lower=email.lower())
-        logging.info("Found existing Profile %s" % p)
-    except DoesNotExist:
-        p = Profile.add_new(name=name, email=email)
-        logging.info(p)
+    # add_new handles duplicates, collisions, etc.
+    # effectively get_or_create 
+    p = Profile.add_new(name=name, email=email)
 
     # Ensure p was succesfully created before 
     # adding a Connection. Profile.add_new() sometimes fails (for good reason,
