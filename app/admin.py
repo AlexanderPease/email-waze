@@ -109,18 +109,58 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
-        #p, flag = Profile.objects.get_or_create(name="foo", email="foo@foo.com")
-        #logging.info(p)
-        chris = Profile.add_new(name="Chris1", email="chris@hackNY.org")
-        logging.info(chris)
-        chris2 = Profile.add_new(name="Chris2", email="chris@hackny.org")
-        logging.info(chris2)
+        email = 'billpease@prodigy.net'
+        print_info(email)
 
-        #zander = Profile.objects.get(email='me@alexanderpease.com')
-        #p = Profile.objects.get(email='ME@alexanderPEASE.com'.lower())
-        #logging.info(p)
-        #zander2 = Profile.add_new(name="foo", email="ME@alexanderpease.com")
-        #logging.info(zander2)
+        count = 1;
+        for p in Profile.objects(email=email):
+            logging.info('Count: %s' % count)
+            ps = Profile.objects(email__iexact=p.email)
+            if len(ps) > 1:
+                merge_profiles(ps)
+            count += 1
+
+        print_info(email)
+        return self.api_response(data={})
+
+def merge_profiles(ps):
+    if len(ps) != 2:
+        logging.warning('%s profiles given' % len(ps)) 
+    else:
+        p1 = ps[0]
+        p2 = ps[1]
+        # Just iterate through p2 Connections
+        cs2 = Connection.objects(profile=p2)
+        for c2 in cs2:
+            u = c2.user
+            # See if there is a conflicting Connection
+            try:
+                c1 = Connection.objects.get(profile=p1, user=u)
+            except:
+                c1 = None
+            if c1:
+                # Reconcile c and c_dup
+                c1.total_emails_out += c2.total_emails_out
+                c1.total_emails_in += c2.total_emails_in
+                if c1.days_since_emailed_out() > c2.days_since_emailed_out():
+                    c1.latest_email_out_date = c2.latest_email_out_date
+                if c1.days_since_emailed_in() > c2.days_since_emailed_in():
+                    c1.latest_email_in_date = c2.latest_email_in_date
+                c2.delete()
+            else:
+                # No conflict, attach c to p1
+                c2.profile = p1
+                c2.save()
+        p2.delete()
+
+def print_info(email):
+    ps = Profile.objects(email__iexact=email)
+    for p in ps:
+        logging.info('------------')
+        logging.info(p)
+        cs = Connection.objects(profile=p)
+        logging.info(cs)
+        logging.info('------------')
 
         # Counts number of profiles that have an email address
         # that is duplicated (via capitalization) in the database
@@ -269,5 +309,3 @@ class Scratch(app.basic.BaseHandler):
         #from tests.test_group import test_group_class
         #test_group_class()
         """
-
-        return self.api_response(data={})

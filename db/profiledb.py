@@ -80,16 +80,17 @@ class Profile(Document):
         Returns:
             The Profile instance if successfully created
         """
-        # Email is the unique key, case-insensitive
-        if Profile.email_exists(email):
-            return
         try:
             p, created = Profile.objects.get_or_create(email=email) # This automatically saves()
             if p and created:
+                # Email is the unique key, case-insensitive
+                if Profile.email_exists(email) > 1:
+                    p.delete()
+                    return
+
                 # Only add attributes here. Don't overwrite attributes if already created
                 p.name = name
                 p.domain = p.get_domain()
-                logging.info('here')
                 p.save() 
                 # Brief set of rules to ignore certain emails
                 if 'reply' in p.email or 'notify' in p.email or 'notification' in p.email or 'info' in p.domain or len(p.email) > 40 or 'ansatz.me' in p.domain:
