@@ -8,16 +8,17 @@ mongo_database = settings.get('mongo_database')
 connect('profile', host=mongo_database['host'])
 
 class Profile(Document):
+    ## Original fields
     # Email is the unique key. Search and create based on email. 
     email = EmailField(required=True, unique=True)
-    # Field derived from canonical email field via function get_domain()
-    # Saved in DB for querying
-    domain = StringField()
-
     # Name, ex. Alexander Pease
     name = StringField() 
 
-    # A pass through email that is publicly displayed. 
+    ## Derivative fields
+    # Domain field derived from canonical email field via function get_domain()
+    # Saved in DB for querying
+    domain = StringField()
+    # Burner is a pass through email that is publicly displayed. 
     # Using term "burner" despite it being a constant in v1
     # meta dict allows you to init self.burner as null, also have multiple nulls
     burner = StringField()
@@ -27,6 +28,89 @@ class Profile(Document):
         ]
     }
 
+    def __str__(self):
+        return self.name + ' <' + self.email + '>'
+
+    def to_json(self):
+        return {
+            'id': str(self.id),
+            'email': self.email,
+            'name': self.name,
+            'burner': self.burner,
+        }
+
+    def get_domain(self):
+        """
+        Returns just the domain name of self.email
+        Ex: reply.craigslist.com from foo@reply.craigslist.com
+        """
+        return self.email.split('@')[1]
+
+    def get_domain_title(self):
+        """
+        Returns domain name minus extension of self.email
+        Ex: reply.craigslist from foo@reply.craigslist.com
+        """
+        return self.domain.split('.')[-2]
+
+    @classmethod
+    def email_exists(cls, email):
+        """
+        Checks if case-insensitive email exists as a Profile instance
+
+        Returns number of instances if exists, or False
+        """
+        ps = Profile.objects(email__iexact=email)
+        if len(ps) > 0:
+            #logging.info('%s profiles contain the case-insensitive email: %s' % (len(ps), email))
+            return len(ps)
+        else:
+            return False
+
+    @classmethod
+    def add_new(cls, name, email):
+        """
+        Creates a new Profile in database (if DNE) and goes through
+        all necessary error checking, cleaning, and creation of derivative fields.
+        This is effectively __init__ for Profile class. 
+
+        Args:
+            Name and email strings
+
+        Returns:
+            The Profile instance if successfully created
+        """
+        try:
+            p, created = Profile.objects.get_or_create(email=email) # This automatically saves()
+            if p and created:
+                # Email is the unique key, case-insensitive
+                if Profile.email_exists(email) > 1:
+                    p.delete()
+                    return
+
+                # Only add attributes here. Don't overwrite attributes if already created
+                p.name = name
+                p.domain = p.get_domain()
+                p.save() 
+                # Brief set of rules to ignore certain emails
+                if 'reply' in p.email or 'notify' in p.email or 'notification' in p.email or 'info' in p.domain or len(p.email) > 40 or 'ansatz.me' in p.domain:
+                    p.delete()
+                    logging.info("%s did not pass tests, not added to database" % email)
+                else:
+                    #p.set_burner_by_algo()
+                    p.save()
+                    logging.info('Added to database: %s %s' % (p.name, p.email))
+                    return p
+            # Attempted to add existing email address
+            elif p and not created:
+                logging.info('%s already exists, no change to database' % p)
+        except mongoengine.errors.NotUniqueError:
+            logging.info("Profile of email address %s already exists, no new Profile created" % email)
+        except:
+            logging.warning("Couldn't add Profile: %s <%s>" % (name, email))
+
+
+# UNUSED
     # Obscured self.email by generating random string. 
     # This is just a string, doesn't include our domain. 
     # Ex: 1493458459, NOT 1493458459@ansatz.me
@@ -42,6 +126,7 @@ class Profile(Document):
     # Graph fields, for future use
     #emailed_by = ListField(field=DictField(), default=list) # or look at one to many with listfields
     #emailed_to = ListField(field=DictField(), default=list)
+
     """
     def __init__(self, *args, **kwargs):
         # Set default burner...
@@ -58,33 +143,7 @@ class Profile(Document):
             self.set_burner_by_algo(overwrite=True)
     """
 
-    def __str__(self):
-        return self.name + ' <' + self.email + '>'
-
-    def to_json(self):
-        return {
-            'id': str(self.id),
-            'email': self.email,
-            'name': self.name,
-            'burner': self.burner,
-        }
-
-
-    def get_domain(self):
-        """
-        Returns just the domain name of self.email
-        Ex: reply.craigslist.com from foo@reply.craigslist.com
-        """
-        return self.email.split('@')[1]
-
-
-    def get_domain_title(self):
-        """
-        Returns domain name minus extension of self.email
-        Ex: reply.craigslist from foo@reply.craigslist.com
-        """
-        return self.domain.split('.')[-2]
-
+    '''
     def set_burner_by_algo(self, overwrite=False):
         """
         Sets burner email string for a Profile based on an algorithm 
@@ -129,8 +188,9 @@ class Profile(Document):
                     else:
                         burner = burner[:-len(str(flag-1))] + str(flag)
                     flag = flag + 1
+    '''
 
-
+    '''
     @classmethod
     def email_exists(cls, email):
         """
@@ -144,55 +204,11 @@ class Profile(Document):
             return len(ps)
         else:
             return False
+    '''
 
+    '''
     @classmethod
-    def add_new(cls, name, email):
-        """
-        Creates a new Profile in database (if DNE) and goes through
-        all necessary error checking, cleaning, and creation of derivative fields.
-        This is effectively __init__ for Profile class. 
-
-        Args:
-            Name and email strings
-
-        Returns:
-            The Profile instance if successfully created
-        """
-        try:
-            # Email is the unique key
-            p, created = Profile.objects.get_or_create(email=email)
-
-            if p and created:
-                # Only add attributes here. Don't overwrite attributes if already created
-                p.name = name
-                p.domain = p.get_domain()
-                p.save() 
-                # Brief set of rules to ignore certain emails
-                if 'reply' in p.email or 'notify' in p.email or 'notification' in p.email or 'info' in p.domain or len(p.email) > 40 or 'ansatz.me' in p.domain:
-                    p.delete()
-                    logging.info("%s did not pass tests, not added to database" % email)
-                else:
-                    p.set_burner_by_algo()
-                    p.save()
-                    logging.info('Added to database: %s %s' % (p.name, p.email))
-                    return p
-
-            # Attempted to add existing email address
-            elif p and not created:
-                logging.info('%s already exists, no change to database' % p)
-            else:
-                logging.warning("p DNE?!")
-                raise Exception
-
-        except mongoengine.errors.NotUniqueError:
-            logging.info("Profile of email address %s already exists, no new Profile created" % email)
-        except:
-            logging.warning("Couldn't add Profile: %s <%s>" % (name, email))
-
-
-    # UNUSED
-    # @classmethod
-    # def add_from_gmail_message_header(cls, msg_header):
+    def add_from_gmail_message_header(cls, msg_header):
         """
         Takes a dict message header from GetMessageHeader() and 
         adds to/creates entries in Profile database if necessary
@@ -216,7 +232,7 @@ class Profile(Document):
             else:
                 logging.debug('No %s field in header (output in line below)' % header)
                 logging.debug(msg_header)
-        """
+    '''
 
 
 

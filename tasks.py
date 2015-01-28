@@ -163,13 +163,12 @@ def update_user(u):
                     if header in msg_header.keys():
                         field = parseaddr(msg_header[header]) # Allows local emails addresses unfortunately
                         name = field[0]
-                        email = field[1].lower() 
+                        email = field[1]
 
                         # Only consider email if it hasn't yet been done 
                         # for this user 
                         if email not in updated_emails:
                             updated_emails.append(email)
-                            logging.info(updated_emails)
                             if name and name is not "" and email and email is not "":
                                 logging.info("Good pair: %s <%s>" % (name, email))
                                 update_profile_and_connection(email=email,
@@ -202,14 +201,9 @@ def update_profile_and_connection(email, name, user, gmail_service):
     Logic to update both Profile and Connection databases for the given 
     User and an email and name
     """ 
-    # The following lines could be condensed if 
-    # Profile.get_or_create() was working. 
-    try:
-        p = Profile.objects.get(email=email)
-        logging.info("Found existing Profile %s" % p)
-    except DoesNotExist:
-        p = Profile.add_new(name=name, email=email)
-        logging.info(p)
+    # add_new handles duplicates, collisions, etc.
+    # effectively get_or_create 
+    p = Profile.add_new(name=name, email=email)
 
     # Ensure p was succesfully created before 
     # adding a Connection. Profile.add_new() sometimes fails (for good reason,
@@ -235,6 +229,56 @@ def update_profile_and_connection(email, name, user, gmail_service):
         # Updates fields of c by searching through users'
         # entire Gmail inbox 
         c.populate_from_gmail(service=gmail_service)
+
+### Local 
+logging.getLogger().setLevel(logging.INFO)
+def remove_capitalization_redundant_pc():
+    count = 1;
+    for p in Profile.objects():
+        logging.info('Count: %s' % count)
+        ps = Profile.objects(email__iexact=p.email)
+        if len(ps) > 1:
+            merge_profiles(ps)
+        count += 1
+
+def merge_profiles(ps):
+    if len(ps) != 2:
+        logging.warning('%s profiles given' % len(ps)) 
+    else:
+        p1 = ps[0]
+        p2 = ps[1]
+        # Just iterate through p2 Connections
+        cs2 = Connection.objects(profile=p2)
+        for c2 in cs2:
+            u = c2.user
+            # See if there is a conflicting Connection
+            try:
+                c1 = Connection.objects.get(profile=p1, user=u)
+            except:
+                c1 = None
+            if c1:
+                # Reconcile c and c_dup
+                c1.total_emails_out += c2.total_emails_out
+                c1.total_emails_in += c2.total_emails_in
+                if c1.days_since_emailed_out() > c2.days_since_emailed_out():
+                    c1.latest_email_out_date = c2.latest_email_out_date
+                if c1.days_since_emailed_in() > c2.days_since_emailed_in():
+                    c1.latest_email_in_date = c2.latest_email_in_date
+                c2.delete()
+            else:
+                # No conflict, attach c to p1
+                c2.profile = p1
+                c2.save()
+        p2.delete()
+
+def print_info(email):
+    ps = Profile.objects(email__iexact=email)
+    for p in ps:
+        logging.info('------------')
+        logging.info(p)
+        cs = Connection.objects(profile=p)
+        logging.info(cs)
+        logging.info('------------')
 
 
 """
