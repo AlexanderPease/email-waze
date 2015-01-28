@@ -100,10 +100,10 @@
             <th>Connection Strength</th>
             <th>Days Since Contact</th>
             <th>Connections</th>
-            <th># Emails Sent</th>
-            <th># Emails Received</th>
             <th>Latest Sent</th>
             <th>Latest Received</th>
+            <th>Emails Sent</th>
+            <th>Emails Received</th>
             <th>Self Connected</th>
           </tr>
         </thead>
@@ -245,10 +245,10 @@
           },
           {'name': 'days_since_contact', 'data': 'days_since_contact', 'type': 'int-na' },
           {'name': 'connections', 'data': 'connections'},
-          {'name': 'total_emails_out', 'data': 'total_emails_out'},
-          {'name': 'total_emails_in', 'data': 'total_emails_in'},
           {'name': 'latest_email_out_date', 'data': 'latest_email_out_date', 'type': 'date-na'},
           {'name': 'latest_email_in_date', 'data': 'latest_email_in_date', 'type': 'date-na'},
+          {'name': 'total_emails_out', 'data': 'total_emails_out'},
+          {'name': 'total_emails_in', 'data': 'total_emails_in'},
           {'name': 'self_connected', 'data': 'self_connected'},
         ],
         columnDefs: [
@@ -342,6 +342,7 @@
 
       // Filter options
       $('.filter-option').click(function() {
+        //$("#search_table").DataTable({scrollX: true});
         var filterName = $(this).attr('data-filter');
         if (filterName == 'all_fields') {
           dataTable.columns().visible(true);
