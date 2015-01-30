@@ -98,6 +98,7 @@
             <th>Name</th>
             <th>Email</th>
             <th>Connection Strength</th>
+            <th>Reminders</th>
             <th>Days Since Contact</th>
             <th>Connections</th>
             <th>Latest Sent</th>
@@ -118,6 +119,10 @@
 
       <!-- Advanced search modal -->
       {% include 'advanced_search_modal_snippet.html' %}
+
+      <!-- Reminder dropdown -->
+      {% include 'reminder_dropdown.hbs' %}
+
 
     </div> <!-- container -->
   </section> <!-- feature -->
@@ -226,7 +231,7 @@
             }
           },
           {
-            'name': 'connection_strength', 
+            'name': 'connection_strength',
             'data': 'connection_strength',
             'render': function(data, type, full, meta) {
               if (data == 0) {
@@ -243,6 +248,16 @@
               return '<img class="signal-icon" src="' + icon_url + '"><span hidden>' + data + '</span>';
             }
           },
+          {
+            'name': 'reminder',
+            'data': 'reminder', 
+            'render': function(data, type, full, meta) {
+              var source   = $("#reminder-dropdown").html();
+              var template = Handlebars.compile(source);
+              var context = {};
+              return template(context);
+            }
+          },
           {'name': 'days_since_contact', 'data': 'days_since_contact', 'type': 'int-na' },
           {'name': 'connections', 'data': 'connections'},
           {'name': 'latest_email_out_date', 'data': 'latest_email_out_date', 'type': 'date-na'},
@@ -253,7 +268,7 @@
         ],
         columnDefs: [
           {
-            'targets': [4, 5, 6, 7, 8, 9],
+            'targets': [4, 5, 6, 7, 8, 9, 10],
             'visible': false
           }
         ],
@@ -516,6 +531,7 @@
         rowDict['connections'] = 'N/A';
       }
       rowDict['connection_strength'] = this.connection_strength;
+      rowDict['reminder'] = 'foo';
       if (this.days_since_contact) {
         rowDict['days_since_contact'] = this.days_since_contact;
       } else {
