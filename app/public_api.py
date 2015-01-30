@@ -67,7 +67,7 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
         # Exact ID search
         elif company_id:
             company = Company.objects.get(id=company_id)
-            profiles = Profile.objects(email__icontains=company.domain)
+            profiles = Profile.objects(domain=company.domain)
         # Advanced search query. Specific fields are searched
         else:
             # Global profile results
