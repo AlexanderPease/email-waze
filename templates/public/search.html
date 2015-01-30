@@ -254,7 +254,20 @@
             'render': function(data, type, full, meta) {
               var source   = $("#reminder-dropdown").html();
               var template = Handlebars.compile(source);
-              var context = {};
+              var type = full['type'];
+              if (type == 'profile') {
+                console.log('profile context')
+                console.log(data)
+                var context = { 
+                  profile_id: full['DT_RowId'], 
+                  setting: data
+                };
+              } else {
+                var context = {
+                  company_id: full['DT_RowId'], 
+                  setting: data
+                };
+              }
               return template(context);
             }
           },
@@ -294,7 +307,7 @@
               $('.copy-to-clipboard').popover('destroy');
             });
           }); // client.on('ready')
-          // Email link popover
+          // Email links popover
           $('.copy-to-clipboard').popover({
             content: 'Click to copy to clipboard',
             placement: 'top',
@@ -307,6 +320,28 @@
           $('.copy-to-clipboard').click(function(event) {
             // Stop tr click event firing when email link is clicked
             event.stopPropagation();
+          });
+          // Reminders
+          $('.reminder-dropdown').click(function(event) {
+            event.stopPropagation();
+          });
+         $('.reminder-dropdown').change(function(event) {
+            var days = $(this).find(':selected').attr('data-reminder-days');
+            if (days == 'null') {
+              return;
+            }
+            var url = "/api/reminder?";
+            var profile_id = $(this).attr('data-profile-id');
+            var company_id = $(this).attr('data-company-id');
+            if (profile_id && profile_id != "") {
+              url += "profile_id=" + profile_id;
+            } else{
+              url += "company_id=" + company_id;
+            }
+            url += "&days=" + days;
+            url += "&recurring=" + $(this).find(':selected').attr('data-reminder-recurring');
+            console.log(url);
+            //ajax call
           });
         },
         ajax: {
@@ -522,16 +557,12 @@
     // Put instance properties into array for displaying in table
     Profile.prototype.rowArray = function() {
       rowDict = {};
+      rowDict['type'] = 'profile';
       rowDict['name'] = this.cleanName();
-      if (this.connections) {
-        rowDict['email'] = this.email;
-        rowDict['connections'] = this.connections.length;
-      } else {
-        rowDict['email'] = this.burner + '@' + '{{ settings.get("domain_name") }}';
-        rowDict['connections'] = 'N/A';
-      }
+      rowDict['email'] = this.email;
+      rowDict['connections'] = this.connections.length;
       rowDict['connection_strength'] = this.connection_strength;
-      rowDict['reminder'] = 'foo';
+      rowDict['reminder'] = null;
       if (this.days_since_contact) {
         rowDict['days_since_contact'] = this.days_since_contact;
       } else {
