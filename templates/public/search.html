@@ -3,45 +3,13 @@
 {% block page-description %}{% end %}
 
 {% block body %}
-  {{ err }}
-  {{ msg }}
-
-  <section class="js-stretch-height search-background thin-search">
-    <div class="container">
-      <form id="main-search" class="form-inline">
-        <!--
-        <div class="form-group">
-          <div class="input-group">
-            <input id="form-name" name="name" type="text" class="form-control" placeholder="Name" autocomplete="off">
-          </div>
-        </div>
-        <div class="form-group">
-          <input id="form-company" name="company" type="text" class="form-control typeahead" placeholder="Company">
-        </div>
-        <div class="form-group">
-          <div class="input-group">
-            <span class="input-group-addon">@</span>
-            <input id="form-domain" name="domain" type="text" class="form-control" placeholder="Domain" autocomplete="off">
-          </div>
-        </div>
-        -->
-        <div class="form-group">
-          <input id="form-q" name="q" type="text" class="form-control">
-        </div>
-        <div class="form-group">
-          <div class="input-group">
-            <button id="form-button" class="btn btn-primary btn-inline" type="button">Search</button>
-          </div>
-        </div>
-      </form>
-      <a id="advanced-search-link" class="advanced-search-link">
-        <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
-        <span>Advanced Search</span>
-      </a>
+  <section class="pixel-grid feature">
+      <div class="container">
+        <h2 id="results"></h2> 
     </div>
   </section>
 
-  <section class="feature">
+  <section>
     <div class="container">
 
       <!-- Companies panel -->
@@ -51,11 +19,7 @@
       </div>
 
       <div class="row">
-        <div class="col-sm-6">
-          <h3 id="results"></h3> 
-        </div> 
-
-        <div class="col-sm-6 float-right">
+        <div class="col-sm-6 col-sm-offset-6 float-right">
           <!-- Filter by -->
           <div id="filter-by" class="dropdown">
             <button class="btn btn-primary btn-inline dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
@@ -95,16 +59,16 @@
       <table id="search_table" class="row-border hover">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Connection Strength</th>
-            <th>Days Since Contact</th>
-            <th>Connections</th>
-            <th>Latest Sent</th>
-            <th>Latest Received</th>
-            <th>Emails Sent</th>
-            <th>Emails Received</th>
-            <th>Self Connected</th>
+            <th>NAME</th>
+            <th>EMAIL</th>
+            <th>CONNECTIONS</th>
+            <th>SIGNAL</th>
+            <th>ALERTS</th>
+            <th>DAYS SINCE CONTACT</th>
+            <th>LATEST SENT</th>
+            <th>LATEST RECEIEVED</th>
+            <th>EMAILS SENT</th>
+            <th>EMAILS RECEIVED</th>
           </tr>
         </thead>
         <tbody id="search_table_body">
@@ -121,6 +85,41 @@
 
     </div> <!-- container -->
   </section> <!-- feature -->
+
+    <section class="js-stretch-height search-background thin-search">
+    <div class="container">
+      <form id="main-search" class="form-inline">
+        <!--
+        <div class="form-group">
+          <div class="input-group">
+            <input id="form-name" name="name" type="text" class="form-control" placeholder="Name" autocomplete="off">
+          </div>
+        </div>
+        <div class="form-group">
+          <input id="form-company" name="company" type="text" class="form-control typeahead" placeholder="Company">
+        </div>
+        <div class="form-group">
+          <div class="input-group">
+            <span class="input-group-addon">@</span>
+            <input id="form-domain" name="domain" type="text" class="form-control" placeholder="Domain" autocomplete="off">
+          </div>
+        </div>
+        -->
+        <div class="form-group">
+          <input id="form-q" name="q" type="text" class="form-control">
+        </div>
+        <div class="form-group">
+          <div class="input-group">
+            <button id="form-button" class="btn btn-primary btn-inline" type="button">Search</button>
+          </div>
+        </div>
+      </form>
+      <a id="advanced-search-link" class="advanced-search-link">
+        <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+        <span>Advanced Search</span>
+      </a>
+    </div>
+  </section>
 
 {% end %}
 
@@ -210,13 +209,19 @@
         searching: false,
         pageLength: 20,
         lengthChange: false,
+        dom: '<<t>p>',
         //scrollX: true,
         oLanguage: {
           sLoadingRecords: '<img src="' + '{{ static_url("img/loading-transparent.png") }}' + '">'
         },
         order: [[2, "desc"]],
         columns: [
-          {'data': 'name'},
+          {
+            'data': 'name', 
+            'render': function(data, type, full, meta) {
+              return "<span>" + data + "</span></br>Company Name"
+            }
+          },
           {
             'data': 'email', 
             'render': function(data, type, full, meta) { 
@@ -224,6 +229,10 @@
                 data + '</a>' + 
                 '<span class="glyphicon glyphicon-copy copy-to-clipboard-check" data-clipboard-text-check="' + data + '" aria-hidden="true"></span>';
             }
+          },
+          {
+            'name': 'connections',
+            'data': 'connections'
           },
           {
             'name': 'connection_strength', 
@@ -243,17 +252,16 @@
               return '<img class="signal-icon" src="' + icon_url + '"><span hidden>' + data + '</span>';
             }
           },
-          {'name': 'days_since_contact', 'data': 'days_since_contact', 'type': 'int-na' },
-          {'name': 'connections', 'data': 'connections'},
+          {'name': 'reminder', 'data': 'reminder'},
+          {'name': 'days_since_contact', 'data': 'days_since_contact', 'type': 'int-na'},
           {'name': 'latest_email_out_date', 'data': 'latest_email_out_date', 'type': 'date-na'},
           {'name': 'latest_email_in_date', 'data': 'latest_email_in_date', 'type': 'date-na'},
           {'name': 'total_emails_out', 'data': 'total_emails_out'},
           {'name': 'total_emails_in', 'data': 'total_emails_in'},
-          {'name': 'self_connected', 'data': 'self_connected'},
         ],
         columnDefs: [
           {
-            'targets': [4, 5, 6, 7, 8, 9],
+            'targets': [5, 6, 7, 8, 9],
             'visible': false
           }
         ],
@@ -466,11 +474,6 @@
       this.latest_email_out_date = dict['latest_email_out_date']
       this.total_emails_in = dict['total_emails_in']
       this.latest_email_in_date = dict['latest_email_in_date']
-      if (dict['self_connected']) {
-        this.self_connected = dict['self_connected'];
-      } else {
-        this.self_connected = null;
-      }
     }
 
     Profile.prototype.cleanName = function() {
@@ -516,6 +519,11 @@
         rowDict['connections'] = 'N/A';
       }
       rowDict['connection_strength'] = this.connection_strength;
+      if (this.reminder) {
+        rowDict['reminder'] = this.reminder;
+      } else {
+        rowDict['reminder'] = 'FOOOOO';
+      }
       if (this.days_since_contact) {
         rowDict['days_since_contact'] = this.days_since_contact;
       } else {
@@ -532,11 +540,6 @@
         rowDict['latest_email_in_date'] = this.latest_email_in_date;
       } else {
         rowDict['latest_email_in_date'] = 'N/A';
-      }
-      if (this.self_connected) {
-        rowDict['self_connected'] = 'Yes';
-      } else {
-        rowDict['self_connected'] = 'No';
       }
       rowDict['DT_RowId'] = this.profile_id;
       return rowDict;
