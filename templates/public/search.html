@@ -214,7 +214,7 @@
         oLanguage: {
           sLoadingRecords: '<img src="' + '{{ static_url("img/loading-transparent.png") }}' + '">'
         },
-        order: [[2, "desc"]],
+        order: [[3, "desc"]],
         columns: [
           {
             'data': 'name', 
@@ -227,7 +227,7 @@
             'render': function(data, type, full, meta) { 
               return '<a class="copy-to-clipboard" data-clipboard-text="' + data + '">' + 
                 data + '</a>' + 
-                '<span class="glyphicon glyphicon-copy copy-to-clipboard-check" data-clipboard-text-check="' + data + '" aria-hidden="true"></span>';
+                '<span class="glyphicon glyphicon-copy copy-to-clipboard-check" data-clipboard-text-check="' + data + '" aria-hidden="true"></span></br><span>Copy email</span>';
             }
           },
           {
@@ -238,16 +238,18 @@
             'name': 'connection_strength', 
             'data': 'connection_strength',
             'render': function(data, type, full, meta) {
-              if (data == 0) {
-                var icon_url = '{{ static_url("img/signal-0.png") }}';
-              } else if (data == 1) {
-                var icon_url = '{{ static_url("img/signal-1.png") }}';
+              if (data == 1) {
+                var icon_url = '{{ static_url("img/signal_strength/signal_strength_1.png") }}';
               } else if (data == 2) {
-                var icon_url = '{{ static_url("img/signal-2.png") }}';
+                var icon_url = '{{ static_url("img/signal_strength/signal_strength_2.png") }}';
               } else if (data == 3) {
-                var icon_url = '{{ static_url("img/signal-3.png") }}';
+                var icon_url = '{{ static_url("img/signal_strength/signal_strength_3.png") }}';
+              } else if (data == 4) {
+                var icon_url = '{{ static_url("img/signal_strength/signal_strength_4.png") }}';
+              } else if (data == 5) {
+                var icon_url = '{{ static_url("img/signal_strength/signal_strength_5.png") }}';
               } else {
-                var icon_url = '{{ static_url("img/signal-4.png") }}';
+                var icon_url = '{{ static_url("img/signal_strength/signal_strength_6.png") }}';
               } 
               return '<img class="signal-icon" src="' + icon_url + '"><span hidden>' + data + '</span>';
             }

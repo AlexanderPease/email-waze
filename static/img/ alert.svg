@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="23px" height="23px" viewBox="0 0 23 23" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.2.2 (9983) - http://www.bohemiancoding.com/sketch -->
+    <title>btn / alert</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="Search" sketch:type="MSArtboardGroup" transform="translate(-1117.000000, -470.000000)" stroke="#FCD228" stroke-width="0.833333333" fill="#FCD228">
+            <g id="btn-/-alert" sketch:type="MSLayerGroup" transform="translate(1117.000000, 470.000000)">
+                <g id="Group" transform="translate(11.500000, 11.500000) scale(-1, -1) translate(-11.500000, -11.500000) " sketch:type="MSShapeGroup">
+                    <ellipse id="Oval-951" cx="1.41666667" cy="9.55555556" rx="0.833333333" ry="0.844444444"></ellipse>
+                    <ellipse id="Oval-952" cx="1.41666667" cy="13.5555556" rx="0.833333333" ry="0.844444444"></ellipse>
+                    <ellipse id="Oval-956" cx="1.41666667" cy="17.5555556" rx="0.833333333" ry="0.844444444"></ellipse>
+                    <ellipse id="Oval-967" cx="13.4166667" cy="13.5555556" rx="0.833333333" ry="0.844444444"></ellipse>
+                    <ellipse id="Oval-958" cx="1.41666667" cy="5.55555556" rx="0.833333333" ry="0.844444444"></ellipse>
+                    <ellipse id="Oval-978" cx="17.4166667" cy="5.55555556" rx="0.833333333" ry="0.844444444"></ellipse>
+                    <ellipse id="Oval-962" cx="21.4166667" cy="5.55555556" rx="0.833333333" ry="0.844444444"></ellipse>
+                    <ellipse id="Oval-966" cx="17.4166667" cy="13.5555556" rx="0.833333333" ry="0.844444444"></ellipse>
+                    <ellipse id="Oval-965" cx="21.4166667" cy="13.5555556" rx="0.833333333" ry="0.844444444"></ellipse>
+                    <ellipse id="Oval-986" cx="5.41666667" cy="21.5555556" rx="0.833333333" ry="0.844444444"></ellipse>
+                    <ellipse id="Oval-985" cx="13.4166667" cy="21.5555556" rx="0.833333333" ry="0.844444444"></ellipse>
+                    <ellipse id="Oval-984" cx="17.4166667" cy="21.5555556" rx="0.833333333" ry="0.844444444"></ellipse>
+                    <ellipse id="Oval-983" cx="21.4166667" cy="21.5555556" rx="0.833333333" ry="0.844444444"></ellipse>
+                    <ellipse id="Oval-982" cx="9.41666667" cy="21.5555556" rx="0.833333333" ry="0.844444444"></ellipse>
+                    <ellipse id="Oval-969" cx="9.41666667" cy="9.55555556" rx="0.833333333" ry="0.844444444"></ellipse>
+                    <ellipse id="Oval-970" cx="9.41666667" cy="5.55555556" rx="0.833333333" ry="0.844444444"></ellipse>
+                    <ellipse id="Oval-974" cx="17.4166667" cy="1.55555556" rx="0.833333333" ry="0.844444444"></ellipse>
+                    <ellipse id="Oval-975" cx="9.41666667" cy="1.55555556" rx="0.833333333" ry="0.844444444"></ellipse>
+                    <ellipse id="Oval-977" cx="1.41666667" cy="1.55555556" rx="0.833333333" ry="0.844444444"></ellipse>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
