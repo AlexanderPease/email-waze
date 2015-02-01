@@ -34,15 +34,14 @@ class Reminder(Document):
         else:
             raise Exception
 
-    def clean(self):
-        """
-        Called before executing validate() as part of save()
-        """
+    def save(self, *args, **kwargs):
         # Ensure either company or profile is set
         if not self.profile and not self.company:
-            raise Exception
+            msg = 'Reminder requires either profile or company to be set'
+            return
         elif self.profile and self.company:
-            raise Exception
+            msg = 'Reminder cannot have both company and profile set'
+            return
         # Ensure sparse uniqueness. Couldn't get index to work
         if self.profile:
             rs = Reminder.objects(user=self.user, profile=self.profile)
@@ -53,7 +52,10 @@ class Reminder(Document):
                 raise Exception
             r = rs[0]
             if r.id != self.id:
-                raise Exception
+                msg = 'Reminder for %s & %s/%s already exists' % (self.user, self.profile, self.company)
+                return 
+
+        super(Reminder, self).save(*args, **kwargs)
 
 
 
