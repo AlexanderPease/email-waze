@@ -2,6 +2,13 @@
 
 // apply a natural box layout model to all elements
 
+// Global color variables
+$dark-grey: #464546;
+$medium-grey: #979797;
+$light-grey: #CCCCCC;
+$white: #FFFFFF;
+$lightning-yellow: #FDDF49;
+
 *, *:before, *:after {
   -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
 }
@@ -11,7 +18,6 @@ html {
 }
 
 body {
-  //font-family: 'UniversNextW01-Regular';
   font-family: Lato, "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   background-color: #F8F8FA;
   font-weight: 300;
@@ -61,15 +67,18 @@ h4, .h4 {
 
 a:hover {
   cursor: pointer;
+
 }
 
-// nav
+// Navbar
 .navbar {
   background: #fff;
   @include border-radius(0);
   @include box-shadow(none);
   margin-bottom: 0;
   border-bottom: 1px solid #E7E8EF;
+  padding-top: 10px;
+  padding-bottom: 20px;
   z-index: 1000;
   @media screen and (min-width: 768px) {
     position: fixed;
@@ -86,34 +95,32 @@ a:hover {
   }
 }
 
-$navbar-blue: #4B6CB7;
 .navbar-default .navbar-nav > li > a, 
-.navbar-default .navbar-brand,
 .navbar-default .navbar-nav > .open > a,
 .navbar-default .navbar-nav .open .dropdown-menu > li > a {
-  color: $navbar-blue;
+  color: $white;
+  background-color: $light-grey;
+  margin-left: 6px;
+  text-align:left;
+  padding-top: 3px;
+  padding-bottom: 16px;
+  padding-left: 10px;
+  width: 160px;
   &:focus {
-    color: #4B6CB7;
+    color: $dark-grey;
+    background-color: $lightning-yellow;
     outline: none;
   }
   &:hover {
-    color: #F30D33;
+    color: $dark-grey;
+    background-color: $lightning-yellow;
     outline: none;
   }
 }
 
-.navbar-default .navbar-brand {
-  font-family: Lato;
-  font-size: 20px;
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  &:hover {
-    color: #4B6CB7;
-  }
-}
 
 // footer
+//.footer-right { float:right!important;} 
 footer {
   width: 100%;
   display: block;
@@ -423,7 +430,7 @@ $tt-suggestion-padding: 3px;
 }
 
 .tt-suggestion.tt-cursor { // When suggestion is moused over
-  background-color: $navbar-blue;
+  background-color: pink;//$navbar-blue;
   color: white;
 }
 
