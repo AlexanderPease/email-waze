@@ -2,6 +2,9 @@
 
 // apply a natural box layout model to all elements
 
+// Global variables
+$pixel-background: url('../img/pixel_grid.png');
+
 // Global color variables
 $dark-grey: #464546;
 $medium-grey: #979797;
@@ -80,12 +83,13 @@ a:hover {
   padding-top: 10px;
   padding-bottom: 20px;
   z-index: 1000;
+  background-image: $pixel_background;
+  background-repeat: repeat;
   @media screen and (min-width: 768px) {
     position: fixed;
     width: 100%;
     display: block;
   }
-
   a {
     font-family: "Titillium Web", Lato, "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
     font-weight: 600;
@@ -99,10 +103,13 @@ a:hover {
 footer {
   position: fixed;
   width: 100%;
+  height: 200px;
   display: block;
   padding: 40px 0px;
   text-align: center;
   z-index: 10;
+  background-image: $pixel_background;
+  background-repeat: repeat;
 
   &.fixed {
     @media (min-width: 768px) {
@@ -111,8 +118,9 @@ footer {
     }
   }
 
-  a {
+  .simple-link > li > a {
     color: $dark-grey;
+    padding-top: 3px;
   }
 }
 
