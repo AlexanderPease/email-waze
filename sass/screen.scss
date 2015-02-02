@@ -158,7 +158,7 @@ footer {
   }
   &:hover {
     color: $dark-grey;
-    background-color: $lightning-yellow;
+    background: $lightning-yellow url('../img/search_arrow_white.png') no-repeat 135px 10px;
     outline: none;
   }
 }
@@ -403,12 +403,15 @@ table.dataTable {
   a:hover {
     color: $dark-yellow;
   }
-  .copy-email {
+  .copy-email, .alert-icon {
     display: none;
   }
   .name {
     font-size: 18px;
   }
+}
+table.dataTable thead th, table.dataTable thead td {
+  border-bottom: 1px solid $light-grey;
 }
 table.dataTable.no-footer {
   border-bottom: 1px solid $light-grey;
@@ -420,30 +423,64 @@ table.dataTable.hover tbody tr:hover, table.dataTable.hover tbody tr.odd:hover, 
   a, .email {
     color: $dark-yellow;
   }
-  .copy-email {
+  .copy-email, .alert-icon {
     display: block;
   }
 
+
 }
 // Pagination buttons
-.dataTables_wrapper .dataTables_paginate .paginate_button .current {
-  color: $white !important;
-  background-color: $lightning-yellow;
-}
 .dataTables_wrapper .dataTables_paginate .paginate_button {
   color: $lightning-yellow !important;
+  border: none;
   &:hover {
     color: $white !important;
     background: $lightning-yellow;
     border: none;
   }
 }
-
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+  color: $white !important;
+  background: $lightning-yellow;
+  border: none;
+    &:hover {
+    color: $white !important;
+    background: $lightning-yellow;
+    border: none;
+  }
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.next {
+  background: url('../img/pagination_next.png');
+  color: $lightning-yellow !important;
+  border: none;
+  &:hover {
+    color: $white !important;
+    background: $lightning-yellow;
+    border: none;
+  }
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+  display: none;
+  &:hover {
+    display:none;
+  }
+}
+table.dataTable thead .sorting {
+  background: url('../img/sort/sort_inactive.png') no-repeat center right;
+}
+table.dataTable thead .sorting_desc {
+  background: url('../img/sort/sorter_down.png') no-repeat center right;
+}
+table.dataTable thead .sorting_asc {
+  background: url('../img/sort/sorter_up.png') no-repeat center right;
+}
 .datatables-cell {
   padding-left: 18px !important;
 }
 
-// typeahead.js
+/******************************************************************************
+typeahead.js
+******************************************************************************/
 $tt-width: 400px;
 $bootstrap-text-color: #555;
 .tt-input, .tt-hint {
