@@ -139,6 +139,13 @@ footer {
 
 
 // Header and footer grey box links
+.navbar-default .navbar-nav > li > a.nav-selected, 
+.navbar-default .navbar-nav > .open > a.nav-selected,
+.navbar-default .navbar-nav .open .dropdown-menu > li > a.nav-selected {
+  color: $white;
+  background: $lightning-yellow;
+  outline: none;
+}
 .navbar-default .navbar-nav > li > a, 
 .navbar-default .navbar-nav > .open > a,
 .navbar-default .navbar-nav .open .dropdown-menu > li > a,
@@ -151,17 +158,13 @@ footer {
   padding-bottom: 16px;
   padding-left: 10px;
   width: 160px;
-  &:focus {
-    color: $dark-grey;
-    background-color: $lightning-yellow;
-    outline: none;
-  }
-  &:hover {
-    color: $dark-grey;
+  &:focus, &:hover {
+    color: $white;
     background: $lightning-yellow url('../img/search_arrow_white.png') no-repeat 135px 10px;
     outline: none;
   }
 }
+
 
 /******************************************************************************
 Main pages

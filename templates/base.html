@@ -34,7 +34,11 @@
         <ul class="nav navbar-nav navbar-right">
           <!--<li id="nav-chrome-extension" class="hidden"><a href="https://chrome.google.com/webstore/detail/ansatz/fhmfdjnooicibclghoophehldkeeloje">Install the Chrome Extension!</a></li>-->
           {% if current_user %}
-            <li><a>Search</a></li>
+            <li>
+              <a {% if nav_select == 'search' %} class="nav-selected" {% end %}>
+                Search
+              </a>
+            </li>
             <li><a href="/reminders">Reminders</a></li>
             <li><a href="/networks">Networks</a></li>
             <li class="dropdown">

@@ -35,7 +35,7 @@ class Search(app.basic.BaseHandler):
   def get(self):
     # Groups
     gs = User.objects.get(email=self.current_user).get_groups()
-    return self.render('public/search.html', groups=gs)
+    return self.render('public/search.html', groups=gs, nav_select="search")
 
 """
 class Search(app.basic.BaseHandler):
