@@ -213,7 +213,8 @@
           {
             'data': 'name', 
             'render': function(data, type, full, meta) {
-              return '<span>' + data + '</span></br><span class="company-name">Company Name</span>'
+              var company_name = full['company_name'];
+              return '<span>' + data + '</span></br><span class="company-name">' + company_name + '</span>'
             }
           },
           {
@@ -265,10 +266,11 @@
           {'name': 'latest_email_in_date', 'data': 'latest_email_in_date', 'type': 'date-na'},
           {'name': 'total_emails_out', 'data': 'total_emails_out'},
           {'name': 'total_emails_in', 'data': 'total_emails_in'},
+          {'name': 'company_name', 'data': 'company_name'}
         ],
         columnDefs: [
           {
-            'targets': [5, 6, 7, 8, 9],
+            'targets': [5, 6, 7, 8, 9, 10],
             'visible': false
           }
         ],
@@ -473,6 +475,7 @@
       this.profile_id = dict['profile_id'];
       this.name = dict['name'];
       this.email = dict['email'];
+      this.company_name = dict['company_name'];
       //this.burner = dict['burner'];
       this.connection_strength = dict['connection_strength']
       this.connections = dict['connections']
@@ -518,13 +521,8 @@
     Profile.prototype.rowArray = function() {
       rowDict = {};
       rowDict['name'] = this.cleanName();
-      if (this.connections) {
-        rowDict['email'] = this.email;
-        rowDict['connections'] = this.connections.length;
-      } else {
-        rowDict['email'] = this.burner + '@' + '{{ settings.get("domain_name") }}';
-        rowDict['connections'] = 'N/A';
-      }
+      rowDict['email'] = this.email;
+      rowDict['connections'] = this.connections.length;
       rowDict['connection_strength'] = this.connection_strength;
       if (this.reminder) {
         rowDict['reminder'] = this.reminder;
@@ -548,6 +546,7 @@
       } else {
         rowDict['latest_email_in_date'] = 'N/A';
       }
+      rowDict['company_name'] = this.company_name;
       rowDict['DT_RowId'] = this.profile_id;
       return rowDict;
     }

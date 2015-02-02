@@ -5,7 +5,7 @@ from db.profiledb import Profile
 from db.userdb import User
 from db.groupdb import Group
 from db.connectiondb import Connection
-
+from db.companydb import Company
 
 class BaseProfileConnection:
     """
@@ -24,6 +24,7 @@ class BaseProfileConnection:
         self.connections = connections
 
         # The following fields are processed below
+        self.company_name = None
         self.connection_strength = 0
         self.days_since_contact = 0
         self.total_emails_out = 0
@@ -31,6 +32,13 @@ class BaseProfileConnection:
         self.total_emails_in = 0
         self.latest_email_in_date = None
         self.self_connected = None
+
+        # Get company name
+        try:
+            c = Company.objects.get(domain=profile.domain)
+            self.company_name = c.name
+        except:
+            pass
 
         # Process connections and set other fields
         for c in self.connections:
@@ -93,7 +101,8 @@ class BaseProfileConnection:
             'burner': self.burner,
             'total_emails_out': self.total_emails_out,
             'total_emails_in': self.total_emails_in,
-            'connection_strength': self.connection_strength
+            'connection_strength': self.connection_strength,
+            'company_name': self.company_name
         }
         if self.connections:
             json['connections'] = []
