@@ -39,8 +39,16 @@
                 Search
               </a>
             </li>
-            <li><a href="/reminders">Reminders</a></li>
-            <li><a href="/networks">Networks</a></li>
+            <li>
+              <a href="/reminders" {% if nav_select == 'reminders' %} class="nav-selected" {% end %}>
+                Reminders
+              </a>
+            </li>
+            <li>
+              <a href="/networks" {% if nav_select == 'networks' %} class="nav-selected" {% end %}>
+                Networks
+              </a>
+            </li>
             <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">

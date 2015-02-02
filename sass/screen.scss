@@ -469,12 +469,15 @@ table.dataTable.hover tbody tr:hover, table.dataTable.hover tbody tr.odd:hover, 
   }
 }
 table.dataTable thead .sorting {
+  color: $light-grey;
   background: url('../img/sort/sort_inactive.png') no-repeat center right;
 }
 table.dataTable thead .sorting_desc {
+  color: $dark-grey;
   background: url('../img/sort/sorter_down.png') no-repeat center right;
 }
 table.dataTable thead .sorting_asc {
+  color: $dark-grey;
   background: url('../img/sort/sorter_up.png') no-repeat center right;
 }
 .datatables-cell {
