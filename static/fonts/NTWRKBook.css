@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'NTWRKBook';
+    src: url('fonts/NTWRKBook.eot');
+    src: url('fonts/NTWRKBook.eot') format('embedded-opentype'),
+         url('fonts/NTWRKBook.woff2') format('woff2'),
+         url('fonts/NTWRKBook.woff') format('woff'),
+         url('fonts/NTWRKBook.ttf') format('truetype'),
+         url('fonts/NTWRKBook.svg#NTWRKBook') format('svg');
+}

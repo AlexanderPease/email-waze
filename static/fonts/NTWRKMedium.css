@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'NTWRKMedium';
+    src: url('fonts/NTWRKMedium.eot');
+    src: url('fonts/NTWRKMedium.eot') format('embedded-opentype'),
+         url('fonts/NTWRKMedium.woff2') format('woff2'),
+         url('fonts/NTWRKMedium.woff') format('woff'),
+         url('fonts/NTWRKMedium.ttf') format('truetype'),
+         url('fonts/NTWRKMedium.svg#NTWRKMedium') format('svg');
+}
