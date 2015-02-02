@@ -263,10 +263,10 @@ $disabled-color: #428bca;
   }
   border-bottom: 1px solid #E8EAF1;
   overflow: hidden;
-  background-color: #F8F8FA;
+  background-color: $white;
 
   &:nth-child(2n) {
-    background-color: #FFF;
+    background-color: #F8F8FA;
     background-image: none;
   }
 }
@@ -414,6 +414,9 @@ table.dataTable {
   a:hover {
     color: $dark-yellow;
   }
+  .copy-email {
+    display: none;
+  }
 }
 table.dataTable.no-footer {
   border-bottom: 1px solid $light-grey;
@@ -422,6 +425,13 @@ table.dataTable.hover tbody tr:hover, table.dataTable.hover tbody tr.odd:hover, 
   background-color: $hover-yellow;
   color: $dark-yellow;
   cursor: pointer;
+  a {
+    color: $dark-yellow;
+  }
+  .copy-email {
+    display: block;
+  }
+
 }
 // Pagination buttons
 .dataTables_wrapper .dataTables_paginate .paginate_button .current {

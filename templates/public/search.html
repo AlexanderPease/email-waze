@@ -3,15 +3,9 @@
 {% block page-description %}{% end %}
 
 {% block body %}
-  <section class="pixel-grid feature">
-      <div class="container">
-        <h2 id="results"></h2> 
-    </div>
-  </section>
-
-  <section>
+  <section class="feature">
     <div class="container">
-
+      <h1 id="results"></h1>
       <!-- Companies panel -->
       <div id="company-panel" class="panel panel-default" style="display:none">
         <div class="panel-body">
@@ -219,7 +213,7 @@
           {
             'data': 'name', 
             'render': function(data, type, full, meta) {
-              return "<span>" + data + "</span></br>Company Name"
+              return '<span>' + data + '</span></br><span class="company-name">Company Name</span>'
             }
           },
           {
@@ -227,7 +221,7 @@
             'render': function(data, type, full, meta) { 
               return '<a class="copy-to-clipboard" data-clipboard-text="' + data + '">' + 
                 data + '</a>' + 
-                '<span class="glyphicon glyphicon-copy copy-to-clipboard-check" data-clipboard-text-check="' + data + '" aria-hidden="true"></span></br><span>Copy email</span>';
+                '<span class="glyphicon glyphicon-copy copy-to-clipboard-check" data-clipboard-text-check="' + data + '" aria-hidden="true"></span></br><span class="copy-email"><a>Copy email</a></span>';
             }
           },
           {
@@ -254,7 +248,18 @@
               return '<img class="signal-icon" src="' + icon_url + '"><span hidden>' + data + '</span>';
             }
           },
-          {'name': 'reminder', 'data': 'reminder'},
+          {
+            'name': 'reminder', 
+            'data': 'reminder',
+            'render': function(data, type, full, meta) {
+              if (data == null || data == "") {
+                //return '{{ static_url("img/alert.png") }}';
+                return '<img class="signal-icon" src="' + '{{ static_url("img/alert.png") }}' + '">';
+              } else {
+                return 'foo';
+              }
+            }
+          },
           {'name': 'days_since_contact', 'data': 'days_since_contact', 'type': 'int-na'},
           {'name': 'latest_email_out_date', 'data': 'latest_email_out_date', 'type': 'date-na'},
           {'name': 'latest_email_in_date', 'data': 'latest_email_in_date', 'type': 'date-na'},
@@ -524,7 +529,7 @@
       if (this.reminder) {
         rowDict['reminder'] = this.reminder;
       } else {
-        rowDict['reminder'] = 'FOOOOO';
+        rowDict['reminder'] = null;
       }
       if (this.days_since_contact) {
         rowDict['days_since_contact'] = this.days_since_contact;
