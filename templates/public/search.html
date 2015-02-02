@@ -214,15 +214,15 @@
             'data': 'name', 
             'render': function(data, type, full, meta) {
               var company_name = full['company_name'];
-              return '<span>' + data + '</span></br><span class="company-name">' + company_name + '</span>'
+              return '<span class="name">' + data + '</span></br><span class="company-name">' + company_name + '</span>'
             }
           },
           {
             'data': 'email', 
             'render': function(data, type, full, meta) { 
-              return '<a class="copy-to-clipboard" data-clipboard-text="' + data + '">' + 
-                data + '</a>' + 
-                '<span class="glyphicon glyphicon-copy copy-to-clipboard-check" data-clipboard-text-check="' + data + '" aria-hidden="true"></span></br><span class="copy-email"><a>Copy email</a></span>';
+              return '<span class="email">' + data + '</span>' +
+                '<a class="copy-email" data-clipboard-text="' + 
+                data + '">Copy email</a>';
             }
           },
           {
@@ -283,31 +283,23 @@
           ZeroClipboard.config({
             swfPath: moviePath
           });
-          var client = new ZeroClipboard( $(".copy-to-clipboard") );
+          var client = new ZeroClipboard( $(".copy-email") );
           client.on('ready', function(event) {
+            console.log('ready');
             client.on('aftercopy', function(event) {
+              console.log('aftercopy');
               // `this` === `client`
               // `event.target` === the element that was clicked. Won't work with jquery though. 
-              $('.copy-to-clipboard-check').removeClass('transition');
+              $('.copy-email').text('Copy email');
               var dataClipboardText = event.data['text/plain'];
-              var checkmark = $('.copy-to-clipboard-check[data-clipboard-text-check="' + dataClipboardText + '"]');
-              checkmark.addClass('transition');
-              // Remove email link popovers
-              $('.copy-to-clipboard').popover('destroy');
+              console.log(dataClipboardText);
+              var copyEmailMsg = $('.copy-email[data-clipboard-text="' + dataClipboardText + '"]');
+              copyEmailMsg.text('Copied to clipboard!');
             });
           }); // client.on('ready')
-          // Email link popover
-          $('.copy-to-clipboard').popover({
-            content: 'Click to copy to clipboard',
-            placement: 'top',
-            trigger: 'hover',
-            delay: {
-              show: 800,
-              hide: 100
-            }
-          });
-          $('.copy-to-clipboard').click(function(event) {
+          $('.copy-email').click(function(event) {
             // Stop tr click event firing when email link is clicked
+            console.log('clicked');
             event.stopPropagation();
           });
         },

@@ -30,7 +30,7 @@ body {
   background-color: #F8F8FA;
   font-weight: 300;
   font-style: normal;
-  font-size: 18px;
+  font-size: 14px;
   line-height: 1.6;
 }
 
@@ -392,22 +392,12 @@ $btn-inline-font-size: 14px;
   font-size: 20px;
 }
 
-.copy-to-clipboard-check {
-  opacity: 0;
-  margin-left: 3px;
-}
-
-.copy-to-clipboard-check.transition {
-  opacity: 1;
-  -webkit-transition: opacity 1.5s;
-}
-
 /******************************************************************************
 Datatables
 ******************************************************************************/
 table.dataTable {
   color: $name-grey;
-  a {
+  a, .email {
     color: $medium-grey;
   }
   a:hover {
@@ -415,6 +405,9 @@ table.dataTable {
   }
   .copy-email {
     display: none;
+  }
+  .name {
+    font-size: 18px;
   }
 }
 table.dataTable.no-footer {
@@ -424,7 +417,7 @@ table.dataTable.hover tbody tr:hover, table.dataTable.hover tbody tr.odd:hover, 
   background-color: $hover-yellow;
   color: $dark-yellow;
   cursor: pointer;
-  a {
+  a, .email {
     color: $dark-yellow;
   }
   .copy-email {
