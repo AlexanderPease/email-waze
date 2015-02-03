@@ -113,9 +113,11 @@ class Scratch(app.basic.BaseHandler):
         u = User.objects.get(email="me@alexanderpease.com")
         brad = Profile.objects.get(email="brad@usv.com")
         usv = Company.objects.get(domain="usv.com")
-        r = ProfileReminder(user=u, profile=brad, days=10)
+        r = ProfileReminder(user=u, profile=brad, days=16, recurring=True)
         r.save()
-        logging.info()
+        #r = CompanyReminder(user=u, company=usv, days=10)
+        #r.save()
+        logging.info(r)
 
 
         # Counts number of profiles that have an email address

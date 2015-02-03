@@ -45,17 +45,20 @@ class CreateReminder(app.basic.BaseHandler):
                 r = ProfileReminder(profile=p, user=u, days=days, recurring=recurring)
                 r.save()
             except: 
-                return self.api_error(400, 'Error saving profile reminder')
+                return self.api_error(500, 'Error saving ProfileReminder')
         elif reminder_type == 'company':
             try:
                 c = Company.objects.get(id=doc_id)
             except:
                 return self.api_error(400, 'Company ID is invalid')
             try:
+                logging.info(c)
+                logging.info(u)
                 r = CompanyReminder(company=c, user=u, days=days, recurring=recurring)
+                logging.info(r)
                 r.save()
             except: 
-                return self.api_error(400, 'Error saving profile reminder')
+                return self.api_error(500, 'Error saving CompanyReminder')
         else:
             return self.api_error(400, 'Invalid reminder_type parameter')
         return self.api_response(data={})

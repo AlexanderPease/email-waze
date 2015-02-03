@@ -48,27 +48,16 @@ class Reminder(Document):
                 pass
         return r
 
+class ProfileReminder(Reminder):
+    profile = ReferenceField(Profile, required=True, unique_with='user')
+
+    def __str__(self):
+        return 'Reminder: %s <-> %s' % (self.user, self.profile)
 
 class CompanyReminder(Reminder):
-    company = ReferenceField(Company, required=True)
-    meta = {
-        'indexes': [
-            {'fields': ['user', 'company'], 'unique': True},
-        ]
-    }
+    company = ReferenceField(Company, required=True, unique_with='user')
 
     def __str__(self):
-        return 'Reminder: User %s <-> Company %s' % (self.user, self.company)
-
-class ProfileReminder(Reminder):
-    profile = ReferenceField(Profile, required=True)
-    meta = {
-        'indexes': [
-            {'fields': ['user', 'profile'], 'unique': True},
-        ]
-    }
-
-    def __str__(self):
-        return 'Reminder: User %s <-> Profile %s' % (self.user, self.profile)
+        return 'Reminder: %s <-> %s' % (self.user, self.company)
 
 
