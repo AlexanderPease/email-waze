@@ -91,7 +91,7 @@ Navbar & Footer
   @include border-radius(0);
   @include box-shadow(none);
   margin-bottom: 0;
-  border-bottom: 1px solid #E7E8EF;
+  border-bottom: none;
   padding-top: 10px;
   padding-bottom: 20px;
   z-index: 1000;
@@ -104,7 +104,7 @@ Navbar & Footer
   }
   a {
     color: $medium-grey;
-    font-family: "Titillium Web", Lato, "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-family: "NTWRKMedium", "Titillium Web", Lato, "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
     font-weight: 600;
     font-size: 14px;
     text-transform: uppercase;
@@ -420,7 +420,7 @@ table.dataTable.no-footer {
   border-bottom: 1px solid $light-grey;
 }
 table.dataTable.hover tbody tr:hover, table.dataTable.hover tbody tr.odd:hover, table.dataTable.hover tbody tr.even:hover, table.dataTable.display tbody tr:hover, table.dataTable.display tbody tr.odd:hover, table.dataTable.display tbody tr.even:hover {
-  background-color: $hover-yellow;
+  background: rgba($hover-yellow, 0.05);
   color: $dark-yellow;
   cursor: pointer;
   a, .email {
@@ -454,11 +454,11 @@ table.dataTable.hover tbody tr:hover, table.dataTable.hover tbody tr.odd:hover, 
 }
 .dataTables_wrapper .dataTables_paginate .paginate_button.next {
   background: url('../img/pagination_next.png');
-  color: $lightning-yellow !important;
+  color: transparent !important;
   border: none;
   &:hover {
-    color: $white !important;
-    background: $lightning-yellow;
+    color: transparent !important;
+    background: url('../img/pagination_next_hover.png');
     border: none;
   }
 }
@@ -468,6 +468,8 @@ table.dataTable.hover tbody tr:hover, table.dataTable.hover tbody tr.odd:hover, 
     display:none;
   }
 }
+
+// Column headers
 table.dataTable thead .sorting {
   color: $light-grey;
   background: url('../img/sort/sort_inactive.png') no-repeat center right;
