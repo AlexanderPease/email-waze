@@ -17,6 +17,9 @@ class Reminder(Document):
     # Number of days until reminder is due, or number of days for recurring time period
     days = IntField(required=True)
 
+    # Allow subclassing
+    meta = {'allow_inheritance': True}
+
     def to_json(self):
         json = {}
         for k,v in Reminder._fields.iteritems():

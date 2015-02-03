@@ -10,7 +10,7 @@ from db.groupdb import Group
 from db.connectiondb import Connection
 from db.statsdb import Stats
 from db.companydb import Company
-from db.reminderdb import Reminder
+from db.reminderdb import ProfileReminder, CompanyReminder
 
 
 ###########################
@@ -113,13 +113,9 @@ class Scratch(app.basic.BaseHandler):
         u = User.objects.get(email="me@alexanderpease.com")
         brad = Profile.objects.get(email="brad@usv.com")
         usv = Company.objects.get(domain="usv.com")
-        try:
-            r = Reminder(user=u, company=usv, days=0)
-        except:
-            r = 'null'
-
-        logging.info(r)
+        r = ProfileReminder(user=u, profile=brad, days=10)
         r.save()
+        logging.info()
 
 
         # Counts number of profiles that have an email address
