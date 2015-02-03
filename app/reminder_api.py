@@ -90,9 +90,16 @@ class EditReminder(app.basic.BaseHandler):
         recurring = self.get_argument('recurring', '')
 
         # Get reminder
-        r = Reminder.get_by_id(reminder_type=reminder_type, reminder_id=reminder_id)
-        if not r:
-            return self.api_error(400, 'Invalid reminder parameters. Could not find reminder')
+        if reminder_type == 'profile':
+            try:
+                r = ProfileReminder.objects.get(id=reminder_id, user=u)
+            except:
+                return self.api_error(400, 'Invalid reminder_id parameter for ProfileReminder')
+        elif reminder_type == 'company':
+            try:
+                r = CompanyReminder.objects.get(id=reminder_id, user=u)
+            except:
+                return self.api_error(400, 'Invalid reminder_id parameter for CompanyReminder')
 
         # Update reminder
         if days:
@@ -134,11 +141,16 @@ class DeleteReminder(app.basic.BaseHandler):
             return self.api_error(500, 'Invalid reminder_type parameter')
 
         # Get reminder
-        r = Reminder.get_by_id(reminder_type=reminder_type, reminder_id=reminder_id)
-        if not r:
-            return self.api_error(500, 'Could not find reminder of id %s' % reminder_id)
-        if not u.same_user(r.user):
-            return self.api_error(500, 'Reminder of id %s does not belong to current user' % reminder_id)
+        if reminder_type == 'profile':
+            try:
+                r = ProfileReminder.objects.get(id=reminder_id, user=u)
+            except:
+                return self.api_error(400, 'Invalid reminder_id parameter for ProfileReminder')
+        elif reminder_type == 'company':
+            try:
+                r = CompanyReminder.objects.get(id=reminder_id, user=u)
+            except:
+                return self.api_error(400, 'Invalid reminder_id parameter for CompanyReminder')
         r.delete()
         return self.api_response(data={})
 
