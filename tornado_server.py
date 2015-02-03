@@ -53,6 +53,8 @@ class Application(tornado.web.Application):
       (r"/api/group/(?P<group_id>[A-z-+0-9]+)/delete", app.group_api.Delete),
       (r"/api/user/(?P<user_id>[A-z-+0-9]+)/deleteaccount", app.user_api.DeleteAccount),
       (r"/api/reminder/create", app.reminder_api.CreateReminder),
+      (r"/api/reminder/(?P<reminder_id>[A-z-+0-9]+)/edit", app.reminder_api.EditReminder),
+      (r"/api/reminder/(?P<reminder_id>[A-z-+0-9]+)/delete", app.reminder_api.DeleteReminder),
       (r"/json/(.*)", tornado.web.StaticFileHandler, {'path': r'static/json'}),
 
       # Public API v1

@@ -1,5 +1,6 @@
 import app.basic, settings, ui_methods, tornado.web
 import logging
+from db.reminderdb import Reminder
 from db.reminderdb import ProfileReminder
 from db.reminderdb import CompanyReminder
 from db.userdb import User
@@ -21,47 +22,123 @@ class CreateReminder(app.basic.BaseHandler):
             return self.api_error(500, 'Could not find client user in database')
 
         # Get args
-        profile_id = self.get_argument('profile_id', '')
-        company_id = self.get_argument('company_id', '')
+        reminder_type = self.get_argument('reminder_type', '')
+        doc_id = self.get_argument('doc_id', '')
         days = self.get_argument('days', '')
         recurring = self.get_argument('recurring', '')
         if recurring and recurring != "":
             recurring = True
 
         # Require necessary fields
-        if profile_id and company_id:
-            return self.api_error(400, 'Cannot set both company and profile')
-        elif not profile_id and not company_id: 
-            return self.api_error(400, 'Must have either company or profile')
-        if not days:
-            return self.api_error(400, 'Must set a reminder time period')
+        if not reminder_type or not doc_id or not days:
+            return self.api_error(400, 'Invalid arg parameters')
 
         # Save reminder
-        if profile_id:
+        if reminder_type == 'profile':
             try:
-                p = Profile.objects.get(id=profile_id)
-                logging.info(p)
+                p = Profile.objects.get(id=doc_id)
             except:
-                return self.api_error(501, 'Profile_ID is invalid')
+                return self.api_error(400, 'Profile ID is invalid')
             if p.email == u.email:
-                return self.api_error(501, 'User cannot set reminder about him/herself')
+                return self.api_error(400, 'User cannot set reminder about him/herself')
             try:
                 r = ProfileReminder(profile=p, user=u, days=days, recurring=recurring)
                 r.save()
             except: 
-                return self.api_error(501, 'Error saving profile reminder')
-        elif company_id:
+                return self.api_error(400, 'Error saving profile reminder')
+        elif reminder_type == 'company':
             try:
-                c = Company.objects.get(id=company_id)
+                c = Company.objects.get(id=doc_id)
             except:
-                return self.api_error(501, 'Company_ID is invalid')
+                return self.api_error(400, 'Company ID is invalid')
             try:
                 r = CompanyReminder(company=c, user=u, days=days, recurring=recurring)
                 r.save()
             except: 
-                return self.api_error(501, 'Error saving profile reminder')
+                return self.api_error(400, 'Error saving profile reminder')
+        else:
+            return self.api_error(400, 'Invalid reminder_type parameter')
         return self.api_response(data={})
 
+
+########################
+### Edit reminder
+### /api/reminder/<reminder_id>/edit
+########################
+class EditReminder(app.basic.BaseHandler):
+    @tornado.web.authenticated
+    def get(self, reminder_id):
+        """
+        Required Args:
+            reminder_type is either 'profile' or 'company'
+        Args:
+            days
+            recurring should be set to 'true' or 'false'
+        """
+        if not self.current_user:
+            return self.api_error(401, 'User is not logged in')
+        try:
+            u = User.objects.get(email=self.current_user)
+        except:
+            return self.api_error(500, 'Could not find client user in database')
+
+        # Get args
+        reminder_type = self.get_argument('reminder_type', '')
+        days = self.get_argument('days', '')
+        recurring = self.get_argument('recurring', '')
+
+        # Get reminder
+        r = Reminder.get_by_id(reminder_type=reminder_type, reminder_id=reminder_id)
+        if not r:
+            return self.api_error(400, 'Invalid reminder parameters. Could not find reminder')
+
+        # Update reminder
+        if days:
+            r.days = days
+        if recurring == 'false' or recurring == 'False':
+            r.recurring = False
+        elif recurring and recurring != "":
+            r.recurring = True
+        try:
+            r.save()
+            logging.info(r)
+        except:
+            return self.api_error(500, 'Error editing Reminder of type %s and id %s' %(reminder_type, reminder_id))
+
+        return self.api_response(data={})
+
+
+########################
+### Delete the reminder
+### /api/reminder/<reminder_type>/<reminder_id>/delete
+########################
+class DeleteReminder(app.basic.BaseHandler):
+    @tornado.web.authenticated
+    def get(self, reminder_id):
+        """
+        Required Args:
+            reminder_type is either 'profile' or 'company'
+        """
+        if not self.current_user:
+            return self.api_error(401, 'User is not logged in')
+        try:
+            u = User.objects.get(email=self.current_user)
+        except:
+            return self.api_error(500, 'Could not find client user in database')
+
+        # reminder_type
+        reminder_type = self.get_argument('reminder_type', '')
+        if reminder_type != 'profile' and reminder_type != 'company':
+            return self.api_error(500, 'Invalid reminder_type parameter')
+
+        # Get reminder
+        r = Reminder.get_by_id(reminder_type=reminder_type, reminder_id=reminder_id)
+        if not r:
+            return self.api_error(500, 'Could not find reminder of id %s' % reminder_id)
+        if not u.same_user(r.user):
+            return self.api_error(500, 'Reminder of id %s does not belong to current user' % reminder_id)
+        r.delete()
+        return self.api_response(data={})
 
 
 

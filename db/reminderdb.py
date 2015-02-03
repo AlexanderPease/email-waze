@@ -20,12 +20,34 @@ class Reminder(Document):
     # Allow subclassing
     meta = {'allow_inheritance': True}
 
+    # Unfinished
     def to_json(self):
         json = {}
         for k,v in Reminder._fields.iteritems():
             logging.info(self.k)
             logging.info(self.v) # ??
         return json
+
+    @classmethod
+    def get_by_id(cls, reminder_type, reminder_id):
+        """
+        Returns ProfileReminder or CompanyReminder, or None if DNE
+        """
+        r = None
+        logging.info(reminder_type)
+        logging.info(reminder_id)
+        if reminder_type == 'profile':
+            try:
+                r = ProfileReminder.objects.get(id=reminder_id)
+            except:
+                pass
+        elif reminder_type == 'company':
+            try:
+                r = CompanyReminder.objects.get(id=reminder_id)
+            except:
+                pass
+        return r
+
 
 class CompanyReminder(Reminder):
     company = ReferenceField(Company, required=True)
