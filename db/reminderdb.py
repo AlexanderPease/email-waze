@@ -5,8 +5,9 @@ from profiledb import Profile
 from companydb import Company
 import logging, datetime
 
-class Reminder(Document):
+class ProfileReminder(Document):
     user = ReferenceField(User, required=True)
+    profile = ReferenceField(Profile, required=True, unique_with='user')
 
     # Recurring reminder or not
     recurring = BooleanField(required=True, default=False)
@@ -17,8 +18,8 @@ class Reminder(Document):
     # Number of days until reminder is due, or number of days for recurring time period
     days = IntField(required=True)
 
-    # Allow subclassing
-    meta = {'allow_inheritance': True}
+    def __str__(self):
+        return 'ProfileReminder: %s <-> %s' % (self.user, self.profile)
 
     # Unfinished
     def to_json(self):
@@ -28,36 +29,14 @@ class Reminder(Document):
             logging.info(self.v) # ??
         return json
 
-    @classmethod
-    def get_by_id(cls, reminder_type, reminder_id):
-        """
-        Returns ProfileReminder or CompanyReminder, or None if DNE
-        """
-        r = None
-        logging.info(reminder_type)
-        logging.info(reminder_id)
-        if reminder_type == 'profile':
-            try:
-                r = ProfileReminder.objects.get(id=reminder_id)
-            except:
-                pass
-        elif reminder_type == 'company':
-            try:
-                r = CompanyReminder.objects.get(id=reminder_id)
-            except:
-                pass
-        return r
-
-class ProfileReminder(Reminder):
-    profile = ReferenceField(Profile, required=True, unique_with='user')
-
-    def __str__(self):
-        return 'Reminder: %s <-> %s' % (self.user, self.profile)
-
-class CompanyReminder(Reminder):
+class CompanyReminder(Document):
+    user = ReferenceField(User, required=True)
     company = ReferenceField(Company, required=True, unique_with='user')
+    recurring = BooleanField(required=True, default=False)
+    date_set = DateTimeField(required=True, default=datetime.datetime.now())
+    days = IntField(required=True)
 
     def __str__(self):
-        return 'Reminder: %s <-> %s' % (self.user, self.company)
+        return 'CompanyReminder: %s <-> %s' % (self.user, self.company)
 
 

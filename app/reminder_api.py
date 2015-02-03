@@ -1,6 +1,5 @@
 import app.basic, settings, ui_methods, tornado.web
 import logging
-from db.reminderdb import Reminder
 from db.reminderdb import ProfileReminder
 from db.reminderdb import CompanyReminder
 from db.userdb import User
