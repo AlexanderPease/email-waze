@@ -24,6 +24,7 @@ class Index(app.basic.BaseHandler):
     err = self.get_argument('err', '')
     if err == 'no_results':
         err = 'No results found! Try another search'
+
     return self.render('public/index.html', msg=msg, err=err)
 
 ########################

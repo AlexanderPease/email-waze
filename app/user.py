@@ -48,7 +48,8 @@ class UserSettings(app.basic.BaseHandler):
             paying_groups=paying_groups,
             msg=msg, 
             err=err,
-            list_to_comma_delimited_string=ui_methods.list_to_comma_delimited_string)
+            list_to_comma_delimited_string=ui_methods.list_to_comma_delimited_string,
+            nav_select='settings')
 
 
 ########################

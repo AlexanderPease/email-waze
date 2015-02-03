@@ -49,10 +49,11 @@
     </section>
 
   {% else %}
-    <section class="js-stretch-height search-background">
-      <div class="container centered">
-        <h2>{{ msg }}</h2>
-        
+    <section class="feature">
+      <div class="container">
+        {% if msg %}
+          <h2>{{ msg }}</h2>
+        {% end %}
         {% if err %}
           <div class="alert alert-danger" role="alert">
             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
@@ -60,7 +61,7 @@
             {{ err }}
           </div>
         {% else %}
-          <h2>Hi {{ current_user_casual_name() }}!</h2>
+          <h1>Find anyone in your NTWRK</h1>
         {% end %}
 
         {% if current_user_instance().get_groups() == [] %}
@@ -75,18 +76,8 @@
         {% end %}
       </div> <!--container-->
       <form id="main-search" class="container" action="/search" method="GET">
-        <div class="row">
-          <div class="input-group-lg col-lg-6 col-xs-12">
-            <input id="form-q" name="q" type="text" class="form-control" placeholder="Search for a person, company, or website" autocomplete="off">
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-sm-6 col-lg-4 col-xs-12 search-btn-wrap">
-            <button type="submit" class="btn btn-primary">Search</button>
-          </div>
-        </div>
-
+        <input id="form-q" name="q" type="text" class="form-control" autocomplete="off">
+        <button type="submit" class="btn btn-ntwrk"></button>
       </form>
     </section>
   {% end %}<!--current user-->
@@ -98,10 +89,8 @@
 {% block javascript %}
   <script>
     $(document).ready(function(){
-      fixSearchBg();
-
       // Init code for the searchbar's behavior, incl. typeahead
-      //{% include 'init_typeahead_snippet.js' %}
+      {% include 'init_typeahead_snippet.js' %}
 
       /* Trigger search when a suggestion is selected 
         Sends a request using <field>_id to specify exact document to look up */
@@ -110,11 +99,11 @@
         var field = name; 
         window.location.href = "/search?" + field + "_id=" + datum['id'];
       });
+      //fixSearchBg();
     });
-
     $(window).resize(function () {
-      fixFooter();
-      fixSearchBg();
+      //fixFooter();
+      //fixSearchBg();
     });
 
     var fixSearchBg = function() {
