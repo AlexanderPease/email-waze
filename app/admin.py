@@ -10,6 +10,7 @@ from db.groupdb import Group
 from db.connectiondb import Connection
 from db.statsdb import Stats
 from db.companydb import Company
+from db.reminderdb import Reminder
 
 
 ###########################
@@ -109,7 +110,17 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
-        return self.api_response(data={})
+        u = User.objects.get(email="me@alexanderpease.com")
+        brad = Profile.objects.get(email="brad@usv.com")
+        usv = Company.objects.get(domain="usv.com")
+        try:
+            r = Reminder(user=u, company=usv, days=0)
+        except:
+            r = 'null'
+
+        logging.info(r)
+        r.save()
+
 
         # Counts number of profiles that have an email address
         # that is duplicated (via capitalization) in the database
@@ -258,3 +269,5 @@ class Scratch(app.basic.BaseHandler):
         #from tests.test_group import test_group_class
         #test_group_class()
         """
+
+        return self.api_response(data={})

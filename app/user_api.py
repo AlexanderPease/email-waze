@@ -29,7 +29,3 @@ class DeleteAccount(app.basic.BaseHandler):
         logging.info(u.deleted)
 
         return self.api_response(data={})
-
-
-
-

@@ -77,6 +77,10 @@
       <!-- Advanced search modal -->
       {% include 'advanced_search_modal_snippet.html' %}
 
+      <!-- Reminder dropdown -->
+      {% include 'reminder_dropdown.hbs' %}
+
+
     </div> <!-- container -->
   </section> <!-- feature -->
 
@@ -305,6 +309,28 @@
             console.log('clicked');
             event.stopPropagation();
           });
+          // Reminders
+          $('.reminder-dropdown').click(function(event) {
+            event.stopPropagation();
+          });
+         $('.reminder-dropdown').change(function(event) {
+            var days = $(this).find(':selected').attr('data-reminder-days');
+            if (days == 'null') {
+              return;
+            }
+            var url = "/api/reminder?";
+            var profile_id = $(this).attr('data-profile-id');
+            var company_id = $(this).attr('data-company-id');
+            if (profile_id && profile_id != "") {
+              url += "profile_id=" + profile_id;
+            } else{
+              url += "company_id=" + company_id;
+            }
+            url += "&days=" + days;
+            url += "&recurring=" + $(this).find(':selected').attr('data-reminder-recurring');
+            console.log(url);
+            //ajax call
+          });
         },
         ajax: {
           url: url,
@@ -515,6 +541,7 @@
     // Put instance properties into array for displaying in table
     Profile.prototype.rowArray = function() {
       rowDict = {};
+      rowDict['type'] = 'profile';
       rowDict['name'] = this.cleanName();
       rowDict['email'] = this.email;
       rowDict['connections'] = this.connections.length;
