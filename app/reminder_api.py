@@ -1,6 +1,7 @@
 import app.basic, settings, ui_methods, tornado.web
 import logging
-from db.reminderdb import Reminder
+from db.reminderdb import ProfileReminder
+from db.reminderdb import CompanyReminder
 from db.userdb import User
 
 ########################
@@ -9,7 +10,7 @@ from db.userdb import User
 ########################
 class CreateReminder(app.basic.BaseHandler):
     @tornado.web.authenticated
-    def get(self, user_id):
+    def get(self):
         if not self.current_user:
             return self.api_error(401, 'User is not logged in')
         try:
@@ -26,7 +27,7 @@ class CreateReminder(app.basic.BaseHandler):
         # Require necessary fields
         if profile_id and company_id:
             return self.api_error(400, 'Cannot set both company and profile')
-        elif not profile_ud and not company_id: 
+        elif not profile_id and not company_id: 
             return self.api_error(400, 'Must have either company or profile')
         if not days:
             return self.api_error(400, 'Must set a reminder time period')
@@ -34,12 +35,12 @@ class CreateReminder(app.basic.BaseHandler):
         # Save reminder
         if profile_id:
             try:
-                r = Reminder(profile=p, user=u, days=days, recurring=recurring)
+                r = ProfileReminder(profile=p, user=u, days=days, recurring=recurring)
             except: 
                 return self.api_error(501, 'Error saving profile reminder')
         elif company_id:
             try:
-                r = Reminder(company=c, user=u, days=days, recurring=recurring)
+                r = CompanyReminder(company=c, user=u, days=days, recurring=recurring)
             except: 
                 return self.api_error(501, 'Error saving profile reminder')
         return self.api_response(data={})
