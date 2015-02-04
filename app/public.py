@@ -7,6 +7,7 @@ from db.groupdb import Group
 from db.connectiondb import Connection
 from app.connectionsets import GroupConnectionSet, ProfileConnectionSet, BaseProfileConnection
 from db.companydb import Company
+from db.reminderdb import ProfileReminder, CompanyReminder
 from mongoengine.queryset import Q
 import math
 
@@ -124,6 +125,21 @@ class Search(app.basic.BaseHandler):
     else:
         return self.redirect('/')
 """
+
+########################
+### Reminders
+### /about
+########################
+class Reminders(app.basic.BaseHandler):
+  @tornado.web.authenticated
+  def get(self):
+    u = User.objects.get(email=self.current_user)
+    prs = ProfileReminder.objects(user=u)
+    crs = CompanyReminder.objects(user=u)
+
+    return self.render('public/reminders.html', 
+        today_reminders=prs, 
+        later_reminders=None)
 
 ########################
 ### About 

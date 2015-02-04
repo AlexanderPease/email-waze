@@ -1,0 +1,54 @@
+{% extends "../base.html" %}
+{% block page-title %}Reminders{% end %}
+{% block page-description %}{% end %}
+
+{% block body %}
+  <section class="feature">
+    <div class="container">
+      <h1>Reminders</h1>
+
+      <div id="active-reminders">
+        Active Reminders
+      </div>
+
+      {% if today_reminders %}
+        <table class="row-border hover">
+          <thead>
+            <tr>
+              <th>TODAY</th>
+              <th>EMAIL</th>
+              <th>CONNECTIONS</th>
+              <th>SIGNAL</th>
+              <th>ALERTS</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for r in today_reminders %}
+              <tr>
+                {% if r.name %}
+                  <td>{{ r.profile.name }} {{ r.company }}</td>
+                  <td>email</td>
+                {% else %}
+                  <td>{{ r.company }}</td>
+                  <td>email</td>
+                {% end %}
+                <td>connections</td>
+                <td>signal</td>
+                <td>foo</td>
+              </tr>
+            {% end %}
+          </tbody>
+        </table>
+      {% end %}<!--today-reminders-->
+      
+    </div> <!--container-->
+  </section>
+
+{% end %}
+
+{% block javascript %}
+  <script>
+    $(document).ready(function(){
+    });
+  </script>
+{% end %}

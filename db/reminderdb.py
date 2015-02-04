@@ -21,14 +21,6 @@ class ProfileReminder(Document):
     def __str__(self):
         return 'ProfileReminder: %s <-> %s' % (self.user, self.profile)
 
-    # Unfinished
-    def to_json(self):
-        json = {}
-        for k,v in Reminder._fields.iteritems():
-            logging.info(self.k)
-            logging.info(self.v) # ??
-        return json
-
 class CompanyReminder(Document):
     user = ReferenceField(User, required=True)
     company = ReferenceField(Company, required=True, unique_with='user')
@@ -40,3 +32,6 @@ class CompanyReminder(Document):
         return 'CompanyReminder: %s <-> %s' % (self.user, self.company)
 
 
+class Reminder:
+    def __init__(self, reminder):
+        self.reminder = reminder # Either ProfileReminder or Company

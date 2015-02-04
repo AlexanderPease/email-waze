@@ -119,7 +119,7 @@ class EditReminder(app.basic.BaseHandler):
 
 ########################
 ### Delete the reminder
-### /api/reminder/<reminder_type>/<reminder_id>/delete
+### /api/reminder/<reminder_id>/delete
 ########################
 class DeleteReminder(app.basic.BaseHandler):
     @tornado.web.authenticated

@@ -100,6 +100,7 @@ class Application(tornado.web.Application):
       (r'/about', app.public.About),
       (r'/pricing', app.public.Pricing),
       (r'/search/?', app.public.Search),
+      (r'/reminders/?', app.public.Reminders),
       (r'/', app.public.Index),
     ]
 
