@@ -8,7 +8,7 @@ import logging, datetime
 class ProfileReminder(Document):
     user = ReferenceField(User, required=True)
     profile = ReferenceField(Profile, required=True, unique_with='user')
-    company = ReferenceField(Company)
+    company = ReferenceField(Company) # Set automatically
 
     # Recurring reminder or not
     recurring = BooleanField(required=True, default=False)
@@ -20,14 +20,14 @@ class ProfileReminder(Document):
     days = IntField(required=True)
 
     def save(self , *args, **kwargs):
-        logging.info('save')
-        logging.info(self)
-        logging.info(self.company)
+        '''
+        Automatically sets self.company
+        '''
         if not self.company:
-            #try:
-            self.company = Company.objects.get(domain=self.profile.domain)
-            #except:
-            #    pass
+            try:
+                self.company = Company.objects.get(domain=self.profile.domain)
+            except:
+                pass
         return super(ProfileReminder, self).save(*args, **kwargs)
 
     def __str__(self):

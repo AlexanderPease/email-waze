@@ -12,7 +12,7 @@
       </div>
 
       {% if today_reminders %}
-        <table class="row-border hover">
+        <table id="reminders-table" class="row-border hover">
           <thead>
             <tr>
               <th>TODAY</th>
@@ -25,13 +25,12 @@
           <tbody>
             {% for r in today_reminders %}
               <tr>
-                {% if r.name %}
-                  <td>{{ r.profile.name }} {{ r.company }}</td>
-                  <td>email</td>
+                {% if r.company %}
+                  <td>{{ r.profile.name }} {{ r.company.name }}</td>
                 {% else %}
-                  <td>{{ r.company }}</td>
-                  <td>email</td>
+                  <td>{{ r.profile.name }}</td>
                 {% end %}
+                <td>{{ r.profile.email }}</td>
                 <td>connections</td>
                 <td>signal</td>
                 <td>foo</td>
@@ -47,8 +46,14 @@
 {% end %}
 
 {% block javascript %}
-  <script>
-    $(document).ready(function(){
+<script>
+  $(document).ready(function() {
+    var dataTable = $('#reminders-table').DataTable({
+      searching: false,
+      pageLength: 20,
+      lengthChange: false,
+      dom: '<<t>p>',
     });
-  </script>
+  });
+</script>
 {% end %}
