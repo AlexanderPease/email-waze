@@ -1,6 +1,7 @@
 import app.basic, settings, ui_methods
 import logging
 import tornado.web
+import datetime
 from db.profiledb import Profile
 from db.userdb import User
 from db.groupdb import Group
@@ -135,11 +136,20 @@ class Reminders(app.basic.BaseHandler):
   def get(self):
     u = User.objects.get(email=self.current_user)
     prs = ProfileReminder.objects(user=u)
-    crs = CompanyReminder.objects(user=u)
 
-    return self.render('public/reminders.html', 
-        today_reminders=prs, 
-        later_reminders=None)
+    # Group reminders by due today or not
+    today_reminders = []
+    later_reminders = []
+    for pr in prs:
+        if pr.date_set + datetime.timedelta(days=pr.days) <= datetime.datetime.today():
+            today_reminders.append(pr)
+        else:
+            later_reminders.append(pr)
+
+    return self.render('public/reminders.html',
+        nav_select="reminders",
+        today_reminders=today_reminders, 
+        later_reminders=later_reminders)
 
 ########################
 ### About 

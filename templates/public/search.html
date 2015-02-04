@@ -218,7 +218,12 @@
             'data': 'name', 
             'render': function(data, type, full, meta) {
               var company_name = full['company_name'];
-              return '<span class="name">' + data + '</span></br><span class="company-name">' + company_name + '</span>'
+              if (company_name != null) {
+                return '<span class="name">' + data + '</span></br><span class="company-name">' + company_name + '</span>'; 
+              } else {
+                return '<span class="name">' + data + '</span>';
+              }
+              
             }
           },
           {

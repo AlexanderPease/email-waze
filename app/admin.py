@@ -110,11 +110,12 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
-
+        '''
         for pr in ProfileReminder.objects():
             logging.info(pr)
             pr.save()
             logging.info(pr.company)
+        '''
         #logging.info(r)
 
 

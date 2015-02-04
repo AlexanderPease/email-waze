@@ -4,41 +4,89 @@
 
 {% block body %}
   <section class="feature">
-    <div class="container">
+    <div id="reminders-div" class="container">
       <h1>Reminders</h1>
 
-      <div id="active-reminders">
-        Active Reminders
-      </div>
-
       {% if today_reminders %}
-        <table id="reminders-table" class="row-border hover">
+        <div class="reminders-header">
+          Active Reminders
+        </div>
+        <table id="today-reminders-table" class="row-border hover">
           <thead>
             <tr>
-              <th>TODAY</th>
-              <th>EMAIL</th>
-              <th>CONNECTIONS</th>
-              <th>SIGNAL</th>
-              <th>ALERTS</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Last Emailed</th>
+              <th>Alert</th>
             </tr>
           </thead>
           <tbody>
             {% for r in today_reminders %}
               <tr>
                 {% if r.company %}
-                  <td>{{ r.profile.name }} {{ r.company.name }}</td>
+                  <td>
+                    <span class="name">{{ r.profile.name }}</span></br>
+                    <span class="company-name">{{ r.company.name }}</span>
+                  </td>
                 {% else %}
                   <td>{{ r.profile.name }}</td>
                 {% end %}
                 <td>{{ r.profile.email }}</td>
-                <td>connections</td>
-                <td>signal</td>
-                <td>foo</td>
+                {% if r.connection %}
+                  <td>{{ r.display_last_emailed() }}</td>
+                {% else %}
+                  <td>N/A</td>
+                {% end %}
+                <td>{{ r.display_alert_type() }}</td>
               </tr>
             {% end %}
           </tbody>
         </table>
       {% end %}<!--today-reminders-->
+
+      {% if later_reminders %}
+        {% if not today_reminders %}
+          <div class="reminders-header">
+            Upcoming Reminders (You have no reminders for today)
+          </div>
+        {% else %}
+          <div class="reminders-header">
+            Upcoming Reminders
+          </div>
+        {% end %}
+
+        <table id="later-reminders-table" class="row-border hover">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Last Emailed</th>
+              <th>Alert</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for r in later_reminders %}
+              <tr>
+                {% if r.company %}
+                  <td>
+                    <span class="name">{{ r.profile.name }}</span></br>
+                    <span class="company-name">{{ r.company.name }}</span>
+                  </td>
+                {% else %}
+                  <td>{{ r.profile.name }}</td>
+                {% end %}
+                <td>{{ r.profile.email }}</td>
+                {% if r.connection %}
+                  <td>{{ r.display_last_emailed() }}</td>
+                {% else %}
+                  <td>N/A</td>
+                {% end %}
+                <td>{{ r.display_alert_type() }}</td>
+              </tr>
+            {% end %}
+          </tbody>
+        </table>
+      {% end %}<!--later-reminders-->
       
     </div> <!--container-->
   </section>
@@ -48,11 +96,13 @@
 {% block javascript %}
 <script>
   $(document).ready(function() {
-    var dataTable = $('#reminders-table').DataTable({
+    var dataTable = $('#today-reminders-table').DataTable({
       searching: false,
-      pageLength: 20,
-      lengthChange: false,
-      dom: '<<t>p>',
+      dom: '<<t>>',
+    });
+    var dataTable = $('#later-reminders-table').DataTable({
+      searching: false,
+      dom: '<<t>>',
     });
   });
 </script>

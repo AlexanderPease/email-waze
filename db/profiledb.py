@@ -29,7 +29,7 @@ class Profile(Document):
     }
 
     def __str__(self):
-        return self.name + ' <' + self.email + '>'
+        return 'Profile: ' + self.name + ' <' + self.email + '>'
 
     def to_json(self):
         return {

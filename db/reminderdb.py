@@ -2,13 +2,20 @@ import settings
 from mongoengine import *
 from userdb import User
 from profiledb import Profile
+from connectiondb import Connection
 from companydb import Company
 import logging, datetime
 
 class ProfileReminder(Document):
     user = ReferenceField(User, required=True)
     profile = ReferenceField(Profile, required=True, unique_with='user')
-    company = ReferenceField(Company) # Set automatically
+
+    # Set automatically
+    company = ReferenceField(Company) 
+    connection = ReferenceField(Connection)
+
+    # Number of days until reminder is due, or number of days for recurring time period
+    days = IntField(required=True)
 
     # Recurring reminder or not
     recurring = BooleanField(required=True, default=False)
@@ -16,22 +23,54 @@ class ProfileReminder(Document):
     # Date reminder was set
     date_set = DateTimeField(required=True, default=datetime.datetime.now())
 
-    # Number of days until reminder is due, or number of days for recurring time period
-    days = IntField(required=True)
-
     def save(self , *args, **kwargs):
         '''
-        Automatically sets self.company
+        Automatically sets self.company and self.connection
         '''
         if not self.company:
             try:
                 self.company = Company.objects.get(domain=self.profile.domain)
             except:
                 pass
+        if not self.connection:
+            try:
+                self.connection = Connection.objects.get(user=self.user, profile=self.profile)
+            except:
+                pass
         return super(ProfileReminder, self).save(*args, **kwargs)
 
     def __str__(self):
         return 'ProfileReminder: %s <-> %s' % (self.user, self.profile)
+
+    def display_alert_type(self):
+        if self.recurring == True:
+            if self.days == 7:
+                return 'Weekly'
+            elif self.days == 30:
+                return 'Monthly'
+            elif self.days == 90:
+                return 'Quarterly'
+            else:
+                return 'Every %s days' % self.days
+        else:
+            if self.days == 7:
+                return 'Weekly'
+            elif self.days == 30:
+                return 'Monthly'
+            elif self.days == 90:
+                return 'Quarterly'
+
+    def display_last_emailed(self):
+        if not self.connection:
+            return 'N/A'
+        else:
+            days_since = self.connection.days_since_emailed_out()
+            if days_since < 30:
+                return '%s days ago' % days_since
+            else:
+                return self.connection.latest_email_out_date_string()
+
+
 
 class CompanyReminder(Document):
     user = ReferenceField(User, required=True)

@@ -476,21 +476,30 @@ table.dataTable.hover tbody tr:hover, table.dataTable.hover tbody tr.odd:hover, 
   }
 }
 
-// Column headers
+// Column headers and cells
 table.dataTable thead .sorting {
   color: $light-grey;
+  text-transform: uppercase;
   background: url('../img/sort/sort_inactive.png') no-repeat center right;
 }
 table.dataTable thead .sorting_desc {
   color: $dark-grey;
+  text-transform: uppercase;
   background: url('../img/sort/sorter_down.png') no-repeat center right;
 }
 table.dataTable thead .sorting_asc {
   color: $dark-grey;
+  text-transform: uppercase;
   background: url('../img/sort/sorter_up.png') no-repeat center right;
 }
 .datatables-cell {
-  padding-left: 18px !important;
+  //padding-left: 18px !important;
+}
+table.dataTable tbody th, 
+table.dataTable tbody td,
+table.dataTable thead th,
+table.dataTable thead td {
+  padding-left: 0px;
 }
 
 /******************************************************************************
@@ -615,9 +624,13 @@ a.advanced-search-link {
 /******************************************************************************
 Reminders
 ******************************************************************************/
-#active-reminders {
+#reminders-div {
+  padding-bottom: 20px;
+}
+.reminders-header {
   border-bottom: 1px solid $dark-grey;
   padding-bottom: 12px;
+  margin-bottom: 12px;
   text-transform: uppercase;
 }
 
