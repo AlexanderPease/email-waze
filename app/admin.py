@@ -110,13 +110,11 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
-        u = User.objects.get(email="me@alexanderpease.com")
-        p = Profile.objects.get(email="albert@usv.com")
-        c = Company.objects.get(domain="usv.com")
-        r = ProfileReminder(user=u, profile=p, days=16, recurring=True)
-        r.save()
-        r = CompanyReminder(user=u, company=c, days=10)
-        r.save()
+
+        for pr in ProfileReminder.objects():
+            logging.info(pr)
+            pr.save()
+            logging.info(pr.company)
         #logging.info(r)
 
 
