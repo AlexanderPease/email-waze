@@ -76,9 +76,25 @@
         {% end %}
       </div> <!--container-->
       <form id="main-search" class="container" action="/search" method="GET">
-        <input id="form-q" name="q" type="text" class="form-control" autocomplete="off">
+        <!--<input id="form-q" name="q" type="text" class="form-control" autocomplete="off">-->
+        <span class="input input--minoru">
+          <input id="form-q" name="q" class="input__field input__field--minoru" type="text" autocomplete="off"/>
+          <label class="input__label input__label--minoru" for="input-13">
+            <span class="input__label-content input__label-content--minoru"></span>
+          </label>
+        </span>
         <button type="submit" class="btn btn-ntwrk"></button>
       </form>
+
+      <div>
+        <span class="input input--minoru">
+          <input id="form-q" name="q" class="input__field input__field--minoru" type="text" autocomplete="off"/>
+          <label class="input__label input__label--minoru" for="input-13">
+            <span class="input__label-content input__label-content--minoru"></span>
+          </label>
+        </span>
+        <button type="submit" class="btn btn-ntwrk"></button>
+      </div>
     </section>
   {% end %}<!--current user-->
 
