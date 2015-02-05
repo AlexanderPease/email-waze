@@ -169,8 +169,8 @@ $navbar-grey-box-width: 160px;
 .navbar-default .navbar-nav > li > a, 
 .navbar-default .navbar-nav > .open > a,
 .navbar-default .navbar-nav .open .dropdown-menu > li > a,
-.footer-right > li > a 
-#navbar-search {
+.footer-right > li > a,
+#navbar-search-input {
   color: $white;
   background-color: $light-grey;
   margin-left: 6px;
@@ -180,33 +180,69 @@ $navbar-grey-box-width: 160px;
   padding-left: 10px;
   width: $navbar-grey-box-width;
   height: 40px; //height of the NTWRK logo
+  border: none;
   &:focus, &:hover {
     color: $white;
     background: $lightning-yellow url('../img/search_arrow_white.png') no-repeat 135px 10px;
     outline: none;
+  }
+  // These are just for #navbar-search-input
+  &::-webkit-input-placeholder {
+     color: $white;
+  }
+  &:-moz-placeholder { /* Firefox 18- */
+     color: $white;  
+  }
+  &::-moz-placeholder {  /* Firefox 19+ */
+     color: $white;  
+  }
+  &:-ms-input-placeholder {  
+     color: $white;  
   }
 }
 .navbar-brand, .navbar-nav>li>a {
   text-shadow: none;
 }
 
-#navbar-search.navbar-search-active {
-  color: purple;
-  //width: $navbar-grey-box-width * 2;
-  -webkit-animation: anim-widen 0.3s forwards;
-  //animation: anim-shadow 0.3s forwards;
+#navbar-search-input.navbar-search-inactive {
+  -webkit-animation: anim-shorten 0.3s forwards;
 }
 
-@-webkit-keyframes anim-widen {
+#navbar-search-input.navbar-search-active {
+  //background: $lightning-yellow url('../img/search_arrow_white.png') no-repeat 295px 10px;
+  background-color: $lightning-yellow;
+  -webkit-animation: anim-widen 0.3s forwards;
+  animation: anim-widen 0.3s forwards;
+  //font-size: 26px; // causing cursor to not be positioned correctly before text inputted
+  //line-height: 100%;
+  //padding-top: 2px;
+  //padding-bottom: 2px; // padding would center text
+}
+$wide-factor: 2;
+@-webkit-keyframes anim-shorten {
+  from {
+    width: $navbar-grey-box-width * $wide-factor;
+  }
   to {
-    width: $navbar-grey-box-width * 2;
+    width: $navbar-grey-box-width;
   }
 }
-
-@keyframes anim-shadow {
+@keyframes anim-shorten {
+  from {
+    width: $navbar-grey-box-width * $wide-factor;
+  }
   to {
-    box-shadow: 0px 0px 100px 50px;
-      opacity: 0;
+    width: $navbar-grey-box-width;
+  }
+}
+@-webkit-keyframes anim-widen {
+  to {
+    width: $navbar-grey-box-width * $wide-factor;
+  }
+}
+@keyframes anim-widen {
+  to {
+    width: $navbar-grey-box-width * $wide-factor;
   }
 }
 
