@@ -403,6 +403,81 @@ $btn-inline-font-size: 14px;
   font-size: 20px;
 }
 
+.input-ntwrk {
+  background: $white;
+  border: 2px solid $lightning-yellow;
+  color: $lightning-yellow;
+  padding-left: 8px;
+  margin-right: 8px;
+  font-size: 30px;
+  height: 48px;
+  width: 500px;
+  &:focus {
+    //-webkit-animation: anim-shadow 0.3s forwards;
+    //animation: anim-shadow 0.3s forwards;
+    box-shadow: 0px 0px 0px 3px $lightning-yellow;
+    outline: none;
+  }
+}
+
+/* Minoru */
+/*.input {
+  max-width: 800px;
+  height: 50px;
+  font-size: 36px;
+  margin-top: 20px;
+  margin-left: 0px
+}
+
+.input__field {
+  display: inline;
+  position: none;
+  float: none;
+}
+
+.input__field--minoru {
+  width: 100%;
+  padding: 0px 0px 0px 6px;
+  background: $white;
+  border: 2px solid $lightning-yellow;
+  color: $lightning-yellow;
+  -webkit-transition: box-shadow 0.3s;
+  transition: box-shadow 0.3s;
+
+}
+
+.input__field--minoru:focus {
+  box-shadow: 0px 0px 0px 3px $lightning-yellow;
+}
+
+.input__field--minoru:focus + .input__label--minoru {
+  pointer-events: none;
+}
+
+.input__field--minoru:focus + .input__label--minoru::after {
+  -webkit-animation: anim-shadow 0.3s forwards;
+  animation: anim-shadow 0.3s forwards;
+}
+
+@-webkit-keyframes anim-shadow {
+  to {
+    box-shadow: 0px 0px 100px 50px;
+      opacity: 0;
+  }
+}
+
+@keyframes anim-shadow {
+  to {
+    box-shadow: 0px 0px 100px 50px;
+      opacity: 0;
+  }
+}
+
+.input__label-content--minoru {
+  padding: 0.75em 0.15em;
+}
+*/
+
 /******************************************************************************
 Datatables
 ******************************************************************************/
