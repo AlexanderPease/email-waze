@@ -40,7 +40,7 @@
             >
               Search
             </a>-->
-            <input id="navbar-search-input" placeholder="SEARCH"></input>
+            <input id="navbar-search-input" class="search-tt" placeholder="SEARCH"></input>
           </li>
           <li>
             <a href="/reminders" {% if nav_select == 'reminders' %} class="nav-selected" {% end %}>
@@ -133,7 +133,15 @@
         $(this).val("");
         $(this).attr("placeholder", "SEARCH");
       });
-
+      // Init code for the searchbar's behavior, incl. typeahead
+      {% include 'public/partials/init_typeahead.js' %}
+      /* Trigger search when a suggestion is selected 
+        Sends a request using <field>_id to specify exact document to look up */
+      $('#form-q').bind('typeahead:selected', function(obj, datum, name){
+        // obj is event, datum is what I've given typeahead, name is "company"
+        var field = name; 
+        window.location.href = "/search?" + field + "_id=" + datum['id'];
+      });
 
       //fixFooter();
       // Initialize all selectpickers

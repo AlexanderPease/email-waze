@@ -28,7 +28,7 @@ promise.done(function() {console.log('Bloodhound initialized!')});
  
 // passing in `null` for the `options` arguments will result in the default
 // options being used
-$('#form-q').typeahead(null, {
+$('.search-tt').typeahead(null, {
   name: 'company',
   displayKey: 'name',
   source: companies.ttAdapter(),
