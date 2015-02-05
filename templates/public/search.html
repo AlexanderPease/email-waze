@@ -130,10 +130,20 @@
 
       // Init code for the searchbar's behavior, incl. typeahead
       {% include 'partials/init_typeahead.js' %}
-
+      // Search, causes AJAX reload
+      $('.search-tt').keypress(function(event) {
+        if (event.which == 13) {
+          var q = $('#form-q').val();
+          var new_url = 'api/searchbaseprofileconnection?q=' + q;
+          console.log(new_url)
+          $("#search_table").DataTable().ajax.url(new_url).load();
+          displayLoading();
+          //window.location.href.replace("name="+name, "domain="+domain); // not working
+        }
+      });
       /* Trigger search when a suggestion is selected 
         Sends a request using <field>_id to specify exact document to look up */
-      $('#form-q').bind('typeahead:selected', function(obj, datum, name){
+      $('.search-tt').bind('typeahead:selected', function(obj, datum, name){
         // obj is event, datum is what I've given typeahead, name is "company"
         var field = name; 
         // Reload datatable
@@ -144,25 +154,6 @@
         showCompanyPanelLoading(datum);
         //window.location.href.replace("name="+name, "domain="+domain); // not working
       });
-
-      // Submit form if Enter is pressed in text input
-      $('#form-q').keypress(function(event){ 
-        if (event.which == 13) {
-          $('#form-button').click();
-        }
-      });
-
-      // Search button is pressed, causes AJAX reload
-      $('#form-button').click(function() {
-        var q = $('#form-q').val();
-        // Reload datatable
-        var new_url = 'api/searchbaseprofileconnection?q=' + q;
-        console.log(new_url)
-        $("#search_table").DataTable().ajax.url(new_url).load();
-        displayLoading();
-        //window.location.href.replace("name="+name, "domain="+domain); // not working
-      });
-
 
       // Init DataTable
       params = getQueryParameters();

@@ -54,14 +54,14 @@
         {% if msg %}
           <h2>{{ msg }}</h2>
         {% end %}
+
+        <h1 id="index-h1">Find anyone in your NTWRK</h1>
         {% if err %}
           <div class="alert alert-danger" role="alert">
             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
             <span class="sr-only">Error:</span>
             {{ err }}
           </div>
-        {% else %}
-          <h1 id="index-h1">Find anyone in your NTWRK</h1>
         {% end %}
 
         <form class="form-inline" method="GET" action="/search">

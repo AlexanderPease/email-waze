@@ -72,7 +72,7 @@
       </ul>
     </div><!-- /.container -->
   </nav>
-
+{{nav_select}} sdffdf
   <main class="page-content">
     {% block body %}{% end %}
   </main>
@@ -128,20 +128,39 @@
         $(this).attr("placeholder", "");
       });
       $('#navbar-search-input').blur(function(){
-        //$(this).removeClass('navbar-search-active');
-        //$(this).addClass('navbar-search-inactive');
-        $(this).val("");
+        $(this).removeClass('navbar-search-active');
+        $(this).addClass('navbar-search-inactive');
+        //$(this).val("");
+        $('.search-tt .tt-hint').each(function(){
+          console.log($(this));
+          console.log($(this).val());
+          $(this).val("");
+          console.log($(this).val());
+        });
         $(this).attr("placeholder", "SEARCH");
       });
-      // Init code for the searchbar's behavior, incl. typeahead
-      {% include 'public/partials/init_typeahead.js' %}
-      /* Trigger search when a suggestion is selected 
-        Sends a request using <field>_id to specify exact document to look up */
-      $('#form-q').bind('typeahead:selected', function(obj, datum, name){
-        // obj is event, datum is what I've given typeahead, name is "company"
-        var field = name; 
-        window.location.href = "/search?" + field + "_id=" + datum['id'];
-      });
+
+      // DO NOT HANDLE SEARCH TRIGGERS FOR /SEARCH
+      var nav_select = "{{ nav_select }}";
+      if (nav_select != 'search') {
+        console.log('base.html doing typeahead')
+        // Init code for the searchbar's behavior, incl. typeahead
+        {% include 'public/partials/init_typeahead.js' %}
+        /* Trigger search when a suggestion is selected 
+          Sends a request using <field>_id to specify exact document to look up */
+        $('.search-tt').bind('typeahead:selected', function(obj, datum, name){
+          // obj is event, datum is what I've given typeahead, name is "company"
+          var field = name; 
+          window.location.href = "/search?" + field + "_id=" + datum['id'];
+        });
+        // Submit form if Enter is pressed in text input
+        $('.search-tt').keypress(function(event){ 
+          if (event.which == 13) {
+            var field = name; 
+            window.location.href = "/search?" + field + "_id=" + datum['id'];
+          }
+        });
+      }
 
       //fixFooter();
       // Initialize all selectpickers
