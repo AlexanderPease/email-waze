@@ -1,0 +1,109 @@
+{% extends "../base.html" %}
+{% block page-title %}Home{% end %}
+{% block page-description %}{% end %}
+
+{% block body %}
+  <section class="feature">
+    <div class="container">
+      {% if msg %}
+        <h2>{{ msg }}</h2>
+      {% end %}
+
+      <h1 id="index-h1">Find anyone in your NTWRK</h1>
+      {% if err %}
+        <div class="alert alert-danger" role="alert">
+          <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+          <span class="sr-only">Error:</span>
+          {{ err }}
+        </div>
+      {% end %}
+
+      <form class="form-inline" method="GET" action="/search">
+        <div class="form-group">
+          <input name="q" type="text" class="form-control input-ntwrk search-tt" autocomplete="off">
+        </div>
+        <button type="submit" class="btn btn-ntwrk input-ntwrk-height"></button>
+      </form>
+      <span>
+        <a id="advanced-search-link">Advanced Search</a>
+      </span>
+      <!-- Advanced search modal -->
+      {% include 'partials/advanced_search_modal.html' %}
+
+      {% if user.get_groups() == [] %}
+        <div class="alert alert-danger" role="alert">
+          <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+          <span class="sr-only">Error:</span>
+          You aren't part of a team yet! 
+          <a href="/user/settings">Click here</a> to join a team or create a new one!
+          This will make Ansatz much more useful to you.
+          </a>
+        </div>
+      {% end %}
+
+      <!-- Show reminders -->
+      <div style="margin-top: 50px;">
+        {% include 'partials/reminders_active_later.html' %}
+      </div>
+
+    </div> <!--container-->
+  </section>
+
+  {% block user_welcome_html %}{% end %}
+
+{% end %}
+
+{% block javascript %}
+  <script>
+    $(document).ready(function() {
+      /* Trigger search when a suggestion is selected 
+        Sends a request using <field>_id to specify exact document to look up */
+      $('.search-tt').bind('typeahead:selected', function(obj, datum, name){
+        // obj is event, datum is what I've given typeahead, name is "company"
+        var field = name; 
+        window.location.href = "/search?" + field + "_id=" + datum['id'];
+      });
+      //fixSearchBg();
+
+      // Init reminders datatables
+      var dataTable = $('#today-reminders-table').DataTable({
+        searching: false,
+        dom: '<<t>>',
+      });
+      var dataTable = $('#later-reminders-table').DataTable({
+        searching: false,
+        dom: '<<t>>',
+      });
+
+      // Advanced search
+      $('#advanced-search-link').click(function() {
+        $('#advanced-search-modal').modal();
+      });
+
+      $('#advanced-search-submit').click(function() {
+        $('#advanced-search-modal').modal('hide');
+        var name = $('#advanced-search-name').val();
+        var domain = $('#advanced-search-domain').val();
+        var group_id = $('#advanced-search-group').find(':selected').attr('data-group-id');
+        var newUrl = 'search?name=' + name + 
+          '&domain=' + domain +
+          '&group_id=' + group_id;
+        window.location.href = newUrl; // Load search results
+      });
+    });
+    $(window).resize(function () {
+      //fixFooter();
+      //fixSearchBg();
+    });
+
+    var fixSearchBg = function() {
+    //fixes gradient background div height for search results page
+      if ($('.search-background.js-stretch-height').length && $(window).innerWidth() > 767) {
+        var padTop = parseInt($('.search-background').css('padding-top').split('px')[0]);
+        var padBottom = parseInt($('.search-background').css('padding-bottom').split('px')[0]);
+        $('.search-background').height($(window).innerHeight() - $('.nav').height() - $('footer').height() - padTop - padBottom);
+      }
+    }
+  </script>
+  {% block user_welcome_js %}{% end %}
+{% end %}

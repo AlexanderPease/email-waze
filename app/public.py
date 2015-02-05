@@ -27,14 +27,24 @@ class Index(app.basic.BaseHandler):
     if err == 'no_results':
         err = 'No results found! Try another search'
 
-    gs = self.user.get_groups()
-    today_reminders, later_reminders = ProfileReminder.today_later_reminders(user=self.user)
-    return self.render('public/index.html', 
-        msg=msg, 
-        err=err,
-        groups=gs,
-        today_reminders=today_reminders,
-        later_reminders=later_reminders)
+    # Logged in
+    if self.user:
+        gs = self.user.get_groups()
+        today_reminders, later_reminders = ProfileReminder.today_later_reminders(user=self.user)
+        return self.render('public/dashboard.html', 
+            msg=msg, 
+            err=err,
+            groups=gs,
+            today_reminders=today_reminders,
+            later_reminders=later_reminders)
+    # Not logged in
+    else:
+        return self.render('public/index.html', 
+            msg=msg, 
+            err=err,
+            groups=None,
+            today_reminders=None,
+            later_reminders=None)
 
 ########################
 ### Search
