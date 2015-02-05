@@ -104,7 +104,7 @@ Navbar & Footer
   }
   a {
     color: $medium-grey;
-    font-family: "NTWRKMedium", "Titillium Web", Lato, "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    //font-family: "NTWRKMedium", "Titillium Web", Lato, "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
     //font-weight: 600;
     font-size: 14px;
     text-transform: uppercase;
@@ -114,12 +114,13 @@ Navbar & Footer
 
 // Footer
 footer {
-  position: fixed;
+  //position: fixed;
   width: 100%;
   height: 200px;
   display: block;
   padding: 40px 0px;
   text-align: center;
+  text-transform: uppercase;
   z-index: 10;
   background: $white $pixel_background repeat;
   &.fixed {
@@ -160,6 +161,9 @@ footer {
     background: $lightning-yellow url('../img/search_arrow_white.png') no-repeat 135px 10px;
     outline: none;
   }
+}
+.navbar-brand, .navbar-nav>li>a {
+  text-shadow: none;
 }
 
 
@@ -486,17 +490,17 @@ table.dataTable.hover tbody tr:hover, table.dataTable.hover tbody tr.odd:hover, 
 table.dataTable thead .sorting {
   color: $light-grey;
   text-transform: uppercase;
-  background: url('../img/sort/sort_inactive.png') no-repeat center right;
+  background: url('../img/sort/sort_inactive.png') no-repeat right center;
 }
 table.dataTable thead .sorting_desc {
   color: $dark-grey;
   text-transform: uppercase;
-  background: url('../img/sort/sorter_down.png') no-repeat center right;
+  background: url('../img/sort/sorter_down.png') no-repeat right center;
 }
 table.dataTable thead .sorting_asc {
   color: $dark-grey;
   text-transform: uppercase;
-  background: url('../img/sort/sorter_up.png') no-repeat center right;
+  background: url('../img/sort/sorter_up.png') no-repeat right center;
 }
 .datatables-cell {
   //padding-left: 18px !important;
