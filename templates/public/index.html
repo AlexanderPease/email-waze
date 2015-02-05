@@ -61,13 +61,16 @@
             {{ err }}
           </div>
         {% else %}
-          <h1>Find anyone in your NTWRK</h1>
+          <h1 id="index-h1">Find anyone in your NTWRK</h1>
         {% end %}
 
-        <div>
-          <input class="input-ntwrk" autocomplete="off">
-          <button type="submit" class="btn btn-ntwrk"></button>
-        </div>
+
+        <form class="form-inline" method="GET" action="">
+          <div class="form-group">
+            <input id="search-q" name="q" type="text" class="form-control input-ntwrk" autocomplete="off">
+          </div>
+          <button type="submit" class="btn btn-ntwrk input-ntwrk-height"></button>
+        </form>
 
         {% if current_user_instance().get_groups() == [] %}
           <div class="alert alert-danger" role="alert">
