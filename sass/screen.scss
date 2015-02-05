@@ -204,30 +204,29 @@ $navbar-grey-box-width: 160px;
      color: $white;  
   }
 }
-
-#navbar-search-input.tt-input, 
-#navbar-search-input.tt-hint {
-    width: $navbar-grey-box-width !important;
-    font-size: 14px;
-    //height: 30px;
-    //padding: 8px 12px;
-    //line-height: 30px;
-    //border: 2px solid #ccc;
-    //border-radius: 8px;
-    //outline: none;
-    //&:disabled {
-    //  background-color: darken(white, 20%) !important;
-    //}
-  }
-
 .navbar-brand, .navbar-nav>li>a {
   text-shadow: none;
 }
 
+// Styling for navbar-search-input specifically
+.navbar-default {
+  #navbar-search-input.tt-input, {
+    width: $navbar-grey-box-width !important;
+    font-size: 14px;
+  }
+  // Hack to hide this tt-input fully behind #nav-search-input
+  .tt-hint, {
+    width: $navbar-grey-box-width !important;
+    margin-left: 20px;
+  }
+  .tt-dropdown-menu {
+    width: $navbar-grey-box-width * 2;
+    margin-left: 6px;
+  }
+}
 #navbar-search-input.navbar-search-inactive {
   -webkit-animation: anim-shorten 0.3s forwards;
 }
-
 #navbar-search-input.navbar-search-active {
   //background: $lightning-yellow url('../img/search_arrow_white.png') no-repeat 295px 10px;
   background: $lightning-yellow !important;
@@ -625,7 +624,7 @@ $tt-width: 400px;
 .tt-input, .tt-hint {
     width: $tt-width !important;
     color: $lightning-yellow;
-    background-color: $white !important; //override
+    background-color: transparent !important; //override
     font-size: 18px;
     //height: 30px;
     //padding: 8px 12px;
@@ -638,9 +637,9 @@ $tt-width: 400px;
     }
 }
 
-//.tt-hint {
-//  color: $light-grey;
-//}
+.tt-hint {
+  color: $light-grey !important;
+}
 
 .tt-dropdown-menu {
   width: $tt-width;
@@ -648,7 +647,7 @@ $tt-width: 400px;
   padding: 8px 4px;
   color: $white;
   background-color: $dark-grey;
-  border: 1px solid $lightning-yellow;
+  //border: 1px solid $lightning-yellow;
   //border: 1px solid rgba(0, 0, 0, 0.2);
   //box-shadow: 0 5px 10px rgba(0,0,0,.2);
   // z-index hardcoded to 100 by typeahead.js
