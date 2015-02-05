@@ -39,12 +39,7 @@ class Index(app.basic.BaseHandler):
             later_reminders=later_reminders)
     # Not logged in
     else:
-        return self.render('public/index.html', 
-            msg=msg, 
-            err=err,
-            groups=None,
-            today_reminders=None,
-            later_reminders=None)
+        return self.render('public/index.html')
 
 ########################
 ### Search

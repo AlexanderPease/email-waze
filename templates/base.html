@@ -19,7 +19,7 @@
   <link href="{{ static_url("css/screen.css") }}" rel="stylesheet" type="text/css" />
 </head>
 <body>
-  <nav class="navbar navbar-default" role="navigation">
+  <nav class="navbar navbar-default navbar-static-top" role="navigation">
     <div class="container">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse">
@@ -66,7 +66,6 @@
         {% else %}
           <li><a href="/about">About</a></li>
           <li><a href="/pricing">Pricing</a></li>
-          <li><a href="/auth/google">Sign Up</a></li>
           <li><a href="/auth/google">Log In</a></li>
         {% end %}
       </ul>
@@ -143,7 +142,6 @@
       // DO NOT HANDLE SEARCH TRIGGERS FOR /SEARCH
       var nav_select = "{{ nav_select }}";
       if (nav_select != 'search') {
-        console.log('base.html doing typeahead')
         // Init code for the searchbar's behavior, incl. typeahead
         {% include 'public/partials/init_typeahead.js' %}
         /* Trigger search when a suggestion is selected 
