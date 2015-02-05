@@ -28,7 +28,7 @@ html {
 body {
   font-family: "NTWRKBook", Lato, "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   background-color: #F8F8FA;
-  font-weight: 300;
+  //font-weight: 300;
   font-style: normal;
   font-size: 14px;
   line-height: 1.6;
@@ -105,10 +105,10 @@ Navbar & Footer
   a {
     color: $medium-grey;
     font-family: "NTWRKMedium", "Titillium Web", Lato, "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-    font-weight: 600;
+    //font-weight: 600;
     font-size: 14px;
     text-transform: uppercase;
-    letter-spacing: 0.02em;
+    //letter-spacing: 0.02em;
   }
 }
 
@@ -408,91 +408,6 @@ $btn-inline-font-size: 14px;
   margin-bottom: 22px;
 }
 
-// Search bar
-$input-height: 48px;
-.input-ntwrk {
-  background: $white;
-  border: 2px solid $lightning-yellow;
-  color: $lightning-yellow;
-  padding-top: 0px;
-  padding-left: 8px;
-  padding-bottom: 0px;
-  margin-right: 8px;
-  font-size: 28px;
-  height: $input-height;
-  width: 500px;
-  border-radius: 0px;
-  &:focus {
-    //-webkit-animation: anim-shadow 0.3s forwards;
-    //animation: anim-shadow 0.3s forwards;
-    //box-shadow: 0px 0px 0px 3px $lightning-yellow;
-    box-shadow: none;
-    outline: none;
-    border: 2px solid $lightning-yellow;
-  }
-}
-
-.input-ntwrk-height {
-  height: $input-height
-}
-
-/* Minoru */
-/*.input {
-  max-width: 800px;
-  height: 50px;
-  font-size: 36px;
-  margin-top: 20px;
-  margin-left: 0px
-}
-
-.input__field {
-  display: inline;
-  position: none;
-  float: none;
-}
-
-.input__field--minoru {
-  width: 100%;
-  padding: 0px 0px 0px 6px;
-  background: $white;
-  border: 2px solid $lightning-yellow;
-  color: $lightning-yellow;
-  -webkit-transition: box-shadow 0.3s;
-  transition: box-shadow 0.3s;
-
-}
-
-.input__field--minoru:focus {
-  box-shadow: 0px 0px 0px 3px $lightning-yellow;
-}
-
-.input__field--minoru:focus + .input__label--minoru {
-  pointer-events: none;
-}
-
-.input__field--minoru:focus + .input__label--minoru::after {
-  -webkit-animation: anim-shadow 0.3s forwards;
-  animation: anim-shadow 0.3s forwards;
-}
-
-@-webkit-keyframes anim-shadow {
-  to {
-    box-shadow: 0px 0px 100px 50px;
-      opacity: 0;
-  }
-}
-
-@keyframes anim-shadow {
-  to {
-    box-shadow: 0px 0px 100px 50px;
-      opacity: 0;
-  }
-}
-
-.input__label-content--minoru {
-  padding: 0.75em 0.15em;
-}
-*/
 
 /******************************************************************************
 Datatables
@@ -600,8 +515,8 @@ $tt-width: 400px;
 $bootstrap-text-color: #555;
 .tt-input, .tt-hint {
     width: $tt-width !important;
-    color: $bootstrap-text-color;
-    background-color: white !important; //override
+    color: $lightning-yellow;
+    background-color: $white !important; //override
     font-size: 18px;
     //height: 30px;
     //padding: 8px 12px;
@@ -626,9 +541,9 @@ $bootstrap-text-color: #555;
   width: $tt-width;
   //margin-top: 12px;
   padding: 8px 4px;
-  color: $bootstrap-text-color;
-  background-color: white;
-  border: 1px solid $bootstrap-text-color;
+  color: $white;
+  background-color: $dark-grey;
+  border: 1px solid $lightning-yellow;
   //border: 1px solid rgba(0, 0, 0, 0.2);
   //box-shadow: 0 5px 10px rgba(0,0,0,.2);
   // z-index hardcoded to 100 by typeahead.js
@@ -637,12 +552,12 @@ $bootstrap-text-color: #555;
 $tt-suggestion-padding: 3px;
 .tt-suggestion { // Styling of each suggestion
   padding-left: $tt-suggestion-padding;
-  //font-size: 18px;
-  //line-height: 24px;
+  border-bottom: 1px solid $white;
+  font-size: 14px;
 }
 
 .tt-suggestion.tt-cursor { // When suggestion is moused over
-  background-color: pink;//$navbar-blue;
+  background: $lightning-yellow url('../img/search_arrow_white.png') no-repeat 365px center;
   color: white;
 }
 
@@ -711,6 +626,92 @@ a.advanced-search-link {
   width: 100%;
   margin-top: 10px;
 }
+
+// Search bar
+$input-height: 48px;
+.input-ntwrk {
+  background: $white;
+  border: 2px solid $lightning-yellow;
+  color: $lightning-yellow;
+  padding-top: 0px;
+  padding-left: 8px;
+  padding-bottom: 0px;
+  margin-right: 8px;
+  font-size: 28px;
+  height: $input-height;
+  width: $tt-width;
+  border-radius: 0px;
+  &:focus {
+    //-webkit-animation: anim-shadow 0.3s forwards;
+    //animation: anim-shadow 0.3s forwards;
+    //box-shadow: 0px 0px 0px 3px $lightning-yellow;
+    box-shadow: none;
+    outline: none;
+    border: 2px solid $lightning-yellow;
+  }
+}
+
+.input-ntwrk-height {
+  height: $input-height
+}
+
+/* Minoru */
+/*.input {
+  max-width: 800px;
+  height: 50px;
+  font-size: 36px;
+  margin-top: 20px;
+  margin-left: 0px
+}
+
+.input__field {
+  display: inline;
+  position: none;
+  float: none;
+}
+
+.input__field--minoru {
+  width: 100%;
+  padding: 0px 0px 0px 6px;
+  background: $white;
+  border: 2px solid $lightning-yellow;
+  color: $lightning-yellow;
+  -webkit-transition: box-shadow 0.3s;
+  transition: box-shadow 0.3s;
+
+}
+
+.input__field--minoru:focus {
+  box-shadow: 0px 0px 0px 3px $lightning-yellow;
+}
+
+.input__field--minoru:focus + .input__label--minoru {
+  pointer-events: none;
+}
+
+.input__field--minoru:focus + .input__label--minoru::after {
+  -webkit-animation: anim-shadow 0.3s forwards;
+  animation: anim-shadow 0.3s forwards;
+}
+
+@-webkit-keyframes anim-shadow {
+  to {
+    box-shadow: 0px 0px 100px 50px;
+      opacity: 0;
+  }
+}
+
+@keyframes anim-shadow {
+  to {
+    box-shadow: 0px 0px 100px 50px;
+      opacity: 0;
+  }
+}
+
+.input__label-content--minoru {
+  padding: 0.75em 0.15em;
+}
+*/
 
 /******************************************************************************
 Reminders

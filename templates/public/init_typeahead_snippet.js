@@ -33,8 +33,8 @@ $('#form-q').typeahead(null, {
   displayKey: 'name',
   source: companies.ttAdapter(),
   templates: {
-    header: '<div class="tt-suggestion-heading"><strong>Companies</strong></div>',
-    suggestion: Handlebars.compile('<img src="{{!logo}}" width="25px" height="25px"/>{{!name}}')
+    header: '<div class="tt-suggestion-heading">Companies</div>',
+    suggestion: Handlebars.compile('{{!name}}')
   }
 });
 
