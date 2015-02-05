@@ -26,8 +26,13 @@ class Index(app.basic.BaseHandler):
     err = self.get_argument('err', '')
     if err == 'no_results':
         err = 'No results found! Try another search'
-
-    return self.render('public/index.html', msg=msg, err=err)
+    u = User.objects.get(email=self.current_user)
+    today_reminders, later_reminders = ProfileReminder.today_later_reminders(user=u)
+    return self.render('public/index.html', 
+        msg=msg, 
+        err=err,
+        today_reminders=today_reminders,
+        later_reminders=later_reminders)
 
 ########################
 ### Search
@@ -135,17 +140,7 @@ class Reminders(app.basic.BaseHandler):
   @tornado.web.authenticated
   def get(self):
     u = User.objects.get(email=self.current_user)
-    prs = ProfileReminder.objects(user=u)
-
-    # Group reminders by due today or not
-    today_reminders = []
-    later_reminders = []
-    for pr in prs:
-        if pr.date_set + datetime.timedelta(days=pr.days) <= datetime.datetime.today():
-            today_reminders.append(pr)
-        else:
-            later_reminders.append(pr)
-
+    today_reminders, later_reminders = ProfileReminder.today_later_reminders(user=u)
     return self.render('public/reminders.html',
         nav_select="reminders",
         today_reminders=today_reminders, 

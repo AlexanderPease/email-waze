@@ -23,7 +23,6 @@ class BaseHandler(tornado.web.RequestHandler):
 
 
     def render(self, template, **kwargs):
-        
         current_user = self.current_user_instance()
         if current_user:
             current_user.last_web_action = datetime.datetime.now()

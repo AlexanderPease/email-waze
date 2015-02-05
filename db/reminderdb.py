@@ -70,6 +70,25 @@ class ProfileReminder(Document):
             else:
                 return self.connection.latest_email_out_date_string()
 
+    @classmethod
+    def today_later_reminders(cls, user):
+        """
+        Group a users reminders by due date, either today or later_reminders
+
+        Returns:
+            today_reminders is a list of Reminders that are due today (or previously)
+            later_reminders is a list of Reminders that are due in future
+        """
+        prs = ProfileReminder.objects(user=user)
+        today_reminders = []
+        later_reminders = []
+        for pr in prs:
+            if pr.date_set + datetime.timedelta(days=pr.days) <= datetime.datetime.today():
+                today_reminders.append(pr)
+            else:
+                later_reminders.append(pr)
+        return today_reminders, later_reminders
+
 
 
 class CompanyReminder(Document):

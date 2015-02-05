@@ -160,6 +160,7 @@ footer {
   padding-bottom: 16px;
   padding-left: 10px;
   width: 160px;
+  height: 40px; //height of the NTWRK logo
   &:focus, &:hover {
     color: $white;
     background: $lightning-yellow url('../img/search_arrow_white.png') no-repeat 135px 10px;
@@ -434,6 +435,9 @@ table.dataTable {
   .name {
     font-size: 18px;
   }
+}
+table.dataTable tbody td {
+  padding: 2px 8px;
 }
 table.dataTable thead th, table.dataTable thead td {
   border-bottom: 1px solid $light-grey;

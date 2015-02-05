@@ -82,6 +82,11 @@
           </div>
         {% end %}
 
+        <!-- Show reminders -->
+        <div style="margin-top: 50px;">
+          {% include 'partials/reminders_active_later.html' %}
+        </div>
+
       </div> <!--container-->
     </section>
   {% end %}<!--current user-->
@@ -104,6 +109,16 @@
         window.location.href = "/search?" + field + "_id=" + datum['id'];
       });
       //fixSearchBg();
+
+      // Init reminders results
+      var dataTable = $('#today-reminders-table').DataTable({
+        searching: false,
+        dom: '<<t>>',
+      });
+      var dataTable = $('#later-reminders-table').DataTable({
+        searching: false,
+        dom: '<<t>>',
+      });
     });
     $(window).resize(function () {
       //fixFooter();
@@ -119,6 +134,5 @@
       }
     }
   </script>
-
   {% block user_welcome_js %}{% end %}
 {% end %}
