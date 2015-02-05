@@ -336,6 +336,13 @@
             console.log(url);
             //ajax call
           });
+         // Standardize row height
+         var maxHeight = null;
+         $('#search_table tbody tr').each(function(){
+          rowHeight = $(this).height();
+          maxHeight = (rowHeight > maxHeight) ? rowHeight : maxHeight;
+         });
+         $('#search_table tbody tr').height(maxHeight);
         },
         ajax: {
           url: url,

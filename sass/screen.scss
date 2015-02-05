@@ -81,6 +81,10 @@ a:hover {
   background-repeat: repeat;
 }
 
+.hidden-text {
+  color: transparent;
+}
+
 /******************************************************************************
 Navbar & Footer
 ******************************************************************************/
@@ -447,6 +451,9 @@ table.dataTable.hover tbody tr:hover, table.dataTable.hover tbody tr.odd:hover, 
   .copy-email, .alert-icon {
     display: block;
   }
+}
+table.dataTable tbody tr {
+  min-height: 300px;
 }
 
 // Pagination buttons

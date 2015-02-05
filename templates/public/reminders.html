@@ -47,7 +47,7 @@
       {% if later_reminders %}
         {% if not today_reminders %}
           <div class="reminders-header">
-            Upcoming Reminders (You have no reminders for today)
+            Upcoming Reminders (You have no reminders due today)
           </div>
         {% else %}
           <div class="reminders-header">
@@ -81,7 +81,10 @@
                 {% else %}
                   <td>N/A</td>
                 {% end %}
-                <td>{{ r.display_alert_type() }}</td>
+                <td>
+                  {{ r.display_alert_type() }}
+                  <span class="copy-email">Change</span>
+                </td>
               </tr>
             {% end %}
           </tbody>
