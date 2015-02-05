@@ -35,9 +35,12 @@
         <!--<li id="nav-chrome-extension" class="hidden"><a href="https://chrome.google.com/webstore/detail/ansatz/fhmfdjnooicibclghoophehldkeeloje">Install the Chrome Extension!</a></li>-->
         {% if current_user %}
           <li>
-            <a {% if nav_select == 'search' %} class="nav-selected" {% end %}>
+            <a id="navbar-search"
+              {% if nav_select == 'search' %} class="nav-selected" {% end %}
+            >
               Search
             </a>
+            <input id="navbar-search-input" placeholder="foo"></input>
           </li>
           <li>
             <a href="/reminders" {% if nav_select == 'reminders' %} class="nav-selected" {% end %}>
@@ -118,6 +121,11 @@
   <script src="{{ static_url("textinputeffects/js/classie.js") }}"></script>
   <script>
     $(document).ready(function () {
+      // Search in navbar
+      $('#navbar-search').click(function(){
+        $(this).addClass('navbar-search-active');
+      });
+
       //fixFooter();
       // Initialize all selectpickers
       $('.selectpicker').selectpicker();

@@ -12,28 +12,22 @@ from db.userdb import User
 class BaseHandler(tornado.web.RequestHandler):
     def __init__(self, *args, **kwargs):
         super(BaseHandler, self).__init__(*args, **kwargs)
-        #user = self.get_current_user()
-        #css_file = "%s/css/threatvector.css" % settings.tornado_config['static_path']
-        #css_modified_time = os.path.getmtime(css_file)
-            
-        self.vars = {
-            #'user': user,
-            #'css_modified_time': css_modified_time
-        }
+        try:
+            self.user = User.objects.get(email=self.current_user)
+        except:
+            self.user = None
 
 
     def render(self, template, **kwargs):
-        current_user = self.current_user_instance()
-        if current_user:
-            current_user.last_web_action = datetime.datetime.now()
-            current_user.save()
+        # Set current users action in database
+        if self.user:
+            self.user.last_web_action = datetime.datetime.now()
+            self.user.save()
 
         # add any variables or functions we want available in all templates
+        kwargs['user'] = self.user
         kwargs['user_obj'] = None
         kwargs['settings'] = settings 
-        kwargs['current_user_name'] = self.current_user_name
-        kwargs['current_user_casual_name'] = self.current_user_casual_name
-        kwargs['current_user_instance'] = self.current_user_instance
         kwargs['current_user_staff'] = self.current_user_staff
         kwargs['body_location_class'] = ""
         
@@ -61,26 +55,6 @@ class BaseHandler(tornado.web.RequestHandler):
     # Left over from Nick. Not using yet. kwargs above. 
     def current_user_name(self):
         return self.get_secure_cookie("user_name")
-
-    def current_user_instance(self):
-        """
-        Returns actual User instance
-        """
-        try:
-            return User.objects.get(email=self.current_user)
-        except:
-            return None
-
-    def current_user_casual_name(self):
-        """
-        Returns casual name of the logged in user
-        Ex: "Alexander"
-        """
-        try:
-            return User.objects.get(email=self.current_user).casual_name()
-        except:
-            return self.get_secure_cookie("user_name")
-
 
     def current_user_staff(self):
         """

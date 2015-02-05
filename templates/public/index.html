@@ -70,13 +70,18 @@
           </div>
           <button type="submit" class="btn btn-ntwrk input-ntwrk-height"></button>
         </form>
+        <span>
+          <a id="advanced-search-link">Advanced Search</a>
+        </span>
+        <!-- Advanced search modal -->
+        {% include 'partials/advanced_search_modal.html' %}
 
-        {% if current_user_instance().get_groups() == [] %}
+        {% if user.get_groups() == [] %}
           <div class="alert alert-danger" role="alert">
             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
             <span class="sr-only">Error:</span>
             You aren't part of a team yet! 
-            <a href="/settings">Click here</a> to join a team or create a new one!
+            <a href="/user/settings">Click here</a> to join a team or create a new one!
             This will make Ansatz much more useful to you.
             </a>
           </div>
@@ -110,7 +115,7 @@
       });
       //fixSearchBg();
 
-      // Init reminders results
+      // Init reminders datatables
       var dataTable = $('#today-reminders-table').DataTable({
         searching: false,
         dom: '<<t>>',
@@ -118,6 +123,22 @@
       var dataTable = $('#later-reminders-table').DataTable({
         searching: false,
         dom: '<<t>>',
+      });
+
+      // Advanced search
+      $('#advanced-search-link').click(function() {
+        $('#advanced-search-modal').modal();
+      });
+
+      $('#advanced-search-submit').click(function() {
+        $('#advanced-search-modal').modal('hide');
+        var name = $('#advanced-search-name').val();
+        var domain = $('#advanced-search-domain').val();
+        var group_id = $('#advanced-search-group').find(':selected').attr('data-group-id');
+        var newUrl = 'search?name=' + name + 
+          '&domain=' + domain +
+          '&group_id=' + group_id;
+        window.location.href = newUrl; // Load search results
       });
     });
     $(window).resize(function () {

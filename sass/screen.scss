@@ -72,9 +72,13 @@ h4, .h4 {
   font-size: 16pt;
 }
 
-a:hover {
-  cursor: pointer;
+a {
+  color: $lightning-yellow;
+  &:hover {
+    cursor: pointer;
+  } 
 }
+
 
 .pixel-grid {
   background-image: $pixel_background;
@@ -116,6 +120,19 @@ Navbar & Footer
   }
 }
 
+@-webkit-keyframes widen {
+  to {
+    box-shadow: 0px 0px 100px 50px;
+      opacity: 0;
+  }
+}
+@keyframes anim-shadow {
+  to {
+    box-shadow: 0px 0px 100px 50px;
+      opacity: 0;
+  }
+}
+
 // Footer
 footer {
   //position: fixed;
@@ -148,10 +165,12 @@ footer {
   background: $lightning-yellow;
   outline: none;
 }
+$navbar-grey-box-width: 160px;
 .navbar-default .navbar-nav > li > a, 
 .navbar-default .navbar-nav > .open > a,
 .navbar-default .navbar-nav .open .dropdown-menu > li > a,
-.footer-right > li > a {
+.footer-right > li > a 
+#navbar-search {
   color: $white;
   background-color: $light-grey;
   margin-left: 6px;
@@ -159,7 +178,7 @@ footer {
   padding-top: 6px;
   padding-bottom: 16px;
   padding-left: 10px;
-  width: 160px;
+  width: $navbar-grey-box-width;
   height: 40px; //height of the NTWRK logo
   &:focus, &:hover {
     color: $white;
@@ -169,6 +188,26 @@ footer {
 }
 .navbar-brand, .navbar-nav>li>a {
   text-shadow: none;
+}
+
+#navbar-search.navbar-search-active {
+  color: purple;
+  //width: $navbar-grey-box-width * 2;
+  -webkit-animation: anim-widen 0.3s forwards;
+  //animation: anim-shadow 0.3s forwards;
+}
+
+@-webkit-keyframes anim-widen {
+  to {
+    width: $navbar-grey-box-width * 2;
+  }
+}
+
+@keyframes anim-shadow {
+  to {
+    box-shadow: 0px 0px 100px 50px;
+      opacity: 0;
+  }
 }
 
 
@@ -542,10 +581,6 @@ $bootstrap-text-color: #555;
     &:disabled {
       background-color: darken(white, 20%) !important;
     }
-}
-
-.tt-input { 
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
 
 .tt-hint {

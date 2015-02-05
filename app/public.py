@@ -26,11 +26,13 @@ class Index(app.basic.BaseHandler):
     err = self.get_argument('err', '')
     if err == 'no_results':
         err = 'No results found! Try another search'
-    u = User.objects.get(email=self.current_user)
-    today_reminders, later_reminders = ProfileReminder.today_later_reminders(user=u)
+
+    gs = self.user.get_groups()
+    today_reminders, later_reminders = ProfileReminder.today_later_reminders(user=self.user)
     return self.render('public/index.html', 
         msg=msg, 
         err=err,
+        groups=gs,
         today_reminders=today_reminders,
         later_reminders=later_reminders)
 
@@ -41,7 +43,7 @@ class Index(app.basic.BaseHandler):
 class Search(app.basic.BaseHandler):
   @tornado.web.authenticated
   def get(self):
-    # Groups
+    # Groups for advanced search
     gs = User.objects.get(email=self.current_user).get_groups()
     return self.render('public/search.html', groups=gs, nav_select="search")
 
