@@ -62,7 +62,7 @@
               <li><a href="/auth/logout/">Logout</a></li>
             </ul>
           </li>
-        -->
+          -->
         {% else %}
           <li><a href="/about">About</a></li>
           <li><a href="/pricing">Pricing</a></li>
@@ -159,7 +159,6 @@
         });
       }
 
-      //fixFooter();
       // Initialize all selectpickers
       $('.selectpicker').selectpicker();
 
@@ -173,19 +172,6 @@
       });
 
     });
-
-    $(window).resize(function () {
-      //fixFooter();
-    });
-
-    var fixFooter = function () {
-    // sticky footer if page is not tall enough to fill the window
-      if ($(".page-content").height() > $(window).innerHeight()) {
-        $("footer").removeClass("fixed");
-      } else {
-        $("footer").addClass("fixed");
-      }
-    }
 
     /* Displays prompt to download Chrome Extension */
     function showChromeExtension() {

@@ -8,6 +8,7 @@ from db.connectiondb import Connection
 from db.groupdb import Group
 from connectionsets import GroupConnectionSet
 from connectionsets import ProfileConnectionSet
+from connectionsets import CompanyConnectionSet
 from connectionsets import BaseProfileConnection
 from connectionsets import list_to_json_list
 import math, re
@@ -89,11 +90,12 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
         else:
             group_users = current_user.all_group_users()
         ps = []
+        cs_all = [] # All Connections for all Profiles
         for p in profiles:
             cs = Connection.objects(profile=p, user__in=group_users)
             if len(cs) > 0:
                 bp = BaseProfileConnection(p, cs, current_user)
-                ps.append(bp)
+                #cs_all += list(cs)
         if len(ps) == 0:
             return self.api_response(data={})
         else:
@@ -119,6 +121,12 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
             c_stats['latest_connection'] = latest_connection.to_json()
             c_stats['most_connection'] = most_connection.to_json()
             results['company_stats'] = c_stats
+        # Results for multiple companies?
+        elif False:
+            logging.info(cs_all)
+            companies = CompanyConnectionSet.package_connections(cs_all)
+            logging.info(companies)
+            results['companies'] = list_to_json_list(companies)
 
         return self.api_response(results)
 

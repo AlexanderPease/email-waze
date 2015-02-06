@@ -2,6 +2,7 @@ import settings
 from mongoengine import *
 import mongoengine.errors
 import logging, random
+from db.companydb import Company
 from email.utils import parseaddr
 
 mongo_database = settings.get('mongo_database')
@@ -52,6 +53,16 @@ class Profile(Document):
         Ex: reply.craigslist from foo@reply.craigslist.com
         """
         return self.domain.split('.')[-2]
+
+    def get_company(self):
+        """
+        Returns domain name minus extension of self.email
+        Ex: reply.craigslist from foo@reply.craigslist.com
+        """
+        try:
+            return Company.objects.get(domain=self.domain)
+        except:
+            return None
 
     @classmethod
     def email_exists(cls, email):
