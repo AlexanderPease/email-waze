@@ -13,7 +13,8 @@ class BaseProfileConnection:
 
     Args:
         profile is a Profile instance
-        connections is a list of Connection instances
+        connections is a list of Connection instances. All of theses connections
+            must be to the same Profile. 
         self_connected is connection instance with current user
     """
     def __init__(self, profile, connections, current_user):
@@ -163,7 +164,16 @@ class CompanyConnectionSet:
     def __init__(self, company):
         self.domain = company.domain
         self.name = company.name
-        self.connections = [] # start with empty array
+        # Set after __init__
+        self.connections = []
+        self.connection_strength = 0
+        self.days_since_contact = 0
+        self.total_emails_out = 0
+        self.latest_email_out_date = None
+        self.total_emails_in = 0
+        self.latest_email_in_date = None
+        self.self_connected = None
+
 
     def __repr__(self):
         return 'CompanyConnectionSet: %s connected to %s of your team members' % (self.name, len(self.connections))
@@ -178,10 +188,62 @@ class CompanyConnectionSet:
         json = {'domain': self.domain, 'name': self.name, 'connections': []}
         for c in self.connections:
             json['connections'].append(c.to_json())
+        if self.self_connected:
+            json['self_connected'] = self.self_connected.to_json()
+        if self.latest_email_out_date:
+            json['latest_email_out_date'] = self.latest_email_out_date_string()
+        else:
+            json['latest_email_out_date'] = None
+        if self.latest_email_in_date:
+            json['latest_email_in_date'] = self.latest_email_in_date_string()
+        else:
+            json['latest_email_in_date'] = None
+        if self.days_since_contact:
+            json['days_since_contact'] = self.days_since_contact
+        else:
+            json['days_since_contact'] = None
         return json
 
+    def set_derivative_info(self, current_user):
+        """
+        Merge this code with BaseProfileConnection
+        """
+        for c in self.connections:
+            # emails_out
+            if c.total_emails_out:
+                self.total_emails_out += c.total_emails_out
+            if c.latest_email_out_date:
+                if not self.latest_email_out_date or self.latest_email_out_date > c.latest_email_out_date:
+                    self.latest_email_out_date = c.latest_email_out_date
+            # emails_in
+            if c.total_emails_in:
+                self.total_emails_in += c.total_emails_in
+            if c.latest_email_in_date:
+                if not self.latest_email_in_date or self.latest_email_in_date > c.latest_email_in_date:
+                    self.latest_email_in_date = c.latest_email_in_date
+            # self_connected
+            if current_user:
+                if current_user.same_user(c.user):
+                    self.self_connected = c
+        # days_since_contact
+        if self.latest_email_date():
+            self.days_since_contact = (datetime.datetime.now() - self.latest_email_date()).days
+        # connection_strength
+        if self.total_emails_out > 100 and self.days_since_contact < 90:
+            self.connection_strength = 6
+        elif self.total_emails_out > 25 and self.days_since_contact < 90:
+            self.connection_strength = 5
+        elif self.total_emails_out > 25 and self.days_since_contact < 180:
+            self.connection_strength = 4
+        elif self.total_emails_out > 10 and self.days_since_contact < 365:
+            self.connection_strength = 3
+        elif self.total_emails_out > 0 or self.total_emails_in > 0:
+            self.connection_strength = 2
+        else:
+            self.connection_strength = 1
+
     @classmethod
-    def package_connections(self, connections):
+    def package_connections(self, connections, current_user):
         """
         Package and dedupe Connections for client-side use
 
@@ -208,6 +270,10 @@ class CompanyConnectionSet:
                     ccs.add_connection(c)
                     results.append(ccs)
                     results_domains.append(company.domain)
+
+        # Now that all connections are processed, set derivative fields of CompanyConnectionSets
+        for ccs in results:
+            ccs.set_derivative_info(current_user)
         return results
 
 class GroupConnectionSet:

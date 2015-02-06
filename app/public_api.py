@@ -126,7 +126,7 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
             results['company_stats'] = c_stats
         # Results for multiple companies?
         else:
-            companies = CompanyConnectionSet.package_connections(cs_all)
+            companies = CompanyConnectionSet.package_connections(cs_all, self.user)
             results['companies'] = list_to_json_list(companies)
             results['num_companies'] = len(companies)
 
