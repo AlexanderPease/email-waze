@@ -156,6 +156,63 @@ class BaseProfileConnection:
         else:
             return self.latest_email_in_date
 
+class CompanyConnectionSet:
+    """
+    Class that groups Connections together by Company. 
+    """
+    def __init__(self, company):
+        self.domain = company.domain
+        if company.name:
+            self.name = company.name
+        else:
+            self.name = company.domain
+        self.connections = [] # start with empty array
+
+    def __repr__(self):
+        return 'CompanyConnectionSet: %s connected to %s of your team members' % (self.name, len(self.connections))
+
+    def add_connection(self, c):
+        self.connections.append(c)
+
+    def to_json(self):
+        '''
+        Returns JSON dict of GroupConnectionSet instance
+        '''
+        json = {'domain': self.domain, 'name': self.name, 'connections': []}
+        for c in self.connections:
+            json['connections'].append(c.to_json())
+        return json
+
+    @classmethod
+    def package_connections(self, connections):
+        """
+        Package and dedupe Connections for client-side use
+
+        Args:
+            connections are a list of Connections
+        """
+        results = []
+        results_domains = [] # For fast indexing deduping connections
+        for c in connections:
+            company = c.profile.get_company()
+            if company:
+                try:
+                    existing_index = results_domains.index(company.domain)
+                except ValueError:
+                    existing_index = -1
+
+                # If this connection is already in results, just add connection
+                # to existing results
+                if existing_index != -1:
+                    results[existing_index].add_connection(c)
+                # Else it is a new CompanyConnection to add to results
+                else:
+                    ccs = CompanyConnectionSet(company)
+                    ccs.add_connection(c)
+                    results.append(ccs)
+                    results_domains.append(company.domain)
+        return results
+
 class GroupConnectionSet:
     """
     Class that groups Connections together by User
@@ -172,9 +229,9 @@ class GroupConnectionSet:
         self.connections.append(c)
 
     def to_json(self):
-        '''
+        """
         Returns JSON dict of GroupConnectionSet instance
-        '''
+        """
         json = {'email': self.email, 'name': self.name, 'connections': []}
         for c in self.connections:
             json['connections'].append(c.to_json())
@@ -225,9 +282,9 @@ class ProfileConnectionSet:
         self.connections.append(c)
 
     def to_json(self):
-        '''
+        """
         Returns JSON dict of GroupConnectionSet instance
-        '''
+        """
         json = {'email': self.email, 'name': self.name, 'connections': []}
         for c in self.connections:
             json['connections'].append(c.to_json())
@@ -273,63 +330,6 @@ def list_to_json_list(l):
         json_list.append(connection_set.to_json())
     return json_list
 
-class CompanyConnectionSet:
-    """
-    Class that groups Connections together by Company. 
-    """
-    def __init__(self, company):
-        self.domain = company.domain
-        self.name = company.name
-        self.connections = [] # start with empty array
-
-    def __repr__(self):
-        return 'CompanyConnectionSet: %s connected to %s of your team members' % (self.name, len(self.connections))
-
-    def add_connection(self, c):
-        self.connections.append(c)
-
-    def to_json(self):
-        '''
-        Returns JSON dict of GroupConnectionSet instance
-        '''
-        json = {'domain': self.domain, 'name': self.name, 'connections': []}
-        for c in self.connections:
-            json['connections'].append(c.to_json())
-        return json
-
-    @classmethod
-    def package_connections(self, connections):
-        """
-        Package and dedupe Connections for client-side use
-
-        Args:
-            connections are a list of Connections
-        """
-        results = []
-        results_domains = [] # For fast indexing deduping connections
-        logging.info('here')
-        logging.info(connections)
-        for c in connections:
-            company = c.profile.get_company()
-            logging.info(company)
-            if company:
-                logging.info(company)
-                try:
-                    existing_index = results_domains.index(company.domain)
-                except ValueError:
-                    existing_index = -1
-
-                # If this connection is already in results, just add connection
-                # to existing results
-                if existing_index != -1:
-                    results[existing_index].add_connection(c)
-                # Else it is a new CompanyConnection to add to results
-                else:
-                    ccs = CompanyConnectionSet(company)
-                    ccs.add_connection(c)
-                    results.append(ccs)
-                    results_domains.append(company.domain)
-        return results
 
 
 

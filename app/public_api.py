@@ -6,8 +6,6 @@ from db.userdb import User
 from db.companydb import Company
 from db.connectiondb import Connection
 from db.groupdb import Group
-from connectionsets import GroupConnectionSet
-from connectionsets import ProfileConnectionSet
 from connectionsets import CompanyConnectionSet
 from connectionsets import BaseProfileConnection
 from connectionsets import list_to_json_list
@@ -65,14 +63,17 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
                     }
                 ]
             })
+            results['results_msg'] = 'Results for "%s"' % q
         # Exact ID search
         elif company_id:
             company = Company.objects.get(id=company_id)
             profiles = Profile.objects(domain=company.domain)
+            results['results_msg'] = company.name
         # Advanced search query. Specific fields are searched
         else:
             # Global profile results
             profiles = Profile.objects(name__icontains=name, email__icontains=domain) # case-insensitive contains
+            results['results_msg'] = 'Results for "%s %s"' % (name, domain)
 
         # No results
         if len(profiles) == 0:
@@ -89,17 +90,19 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
                 group_users = current_user.all_group_users()
         else:
             group_users = current_user.all_group_users()
-        ps = []
-        cs_all = [] # All Connections for all Profiles
+        ps = [] # List of BaseProfileConnections
+        cs_all = [] # Keep track of all Connections for all Profiles
         for p in profiles:
             cs = Connection.objects(profile=p, user__in=group_users)
             if len(cs) > 0:
                 bp = BaseProfileConnection(p, cs, current_user)
-                #cs_all += list(cs)
+                ps.append(bp)
+                cs_all += list(cs)
         if len(ps) == 0:
             return self.api_response(data={})
         else:
             results['profiles'] = list_to_json_list(ps)
+            results['num_profiles'] = len(ps)
 
         # Company stats if a single company was selected
         if company_id: 
@@ -122,11 +125,10 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
             c_stats['most_connection'] = most_connection.to_json()
             results['company_stats'] = c_stats
         # Results for multiple companies?
-        elif False:
-            logging.info(cs_all)
+        else:
             companies = CompanyConnectionSet.package_connections(cs_all)
-            logging.info(companies)
             results['companies'] = list_to_json_list(companies)
+            results['num_companies'] = len(companies)
 
         return self.api_response(results)
 

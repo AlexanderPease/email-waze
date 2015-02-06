@@ -96,13 +96,14 @@
     $(document).ready(function(){
       // Page inits to display loading
       displayLoading();
-      setFormQPlaceholder();
+      //setFormQPlaceholder();
 
       // Init code for the searchbar's behavior, incl. typeahead
       {% include 'partials/init_typeahead.js' %}
       // Search, causes AJAX reload
       $('.search-tt').keypress(function(event) {
         if (event.which == 13) {
+          $(this).blur();
           var q = $(this).val();
           var new_url = 'api/searchbaseprofileconnection?q=' + q;
           console.log(new_url)
@@ -309,32 +310,28 @@
           url: url,
           dataSrc: function(json) {
             console.log(json);
+            var results = json['data']
             // Handle errors
             if (json.status_code != 200) {
               console.log('Server returned status code: ' + json.status_code);
-              displayLoaded('Error loading data, please try again', null);
+              json = {'results_msg': 'Error loading data, please try again'}
+              displayLoaded(results);
               return []
             }
             // Redirect if no results
-            if (json.data.profiles == null) {
+            if (results.profiles == null) {
               window.location.href = "{{ settings.get('base_url') }}" + "?err=no_results";
             }
             // Process results
-            var profiles = json.data.profiles;
+            var profiles = results.profiles;
             json_list = [];
             for (var i=0; i<profiles.length; i++) {
               var p = new Profile(profiles[i]);
               json_list.push(p.rowArray());
               p.addModal();
             }
-
-            // Company panel results if included
-            if (json.data.company_stats) {
-              //showCompanyPanel(json.data.company_stats);
-              displayLoaded(json.data.company_stats['name'], json);
-            } else {
-              displayLoaded(null, json);
-            }
+            // Display
+            displayLoaded(results);
 
             return json_list;
           },
@@ -395,36 +392,32 @@
     }); // ready
 
     /* Displays everything once data is loaded */
-    function displayLoaded(results_msg, results_json) {
-      if (results_msg) {
-        $('#results').text(results_msg);
-      } else {
-        var q = $("#navbar-search-input").val();
-        updateResultsMessage(q.split(" "));
-      }
-      if (results_json) {
-        $('#people-header').text('People (10)');
-        $('#companies-header').text('Companies (4)');
+    function displayLoaded(results) {
+      $('#results').text(results['results_msg']);
+      if (results['companies']) {
+        $('#people-header').text('People (' + results['num_profiles'] + ')');
+        $('#companies-header').text('Companies (' + results['num_companies'] + ')');
         $('#people-companies-header').show();
       }
-      $('#form-button').prop('disabled', false);
-      $('#form-button').text('Search');
-      //$('#form-q').prop('disabled', false);
-      //$('#form-q').val('');
       $('#filter-by').find('button').prop('disabled', false);
       $('#group-select').find('button').prop('disabled', false);
-      setFormQPlaceholder();
+      //setFormQPlaceholder();
+      //$('#form-button').prop('disabled', false);
+      //$('#form-button').text('Search');
+      //$('#form-q').prop('disabled', false);
+      //$('#form-q').val('');
     }
 
     /* Displays loading messages and disables form */
     function displayLoading() {
       $('#results').text('Loading...');
-      $('#form-button').prop('disabled', true);
-      $('#form-button').text('Loading...');
-      //$('#form-q').prop('disabled', true);
       $('#filter-by').find('button').prop('disabled', true);
       $('#group-select').find('button').prop('disabled', true);
-      setFormQPlaceholder();
+      $('#people-companies-header').hide();
+      //setFormQPlaceholder();
+      //$('#form-q').prop('disabled', true);
+      //$('#form-button').prop('disabled', true);
+      //$('#form-button').text('Loading...');
     }
 
     /* Updates the results message. If an array of queryParameters is supplied,
@@ -463,12 +456,12 @@
     }
 
     // Sets form-q input placeholder
-    function setFormQPlaceholder() {
+    /*function setFormQPlaceholder() {
       $("#form-q").attr('placeholder', 'Search for a person, company, or website');
     }
-
+    */
     // JS to handle the company_panel div
-    {% include 'company_panel.js' %}
+    //{% include 'company_panel.js' %}
 
     var Profile = function(dict) {
       this.profile_id = dict['profile_id'];
