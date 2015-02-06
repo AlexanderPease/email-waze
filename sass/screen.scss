@@ -426,7 +426,7 @@ $btn-inline-font-size: 14px;
   background: $lightning-yellow url('../img/pagination_next_hover.png') no-repeat center left;
 }
 
-.feature {
+/*.feature {
   padding: 20px 0;
   @media screen and (min-width: 768px) {
     padding: 40px 0;
@@ -438,12 +438,29 @@ $btn-inline-font-size: 14px;
   //overflow: hidden;
   background-color: $white;
 
-  /*
   &:nth-child(2n) {
     background-color: #F8F8FA;
     background-image: none;
   }
-  */
+}
+*/
+
+.feature {
+  padding: 20px 0;
+  @media screen and (min-width: 768px) {
+    padding: 40px 0;
+  }
+  @media screen and (min-width: 1025px) and (min-height: 750px) {
+    padding: 90px 0px;
+  }
+  border-bottom: 1px solid #E8EAF1;
+  overflow: hidden;
+  background-color: #F8F8FA;
+
+  &:nth-child(2n) {
+    background-color: #FFF;
+    background-image: none;
+  }
 }
 
 /* Applies nice image to search backgrounds */
