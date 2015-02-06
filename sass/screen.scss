@@ -455,12 +455,7 @@ $btn-inline-font-size: 14px;
   }
   border-bottom: 1px solid #E8EAF1;
   overflow: hidden;
-  background-color: #F8F8FA;
-
-  &:nth-child(2n) {
-    background-color: #FFF;
-    background-image: none;
-  }
+  background-color: $white;
 }
 
 /* Applies nice image to search backgrounds */

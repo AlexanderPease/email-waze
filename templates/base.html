@@ -154,8 +154,7 @@
         // Submit form if Enter is pressed in text input
         $('.search-tt').keypress(function(event){ 
           if (event.which == 13) {
-            var field = name; 
-            window.location.href = "/search?" + field + "_id=" + datum['id'];
+            window.location.href = "/search?q=" + $(this).val();
           }
         });
       }

@@ -97,7 +97,7 @@
       // Search, causes AJAX reload
       $('.search-tt').keypress(function(event) {
         if (event.which == 13) {
-          var q = $('#form-q').val();
+          var q = $(this).val();
           var new_url = 'api/searchbaseprofileconnection?q=' + q;
           console.log(new_url)
           $("#search_table").DataTable().ajax.url(new_url).load();
