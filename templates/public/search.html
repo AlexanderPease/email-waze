@@ -59,16 +59,16 @@
       <table id="search_table" class="row-border hover">
         <thead>
           <tr>
-            <th>NAME</th>
-            <th>EMAIL</th>
-            <th>CONNECTIONS</th>
-            <th>SIGNAL</th>
-            <th>ALERTS</th>
-            <th>DAYS SINCE CONTACT</th>
-            <th>LATEST SENT</th>
-            <th>LATEST RECEIEVED</th>
-            <th>EMAILS SENT</th>
-            <th>EMAILS RECEIVED</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Connections</th>
+            <th>Signal</th>
+            <th>Alerts</th>
+            <th>Days Since Contact</th>
+            <th>Latest Sent</th>
+            <th>Latest Received</th>
+            <th>Emails Sent</th>
+            <th>Emails Recieved</th>
           </tr>
         </thead>
         <tbody id="search_table_body">
@@ -84,11 +84,11 @@
       <table id="companies_table" class="row-border hover">
         <thead>
           <tr>
-            <th>NAME</th>
-            <th>EMAIL</th>
-            <th>CONNECTIONS</th>
-            <th>SIGNAL</th>
-            <th>ALERTS</th>
+            <th>Name</th>
+            <th>Domain</th>
+            <th>Connections</th>
+            <th>Signal</th>
+            <th>Alerts</th>
           </tr>
         </thead>
         <tbody id="companies_table_body">
@@ -440,8 +440,13 @@
     }
 
     function initCompaniesTable(results) {
-      if (!results['companies']) { return }
-      var companyData = [['name', 'email', 'connections', 'signal', 'fuck yeah bitchez']];
+      if (!results.companies) { return }
+      var companyData = [];
+      for (var i=0; i<results.companies.length; i++) {
+        var company = results.companies[i]
+        var companyRow = [company.name, company.domain, 'connections', 'signal', 'fuck yeah'];
+        companyData.push(companyRow)
+      }
       console.log('Initializing #companies_table');
       var companyTable = $('#companies_table').DataTable({
         data: companyData,
