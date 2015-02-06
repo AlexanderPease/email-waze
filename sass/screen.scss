@@ -478,8 +478,18 @@ $btn-inline-font-size: 14px;
     }
 }
 
-#people-header {
-  margin-right: 16px;
+#people-companies-header {
+  a {
+    margin-right: 8px;
+    color: $dark-grey;
+  }
+  a.unselected {
+    color: $light-grey;
+  }
+  span {
+    margin-right: 8px;
+    color: $light-grey;
+  }
 }
 
 /* CSS for the thin search bar */

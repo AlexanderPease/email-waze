@@ -162,10 +162,7 @@ class CompanyConnectionSet:
     """
     def __init__(self, company):
         self.domain = company.domain
-        if company.name:
-            self.name = company.name
-        else:
-            self.name = company.domain
+        self.name = company.name
         self.connections = [] # start with empty array
 
     def __repr__(self):
@@ -195,7 +192,7 @@ class CompanyConnectionSet:
         results_domains = [] # For fast indexing deduping connections
         for c in connections:
             company = c.profile.get_company()
-            if company:
+            if company and company.name: # Ignore companies without info
                 try:
                     existing_index = results_domains.index(company.domain)
                 except ValueError:
