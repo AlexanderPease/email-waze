@@ -115,7 +115,7 @@
         console.log(new_url)
         $("#search_table").DataTable().ajax.url(new_url).load();
         displayLoading();
-        showCompanyPanelLoading(datum);
+        //showCompanyPanelLoading(datum);
         //window.location.href.replace("name="+name, "domain="+domain); // not working
       });
 
@@ -393,13 +393,13 @@
       if (results_msg) {
         $('#results').text(results_msg);
       } else {
-        var q = $("#form-q").val();
+        var q = $("#navbar-search-input").val();
         updateResultsMessage(q.split(" "));
       }
       $('#form-button').prop('disabled', false);
       $('#form-button').text('Search');
-      $('#form-q').prop('disabled', false);
-      $('#form-q').val('');
+      //$('#form-q').prop('disabled', false);
+      //$('#form-q').val('');
       $('#filter-by').find('button').prop('disabled', false);
       $('#group-select').find('button').prop('disabled', false);
       setFormQPlaceholder();
@@ -410,7 +410,7 @@
       $('#results').text('Loading...');
       $('#form-button').prop('disabled', true);
       $('#form-button').text('Loading...');
-      $('#form-q').prop('disabled', true);
+      //$('#form-q').prop('disabled', true);
       $('#filter-by').find('button').prop('disabled', true);
       $('#group-select').find('button').prop('disabled', true);
       setFormQPlaceholder();
