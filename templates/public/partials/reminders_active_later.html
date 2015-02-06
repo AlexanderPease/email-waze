@@ -1,6 +1,6 @@
 <!-- Requires jQuery initialization of dataTables-->
 {% if today_reminders %}
-        <div class="reminders-header">
+        <div class="table-header">
           Active Reminders
         </div>
         <table id="today-reminders-table" class="row-border hover">
@@ -38,11 +38,11 @@
 
       {% if later_reminders %}
         {% if not today_reminders %}
-          <div class="reminders-header">
+          <div class="table-header">
             Upcoming Reminders (You have no reminders due today)
           </div>
         {% else %}
-          <div class="reminders-header">
+          <div class="table-header">
             Upcoming Reminders
           </div>
         {% end %}
