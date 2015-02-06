@@ -56,24 +56,26 @@
       </div>
 
       <!-- Table for Profiles -->
-      <table id="search_table" class="row-border hover">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Connections</th>
-            <th>Signal</th>
-            <th>Alerts</th>
-            <th>Days Since Contact</th>
-            <th>Latest Sent</th>
-            <th>Latest Received</th>
-            <th>Emails Sent</th>
-            <th>Emails Recieved</th>
-          </tr>
-        </thead>
-        <tbody id="search_table_body">
-        </tbody>
-      </table>
+      <div id="search_table_div">
+        <table id="search_table" class="row-border hover">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Connections</th>
+              <th>Signal</th>
+              <th>Alerts</th>
+              <th>Days Since Contact</th>
+              <th>Latest Sent</th>
+              <th>Latest Received</th>
+              <th>Emails Sent</th>
+              <th>Emails Recieved</th>
+            </tr>
+          </thead>
+          <tbody id="search_table_body">
+          </tbody>
+        </table>
+      </div>
 
       <!-- Detail view modals inserted here -->
       <div id="modalsDiv">
@@ -81,19 +83,21 @@
       </div>
 
       <!-- Table for Companies -->
-      <table id="companies_table" class="row-border hover">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Domain</th>
-            <th>Connections</th>
-            <th>Signal</th>
-            <th>Alerts</th>
-          </tr>
-        </thead>
-        <tbody id="companies_table_body">
-        </tbody>
-      </table>
+      <div id="companies_table_div" style="display: none;">
+        <table id="companies_table" class="row-border hover">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Domain</th>
+              <th>Connections</th>
+              <th>Signal</th>
+              <th>Alerts</th>
+            </tr>
+          </thead>
+          <tbody id="companies_table_body">
+          </tbody>
+        </table>
+      </div>
 
       <!-- Advanced search modal -->
       {% include 'partials/advanced_search_modal.html' %}
@@ -109,7 +113,7 @@
 {% block javascript %}
   <script>
     $(document).ready(function(){
-      // Page inits to display loading
+      // Page inits
       displayLoading();
       //setFormQPlaceholder();
 
@@ -320,6 +324,7 @@
           maxHeight = (rowHeight > maxHeight) ? rowHeight : maxHeight;
          });
          $('#search_table tbody tr').height(maxHeight);
+         $('#companies_table tbody tr').height(maxHeight);
         },
         ajax: {
           url: url,
@@ -408,6 +413,20 @@
         $("#search_table").DataTable().ajax.url(newUrl).load();
       });
 
+      // Switch between profiles and companies tables
+      $('#people-header').click(function(){
+        $('#search_table_div').show();
+        $('#companies_table_div').hide();
+        $('#people-header').removeClass('unselected');
+        $('#companies-header').addClass('unselected');
+      });
+      $('#companies-header').click(function(){
+        $('#search_table_div').hide();
+        $('#companies_table_div').show();
+        $('#people-header').addClass('unselected');
+        $('#companies-header').removeClass('unselected');
+      });
+
     }); // ready
 
     /* Displays everything once data is loaded */
@@ -453,7 +472,54 @@
         searching: false,
         pageLength: 20,
         lengthChange: false,
-        dom: '<<t>p>'
+        dom: '<<t>p>',
+        order: [[3, "desc"]],
+        columns: [
+          {
+            'name': 'name',
+            'render': function(data, type, full, meta) {
+                return '<span class="name">' + data;
+            }
+          },
+          { 
+            'domain': 'domain',
+            'render': function(data, type, full, meta) { 
+              return '<span class="email">' + data;
+            }
+          },
+          {
+            'name': 'connections',
+          },
+          {
+            'name': 'connection_strength', 
+            'render': function(data, type, full, meta) {
+              if (data == 1) {
+                var icon_url = '{{ static_url("img/signal_strength/signal_strength_1.png") }}';
+              } else if (data == 2) {
+                var icon_url = '{{ static_url("img/signal_strength/signal_strength_2.png") }}';
+              } else if (data == 3) {
+                var icon_url = '{{ static_url("img/signal_strength/signal_strength_3.png") }}';
+              } else if (data == 4) {
+                var icon_url = '{{ static_url("img/signal_strength/signal_strength_4.png") }}';
+              } else if (data == 5) {
+                var icon_url = '{{ static_url("img/signal_strength/signal_strength_5.png") }}';
+              } else {
+                var icon_url = '{{ static_url("img/signal_strength/signal_strength_6.png") }}';
+              } 
+              return '<img class="signal-icon" src="' + icon_url + '"><span hidden>' + data + '</span>';
+            }
+          },
+          {
+            'name': 'reminder', 
+            'render': function(data, type, full, meta) {
+              if (data == null || data == "") {
+                return '<img class="alert-icon" src="' + '{{ static_url("img/alert.png") }}' + '">';
+              } else {
+                return 'foo';
+              }
+            }
+          }
+        ],
       });// #companies-table init
     }
 
