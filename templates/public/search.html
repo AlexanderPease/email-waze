@@ -55,7 +55,7 @@
         </div>
       </div>
 
-      <!-- Table for All -->
+      <!-- Table for Profiles -->
       <table id="search_table" class="row-border hover">
         <thead>
           <tr>
@@ -80,11 +80,26 @@
         {% include 'search_result_modal.hbs' %}
       </div>
 
+      <!-- Table for Companies -->
+      <table id="companies_table" class="row-border hover">
+        <thead>
+          <tr>
+            <th>NAME</th>
+            <th>EMAIL</th>
+            <th>CONNECTIONS</th>
+            <th>SIGNAL</th>
+            <th>ALERTS</th>
+          </tr>
+        </thead>
+        <tbody id="companies_table_body">
+        </tbody>
+      </table>
+
       <!-- Advanced search modal -->
       {% include 'partials/advanced_search_modal.html' %}
 
-      <!-- Reminder dropdown -->
-      {% include 'reminder_dropdown.hbs' %}
+      <!-- Reminder dropdown
+      {% include 'reminder_dropdown.hbs' %}-->
 
 
     </div> <!-- container -->
@@ -332,6 +347,10 @@
             }
             // Display
             displayLoaded(results);
+            // Init company table if applicable
+            if (results['companies']) {
+              initCompaniesTable(results)
+            }
 
             return json_list;
           },
@@ -339,7 +358,7 @@
             console.warning('Server threw error to #search_table datatable');
           }
         } 
-      });// datatable
+      });// #search-table init
 
       // Display detail modal when row is clicked on
       $('#search_table tbody').on('click', 'tr', function() {
@@ -420,8 +439,21 @@
       //$('#form-button').text('Loading...');
     }
 
+    function initCompaniesTable(results) {
+      if (!results['companies']) { return }
+      var companyData = [['name', 'email', 'connections', 'signal', 'fuck yeah bitchez']];
+      console.log('Initializing #companies_table');
+      var companyTable = $('#companies_table').DataTable({
+        data: companyData,
+        searching: false,
+        pageLength: 20,
+        lengthChange: false,
+        dom: '<<t>p>'
+      });// #companies-table init
+    }
+
     /* Updates the results message. If an array of queryParameters is supplied,
-      it will display those values. If not, it pulls from the href parameters */
+      it will display those values. If not, it pulls from the href parameters 
     function updateResultsMessage(queryParameters) {
       if (!queryParameters || queryParameters == "") {
         queryParameters = getQueryParameters();
@@ -441,6 +473,7 @@
       }
       $('#results').text('Results for ' + terms);
     }
+    */
 
     function getQueryParameters() {
        /* queryParameters -> handles the query string parameters
