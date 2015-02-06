@@ -12,8 +12,9 @@
         </div>
       </div>
 
-      <div class="table-header">
-        Active Reminders
+      <div id="people-companies-header" class="table-header" style="display:none">
+        <span id="people-header">foo</span>
+        <span id="companies-header" class="unselected"></span>
       </div>
       <div class="row">
         <div class="col-sm-6 col-sm-offset-6 float-right">
@@ -309,7 +310,7 @@
             // Handle errors
             if (json.status_code != 200) {
               console.log('Server returned status code: ' + json.status_code);
-              displayLoaded('Error loading data, please try again');
+              displayLoaded('Error loading data, please try again', null);
               return []
             }
             // Redirect if no results
@@ -328,9 +329,9 @@
             // Company panel results if included
             if (json.data.company_stats) {
               //showCompanyPanel(json.data.company_stats);
-              displayLoaded(json.data.company_stats['name']);
+              displayLoaded(json.data.company_stats['name'], json);
             } else {
-              displayLoaded();
+              displayLoaded(null, json);
             }
 
             return json_list;
@@ -392,12 +393,17 @@
     }); // ready
 
     /* Displays everything once data is loaded */
-    function displayLoaded(results_msg) {
+    function displayLoaded(results_msg, results_json) {
       if (results_msg) {
         $('#results').text(results_msg);
       } else {
         var q = $("#navbar-search-input").val();
         updateResultsMessage(q.split(" "));
+      }
+      if (results_json) {
+        $('#people-header').text('People (10)');
+        $('#companies-header').text('Companies (4)');
+        $('#people-companies-header').show();
       }
       $('#form-button').prop('disabled', false);
       $('#form-button').text('Search');

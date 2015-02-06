@@ -32,6 +32,11 @@ body {
   font-style: normal;
   font-size: 14px;
   line-height: 1.6;
+  color: $dark-grey;
+
+  .unselected {
+    color: $light-grey;
+  }
 }
 
 .page-content {
@@ -78,7 +83,6 @@ a {
     cursor: pointer;
   } 
 }
-
 
 .pixel-grid {
   background-image: $pixel-background;
@@ -472,6 +476,10 @@ $btn-inline-font-size: 14px;
       margin-left: auto;
       margin-right: auto; 
     }
+}
+
+#people-header {
+  margin-right: 16px;
 }
 
 /* CSS for the thin search bar */
