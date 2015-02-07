@@ -102,7 +102,6 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
             return self.api_response(data={})
         else:
             results['profiles'] = list_to_json_list(ps)
-            results['num_profiles'] = len(ps)
 
         # Company stats if a single company was selected
         if company_id: 
@@ -128,7 +127,6 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
         else:
             companies = CompanyConnectionSet.package_connections(cs_all, self.user)
             results['companies'] = list_to_json_list(companies)
-            results['num_companies'] = len(companies)
 
         return self.api_response(results)
 

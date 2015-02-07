@@ -433,8 +433,8 @@
     function displayLoaded(results) {
       $('#results').text(results['results_msg']);
       if (results['companies']) {
-        $('#people-header').text('People (' + results['num_profiles'] + ')');
-        $('#companies-header').text('Companies (' + results['num_companies'] + ')');
+        $('#people-header').text('People (' + results.profiles.length + ')');
+        $('#companies-header').text('Companies (' + results.companies.length + ')');
         $('#people-companies-header').show();
       }
       $('#filter-by').find('button').prop('disabled', false);
@@ -463,7 +463,7 @@
       var companyData = [];
       for (var i=0; i<results.companies.length; i++) {
         var company = results.companies[i]
-        var companyRow = [company.name, company.domain, 'connections', 'signal', 'fuck yeah'];
+        var companyRow = [company.name, company.domain, company.connections.length, company.connection_strength, null];
         companyData.push(companyRow)
       }
       console.log('Initializing #companies_table');
@@ -488,11 +488,12 @@
             }
           },
           {
-            'name': 'connections',
+            'name': 'connections'
           },
           {
             'name': 'connection_strength', 
             'render': function(data, type, full, meta) {
+              console.log(data)
               if (data == 1) {
                 var icon_url = '{{ static_url("img/signal_strength/signal_strength_1.png") }}';
               } else if (data == 2) {

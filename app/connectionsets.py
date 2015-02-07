@@ -190,7 +190,12 @@ class CompanyConnectionSet(BaseSet):
         '''
         Returns JSON dict of GroupConnectionSet instance
         '''
-        json = {'domain': self.domain, 'name': self.name, 'connections': []}
+        json = {
+            'domain': self.domain, 
+            'name': self.name, 
+            'connections': [],
+            'connection_strength': self.connection_strength
+        }
         for c in self.connections:
             json['connections'].append(c.to_json())
         if self.self_connected:
