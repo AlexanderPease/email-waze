@@ -7,7 +7,46 @@ from db.groupdb import Group
 from db.connectiondb import Connection
 from db.companydb import Company
 
-class BaseProfileConnection:
+class BaseSet:
+    """
+    Base class to share methods between different types of sets
+    """
+    def total_emails(self):
+        return self.total_emails_out + self.total_emails_in
+
+    def latest_email_out_date_string(self):
+        if self.latest_email_out_date:
+            return self.latest_email_out_date.strftime('%Y/%m/%d')
+        elif self.total_emails_out:
+            return 'Not found'
+        else:
+            return 'N/A'
+
+    def latest_email_in_date_string(self):
+        if self.latest_email_in_date:
+            return self.latest_email_in_date.strftime('%Y/%m/%d')
+        elif self.total_emails_in:
+            return 'Not found'
+        else:
+            return 'N/A'
+
+    def latest_email_date(self):
+        """
+        Returns more recent of latest_email_out/in_date, or None if neither exists
+        """
+        if not self.latest_email_out_date and not self.latest_email_in_date:
+            return None
+        elif not self.latest_email_out_date:
+            return self.latest_email_in_date
+        elif not self.latest_email_in_date:
+            return self.latest_email_out_date
+        elif self.latest_email_out_date > self.latest_email_in_date:
+            return self.latest_email_out_date
+        else:
+            return self.latest_email_in_date
+
+
+class BaseProfileConnection(BaseSet):
     """
     Class for a Profile and relevant Connection info if it exists
 
@@ -88,9 +127,6 @@ class BaseProfileConnection:
         """
         return self.email.split('@')[1]
 
-    def total_emails(self):
-        return self.total_emails_out + self.total_emails_in
-
     def to_json(self):
         '''
         Returns JSON dict of GroupConnectionSet instance
@@ -126,40 +162,9 @@ class BaseProfileConnection:
             json['days_since_contact'] = None
         return json
 
-    def latest_email_out_date_string(self):
-        if self.latest_email_out_date:
-            return self.latest_email_out_date.strftime('%Y/%m/%d')
-        elif self.total_emails_out:
-            return 'Not found'
-        else:
-            return 'N/A'
-
-    def latest_email_in_date_string(self):
-        if self.latest_email_in_date:
-            return self.latest_email_in_date.strftime('%Y/%m/%d')
-        elif self.total_emails_in:
-            return 'Not found'
-        else:
-            return 'N/A'
-
-    def latest_email_date(self):
-        """
-        Returns more recent of latest_email_out/in_date, or None if neither exists
-        """
-        if not self.latest_email_out_date and not self.latest_email_in_date:
-            return None
-        elif not self.latest_email_out_date:
-            return self.latest_email_in_date
-        elif not self.latest_email_in_date:
-            return self.latest_email_out_date
-        elif self.latest_email_out_date > self.latest_email_in_date:
-            return self.latest_email_out_date
-        else:
-            return self.latest_email_in_date
-
-class CompanyConnectionSet:
+class CompanyConnectionSet(BaseSet):
     """
-    Class that groups Connections together by Company. 
+    Class that groups Connections together by Company
     """
     def __init__(self, company):
         self.domain = company.domain
