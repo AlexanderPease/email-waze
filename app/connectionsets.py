@@ -167,6 +167,7 @@ class CompanyConnectionSet(BaseSet):
     Class that groups Connections together by Company
     """
     def __init__(self, company):
+        self.company_id = str(company.id)
         self.domain = company.domain
         self.name = company.name
         # Set after __init__
@@ -191,6 +192,7 @@ class CompanyConnectionSet(BaseSet):
         Returns JSON dict of GroupConnectionSet instance
         '''
         json = {
+            'company_id': self.company_id,
             'domain': self.domain, 
             'name': self.name, 
             'connections': [],

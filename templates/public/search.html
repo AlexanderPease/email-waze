@@ -365,11 +365,20 @@
         } 
       });// #search-table init
 
-      // Display detail modal when row is clicked on
+      // Display detail modal when profile row is clicked on
       $('#search_table tbody').on('click', 'tr', function() {
         //var data = dataTable.fnGetData('tr'); // fnGetData undefined. Hack around
         p_id = $('td', this).parent().attr('id');
         $('#modal-' + p_id).modal();
+      });
+
+      // Search for a specific company when company row is clicked on
+      $('#companies_table tbody').on('click', 'tr', function() {
+        company_id = $('td', this).parent().attr('id');
+        var new_url = 'api/searchbaseprofileconnection?company_id=' + company_id;
+        console.log(new_url)
+        $("#search_table").DataTable().ajax.url(new_url).load();
+        displayLoading();
       });
 
       // Filter options
@@ -415,10 +424,7 @@
 
       // Switch between profiles and companies tables
       $('#people-header').click(function(){
-        $('#search_table_div').show();
-        $('#companies_table_div').hide();
-        $('#people-header').removeClass('unselected');
-        $('#companies-header').addClass('unselected');
+        showSearchTable();
       });
       $('#companies-header').click(function(){
         $('#search_table_div').hide();
@@ -452,10 +458,18 @@
       $('#filter-by').find('button').prop('disabled', true);
       $('#group-select').find('button').prop('disabled', true);
       $('#people-companies-header').hide();
+      showSearchTable();
       //setFormQPlaceholder();
       //$('#form-q').prop('disabled', true);
       //$('#form-button').prop('disabled', true);
       //$('#form-button').text('Loading...');
+    }
+
+    function showSearchTable() {
+      $('#search_table_div').show();
+      $('#companies_table_div').hide();
+      $('#people-header').removeClass('unselected');
+      $('#companies-header').addClass('unselected');
     }
 
     function initCompaniesTable(results) {
@@ -463,7 +477,14 @@
       var companyData = [];
       for (var i=0; i<results.companies.length; i++) {
         var company = results.companies[i]
-        var companyRow = [company.name, company.domain, company.connections.length, company.connection_strength, null];
+        var companyRow = {
+          'DT_RowId': company.company_id,
+          'name': company.name, 
+          'domain': company.domain, 
+          'connections': company.connections.length, 
+          'connection_strength': company.connection_strength, 
+          'reminder': null
+        };
         companyData.push(companyRow)
       }
       console.log('Initializing #companies_table');
@@ -477,23 +498,26 @@
         columns: [
           {
             'name': 'name',
+            'data': 'name',
             'render': function(data, type, full, meta) {
                 return '<span class="name">' + data;
             }
           },
           { 
-            'domain': 'domain',
+            'name': 'domain',
+            'data': 'domain',
             'render': function(data, type, full, meta) { 
               return '<span class="email">' + data;
             }
           },
           {
-            'name': 'connections'
+            'name': 'connections',
+            'data': 'connections'
           },
           {
-            'name': 'connection_strength', 
+            'name': 'connection_strength',
+            'data': 'connection_strength',
             'render': function(data, type, full, meta) {
-              console.log(data)
               if (data == 1) {
                 var icon_url = '{{ static_url("img/signal_strength/signal_strength_1.png") }}';
               } else if (data == 2) {
@@ -511,7 +535,8 @@
             }
           },
           {
-            'name': 'reminder', 
+            'name': 'reminder',
+            'data': 'remidner', 
             'render': function(data, type, full, meta) {
               if (data == null || data == "") {
                 return '<img class="alert-icon" src="' + '{{ static_url("img/alert.png") }}' + '">';
