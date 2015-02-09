@@ -163,6 +163,10 @@
             window.location.href = "/search?q=" + $(this).val();
           }
         });
+
+        $('.search-tt').blur(function(){ 
+          $(this).val('');
+        });
       }
 
       // Initialize all selectpickers
