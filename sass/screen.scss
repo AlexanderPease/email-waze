@@ -365,38 +365,21 @@ Buttons
 ******************************************************************************/
 
 .btn, .btn-primary {
-    @include border-radius(5px);
-    background: none repeat scroll 0% 0% #5677E8;
-    color: #FFF;
-    text-decoration: none;
-    display: inline-block;
-    line-height: 1;
-    padding: 15px 25px;
-    text-transform: capitalize;
-    font-weight: 400;
-    outline: medium none;
-    border: medium none;
-}
-
-.btn-primary {
-    background: none repeat scroll 0% 0% #F30D33;
-    border: 1px solid #F30D33;
-    @include text-shadow(0px 1px 2px rgba(0, 0, 0, 0.2));
-    @include box-shadow(0px 5px 0px #93071E, 0px 5px 20px rgba(0, 0, 0, 0.3));
+  background: $light-grey;
+  color: $white;
+  border-radius: 0px;
+  text-shadow: none;
+  box-shadow: none;
 }
 
 .btn-primary:hover,
-.btn-primary:focus {
-    background: none repeat scroll 0% 0% #E50B2F;
-    border-color: #E50B2F;
-    @include box-shadow(0px 5px 0px #93071E, 0px 5px 20px rgba(0, 0, 0, 0.5));
-    text-decoration: none;
+.btn-primary:focus,
+.open>.dropdown-toggle.btn-primary {
+  background: $lightning-yellow;
+  color: $white;
 }
-
-$disabled-color: #428bca;
 .btn-primary:disabled {
-  @include box-shadow(0px 5px 0px darken($disabled-color, 40%), 0px 5px 20px rgba(0, 0, 0, 0.5));
-    text-decoration: none;
+  background: $light-grey;
 }
 
 $btn-inline-font-size: 14px;
@@ -416,14 +399,8 @@ $btn-inline-font-size: 14px;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  //background-image: none;
-  border: 1px solid transparent;
-  border-radius: 4px;
-
-  // my single addition to move button up a bit b/c of shadow
-  margin-bottom: 2px;
+  border: none;
 }
-
 
 .btn-cta {
   font-size: 24px;
@@ -435,6 +412,10 @@ $btn-inline-font-size: 14px;
   border-radius: 0px;
   background: $lightning-yellow url('../img/pagination_next_hover.png') no-repeat center left;
 }
+
+/******************************************************************************
+Feature
+******************************************************************************/
 
 .feature {
   padding: 20px 0;
@@ -621,7 +602,7 @@ table.dataTable tbody tr {
 
 // Pagination buttons
 .dataTables_wrapper .dataTables_paginate .paginate_button {
-  color: $lightning-yellow !important;
+  color: $light-grey !important;
   border: none;
   &:hover {
     color: $white !important;
@@ -643,9 +624,23 @@ table.dataTable tbody tr {
   background: url('../img/pagination_next.png');
   color: transparent !important;
   border: none;
+  height: 38px;
+  width: 65px;
   &:hover {
     color: transparent !important;
     background: url('../img/pagination_next_hover.png');
+    border: none;
+  }
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.previous {
+  background: url('../img/pagination_previous.png');
+  color: transparent !important;
+  border: none;
+  height: 38px;
+  width: 65px;
+  &:hover {
+    color: transparent !important;
+    background: url('../img/pagination_previous_hover.png');
     border: none;
   }
 }
