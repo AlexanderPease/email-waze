@@ -5,32 +5,28 @@
     <desc>Created with Sketch.</desc>
     <defs></defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
-        <g id="Search" sketch:type="MSArtboardGroup" transform="translate(-1036.000000, -403.000000)" stroke="#FCD228" stroke-width="0.833333333" fill="#FCD228">
-            <g id="btn-/-signal_strength_6" sketch:type="MSLayerGroup" transform="translate(1036.000000, 403.000000)">
-                <g id="Group" transform="translate(11.500000, 11.500000) scale(-1, -1) translate(-11.500000, -11.500000) " sketch:type="MSShapeGroup">
-                    <ellipse id="Oval-939" cx="5.41666667" cy="9.55555556" rx="0.833333333" ry="0.844444444"></ellipse>
-                    <ellipse id="Oval-951" cx="1.41666667" cy="9.55555556" rx="0.833333333" ry="0.844444444"></ellipse>
-                    <ellipse id="Oval-952" cx="1.41666667" cy="13.5555556" rx="0.833333333" ry="0.844444444"></ellipse>
-                    <ellipse id="Oval-953" cx="5.41666667" cy="13.5555556" rx="0.833333333" ry="0.844444444"></ellipse>
-                    <ellipse id="Oval-955" cx="5.41666667" cy="17.5555556" rx="0.833333333" ry="0.844444444"></ellipse>
-                    <ellipse id="Oval-956" cx="1.41666667" cy="17.5555556" rx="0.833333333" ry="0.844444444"></ellipse>
-                    <ellipse id="Oval-957" cx="1.41666667" cy="21.5555556" rx="0.833333333" ry="0.844444444"></ellipse>
-                    <ellipse id="Oval-937" cx="13.4166667" cy="9.55555556" rx="0.833333333" ry="0.844444444"></ellipse>
-                    <ellipse id="Oval-958" cx="1.41666667" cy="5.55555556" rx="0.833333333" ry="0.844444444"></ellipse>
-                    <ellipse id="Oval-954" cx="17.4166667" cy="5.55555556" rx="0.833333333" ry="0.844444444"></ellipse>
-                    <ellipse id="Oval-959" cx="21.4166667" cy="1.55555556" rx="0.833333333" ry="0.844444444"></ellipse>
-                    <ellipse id="Oval-968" cx="9.41666667" cy="13.5555556" rx="0.833333333" ry="0.844444444"></ellipse>
-                    <ellipse id="Oval-969" cx="9.41666667" cy="9.55555556" rx="0.833333333" ry="0.844444444"></ellipse>
-                    <ellipse id="Oval-970" cx="9.41666667" cy="5.55555556" rx="0.833333333" ry="0.844444444"></ellipse>
-                    <ellipse id="Oval-971" cx="5.41666667" cy="5.55555556" rx="0.833333333" ry="0.844444444"></ellipse>
-                    <ellipse id="Oval-972" cx="13.4166667" cy="5.55555556" rx="0.833333333" ry="0.844444444"></ellipse>
-                    <ellipse id="Oval-973" cx="13.4166667" cy="1.55555556" rx="0.833333333" ry="0.844444444"></ellipse>
-                    <ellipse id="Oval-974" cx="17.4166667" cy="1.55555556" rx="0.833333333" ry="0.844444444"></ellipse>
-                    <ellipse id="Oval-975" cx="9.41666667" cy="1.55555556" rx="0.833333333" ry="0.844444444"></ellipse>
-                    <ellipse id="Oval-976" cx="5.41666667" cy="1.55555556" rx="0.833333333" ry="0.844444444"></ellipse>
-                    <ellipse id="Oval-977" cx="1.41666667" cy="1.55555556" rx="0.833333333" ry="0.844444444"></ellipse>
-                </g>
-            </g>
+        <g id="btn-/-signal_strength_6" sketch:type="MSLayerGroup" stroke="#FCD228" stroke-width="0.833333333" fill="#FCD228">
+            <ellipse id="Oval-939" sketch:type="MSShapeGroup" transform="translate(17.583333, 13.444444) scale(-1, -1) translate(-17.583333, -13.444444) " cx="17.5833333" cy="13.4444444" rx="0.833333333" ry="0.844444444"></ellipse>
+            <ellipse id="Oval-953" sketch:type="MSShapeGroup" transform="translate(17.583333, 9.444444) scale(-1, -1) translate(-17.583333, -9.444444) " cx="17.5833333" cy="9.44444444" rx="0.833333333" ry="0.844444444"></ellipse>
+            <ellipse id="Oval-955" sketch:type="MSShapeGroup" transform="translate(17.583333, 5.444444) scale(-1, -1) translate(-17.583333, -5.444444) " cx="17.5833333" cy="5.44444444" rx="0.833333333" ry="0.844444444"></ellipse>
+            <ellipse id="Oval-937" sketch:type="MSShapeGroup" transform="translate(9.583333, 13.444444) scale(-1, -1) translate(-9.583333, -13.444444) " cx="9.58333333" cy="13.4444444" rx="0.833333333" ry="0.844444444"></ellipse>
+            <ellipse id="Oval-954" sketch:type="MSShapeGroup" transform="translate(5.583333, 17.444444) scale(-1, -1) translate(-5.583333, -17.444444) " cx="5.58333333" cy="17.4444444" rx="0.833333333" ry="0.844444444"></ellipse>
+            <ellipse id="Oval-959" sketch:type="MSShapeGroup" transform="translate(1.583333, 21.444444) scale(-1, -1) translate(-1.583333, -21.444444) " cx="1.58333333" cy="21.4444444" rx="0.833333333" ry="0.844444444"></ellipse>
+            <ellipse id="Oval-968" sketch:type="MSShapeGroup" transform="translate(13.583333, 9.444444) scale(-1, -1) translate(-13.583333, -9.444444) " cx="13.5833333" cy="9.44444444" rx="0.833333333" ry="0.844444444"></ellipse>
+            <ellipse id="Oval-969" sketch:type="MSShapeGroup" transform="translate(13.583333, 13.444444) scale(-1, -1) translate(-13.583333, -13.444444) " cx="13.5833333" cy="13.4444444" rx="0.833333333" ry="0.844444444"></ellipse>
+            <ellipse id="Oval-970" sketch:type="MSShapeGroup" transform="translate(13.583333, 17.444444) scale(-1, -1) translate(-13.583333, -17.444444) " cx="13.5833333" cy="17.4444444" rx="0.833333333" ry="0.844444444"></ellipse>
+            <ellipse id="Oval-971" sketch:type="MSShapeGroup" transform="translate(17.583333, 17.444444) scale(-1, -1) translate(-17.583333, -17.444444) " cx="17.5833333" cy="17.4444444" rx="0.833333333" ry="0.844444444"></ellipse>
+            <ellipse id="Oval-972" sketch:type="MSShapeGroup" transform="translate(9.583333, 17.444444) scale(-1, -1) translate(-9.583333, -17.444444) " cx="9.58333333" cy="17.4444444" rx="0.833333333" ry="0.844444444"></ellipse>
+            <ellipse id="Oval-973" sketch:type="MSShapeGroup" transform="translate(9.583333, 21.444444) scale(-1, -1) translate(-9.583333, -21.444444) " cx="9.58333333" cy="21.4444444" rx="0.833333333" ry="0.844444444"></ellipse>
+            <ellipse id="Oval-974" sketch:type="MSShapeGroup" transform="translate(5.583333, 21.444444) scale(-1, -1) translate(-5.583333, -21.444444) " cx="5.58333333" cy="21.4444444" rx="0.833333333" ry="0.844444444"></ellipse>
+            <ellipse id="Oval-975" sketch:type="MSShapeGroup" transform="translate(13.583333, 21.444444) scale(-1, -1) translate(-13.583333, -21.444444) " cx="13.5833333" cy="21.4444444" rx="0.833333333" ry="0.844444444"></ellipse>
+            <ellipse id="Oval-976" sketch:type="MSShapeGroup" transform="translate(17.583333, 21.444444) scale(-1, -1) translate(-17.583333, -21.444444) " cx="17.5833333" cy="21.4444444" rx="0.833333333" ry="0.844444444"></ellipse>
+            <ellipse id="Oval-981" sketch:type="MSShapeGroup" transform="translate(21.583333, 13.444444) scale(-1, -1) translate(-21.583333, -13.444444) " cx="21.5833333" cy="13.4444444" rx="0.833333333" ry="0.844444444"></ellipse>
+            <ellipse id="Oval-964" sketch:type="MSShapeGroup" transform="translate(21.583333, 9.444444) scale(-1, -1) translate(-21.583333, -9.444444) " cx="21.5833333" cy="9.44444444" rx="0.833333333" ry="0.844444444"></ellipse>
+            <ellipse id="Oval-987" sketch:type="MSShapeGroup" transform="translate(21.583333, 1.444444) scale(-1, -1) translate(-21.583333, -1.444444) " cx="21.5833333" cy="1.44444444" rx="0.833333333" ry="0.844444444"></ellipse>
+            <ellipse id="Oval-963" sketch:type="MSShapeGroup" transform="translate(21.583333, 5.444444) scale(-1, -1) translate(-21.583333, -5.444444) " cx="21.5833333" cy="5.44444444" rx="0.833333333" ry="0.844444444"></ellipse>
+            <ellipse id="Oval-980" sketch:type="MSShapeGroup" transform="translate(21.583333, 17.444444) scale(-1, -1) translate(-21.583333, -17.444444) " cx="21.5833333" cy="17.4444444" rx="0.833333333" ry="0.844444444"></ellipse>
+            <ellipse id="Oval-979" sketch:type="MSShapeGroup" transform="translate(21.583333, 21.444444) scale(-1, -1) translate(-21.583333, -21.444444) " cx="21.5833333" cy="21.4444444" rx="0.833333333" ry="0.844444444"></ellipse>
         </g>
     </g>
 </svg>

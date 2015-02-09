@@ -33,6 +33,7 @@ class Index(app.basic.BaseHandler):
         return self.render('public/dashboard.html', 
             msg=msg, 
             err=err,
+            nav_select='dashboard',
             groups=gs,
             today_reminders=today_reminders,
             later_reminders=later_reminders)
@@ -49,7 +50,7 @@ class Search(app.basic.BaseHandler):
   def get(self):
     # Groups for advanced search
     gs = User.objects.get(email=self.current_user).get_groups()
-    return self.render('public/search.html', groups=gs, nav_select="search")
+    return self.render('public/search.html', groups=gs, nav_select='search')
 
 ########################
 ### Reminders

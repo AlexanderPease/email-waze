@@ -28,7 +28,13 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a href="/"><img src="{{ static_url('img/Logo.png') }}"/></a>
+        <a href="/">
+          {% if nav_select == 'dashboard' %}
+            <img src="{{ static_url('img/logo/logo_selected.png') }}" class="logo"/>
+          {% else %}
+            <img src="{{ static_url('img/logo/logo.png') }}" class="logo"/>
+          {% end %}
+        </a>
       </div>
 
       <ul class="nav navbar-nav navbar-right">
