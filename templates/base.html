@@ -163,8 +163,8 @@
             window.location.href = "/search?q=" + $(this).val();
           }
         });
-
-        $('.search-tt').blur(function(){ 
+        // Show placeholder on blur from navbar-search-input
+        $('#navbar-search-input').blur(function(){ 
           $(this).val('');
         });
       }
