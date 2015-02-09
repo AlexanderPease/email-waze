@@ -271,7 +271,17 @@
         //processing: true, // ugly
         drawCallback: function(settings) {
           // Gets called every time redrawn, including just to say "loading"
-          $('td').addClass('datatables-cell');
+          //$('td').addClass('datatables-cell');
+          // Use hover class (instead of pseudoclass) so that hovering can 
+          // be controled via jQuery for use with Zeroclipboard
+          $('#search_table tbody tr').hover(
+            function(){
+              $(this).addClass('hover');
+            }, 
+            function() {
+              $(this).removeClass('hover');
+            }
+          );
           // Copy to clipboard icons for email cells
           var moviePath = '{{ static_url("ZeroClipboard.swf") }}';
           ZeroClipboard.config({
@@ -279,9 +289,7 @@
           });
           var client = new ZeroClipboard( $(".copy-email") );
           client.on('ready', function(event) {
-            console.log('ready');
             client.on('aftercopy', function(event) {
-              console.log('aftercopy');
               // `this` === `client`
               // `event.target` === the element that was clicked. Won't work with jquery though. 
               $('.copy-email').text('Copy email');
@@ -293,7 +301,6 @@
           }); // client.on('ready')
           $('.copy-email').click(function(event) {
             // Stop tr click event firing when email link is clicked
-            console.log('clicked');
             event.stopPropagation();
           });
           // Reminders

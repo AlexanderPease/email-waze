@@ -589,12 +589,27 @@ table.dataTable thead th, table.dataTable thead td {
 table.dataTable.no-footer {
   border-bottom: 1px solid $light-grey;
 }
-table.dataTable.hover tbody tr:hover, table.dataTable.hover tbody tr.odd:hover, table.dataTable.hover tbody tr.even:hover, table.dataTable.display tbody tr:hover, table.dataTable.display tbody tr.odd:hover, table.dataTable.display tbody tr.even:hover {
+// Need hover class (in addition to pseudo-class) to use Zeroclipboard
+table.dataTable.hover tbody tr:hover, 
+table.dataTable.hover tbody tr.odd:hover, 
+table.dataTable.hover tbody tr.even:hover, 
+table.dataTable.display tbody tr:hover, 
+table.dataTable.display tbody tr.odd:hover, 
+table.dataTable.display tbody tr.even:hover,
+table.dataTable.hover tbody tr.hover, 
+table.dataTable.hover tbody tr.odd.hover, 
+table.dataTable.hover tbody tr.even.hover, 
+table.dataTable.display tbody tr.hover, 
+table.dataTable.display tbody tr.odd.hover, 
+table.dataTable.display tbody tr.even.hover {
   background: rgba($hover-yellow, 0.05);
   color: $dark-yellow;
   cursor: pointer;
   a, .email {
     color: $dark-yellow;
+  }
+  a.zeroclipboard-is-hover {
+    text-decoration: underline; // For when hovering over zeroclipboard overlay
   }
   .copy-email, .alert-icon {
     display: block;
