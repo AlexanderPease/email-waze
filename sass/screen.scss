@@ -16,6 +16,9 @@ $white: #FFFFFF;
 $lightning-yellow: #FDDF49;
 $hover-yellow: #FFE770;
 $dark-yellow: #ECBD00;
+//#829aca
+//3e5daa
+
 
 *, *:before, *:after {
   -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
@@ -536,9 +539,7 @@ $btn-inline-font-size: 14px;
 }
 
 .signal-icon {
-  width: 30px;
-  height: 30px;
-  margin-left: 20px;
+  //margin-left: 20px;
 }
 
 // Index Logged in
@@ -644,17 +645,17 @@ table.dataTable tbody tr {
 table.dataTable thead .sorting {
   color: $light-grey;
   text-transform: uppercase;
-  background: url('../img/sort/sort_inactive.png') no-repeat right center;
+  background: url('../img/sort/sort_inactive.png') no-repeat calc(100% - 10px) center;
 }
 table.dataTable thead .sorting_desc {
   color: $dark-grey;
   text-transform: uppercase;
-  background: url('../img/sort/sorter_down.png') no-repeat right center;
+  background: url('../img/sort/sorter_down.png') no-repeat calc(100% - 10px) center;
 }
 table.dataTable thead .sorting_asc {
   color: $dark-grey;
   text-transform: uppercase;
-  background: url('../img/sort/sorter_up.png') no-repeat right center;
+  background: url('../img/sort/sorter_up.png') no-repeat calc(100% - 10px) center;
 }
 .datatables-cell {
   //padding-left: 18px !important;
