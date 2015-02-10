@@ -6,9 +6,8 @@
   <section class="feature">
     <div class="container">
       <h1 id="results"></h1>
-      <span>
-        <a id="advanced-search-link">Advanced Search</a>
-      </span>
+      <a id="advanced-search-link">Or, Advanced Search</a>
+      
 
       <div id="people-companies-header" class="table-header" style="display:none">
         <a id="people-header"></a>
@@ -16,9 +15,8 @@
         <a id="companies-header" class="unselected"></a>
       </div>
 
-      <div class="row">
+      <!--<div class="row">
         <div class="col-sm-6 col-sm-offset-6 float-right">
-          <!-- Filter by -->
           <div id="filter-by" class="dropdown">
             <button class="btn btn-primary btn-inline dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
               Sort By
@@ -52,6 +50,7 @@
           {% end %}
         </div>
       </div>
+      -->
 
       <!-- Table for Profiles -->
       <div id="search_table_div">
@@ -215,7 +214,8 @@
           },
           {
             'name': 'connections',
-            'data': 'connections'
+            'data': 'connections',
+            'className': 'filter_column'
           },
           {
             'name': 'connection_strength', 

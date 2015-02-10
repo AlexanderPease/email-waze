@@ -465,6 +465,10 @@ Feature
     }
 }
 
+#results {
+  display: inline-block;
+}
+
 #people-companies-header {
   a {
     margin-right: 8px;
@@ -656,6 +660,7 @@ table.dataTable thead .sorting {
   color: $light-grey;
   text-transform: uppercase;
   background: url('../img/sort/sort_inactive.png') no-repeat calc(100% - 10px) center;
+  padding-bottom: 10px;
 }
 table.dataTable thead .sorting_desc {
   color: $dark-grey;
@@ -666,6 +671,14 @@ table.dataTable thead .sorting_asc {
   color: $dark-grey;
   text-transform: uppercase;
   background: url('../img/sort/sorter_up.png') no-repeat calc(100% - 10px) center;
+}
+table.dataTable thead .filter_column {
+  //box-sizing: content-box;
+  //border-bottom: 2px double $light-grey;
+  //padding-bottom: 2px; 
+  //padding-top: 0px;
+  //margin-bottom: 50px;
+  //text-decoration: underline;
 }
 .datatables-cell {
   //padding-left: 18px !important;
@@ -745,6 +758,13 @@ a.advanced-search-link {
 .advanced-search {
   .form-horizontal .control-label {
     padding-top: 3px;
+  }
+}
+
+#advanced-search-link {
+  color: $light-grey;
+  &:hover {
+    color: $lightning-yellow;
   }
 }
 
