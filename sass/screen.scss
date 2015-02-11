@@ -430,6 +430,10 @@ Feature
   background-color: $white;
 }
 
+
+/******************************************************************************
+Feature
+******************************************************************************/
 /* Applies nice image to search backgrounds */
 .search-background {
   @include background-image(linear-gradient(135deg, #182848 0%, #4B6CB7 100%));
@@ -482,6 +486,12 @@ Feature
     color: $light-grey;
   }
 }
+
+.modal-backdrop {
+  background: $white $pixel-background repeat;
+}
+
+
 
 /* CSS for the thin search bar */
 .thin-search {
