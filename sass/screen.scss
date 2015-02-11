@@ -45,7 +45,7 @@ body {
 .page-content {
   width: 100%;
   @media screen and (min-width: 768px) {
-    padding-top: 52px;
+    //padding-top: 52px; // was necessary for navbar
   }
   background: #F8F8FA;
 }
@@ -105,6 +105,9 @@ Navbar & Footer
 ******************************************************************************/
 
 // Navbar
+.navbar-container {
+  padding-bottom: 40px;
+}
 .navbar {
   background: #fff;
   @include border-radius(0);
@@ -117,7 +120,7 @@ Navbar & Footer
   background-image: $pixel-background;
   background-repeat: repeat;
   @media screen and (min-width: 768px) {
-    position: fixed;
+    //position: fixed;
     width: 100%;
     display: block;
   }
@@ -432,9 +435,10 @@ Feature
 
 
 /******************************************************************************
-Feature
+Search
 ******************************************************************************/
 /* Applies nice image to search backgrounds */
+// Still used in About page
 .search-background {
   @include background-image(linear-gradient(135deg, #182848 0%, #4B6CB7 100%));
   padding: 80px 0px;

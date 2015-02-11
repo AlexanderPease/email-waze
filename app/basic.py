@@ -37,6 +37,8 @@ class BaseHandler(tornado.web.RequestHandler):
             kwargs['err'] = ""
         if 'nav_select' not in kwargs.keys():
             kwargs['nav_select'] = ""
+        if 'nav_title' not in kwargs.keys():
+            kwargs['nav_title'] = ""
 
         if self.request.path == "/":
             kwargs['body_location_class'] = "home"
