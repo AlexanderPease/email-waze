@@ -79,6 +79,54 @@ a {
   } 
 }
 
+input, input.form-control {
+  background: $white;
+  border: 1px solid $light-grey;
+  color: $dark-grey;
+  border-radius: 0px;
+  box-shadow: none;
+  &:focus {
+    box-shadow: none; //inset 0 1px 1px rgba(0,0,0,.075),0 0 8px #FDDF49;
+    outline: none;
+    border: 1px solid $lightning-yellow;
+  }
+}
+
+// Selectpickers
+button.selectpicker, .bootstrap-select .btn {
+  color: $dark-grey !important;
+  line-height: 1.42857143;
+  font-size: 14px;
+  padding: 6px 12px;
+  background: $white;
+  border: 1px solid $light-grey;
+  border-radius: 0px;
+  &:focus {
+    outline: none !important;
+  }
+  &:hover {
+    background: $lightning-yellow;
+    outline: none;
+  }
+}
+.dropdown-menu {
+  border-radius: 0px;
+  padding: 0px;
+  margin: 0px;
+}
+.dropup .dropdown-menu{
+  margin-bottom: 0px;
+}
+.dropdown-menu>li>a {
+  &:focus {
+    outline: none;
+    background: lighten($lightning-yellow, 25%);
+  }
+  &:hover {
+    background: $lightning-yellow;
+  }
+}
+
 .page-content {
   width: 100%;
   @media screen and (min-width: 768px) {
@@ -796,12 +844,6 @@ $tt-suggestion-padding: 3px;
 
 a.advanced-search-link {
   color: white;
-}
-
-.advanced-search {
-  .form-horizontal .control-label {
-    padding-top: 3px;
-  }
 }
 
 #advanced-search-link {
