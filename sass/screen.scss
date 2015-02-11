@@ -258,6 +258,9 @@ $navbar-grey-box-width: 160px;
     &.nav-selected {
       background-color: $lightning-yellow !important;
     }
+    &:hover {
+      background-color: $lightning-yellow !important;
+    }
   }
   &::-webkit-input-placeholder {
      color: $white;
