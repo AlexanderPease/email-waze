@@ -79,7 +79,8 @@ a {
   } 
 }
 
-input, input.form-control {
+// Inputs
+input, input.form-control, textarea, textarea.form-control {
   background: $white;
   border: 1px solid $light-grey;
   color: $dark-grey;
@@ -127,6 +128,7 @@ button.selectpicker, .bootstrap-select .btn {
   }
 }
 
+// Global page styles
 .page-content {
   width: 100%;
   @media screen and (min-width: 768px) {
