@@ -686,11 +686,16 @@
     Profile.prototype.addModal = function() {
       var source   = $("#search-result-modal").html();
       var template = Handlebars.compile(source);
+      var header = this.cleanName();
+      if (this.company_name) {
+        header += " - " + this.company_name;
+      }
       var context = {
         profile_id: this.profile_id,
+        header: header,
         name: this.cleanName(),
         email: this.email,
-        connections: this.connections 
+        connections: this.connections
       }
       $('#modalsDiv').append(template(context));
       // Each profile modal has a datatable in it
@@ -700,7 +705,8 @@
       }
       $('#table-' + this.profile_id).DataTable({
         searching: false,
-        paging: false
+        paging: false,
+        dom:'<<t>>'
       });
     }
 

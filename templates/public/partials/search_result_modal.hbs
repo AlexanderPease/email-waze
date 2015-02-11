@@ -3,18 +3,20 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal"
-          aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="detailModalTitle">
-            {{! name }} ({{! email }})
-          </h4>
+          <h2 class="modal-title" id="detailModalTitle">
+            {{! header }}
+          </h2>
+          {{! email }} - Copy Email
         </div>
         <div class="modal-body">
-          <table id="table-{{! profile_id }}" class="row-border hover">
+          <span class="modal-body-header">{{! name }} in your NTWRKs</span>
+
+          <table id="table-{{! profile_id }}" class="row-border">
             <thead>
               <tr>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Signal</th>
                 <th>Latest Sent</th>
                 <th>Latest Received</th>
                 <th>Emails Sent</th>
@@ -26,6 +28,7 @@
                 <tr>
                   <td>{{! connected_user_name }}</td>
                   <td>{{! connected_user_email }}</td>
+                  <td>{{! connection_strength }}</td>
                   <td>{{! latest_email_out_date }}</td>
                   <td>{{! latest_email_in_date }}</td>
                   <td>{{! total_emails_out }}</td>

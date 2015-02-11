@@ -487,6 +487,29 @@ Feature
   }
 }
 
+.modal-lg {
+  width: 1000px;
+}
+.modal-content {
+  border: 1px solid $lightning-yellow;
+  border-radius: 0px;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  .modal-header {
+    background: $lightning-yellow;
+    border: none;
+    color: $dark-grey;
+  }
+  .modal-body {
+    .modal-body-header {
+    font-size: 16px;
+    color: $light-grey;
+    }
+    .dataTables_wrapper {
+      padding-bottom: 15px;
+    }
+  }
+}
 .modal-backdrop {
   background: $white $pixel-background repeat;
 }
