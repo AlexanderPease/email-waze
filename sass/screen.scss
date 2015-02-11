@@ -907,7 +907,7 @@ a.advanced-search-link {
 
 // Search bar
 $input-height: 48px;
-.input-ntwrk {
+.input-ntwrk, input.form-control.input-ntwrk {
   background: $white !important;
   border: 2px solid $lightning-yellow;
   color: $lightning-yellow;
