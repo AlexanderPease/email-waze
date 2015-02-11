@@ -204,6 +204,9 @@ $navbar-grey-box-width: 160px;
   &.tt-input {
     width: $navbar-grey-box-width !important;
     background-color: $light-grey !important;
+    &.nav-selected {
+      background-color: $lightning-yellow !important;
+    }
   }
   &::-webkit-input-placeholder {
      color: $white;
@@ -799,10 +802,14 @@ a.advanced-search-link {
 
 #advanced-search-link {
   color: $light-grey;
+  &.yellow {
+    color: $lightning-yellow;
+  }
   &:hover {
     color: $lightning-yellow;
   }
 }
+
 
 .selectpicker {
   color: $light-grey;
