@@ -19,8 +19,8 @@
   <link href="{{ static_url("css/screen.css") }}" rel="stylesheet" type="text/css" />
 </head>
 <body>
-  <nav class="navbar navbar-default navbar-static-top" role="navigation">
-    <div class="container">
+  <nav class="navbar navbar-default" role="navigation">
+    <div class="container navbar-container">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse">
           <span class="sr-only">Toggle navigation</span>
@@ -41,12 +41,7 @@
         <!--<li id="nav-chrome-extension" class="hidden"><a href="https://chrome.google.com/webstore/detail/ansatz/fhmfdjnooicibclghoophehldkeeloje">Install the Chrome Extension!</a></li>-->
         {% if current_user %}
           <li>
-            <!--<a id="navbar-search"
-              {% if nav_select == 'search' %} class="nav-selected" {% end %}
-            >
-              Search
-            </a>-->
-            <input id="navbar-search-input" class="search-tt nav-selected" placeholder="SEARCH"></input>
+            <input id="navbar-search-input" class="search-tt {% if nav_select == 'search' %}nav-selected{% end %}" placeholder="SEARCH"></input>
           </li>
           <li>
             <a href="/reminders" {% if nav_select == 'reminders' %} class="nav-selected" {% end %}>
@@ -76,6 +71,13 @@
         {% end %}
       </ul>
     </div><!-- /.container -->
+    {% if nav_title %}
+    <div class="container">
+      {% block nav_title_div %}
+        <h1>{{ nav_title }}</h1>
+      {% end %}
+    </div>
+    {% end %}
   </nav>
 
   <main class="page-content">

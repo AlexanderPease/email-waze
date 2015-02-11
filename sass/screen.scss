@@ -153,6 +153,9 @@ Navbar & Footer
 ******************************************************************************/
 
 // Navbar
+.navbar-container {
+  padding-bottom: 40px;
+}
 .navbar {
   background: #fff;
   @include border-radius(0);
@@ -165,7 +168,7 @@ Navbar & Footer
   background-image: $pixel-background;
   background-repeat: repeat;
   @media screen and (min-width: 768px) {
-    position: fixed;
+    //position: fixed;
     width: 100%;
     display: block;
   }
@@ -470,22 +473,23 @@ Feature
 
 .feature {
   padding: 20px 0;
+  background-color: $white;
   @media screen and (min-width: 768px) {
     padding: 40px 0;
   }
-  @media screen and (min-width: 1025px) and (min-height: 750px) {
+  /*@media screen and (min-width: 1025px) and (min-height: 750px) {
     padding: 90px 0px;
-  }
+  }*/
   //border-bottom: 1px solid #E8EAF1;
   //overflow: hidden;
-  background-color: $white;
 }
 
 
 /******************************************************************************
-Feature
+Search
 ******************************************************************************/
 /* Applies nice image to search backgrounds */
+// Still used in About page
 .search-background {
   @include background-image(linear-gradient(135deg, #182848 0%, #4B6CB7 100%));
   padding: 80px 0px;

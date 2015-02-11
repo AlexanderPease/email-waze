@@ -1,6 +1,29 @@
 {% extends "../base.html" %}
-{% block page-title %}Home{% end %}
+{% block page-title %}Dashboard{% end %}
 {% block page-description %}{% end %}
+
+{% block nav_title_div %}
+  <h1 id="index-h1">Find anyone in your NTWRK</h1>
+  {% if err %}
+    <div class="alert alert-danger" role="alert">
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+      <span class="sr-only">Error:</span>
+      {{ err }}
+    </div>
+  {% end %}
+
+  <form class="form-inline" method="GET" action="/search">
+    <div class="form-group">
+      <input name="q" type="text" class="form-control input-ntwrk search-tt" autocomplete="off">
+    </div>
+    <button type="submit" class="btn btn-ntwrk input-ntwrk-height"></button>
+  </form>
+  <span>
+    <a id="advanced-search-link" class="yellow">Advanced Search</a>
+  </span>
+  <!-- Advanced search modal -->
+  {% include 'partials/advanced_search_modal.html' %}
+{% end %}
 
 {% block body %}
   <section class="feature">
@@ -8,27 +31,6 @@
       {% if msg %}
         <h2>{{ msg }}</h2>
       {% end %}
-
-      <h1 id="index-h1">Find anyone in your NTWRK</h1>
-      {% if err %}
-        <div class="alert alert-danger" role="alert">
-          <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-          <span class="sr-only">Error:</span>
-          {{ err }}
-        </div>
-      {% end %}
-
-      <form class="form-inline" method="GET" action="/search">
-        <div class="form-group">
-          <input name="q" type="text" class="form-control input-ntwrk search-tt" autocomplete="off">
-        </div>
-        <button type="submit" class="btn btn-ntwrk input-ntwrk-height"></button>
-      </form>
-      <span>
-        <a id="advanced-search-link" class="yellow">Advanced Search</a>
-      </span>
-      <!-- Advanced search modal -->
-      {% include 'partials/advanced_search_modal.html' %}
 
       {% if user.get_groups() == [] %}
         <div class="alert alert-danger" role="alert">
@@ -42,7 +44,7 @@
       {% end %}
 
       <!-- Show reminders -->
-      <div style="margin-top: 50px;">
+      <div>
         {% include 'partials/reminders_active_later.html' %}
       </div>
 
@@ -91,19 +93,6 @@
         window.location.href = newUrl; // Load search results
       });
     });
-    $(window).resize(function () {
-      //fixFooter();
-      //fixSearchBg();
-    });
-
-    var fixSearchBg = function() {
-    //fixes gradient background div height for search results page
-      if ($('.search-background.js-stretch-height').length && $(window).innerWidth() > 767) {
-        var padTop = parseInt($('.search-background').css('padding-top').split('px')[0]);
-        var padBottom = parseInt($('.search-background').css('padding-bottom').split('px')[0]);
-        $('.search-background').height($(window).innerHeight() - $('.nav').height() - $('footer').height() - padTop - padBottom);
-      }
-    }
   </script>
   {% block user_welcome_js %}{% end %}
 {% end %}

@@ -49,7 +49,8 @@ class UserSettings(app.basic.BaseHandler):
             msg=msg, 
             err=err,
             list_to_comma_delimited_string=ui_methods.list_to_comma_delimited_string,
-            nav_select='settings')
+            nav_select='settings',
+            nav_title='Settings for %s' % user.casual_name())
 
 
 ########################
