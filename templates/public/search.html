@@ -593,14 +593,6 @@
       return queryParameters
     }
 
-    // Sets form-q input placeholder
-    /*function setFormQPlaceholder() {
-      $("#form-q").attr('placeholder', 'Search for a person, company, or website');
-    }
-    */
-    // JS to handle the company_panel div
-    //{% include 'company_panel.js' %}
-
     var Profile = function(dict) {
       this.profile_id = dict['profile_id'];
       this.name = dict['name'];
@@ -689,6 +681,29 @@
       var header = this.cleanName();
       if (this.company_name) {
         header += " - " + this.company_name;
+      }
+      for (var i=0; i<this.connections.length; i++) {
+        // THIS IS A HORRIBLE HACK. CONNECTION MONGODB DOC SHOULD ALREADY HAVE THIS
+        c = this.connections[i]; 
+        if (c.total_emails_out > 100 && c.days_since_contact < 90){
+          this.connections[i].connection_strength = 6;
+          this.connections[i].connection_strength_href = '{{ static_url("img/signal_strength/signal_strength_6.png") }}';
+        } else if (c.total_emails_out > 25 && c.days_since_contact < 90) {
+          this.connections[i].connection_strength = 5;
+          this.connections[i].connection_strength_href = '{{ static_url("img/signal_strength/signal_strength_5.png") }}';
+        } else if (c.total_emails_out > 25 && c.days_since_contact < 180) {
+          this.connections[i].connection_strength = 4;
+          this.connections[i].connection_strength_href = '{{ static_url("img/signal_strength/signal_strength_4.png") }}';
+        } else if (c.total_emails_out > 10 && c.days_since_contact < 365) {
+          this.connections[i].connection_strength = 3;
+          this.connections[i].connection_strength_href = '{{ static_url("img/signal_strength/signal_strength_3.png") }}';
+        } else if (c.total_emails_out > 0 || c.total_emails_in > 0) {
+          this.connections[i].connection_strength = 2;
+          this.connections[i].connection_strength_href = '{{ static_url("img/signal_strength/signal_strength_2.png") }}';
+        } else {
+          this.connections[i].connection_strength = 1;
+          this.connections[i].connection_strength_href = '{{ static_url("img/signal_strength/signal_strength_1.png") }}';
+        }
       }
       var context = {
         profile_id: this.profile_id,

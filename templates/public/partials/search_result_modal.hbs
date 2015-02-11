@@ -6,7 +6,7 @@
           <h2 class="modal-title" id="detailModalTitle">
             {{! header }}
           </h2>
-          {{! email }} - Copy Email
+          <span class="email">{{! email }}</span>
         </div>
         <div class="modal-body">
           <span class="modal-body-header">{{! name }} in your NTWRKs</span>
@@ -28,7 +28,7 @@
                 <tr>
                   <td>{{! connected_user_name }}</td>
                   <td>{{! connected_user_email }}</td>
-                  <td>{{! connection_strength }}</td>
+                  <td><img class="signal-icon" src="{{! connection_strength_href }}"><span hidden>{{! connection_strength }}</span></td>
                   <td>{{! latest_email_out_date }}</td>
                   <td>{{! latest_email_in_date }}</td>
                   <td>{{! total_emails_out }}</td>
