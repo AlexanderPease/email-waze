@@ -636,7 +636,7 @@ table.dataTable.display tbody tr.even.hover {
     text-decoration: underline; // For when hovering over zeroclipboard overlay
   }
   .copy-email, .alert-icon {
-    display: block;
+    display: inline-block;
   }
 }
 table.dataTable tbody tr {
