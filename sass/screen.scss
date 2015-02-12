@@ -710,6 +710,7 @@ table.dataTable tbody tr {
 .dataTables_wrapper .dataTables_paginate .paginate_button {
   color: $light-grey !important;
   border: none;
+  height: 38px; // height of arrow icons
   &:hover {
     color: $white !important;
     background: $lightning-yellow;
@@ -730,7 +731,7 @@ table.dataTable tbody tr {
   background: url('../img/pagination_next.png');
   color: transparent !important;
   border: none;
-  height: 38px;
+  height: 38px; // height of arrow icons
   width: 65px;
   &:hover {
     color: transparent !important;
