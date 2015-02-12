@@ -7,7 +7,7 @@
       {{ msg }}
       <form role="form" action="" method="POST">
         <div class="form-group">
-          <label for="name">Team Name*</label>
+          <label for="name">NTWRK Name*</label>
           {% if g %}
             <input type="text" class="form-control" id="name" name="name" value="{{ g.name }}">
           {% else %}
@@ -60,7 +60,7 @@
       {% if g %}
         <form action="/group/{{ g.id }}/delete" method="POST">
           <button type="submit" class="btn btn-danger">
-            Delete Team!!
+            Delete NTWRK!!
         </button>
         </form>
       {% end %}

@@ -76,7 +76,13 @@ a {
   color: $lightning-yellow;
   &:hover {
     cursor: pointer;
-  } 
+  }
+}
+
+a.box {
+  background: $lightning-yellow;
+  color: $white;
+  padding: 3px 3px;
 }
 
 // Inputs

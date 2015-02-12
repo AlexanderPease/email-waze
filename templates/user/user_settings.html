@@ -14,17 +14,17 @@
         {% end %}
 
         Name: {{ user.name }}</br>
-        Email: {{ user.email }} - <a href="/auth/logout/">Logout</a>
+        Email: {{ user.email }} - <a href="/auth/logout/" class="box" >Logout</a>
         </br></br>
 
-        <a class="group-create-link">Create A New Team</a></br>
+        <a id="group-create-link" class="box">Create A New NTWRK</a></br>
         <!-- Group edit Modal -->
         <div id="group-create-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Create A Team</h4>
+                <h4 class="modal-title" id="myModalLabel">Create A NTWRK</h4>
               </div>
               <div class="modal-body">
                 <div class="alert alert-danger err err-modal" role="alert" style="display:none">
@@ -43,9 +43,17 @@
           View & Edit Your Teams: 
           <ul>
             {% for g in groups %}
-              <li> 
+              <li>
+                {{ g }}: {{ len(g.users) }} 
+                {% if len(g.users) == 1 %}
+                  member 
+                {% else %}
+                  members 
+                {% end %}
+
                 {% if current_user == g.admin.email %}
-                  <a group-id="{{ g.id }}" class="group-edit-link">{{ g }}</a>
+                (You are the Team Admin) - 
+                  <a group-id="{{ g.id }}" class="group-edit-link box">Edit</a>
                   <!-- Group edit Modal -->
                   <div group-id="{{ g.id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
@@ -66,7 +74,7 @@
                     </div>
                   </div>
                 {% else %}
-                  <a group-id="{{ g.id }}" class="group-view-link">{{ g }}</a>
+                  <a group-id="{{ g.id }}" class="group-view-link box">View</a>
                   <!-- Group view Modal -->
                   <div group-id="{{ g.id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
@@ -81,18 +89,6 @@
                     </div>
                   </div>
                 {% end %}
-
-                : {{ len(g.users) }} 
-                {% if len(g.users) == 1 %}
-                  member
-                {% else %}
-                  members
-                {% end %}
-
-                {% if current_user == g.admin.email %}
-                  (You are the Team Admin)
-                {% end %}
-
               </li>
             {% end %}
           </ul>
@@ -116,7 +112,7 @@
         {% end %}
 
         <!-- For user to delete their account -->
-        <a id="delete-account-link">Delete My Account</a></br>
+        <a id="delete-account-link" class="box">Delete My Account</a></br>
         <div id="delete-account-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
@@ -177,7 +173,7 @@
   CURRENT_MODAL = ""; // Hold state for which modal/group is being modified
 
   $(document).ready(function(){
-    $(".group-create-link").click(function() {
+    $("#group-create-link").click(function() {
       CURRENT_MODAL = $("#group-create-modal");
       $("#group-create-modal").modal();
     });
