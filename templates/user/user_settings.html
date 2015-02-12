@@ -5,18 +5,20 @@
   <section class="feature">
     <div class="container">
 
-        {% if msg %}
-          {{ msg }}</br>
-        {% end %}
+      {% if msg %}
+        {{ msg }}</br>
+      {% end %}
 
-        {% if err %}
-          {{ msg }}</br>
-        {% end %}
+      {% if err %}
+        {{ msg }}</br>
+      {% end %}
 
-        Name: {{ user.name }}</br>
-        Email: {{ user.email }} - <a href="/auth/logout/" class="box" >Logout</a>
-        </br></br>
+      Name: {{ user.name }}</br>
+      Email: {{ user.email }} - <a href="/auth/logout/" class="box" >Logout</a>
+      </br></br>
 
+      <div>
+        <!--<h4 style="text-decoration: underline">NTWRK Settings</h4>-->
         <a id="group-create-link" class="box">Create A New NTWRK</a></br>
         <!-- Group edit Modal -->
         <div id="group-create-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -110,56 +112,57 @@
             {% end %}
           </ul>
         {% end %}
+      </div><!-- NTWRKs -->
 
-        <!-- For user to delete their account -->
-        <a id="delete-account-link" class="box">Delete My Account</a></br>
-        <div id="delete-account-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h3 class="modal-title" id="myModalLabel">Warning!</h3>
-              </div>
-              <div class="modal-body">
-                Are you sure you want to delete your account?</br>
-                All your email metadata will be deleted and you will removed from all teams.</br>
-                This action cannot be undone.</br></br>
-                
-
-                <div class="form-group">
-                  <label for="domain_setting">Enter your email address to delete your account:</label>
-                  <div class="alert alert-danger err err-domain-setting" role="alert" style="display:none">
-                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                    <span class="sr-only">Error:</span>
-                    Error! Please try refreshing & submitting again.
-                  </div>
-                  <input id="delete-account-email-input" type="email" class="form-control" placeholder="{{ user.email}}">
-                  <button id="delete-account-submit" class="btn btn-primary btn-inline" disabled>Delete Account</button>
-                </div>
-              </div><!--group-modal modal-body-->
+      <!-- For user to delete their account -->
+      <a id="delete-account-link" class="box">Delete My Account</a></br>
+      <div id="delete-account-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h3 class="modal-title" id="myModalLabel">Warning!</h3>
             </div>
+            <div class="modal-body">
+              Are you sure you want to delete your account?</br>
+              All your email metadata will be deleted and you will removed from all teams.</br>
+              This action cannot be undone.</br></br>
+              
+
+              <div class="form-group">
+                <label for="domain_setting">Enter your email address to delete your account:</label>
+                <div class="alert alert-danger err err-domain-setting" role="alert" style="display:none">
+                  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                  <span class="sr-only">Error:</span>
+                  Error! Please try refreshing & submitting again.
+                </div>
+                <input id="delete-account-email-input" type="email" class="form-control" placeholder="{{ user.email}}">
+                <button id="delete-account-submit" class="btn btn-primary btn-inline" disabled>Delete Account</button>
+              </div>
+            </div><!--group-modal modal-body-->
           </div>
         </div>
+      </div>
 
-        {% if 0 %}
-          Billing info:</br>
-          All teams up to 5 users are free! 
+      {% if 0 %}
+        Billing info:</br>
+        All teams up to 5 users are free! 
 
-          {% if paying_groups %}
-            You are the admin of {{ len(paying_groups) }} team ({{ list_to_comma_delimited_string(paying_groups) }}) that qualifies for our Basic tier of $5/month for each user.
-          {% else %}
-            None of your teams exceed the free tier, but you can update your billing info if you'd like. 
-          {% end %}
-
-          </br>
-          <button id="stripeButton" trype="button" class="btn-primary">
-            {% if user.stripe_id %}
-              Update Billing Info
-            {% else %}
-              Enter Billing Info
-            {% end %}
-          </button>
+        {% if paying_groups %}
+          You are the admin of {{ len(paying_groups) }} team ({{ list_to_comma_delimited_string(paying_groups) }}) that qualifies for our Basic tier of $5/month for each user.
+        {% else %}
+          None of your teams exceed the free tier, but you can update your billing info if you'd like. 
         {% end %}
+
+        </br>
+        <button id="stripeButton" trype="button" class="btn-primary">
+          {% if user.stripe_id %}
+            Update Billing Info
+          {% else %}
+            Enter Billing Info
+          {% end %}
+        </button>
+      {% end %}
 
 
     </div><!--container-->

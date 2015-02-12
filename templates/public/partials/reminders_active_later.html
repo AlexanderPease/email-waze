@@ -3,37 +3,9 @@
   <div class="table-header">
     Active Reminders
   </div>
-  <table id="today-reminders-table" class="row-border hover">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Last Emailed</th>
-        <th>Alert</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for r in today_reminders %}
-        <tr>
-          {% if r.company %}
-            <td>
-              <span class="name">{{ r.profile.name }}</span></br>
-              <span class="company-name">{{ r.company.name }}</span>
-            </td>
-          {% else %}
-            <td>{{ r.profile.name }}</td>
-          {% end %}
-          <td>{{ r.profile.email }}</td>
-          {% if r.connection %}
-            <td>{{ r.display_last_emailed() }}</td>
-          {% else %}
-            <td>N/A</td>
-          {% end %}
-          <td>{{ r.display_alert_type() }}</td>
-        </tr>
-      {% end %}
-    </tbody>
-  </table>
+  {% set reminders = today_reminders %}
+  {% set table_id = 'today-reminders-table' %}
+  {% include 'reminders_table.html' %}
 {% end %}<!--today-reminders-->
 
 {% if later_reminders %}
@@ -47,38 +19,7 @@
     </div>
   {% end %}
 
-  <table id="later-reminders-table" class="row-border hover">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Last Emailed</th>
-        <th>Alert</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for r in later_reminders %}
-        <tr>
-          {% if r.company %}
-            <td>
-              <span class="name">{{ r.profile.name }}</span></br>
-              <span class="company-name">{{ r.company.name }}</span>
-            </td>
-          {% else %}
-            <td>{{ r.profile.name }}</td>
-          {% end %}
-          <td>{{ r.profile.email }}</td>
-          {% if r.connection %}
-            <td>{{ r.display_last_emailed() }}</td>
-          {% else %}
-            <td>N/A</td>
-          {% end %}
-          <td>
-            {{ r.display_alert_type() }}
-            <span class="copy-email">Change</span>
-          </td>
-        </tr>
-      {% end %}
-    </tbody>
-  </table>
+  {% set reminders = later_reminders %}
+  {% set table_id = 'later-reminders-table' %}
+  {% include 'reminders_table.html' %}
 {% end %}<!--later-reminders-->

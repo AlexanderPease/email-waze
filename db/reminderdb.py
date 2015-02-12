@@ -5,6 +5,7 @@ from profiledb import Profile
 from connectiondb import Connection
 from companydb import Company
 import logging, datetime
+from math import fabs #absolute value
 
 class ProfileReminder(Document):
     user = ReferenceField(User, required=True)
@@ -53,22 +54,43 @@ class ProfileReminder(Document):
             else:
                 return 'Every %s days' % self.days
         else:
-            if self.days == 7:
-                return 'Weekly'
-            elif self.days == 30:
-                return 'Monthly'
-            elif self.days == 90:
-                return 'Quarterly'
+            return 'One time'
 
     def display_last_emailed(self):
         if not self.connection:
-            return 'N/A'
+            return 'N/A (Reminder set %s)' % self.date_set.strftime('%Y/%m/%d')
         else:
             days_since = self.connection.days_since_emailed_out()
             if days_since < 30:
                 return '%s days ago' % days_since
             else:
                 return self.connection.latest_email_out_date_string()
+
+    def display_due_date(self):
+        """
+        Calculates due date for display_due
+        Ex: "Wednesday", "Next Thursday"
+        """
+        if self.connection:
+            if self.connection.latest_email_out_date:
+                latest_date = self.connection.latest_email_out_date
+            else:
+                latest_date = self.date_set
+        else:
+            latest_date = self.date_set
+        days_left = (datetime.datetime.today() - latest_date) - datetime.timedelta(days=self.days)
+        days_left = int(days_left.days)
+        if days_left < -1:
+            return 'Past (%s days ago)' % int(fabs(days_left))
+        elif days_left == -1:
+            return 'Past (Yesterday)'
+        elif days_left == 0:
+            return 'Today'
+        elif days_left == 1:
+            return 'Tomorrow'
+        else:
+            return 'foo'
+
 
     @classmethod
     def today_later_reminders(cls, user):
@@ -83,7 +105,16 @@ class ProfileReminder(Document):
         today_reminders = []
         later_reminders = []
         for pr in prs:
-            if pr.date_set + datetime.timedelta(days=pr.days) <= datetime.datetime.today():
+            # Use connection.latest_email_out_date, default to date reminder was set 
+            if pr.connection:
+                if pr.connection.latest_email_out_date:
+                    latest_date = pr.connection.latest_email_out_date
+                else: 
+                    latest_date = pr.date_set
+            else:
+                latest_date = pr.date_set
+            # Group into reminders due today or later
+            if latest_date + datetime.timedelta(days=pr.days) <= datetime.datetime.today():
                 today_reminders.append(pr)
             else:
                 later_reminders.append(pr)
