@@ -89,8 +89,7 @@ class ProfileReminder(Document):
         elif days_left == 1:
             return 'Tomorrow'
         else:
-            return 'foo'
-
+            return 'In %s days' % days_left
 
     @classmethod
     def today_later_reminders(cls, user):
