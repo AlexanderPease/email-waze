@@ -100,8 +100,8 @@
       <!-- Advanced search modal -->
       {% include 'partials/advanced_search_modal.html' %}
 
-      <!-- Reminder dropdown
-      {% include 'reminder_dropdown.hbs' %}-->
+      <!-- Reminder dropdown -->
+      {% include 'partials/reminder_dropdown.hbs' %}
 
 
     </div> <!-- container -->
@@ -243,7 +243,38 @@
             'data': 'reminder',
             'render': function(data, type, full, meta) {
               if (data == null || data == "") {
-                return '<span class="alert-icon">Set alert</span>';
+              var source   = $("#reminder-dropdown").html();
+              var template = Handlebars.compile(source);
+              var context = {};
+              return template(context);
+              var type = full['type'];
+              if (type == 'profile') {
+                console.log('profile context')
+                console.log(data)
+                var context = { 
+                  profile_id: full['DT_RowId'], 
+                  setting: data
+                };
+              } else {
+                var context = {
+                  company_id: full['DT_RowId'], 
+                  setting: data
+                };
+              }
+
+
+
+
+
+
+
+
+
+
+
+
+
+                return '<a class="alert-icon reminder-dropdown">Set Reminder</a>';
                 //return '<img class="alert-icon" src="' + '{{ static_url("img/alert.png") }}' + '">';
               } else {
                 return 'foo';
@@ -293,7 +324,6 @@
               // `event.target` === the element that was clicked. Won't work with jquery though. 
               $('.copy-email').text('Copy email');
               var dataClipboardText = event.data['text/plain'];
-              console.log(dataClipboardText);
               var copyEmailMsg = $('.copy-email[data-clipboard-text="' + dataClipboardText + '"]');
               copyEmailMsg.text('Copied to clipboard!');
             });
@@ -303,10 +333,13 @@
             event.stopPropagation();
           });
           // Reminders
+          $('.reminder-icon').click(function(event) {
+            event.stopPropagation();
+          });
           $('.reminder-dropdown').click(function(event) {
             event.stopPropagation();
           });
-         $('.reminder-dropdown').change(function(event) {
+          $('.reminder-dropdown').change(function(event) {
             var days = $(this).find(':selected').attr('data-reminder-days');
             if (days == 'null') {
               return;
