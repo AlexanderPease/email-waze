@@ -1,0 +1,16 @@
+<script id="reminder-popover-content" type="text/x-handlebars-template">
+  <div class="reminder-popover-content"
+    data-profile-id="{{!profile_id}}"
+    data-company-id="{{!company_id}}">
+    <ul>
+      <li>
+        Recurring
+        <input class="recurring-checkbox" type="checkbox" checked>
+      </li>
+      <li data-reminder-days='7' data-reminder-recurring='false'>Weekly</li>
+      <li data-reminder-days='30' data-reminder-recurring='false'>Monthly</li>
+      <li data-reminder-days='90' data-reminder-recurring='false'>Quarterly</li>
+      <li>Custom Date</li>
+    </ul>
+  </div>
+</script>

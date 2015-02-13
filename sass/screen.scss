@@ -134,6 +134,31 @@ button.selectpicker, .bootstrap-select .btn {
   }
 }
 
+// Popover
+.popover {
+  border: 1px solid $lightning-yellow;
+  border-radius: 0px;
+  color: $dark-grey;
+  &.bottom .arrow {
+    border-bottom-color: $lightning-yellow;
+  }
+  .popover-content {
+    padding: 0px 0px;
+    ul {
+      list-style-type: none;
+      padding: 0px 0px;
+      margin-bottom: 0px;
+      li {
+        padding: 6px 6px;
+        &:hover {
+          background: $lightning-yellow;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
 // Global page styles
 .page-content {
   width: 100%;
@@ -668,7 +693,7 @@ table.dataTable {
   a:hover {
     color: $dark-yellow;
   }
-  .copy-email, .alert-icon {
+  .copy-email, .reminder-icon {
     display: none;
   }
   .name {
@@ -706,7 +731,7 @@ table.dataTable.display tbody tr.even.hover {
   a.zeroclipboard-is-hover {
     text-decoration: underline; // For when hovering over zeroclipboard overlay
   }
-  .copy-email, .alert-icon {
+  .copy-email, .reminder-icon {
     display: inline-block;
   }
 }
