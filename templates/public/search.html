@@ -9,6 +9,10 @@
 {% block body %}
   <section class="feature">
     <div class="container">
+    <a id="foo" tabindex="0" class="reminder-icon" role="button" data-toggle="popover">Set Reminder</a>
+
+
+
 
       <div id="people-companies-header" class="table-header" style="display:none">
         <a id="people-header"></a>
@@ -112,9 +116,27 @@
 {% block javascript %}
   <script>
     $(document).ready(function() {
+      // Inject popover
+      var context = { 
+        profile_id: 545, 
+      };
+      var source   = $("#reminder-popover-content").html();
+      var template = Handlebars.compile(source);
+      var options = {
+        'placement': 'bottom',
+        'html': true, 
+        'content': template(context)
+      }
+      $('#foo').popover(options);
+      $('.popover li').click(function(event) {
+        console.log('popover-li-event');
+        event.stopPropagation();
+      });
+
+
+
       // Page inits
       displayLoading();
-      //setFormQPlaceholder();
 
       // Init code for the searchbar's behavior, incl. typeahead
       {% include 'partials/init_typeahead.js' %}
@@ -329,9 +351,25 @@
           $('.reminder-icon').click(function(event) {
             event.stopPropagation();
           });
-          $('.popover').click(function(event) {
-            console.log('popover-content-event');
+          $('.popover li').click(function(event) {
             event.stopPropagation();
+            console.log('popover-li-event in drawCallback');
+            // Checkbox
+            if ($(this).attr('data-reminder-recurring-checkbox')) {
+              console.log('hit checkbox');
+              var checkbox = $(this).attr('data-reminder-recurring-checkbox');
+              console.log(checkbox);
+              if (checkbox == 'true') {
+                $(this).attr('data-reminder-recurring-checkbox', 'false');
+              } else {
+
+                $(this).attr('data-reminder-recurring-checkbox', 'true');
+              }
+            }
+            // Days
+            else {
+              console.log($(this).attr('data-reminder-days'));
+            }
           });
           /*$('.reminder-dropdown').change(function(event) {
             var days = $(this).find(':selected').attr('data-reminder-days');
