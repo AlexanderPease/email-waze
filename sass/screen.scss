@@ -47,6 +47,7 @@ h1, .h1,
 h2, .h2,
 h3, .h3 {
   font-family: "NTWRKMedium", "Titillium Web", Lato, "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  color: $dark-grey;
 }
 
 h1 {
@@ -65,7 +66,6 @@ h3 {
   font-size: 24px;
   margin: 0px 0px 5px;
   font-style: normal;
-  color: #F30D33;
   font-weight: 300;
 }
 
@@ -491,6 +491,17 @@ $dish-background: url('../img/index/homepage_dish_photo.png');
     margin: 0px 0px 20px;
   }
 }
+
+.sell {
+  .sell-box {
+    border-bottom: 1px solid $medium-grey;
+  }
+}
+
+#we-wont {
+  margin-top: 40px;
+}
+
 
 /******************************************************************************
 Feature

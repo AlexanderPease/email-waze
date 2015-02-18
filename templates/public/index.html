@@ -22,7 +22,7 @@
           </div>
 
           <ul class="nav navbar-nav navbar-right">
-              <li><a href="/about">About</a></li>
+              <li><a href="#about">About</a></li>
               <li><a href="/pricing">Pricing</a></li>
               <li><a href="/auth/google">Log In</a></li>
           </ul>
@@ -40,31 +40,80 @@
     </div>
   </section>
 
+  <a name="about"></a>
   <section class="feature">
     <div class="container">
-      <div class="row">
-        <div class="col-sm-4 text-center">
-          <p><span class="img-anti"></span></p>
-          <h3>The Anti-CRM</h3>
-          <p>Leverage your team’s network without tedious data entry or customer tracking.</p>
-        </div>
-        <div class="col-sm-4 text-center">
-          <p><span class="img-team"></span></p>
-          <h3>Integrated Team Features</h3>
-          <p>See who has a preexisting connection before reaching out. </p>
-        </div>
-        <div class="col-sm-4 text-center">
-          <p><span class="img-target"></span></p>
-          <h3>Powerful Search</h3>
-          <p>Reliably find anyone in the world. Even if your team doesn't have a previous connection.</p>
-        </div>
+      <div class="sell">
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="sell-box">
+              <h3>Individual.</h3>
+              <p>
+                Set reminders to stay in touch with </br>
+                your most important contacts.
+              </p>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="sell-box">
+              <h3>Team.</h3>
+              <p>
+                Share contacts with your teammates and </br>
+                leverage their networks to expand your own.
+              </p>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="sell-box">
+              <h3>Global.</h3>
+              <p>
+                Find anyone in the world. </br>
+                Even people outside your network.
+              </p>
+            </div>
+          </div>
+        </div><!--row-->
+      </div><!--sell-->
+
+      <div id="we-wont" class="text-center">
+        <h3>We won't.</h3>
+        <p>
+          Read or store the contents of your emails.</br>
+          Share any of your personal information.</br>
+          Cure minor indigestional episodes. 
+        </p>
       </div>
 
-    </br></br></br>
-      <h3 style="text-align:center">Web App &amp; Gmail Web Client Integration</h3>
+    </div>
+  </section>
+
+  <section class="feature pixel-grid">
+    <div class="container">
       <div align="center">
-        <img src="{{ static_url('img/index/combined-nov5.jpg') }}" alt="..." class="img-round" width="1000px">
+        <img src="{{ static_url('img/index/dashboard-feb18.png') }}" alt="..." class="img-thumbnail" width="1000px">
       </div>
+    </div>
+  </section>
+
+  <section class="feature">
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="customer-box">
+              <img src="{{ static_url('img/customer_logos/usv-logo-green-70x70.png') }}" alt="Union Square Ventures">
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="customer-box">
+              <img src="{{ static_url('img/customer_logos/heyzap.png') }}" alt="HeyZap">
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="customer-box">
+              <img src="{{ static_url('img/customer_logos/younow.png') }}" alt="Union Square Ventures">
+            </div>
+          </div>
+        </div><!--row-->
     </div>
   </section>
 {% end %}
