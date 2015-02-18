@@ -82,7 +82,7 @@ a {
 
 a.box {
   background: $lightning-yellow;
-  color: $white;
+  color: $dark-grey;
   padding: 3px 3px;
 }
 
@@ -492,6 +492,19 @@ $dish-background: url('../img/index/homepage_dish_photo.png');
   }
 }
 
+.cta {
+  margin-top: 20px;
+  a {
+    font-size: 21px;
+    text-align: left;
+    color: $dark-grey;
+    display: inline;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+
 .sell {
   .sell-box {
     border-bottom: 1px solid $medium-grey;
@@ -502,6 +515,32 @@ $dish-background: url('../img/index/homepage_dish_photo.png');
   margin-top: 40px;
 }
 
+.pricing-panel {
+  border: 1px solid $light-grey;
+  background-color:transparent;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  p {
+    font-size: 40px;
+  }
+  h2 {
+    margin-bottom:0px;
+  }
+  .panel-heading {
+    border-bottom: 1px solid $light-grey;
+  }
+  li {
+    background-color:transparent;
+  }
+  .list-group {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+  .list-group-item {
+    border: 1px solid $light-grey;
+  }
+
+}
 
 /******************************************************************************
 Feature
