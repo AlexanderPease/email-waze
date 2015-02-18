@@ -3,17 +3,39 @@
 {% block page-description %}{% end %}
 
 {% block body %}
+  
+
   <section class="hero">
     <div class="container">
-      <h1 style="margin-bottom:0px;">You've built your network</h1>
-      <h1>Why pay big to use it?</h1>
-      <div class="group">
-        <div class="span6">
-          <h4>NTWRK scans your team's email metadata for connections,</h4>
-          <h4>Enabling your team to track its most valued contacts.<h4>
-          <h4>Oh, and we never store your emails.</h4>
-          <p><a href="/auth/google" class="btn-primary btn-cta">Sign up with Google</a></p>
+      <nav class="navbar navbar-default" role="navigation">
+        <div class="navbar-container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a href="/">
+              <img src="{{ static_url('img/logo/logo.png') }}" class="logo"/>
+            </a>
+          </div>
+
+          <ul class="nav navbar-nav navbar-right">
+              <li><a href="/about">About</a></li>
+              <li><a href="/pricing">Pricing</a></li>
+              <li><a href="/auth/google">Log In</a></li>
+          </ul>
         </div>
+      </nav>
+
+      <div class="shadow-grey">
+        <h1 style="margin-bottom: 0px;">Get Better Signal</h1>
+        <h1>From Your Network</h1>
+        <a>
+          Connect With Google
+          <button type="submit" class="btn btn-ntwrk"></button>
+        </a>
       </div>
     </div>
   </section>

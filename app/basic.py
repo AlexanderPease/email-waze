@@ -35,6 +35,8 @@ class BaseHandler(tornado.web.RequestHandler):
             kwargs['msg'] = ""
         if 'err' not in kwargs.keys():
             kwargs['err'] = ""
+        if 'show_nav' not in kwargs.keys():
+            kwargs['nav_title'] = True
         if 'nav_select' not in kwargs.keys():
             kwargs['nav_select'] = ""
         if 'nav_title' not in kwargs.keys():

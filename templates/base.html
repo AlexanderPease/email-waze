@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Ansatz - {% block page-title %}{% end %}</title>
+  <title>NTWRK - {% block page-title %}{% end %}</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{% block page-description %}{% end %}">
@@ -19,66 +19,68 @@
   <link href="{{ static_url("css/screen.css") }}" rel="stylesheet" type="text/css" />
 </head>
 <body>
-  <nav class="navbar navbar-default" role="navigation">
-    <div class="container navbar-container">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a href="/">
-          {% if nav_select == 'dashboard' %}
-            <img src="{{ static_url('img/logo/logo_selected.png') }}" class="logo"/>
-          {% else %}
-            <img src="{{ static_url('img/logo/logo.png') }}" class="logo"/>
-          {% end %}
-        </a>
-      </div>
+  {% if show_nav %}
+    <nav class="navbar navbar-default" role="navigation">
+      <div class="container navbar-container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a href="/">
+            {% if nav_select == 'dashboard' %}
+              <img src="{{ static_url('img/logo/logo_selected.png') }}" class="logo"/>
+            {% else %}
+              <img src="{{ static_url('img/logo/logo.png') }}" class="logo"/>
+            {% end %}
+          </a>
+        </div>
 
-      <ul class="nav navbar-nav navbar-right">
-        <!--<li id="nav-chrome-extension" class="hidden"><a href="https://chrome.google.com/webstore/detail/ansatz/fhmfdjnooicibclghoophehldkeeloje">Install the Chrome Extension!</a></li>-->
-        {% if current_user %}
-          <li>
-            <input id="navbar-search-input" class="search-tt {% if nav_select == 'search' %}nav-selected{% end %}" placeholder="SEARCH"></input>
-          </li>
-          <li>
-            <a href="/reminders" {% if nav_select == 'reminders' %} class="nav-selected" {% end %}>
-              Reminders
-            </a>
-          </li>
-          <li>
-            <a href="/user/settings" {% if nav_select == 'settings' %} class="nav-selected" {% end %}>
-              Ntwrk Settings
-            </a>
-          </li>
-          <!--
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <span class="caret"></span></a>
-            <ul class="dropdown-menu" role="menu">
-              <li><a href="/user/settings">Settings</a></li>
-              <li class="divider"></li>
-              {% if current_user_staff() %}<li><a href="/admin">Admin</a></li>{% end %}
-              <li><a href="/auth/logout/">Logout</a></li>
-            </ul>
-          </li>
-          -->
-        {% else %}
-          <li><a href="/about">About</a></li>
-          <li><a href="/pricing">Pricing</a></li>
-          <li><a href="/auth/google">Log In</a></li>
+        <ul class="nav navbar-nav navbar-right">
+          <!--<li id="nav-chrome-extension" class="hidden"><a href="https://chrome.google.com/webstore/detail/ansatz/fhmfdjnooicibclghoophehldkeeloje">Install the Chrome Extension!</a></li>-->
+          {% if current_user %}
+            <li>
+              <input id="navbar-search-input" class="search-tt {% if nav_select == 'search' %}nav-selected{% end %}" placeholder="SEARCH"></input>
+            </li>
+            <li>
+              <a href="/reminders" {% if nav_select == 'reminders' %} class="nav-selected" {% end %}>
+                Reminders
+              </a>
+            </li>
+            <li>
+              <a href="/user/settings" {% if nav_select == 'settings' %} class="nav-selected" {% end %}>
+                Ntwrk Settings
+              </a>
+            </li>
+            <!--
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="/user/settings">Settings</a></li>
+                <li class="divider"></li>
+                {% if current_user_staff() %}<li><a href="/admin">Admin</a></li>{% end %}
+                <li><a href="/auth/logout/">Logout</a></li>
+              </ul>
+            </li>
+            -->
+          {% else %}
+            <li><a href="/about">About</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="/auth/google">Log In</a></li>
+          {% end %}
+        </ul>
+      </div><!-- /.container -->
+      {% if nav_title %}
+      <div class="container">
+        {% block nav_title_div %}
+          <h1>{{ nav_title }}</h1>
         {% end %}
-      </ul>
-    </div><!-- /.container -->
-    {% if nav_title %}
-    <div class="container">
-      {% block nav_title_div %}
-        <h1>{{ nav_title }}</h1>
+      </div>
       {% end %}
-    </div>
-    {% end %}
-  </nav>
+    </nav>
+  {% end %} {# if show_nav #}
 
   <main class="page-content">
     {% block body %}{% end %}
