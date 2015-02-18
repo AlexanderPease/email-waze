@@ -495,13 +495,19 @@ $dish-background: url('../img/index/homepage_dish_photo.png');
 .cta {
   margin-top: 20px;
   a {
-    font-size: 21px;
+    font-family: NTWRKMedium;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 300;
     text-align: left;
     color: $dark-grey;
     display: inline;
     &:hover {
       text-decoration: none;
     }
+  }
+  .btn-ntwrk {
+    margin-bottom: 3px;
   }
 }
 
@@ -513,6 +519,14 @@ $dish-background: url('../img/index/homepage_dish_photo.png');
 
 #we-wont {
   margin-top: 40px;
+}
+
+.customer-box {
+  display: inline;
+  margin: 10px 10px;
+  img {
+    height: 70px;
+  }
 }
 
 .pricing-panel {
