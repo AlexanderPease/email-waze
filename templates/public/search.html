@@ -10,9 +10,9 @@
   <section class="feature">
     <div class="container">
 
-      <div id="people-companies-header" class="table-header" style="display:none">
+      <div id="people-companies-header" class="table-header">
         <a id="people-header"></a>
-        <span id="people-company-header-break" class="unselected">/</span>
+        <span id="people-company-header-break" class="unselected"></span>
         <a id="companies-header" class="unselected"></a>
         <div style="float:right;">
           <a id="advanced-search-link">Advanced Search</a>
@@ -98,6 +98,12 @@
           dataTable = $('#search_table').DataTable();
           dataTable.column('.filter').visible(false);
           dataTable.column(filterName + ':name').order('desc').draw().visible(true);
+      });
+      $('#filter-link').on('show.bs.popover', function(e){
+        // Don't show popover if filter-link is 'unselected'
+        if ($(this).hasClass('unselected')) {
+          e.preventDefault();
+        }
       });
 
       // Init code for the searchbar's behavior, incl. typeahead
@@ -456,14 +462,22 @@
     function displayLoaded(results) {
       $('#results').text(results['results_msg']);
       $('#people-header').text('People (' + results.profiles.length + ')');
+      $('#people-company-header-break').text('/');
       $('#companies-header').text('Companies (' + results.companies.length + ')');
-      $('#people-companies-header').show();
+      $('#filter-link').removeClass('unselected');
+      $('#filter-link').unbind('click');
     }
     /* Displays loading messages */
     function displayLoading() {
       $('.search-tt').blur();
       $('#results').text('Loading...');
-      $('#people-companies-header').hide();
+      $('#people-header').text('');
+      $('#people-company-header-break').text('');
+      $('#companies-header').text('');
+      $('#filter-link').addClass('unselected');
+      $('#filter-link').bind('click', function(e){
+        e.preventDefault(); // stop popover
+      });
       showSearchTable();
     }
 

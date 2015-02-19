@@ -965,6 +965,10 @@ a.advanced-search-link {
 
 #filter-link {
   margin-right: 0px;
+  &.unselected {
+    text-decoration: none;
+    cursor: default;
+  }
 }
 
 
