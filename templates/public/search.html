@@ -17,46 +17,9 @@
         <div style="float:right;">
           <a id="advanced-search-link">Advanced Search</a>
           <span id="people-company-header-break" class="unselected">/</span>
-          <a id="filter-link">Filters</a>
+          <a id="filter-link" tabindex="0">Filters</a>
         </div>
       </div>
-
-      <!--<div class="row">
-        <div class="col-sm-6 col-sm-offset-6 float-right">
-          <div id="filter-by" class="dropdown">
-            <button class="btn btn-primary btn-inline dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
-              Sort By
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-              <li class="filter-option" data-filter="connections" role="presentation"><a role="menuitem" tabindex="-1">Number of Connections</a></li>
-              <li class="filter-option" data-filter="total_emails_out" role="presentation"><a role="menuitem" tabindex="-1">Number of Emails Sent</a></li>
-              <li class="filter-option" data-filter="total_emails_in" role="presentation"><a role="menuitem" tabindex="-1">Number of Emails Received</a></li>
-              <li class="filter-option" data-filter="latest_email_out_date" role="presentation"><a role="menuitem" tabindex="-1">Most Recent Email Sent</a></li>
-              <li class="filter-option" data-filter="latest_email_in_date" role="presentation"><a role="menuitem" tabindex="-1">Most Recent Email Received</a></li>
-              <li class="filter-option" data-filter="all_fields" role="presentation"><a role="menuitem" tabindex="-1">Show All Fields</a></li>
-            </ul>
-          </div>
-          {% if groups %}
-            <div id="group-select" class="dropdown">
-              <button class="btn btn-primary btn-inline dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
-                NTWRKs
-                <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                {% if len(groups) > 1 %}
-                  <li class="group-option" data-group-id="all" role="presentation"><a role="menuitem" tabindex="-1">All My NTWRKs</a></li>
-                {% end %}
-                {% for g in groups %}
-                  <li class="group-option" data-group-id="{{ g.id }}" role="presentation"><a role="menuitem" tabindex="-1">{{ g }}</a></li>
-                {% end %}
-                <li class="group-option" data-group-id="self" role="presentation"><a role="menuitem" tabindex="-1">Just Me</a></li>
-              </ul>
-            </div>
-          {% end %}
-        </div>
-      </div>
-      -->
 
       <!-- Table for Profiles -->
       <div id="search_table_div">
@@ -121,10 +84,11 @@
     $(document).ready(function() {
       // Page inits
       displayLoading();
-      // Filter init
-      var source   = $("#reminder-popover-content").html();
+      // Filter dropdown init
+      var source   = $("#filter-popover-content").html();
       var template = Handlebars.compile(source);
       var options = {
+        'trigger': 'focus',
         'placement': 'bottom',
         'html': true, 
         'content': template()
@@ -170,20 +134,6 @@
           url += key + '=' + params[key];
         }
       }
-      /*var q = params['q']
-      var company_id = params['company_id']
-      var group_id = params['group_id'];
-      var name = params['name'];
-      var domain = params['domain'];
-      if (company_id) {
-        var url = 'api/searchbaseprofileconnection?company_id=' + company_id;
-      }
-      else if (q) {
-        var url = 'api/searchbaseprofileconnection?q=' + q;
-      } else {
-        var url = 'api/searchbaseprofileconnection?name=' + name + '&domain=' + domain;
-      }
-      */
       console.log("Datatables calling: " + url);
       // Sorting methods for columns including 'N/A' cells
       $.fn.dataTable.ext.type.order['int-na-pre'] = function ( d ) {
@@ -470,10 +420,11 @@
         }
       });
 
-      // Filter options
+      // Filter option selected
       $('.filter-option').click(function() {
-        //$("#search_table").DataTable({scrollX: true});
+        console.log('filter-option');
         var filterName = $(this).attr('data-filter');
+        console.log(filterName);
         if (filterName == 'all_fields') {
           dataTable.columns().visible(true);
           dataTable.columns('self_connected:name').visible(false);
@@ -482,22 +433,10 @@
         }
       });
 
-      // Filter options
-      $('.group-option').click(function() {
-        var groupId = $(this).attr('data-group-id');
-        var oldUrl = $("#search_table").DataTable().ajax.url();
-        var newUrl = oldUrl + '&group_id=' + groupId;
-        console.log(newUrl);
-        displayLoading();
-        $("#search_table").DataTable().ajax.url(newUrl).load();
-        
-      });
-
       // Advanced search
       $('#advanced-search-link').click(function() {
         $('#advanced-search-modal').modal();
       });
-
       $('#advanced-search-submit').click(function() {
         $('#advanced-search-modal').modal('hide');
         var name = $('#advanced-search-name').val();

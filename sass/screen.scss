@@ -78,6 +78,9 @@ a {
   &:hover {
     cursor: pointer;
   }
+  &:focus {
+    outline: none;
+  }
 }
 
 a.box {
@@ -879,7 +882,7 @@ table.dataTable thead .connection_strength_column {
   background-position-x: 55px;
 }
 table.dataTable thead .reminder_column {
-  background-position-x: 85px;
+  background-position-x: 86px;
 }
 
 .datatables-cell {
@@ -942,7 +945,7 @@ $tt-suggestion-padding: 3px;
   padding-left: $tt-suggestion-padding;
 }
 
-// Advanced Search
+// Advanced Search & Filters
 .advanced-search-link {
   font-size: $btn-inline-font-size;
 }
@@ -960,6 +963,10 @@ a.advanced-search-link {
   }
 }
 
+#filter-link {
+  margin-right: 0px;
+}
+
 
 .selectpicker {
   color: $light-grey;
@@ -970,15 +977,6 @@ a.advanced-search-link {
   background-image: none;
   border: 1px solid #ccc;
   border-radius: 4px;
-}
-
-//Filters
-#filter-by {
-  float: right;
-  margin-left: 10px;
-}
-#group-select {
-  float: right;
 }
 
 // User settings
