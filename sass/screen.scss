@@ -208,7 +208,7 @@ Navbar & Footer
   margin-bottom: 0;
   border-bottom: none;
   padding-top: 10px;
-  padding-bottom: 20px;
+  padding-bottom: 21px;
   z-index: 1000;
   background-image: $pixel-background;
   background-repeat: repeat;
@@ -635,7 +635,7 @@ Search
 }
 
 .modal-lg {
-  width: 1000px;
+  width: 1100px;
 }
 .modal-content {
   border: 1px solid $lightning-yellow;
@@ -835,7 +835,7 @@ table.dataTable tbody tr {
 .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
   display: none;
   &:hover {
-    display:none;
+    display: none;
   }
 }
 
@@ -883,6 +883,18 @@ table.dataTable thead .connection_strength_column {
 }
 table.dataTable thead .reminder_column {
   background-position-x: 86px;
+}
+table.dataTable thead .latest_email_out_date_column {
+  background-position-x: 95px;
+}
+table.dataTable thead .latest_email_in_date_column {
+  background-position-x: 125px;
+}
+table.dataTable thead .total_emails_out_column {
+  background-position-x: 94px;
+}
+table.dataTable thead .total_emails_in_column {
+  background-position-x: 127px;
 }
 table.dataTable tbody tr.row-self {
   background: rgba($hover-yellow, 0.05);
