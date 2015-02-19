@@ -93,7 +93,10 @@
         'html': true, 
         'content': template()
       }
-      $('#filter-link').popover(options);
+      $('#filter-link').popover(options).parent().delegate('.filter-option', 'click', function() {
+          var filter = $(this).attr('data-filter');
+          console.log(filter);
+      });
 
       // Init code for the searchbar's behavior, incl. typeahead
       {% include 'partials/init_typeahead.js' %}
@@ -417,19 +420,6 @@
           console.log(new_url)
           $("#search_table").DataTable().ajax.url(new_url).load();
           displayLoading();
-        }
-      });
-
-      // Filter option selected
-      $('.filter-option').click(function() {
-        console.log('filter-option');
-        var filterName = $(this).attr('data-filter');
-        console.log(filterName);
-        if (filterName == 'all_fields') {
-          dataTable.columns().visible(true);
-          dataTable.columns('self_connected:name').visible(false);
-        } else {
-          dataTable.column(filterName + ':name').order('desc').draw().visible(true);
         }
       });
 
