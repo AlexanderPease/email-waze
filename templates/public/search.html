@@ -14,7 +14,11 @@
         <a id="people-header"></a>
         <span id="people-company-header-break" class="unselected">/</span>
         <a id="companies-header" class="unselected"></a>
-        <a id="advanced-search-link" style="float:right;">Advanced Search</a>
+        <div style="float:right;">
+          <a id="advanced-search-link">Advanced Search</a>
+          <span id="people-company-header-break" class="unselected">/</span>
+          <a id="filter-link">Filters</a>
+        </div>
       </div>
 
       <!--<div class="row">
@@ -439,10 +443,8 @@
             }
             // Display
             displayLoaded(results);
-            // Init company table if applicable
-            if (results['companies']) {
-              initCompaniesTable(results)
-            }
+            // Init company table in all instances of loading data
+            initCompaniesTable(results)
 
             return json_list;
           },
@@ -461,11 +463,18 @@
 
       // Search for a specific company when company row is clicked on
       $('#companies_table tbody').on('click', 'tr', function() {
-        company_id = $('td', this).parent().attr('id');
-        var new_url = 'api/searchbaseprofileconnection?company_id=' + company_id;
-        console.log(new_url)
-        $("#search_table").DataTable().ajax.url(new_url).load();
-        displayLoading();
+        if ($('#companies_table').DataTable().data().length == 1) {
+          showSearchTable();
+        }
+        else {
+          /* Reload data for a single company if search table currentnly has
+            profiles for multiple companies */
+          company_id = $('td', this).parent().attr('id');
+          var new_url = 'api/searchbaseprofileconnection?company_id=' + company_id;
+          console.log(new_url)
+          $("#search_table").DataTable().ajax.url(new_url).load();
+          displayLoading();
+        }
       });
 
       // Filter options
@@ -514,10 +523,7 @@
         showSearchTable();
       });
       $('#companies-header').click(function(){
-        $('#search_table_div').hide();
-        $('#companies_table_div').show();
-        $('#people-header').addClass('unselected');
-        $('#companies-header').removeClass('unselected');
+        showCompaniesTable();
       });
 
     }); // ready
@@ -525,41 +531,34 @@
     /* Displays everything once data is loaded */
     function displayLoaded(results) {
       $('#results').text(results['results_msg']);
-      if (results['companies']) {
-        $('#people-header').text('People (' + results.profiles.length + ')');
-        $('#companies-header').text('Companies (' + results.companies.length + ')');
-        $('#people-companies-header').show();
-      }
-      $('#filter-by').find('button').prop('disabled', false);
-      $('#group-select').find('button').prop('disabled', false);
-      //setFormQPlaceholder();
-      //$('#form-button').prop('disabled', false);
-      //$('#form-button').text('Search');
-      //$('#form-q').prop('disabled', false);
-      //$('#form-q').val('');
+      $('#people-header').text('People (' + results.profiles.length + ')');
+      $('#companies-header').text('Companies (' + results.companies.length + ')');
+      $('#people-companies-header').show();
     }
-
-    /* Displays loading messages and disables form */
+    /* Displays loading messages */
     function displayLoading() {
       $('.search-tt').blur();
       $('#results').text('Loading...');
-      $('#filter-by').find('button').prop('disabled', true);
-      $('#group-select').find('button').prop('disabled', true);
       $('#people-companies-header').hide();
       showSearchTable();
-      //setFormQPlaceholder();
-      //$('#form-q').prop('disabled', true);
-      //$('#form-button').prop('disabled', true);
-      //$('#form-button').text('Loading...');
     }
 
+    /* Function is called when new data is loaded and to 
+      switch to the search table from companies_table */
     function showSearchTable() {
       $('#search_table_div').show();
       $('#companies_table_div').hide();
       $('#people-header').removeClass('unselected');
       $('#companies-header').addClass('unselected');
     }
+    function showCompaniesTable() {
+      $('#search_table_div').hide();
+      $('#companies_table_div').show();
+      $('#people-header').addClass('unselected');
+      $('#companies-header').removeClass('unselected');
+    }
 
+    /* Called every time new data is loaded from server */
     function initCompaniesTable(results) {
       if (!results.companies) { return }
       var companyData = [];
@@ -576,6 +575,7 @@
         companyData.push(companyRow)
       }
       console.log('Initializing #companies_table');
+      $('#companies_table').DataTable().destroy();
       var companyTable = $('#companies_table').DataTable({
         data: companyData,
         searching: false,

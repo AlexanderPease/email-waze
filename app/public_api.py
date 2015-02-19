@@ -103,30 +103,9 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
         else:
             results['profiles'] = list_to_json_list(ps)
 
-        # Company stats if a single company was selected
-        if company_id: 
-            c_stats = {
-                'name': company.name,
-                'domain': company.domain,
-                'num_connections': len(ps)
-            }
-            if company.clearbit:
-                if 'logo' in company.clearbit.keys():
-                    c_stats['logo'] = company.clearbit['logo']
-            latest_connection = ps[0]
-            most_connection = ps[0]
-            for bp in ps[1:]:
-                if later_date(latest_connection.latest_email_out_date, bp.latest_email_out_date):
-                    latest_connection = bp
-                if bp.total_emails() > most_connection.total_emails():
-                    most_connection = bp
-            c_stats['latest_connection'] = latest_connection.to_json()
-            c_stats['most_connection'] = most_connection.to_json()
-            results['company_stats'] = c_stats
-        # Results for multiple companies?
-        else:
-            companies = CompanyConnectionSet.package_connections(cs_all, self.user)
-            results['companies'] = list_to_json_list(companies)
+        # Company-level results stats
+        companies = CompanyConnectionSet.package_connections(cs_all, self.user)
+        results['companies'] = list_to_json_list(companies)
 
         return self.api_response(results)
 

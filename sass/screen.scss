@@ -951,12 +951,6 @@ a.advanced-search-link {
   color: white;
 }
 
-#advanced-search-link {
-  color: $light-grey;
-  &:hover {
-    color: $lightning-yellow;
-  }
-}
 #advanced-search-link.yellow {
   background: $lightning-yellow;
   color: $white;
