@@ -884,10 +884,13 @@ table.dataTable thead .connection_strength_column {
 table.dataTable thead .reminder_column {
   background-position-x: 86px;
 }
-
+table.dataTable tbody tr.row-self {
+  background: rgba($hover-yellow, 0.05);
+}
 .datatables-cell {
   //padding-left: 18px !important;
 }
+
 
 /******************************************************************************
 typeahead.js

@@ -81,6 +81,7 @@
 
 {% block javascript %}
   <script>
+    var current_user = '{{ current_user }}';
     $(document).ready(function() {
       // Page inits
       displayLoading();
@@ -702,8 +703,11 @@
         header += " - " + this.company_name;
       }
       for (var i=0; i<this.connections.length; i++) {
-        // THIS IS A HORRIBLE HACK. CONNECTION MONGODB DOC SHOULD ALREADY HAVE THIS
         c = this.connections[i]; 
+        if (c.connected_user_email == current_user) {
+          this.connections[i].connected_user_name = 'Me';
+        } 
+        // THIS IS A HORRIBLE HACK. CONNECTION MONGODB DOC SHOULD ALREADY HAVE THIS
         if (c.total_emails_out > 100 && c.days_since_contact < 90){
           this.connections[i].connection_strength = 6;
           this.connections[i].connection_strength_href = '{{ static_url("img/signal_strength/signal_strength_6.png") }}';
@@ -737,10 +741,15 @@
         // Reinit preexisting table by destroying first
         $('#table-' + this.profile_id).DataTable().destroy();
       }
-      $('#table-' + this.profile_id).DataTable({
+      var modalTable = $('#table-' + this.profile_id).DataTable({
         searching: false,
         paging: false,
-        dom:'<<t>>'
+        dom:'<<t>>',
+        rowCallback: function(row, data){
+          if (data[1] == current_user) {
+            $(row).addClass('row-self'); // so css can highlight
+          }
+        },
       });
     }
 
