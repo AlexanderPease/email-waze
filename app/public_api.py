@@ -45,6 +45,7 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
         ### Profiles
         # Default to simple search if present
         if q:
+            ''' AND query
             q_array = q.split(" ") # whitespace delimited
             logging.info(q_array)
             q_regex_array = []
@@ -60,6 +61,20 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
                     },
                     {
                         "domain": {"$in": q_array}
+                    }
+                ]
+            })
+            '''
+            # Case-insensitive regex
+            q_regex = re.compile(q, re.IGNORECASE)
+            # Construct query
+            profiles = Profile.objects(__raw__={
+                "$or": [
+                    {
+                        "name": q_regex
+                    },
+                    {
+                        "domain": q_regex
                     }
                 ]
             })
