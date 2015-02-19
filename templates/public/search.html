@@ -94,8 +94,10 @@
         'content': template()
       }
       $('#filter-link').popover(options).parent().delegate('.filter-option', 'click', function() {
-          var filter = $(this).attr('data-filter');
-          console.log(filter);
+          var filterName = $(this).attr('data-filter');
+          dataTable = $('#search_table').DataTable();
+          dataTable.column('.filter').visible(false);
+          dataTable.column(filterName + ':name').order('desc').draw().visible(true);
       });
 
       // Init code for the searchbar's behavior, incl. typeahead
@@ -255,23 +257,23 @@
             'name': 'latest_email_out_date', 
             'data': 'latest_email_out_date', 
             'type': 'date-na',
-            'className': 'latest_email_out_date_column'
+            'className': 'latest_email_out_date_column filter'
           },
           {
             'name': 'latest_email_in_date', 
             'data': 'latest_email_in_date', 
             'type': 'date-na',
-            'className': 'latest_email_in_date_column'
+            'className': 'latest_email_in_date_column filter'
           },
           {
             'name': 'total_emails_out', 
             'data': 'total_emails_out',
-            'className': 'total_emails_out_column'
+            'className': 'total_emails_out_column filter'
           },
           {
             'name': 'total_emails_in', 
             'data': 'total_emails_in',
-            'className': 'total_emails_in_column'
+            'className': 'total_emails_in_column filter'
           },
           {'name': 'company_name', 'data': 'company_name'}
         ],
