@@ -108,6 +108,9 @@
       <!-- Reminder dropdown -->
       {% include 'partials/reminder_popover_content.hbs' %}
 
+      <!-- Filter dropdown -->
+      {% include 'partials/filter_popover_content.hbs' %}
+
 
     </div> <!-- container -->
   </section> <!-- feature -->
@@ -116,27 +119,17 @@
 {% block javascript %}
   <script>
     $(document).ready(function() {
-      // Inject popover
-      var context = { 
-        profile_id: 545, 
-      };
+      // Page inits
+      displayLoading();
+      // Filter init
       var source   = $("#reminder-popover-content").html();
       var template = Handlebars.compile(source);
       var options = {
         'placement': 'bottom',
         'html': true, 
-        'content': template(context)
+        'content': template()
       }
-      $('#foo').popover(options);
-      $('.popover li').click(function(event) {
-        console.log('popover-li-event');
-        event.stopPropagation();
-      });
-
-
-
-      // Page inits
-      displayLoading();
+      $('#filter-link').popover(options);
 
       // Init code for the searchbar's behavior, incl. typeahead
       {% include 'partials/init_typeahead.js' %}
