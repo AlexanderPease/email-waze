@@ -213,7 +213,8 @@
         order: [[3, "desc"]],
         columns: [
           {
-            'data': 'name', 
+            'data': 'name',
+            'className': 'name_column',
             'render': function(data, type, full, meta) {
               var company_name = full['company_name'];
               if (company_name != null) {
@@ -226,6 +227,7 @@
           },
           {
             'data': 'email', 
+            'className': 'email_column',
             'render': function(data, type, full, meta) { 
               return '<span class="email">' + data + '</span></br>' +
                 '<a class="copy-email" data-clipboard-text="' + 
@@ -240,6 +242,7 @@
           {
             'name': 'connection_strength', 
             'data': 'connection_strength',
+            'className': 'connection_strength_column',
             'render': function(data, type, full, meta) {
               if (data == 1) {
                 var icon_url = '{{ static_url("img/signal_strength/signal_strength_1.png") }}';
@@ -258,7 +261,8 @@
             }
           },
           {
-            'name': 'reminder', 
+            'name': 'reminder',
+            'className': 'reminder_column',
             'data': 'reminder',
             'render': function(data, type, full, meta) {
               // Set new reminder
@@ -291,11 +295,34 @@
               }
             }
           },
-          {'name': 'days_since_contact', 'data': 'days_since_contact', 'type': 'int-na'},
-          {'name': 'latest_email_out_date', 'data': 'latest_email_out_date', 'type': 'date-na'},
-          {'name': 'latest_email_in_date', 'data': 'latest_email_in_date', 'type': 'date-na'},
-          {'name': 'total_emails_out', 'data': 'total_emails_out'},
-          {'name': 'total_emails_in', 'data': 'total_emails_in'},
+          {
+            'name': 'days_since_contact', 
+            'data': 'days_since_contact', 
+            'type': 'int-na',
+            'className': 'days_since_contact_column'
+          },
+          {
+            'name': 'latest_email_out_date', 
+            'data': 'latest_email_out_date', 
+            'type': 'date-na',
+            'className': 'latest_email_out_date_column'
+          },
+          {
+            'name': 'latest_email_in_date', 
+            'data': 'latest_email_in_date', 
+            'type': 'date-na',
+            'className': 'latest_email_in_date_column'
+          },
+          {
+            'name': 'total_emails_out', 
+            'data': 'total_emails_out',
+            'className': 'total_emails_out_column'
+          },
+          {
+            'name': 'total_emails_in', 
+            'data': 'total_emails_in',
+            'className': 'total_emails_in_column'
+          },
           {'name': 'company_name', 'data': 'company_name'}
         ],
         columnDefs: [

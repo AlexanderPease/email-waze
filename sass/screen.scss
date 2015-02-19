@@ -837,23 +837,37 @@ table.dataTable tbody tr {
 }
 
 // Column headers and cells
+table.dataTable tbody th, 
+table.dataTable tbody td,
+table.dataTable thead th,
+table.dataTable thead td {
+  padding-left: 0px;
+}
 table.dataTable thead .sorting {
   color: $light-grey;
   text-transform: uppercase;
-  background: url('../img/sort/sort_inactive.png') no-repeat calc(100% - 10px) center;
+  background: url('../img/sort/sort_inactive.png') no-repeat calc(100% - 15px) center;
   padding-bottom: 10px;
 }
 table.dataTable thead .sorting_desc {
   color: $dark-grey;
   text-transform: uppercase;
-  background: url('../img/sort/sorter_down.png') no-repeat calc(100% - 10px) center;
+  background: url('../img/sort/sorter_down.png') no-repeat calc(100% - 15px) center;
 }
 table.dataTable thead .sorting_asc {
   color: $dark-grey;
   text-transform: uppercase;
-  background: url('../img/sort/sorter_up.png') no-repeat calc(100% - 10px) center;
+  background: url('../img/sort/sorter_up.png') no-repeat calc(100% - 15px) center;
+}
+// Specific styling for each column
+table.dataTable thead .name_column {
+  background-position-x: 46px;
+}
+table.dataTable thead .email_column {
+  background-position-x: 47px;
 }
 table.dataTable thead .filter_column {
+  background-position-x: 105px;
   //box-sizing: content-box;
   //border-bottom: 2px double $light-grey;
   //padding-bottom: 2px; 
@@ -861,14 +875,15 @@ table.dataTable thead .filter_column {
   //margin-bottom: 50px;
   //text-decoration: underline;
 }
+table.dataTable thead .connection_strength_column {
+  background-position-x: 55px;
+}
+table.dataTable thead .reminder_column {
+  background-position-x: 85px;
+}
+
 .datatables-cell {
   //padding-left: 18px !important;
-}
-table.dataTable tbody th, 
-table.dataTable tbody td,
-table.dataTable thead th,
-table.dataTable thead td {
-  padding-left: 0px;
 }
 
 /******************************************************************************
