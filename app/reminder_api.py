@@ -12,7 +12,7 @@ from db.companydb import Company
 ########################
 class CreateReminder(app.basic.BaseHandler):
     @tornado.web.authenticated
-    def get(self):
+    def post(self):
         if not self.current_user:
             return self.api_error(401, 'User is not logged in')
         try:
@@ -50,14 +50,11 @@ class CreateReminder(app.basic.BaseHandler):
                 c = Company.objects.get(id=doc_id)
             except:
                 return self.api_error(400, 'Company ID is invalid')
-            #try:
-            logging.info(c)
-            logging.info(u)
-            r = CompanyReminder(company=c, user=u, days=days, recurring=recurring)
-            logging.info(r)
-            r.save()
-            #except: 
-            #    return self.api_error(500, 'Error saving CompanyReminder')
+            try:
+                r = CompanyReminder(company=c, user=u, days=days, recurring=recurring)
+                r.save()
+            except: 
+                return self.api_error(500, 'Error saving CompanyReminder')
         else:
             return self.api_error(400, 'Invalid reminder_type parameter')
         return self.api_response(data={})
@@ -69,7 +66,7 @@ class CreateReminder(app.basic.BaseHandler):
 ########################
 class EditReminder(app.basic.BaseHandler):
     @tornado.web.authenticated
-    def get(self, reminder_id):
+    def post(self, reminder_id):
         """
         Required Args:
             reminder_type is either 'profile' or 'company'
@@ -123,7 +120,7 @@ class EditReminder(app.basic.BaseHandler):
 ########################
 class DeleteReminder(app.basic.BaseHandler):
     @tornado.web.authenticated
-    def get(self, reminder_id):
+    def post(self, reminder_id):
         """
         Required Args:
             reminder_type is either 'profile' or 'company'

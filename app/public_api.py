@@ -45,40 +45,49 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
         ### Profiles
         # Default to simple search if present
         if q:
-            ''' AND query
-            q_array = q.split(" ") # whitespace delimited
-            logging.info(q_array)
-            q_regex_array = []
-            # Case-insensitive regexs
-            for f in q_array:
-                q_regex_array.append(re.compile(f, re.IGNORECASE))
-            q_array = q_regex_array
-            # Construct query
-            profiles = Profile.objects(__raw__={
-                "$or": [
-                    {
-                        "name": {"$in": q_array}
-                    },
-                    {
-                        "domain": {"$in": q_array}
-                    }
-                ]
-            })
-            '''
-            # Case-insensitive regex
-            q_regex = re.compile(q, re.IGNORECASE)
-            # Construct query
-            profiles = Profile.objects(__raw__={
-                "$or": [
-                    {
-                        "name": q_regex
-                    },
-                    {
-                        "domain": q_regex
-                    }
-                ]
-            })
-            results['results_msg'] = 'Results for "%s"' % q
+            # In case user picked a company but didn't select it properly
+            try:
+                company = Company.objects.get(name__iexact=q)
+            except:
+                company = None
+            if company:
+                profiles = Profile.objects(domain=company.domain)
+                results['results_msg'] = company.name
+            else:
+                ''' $IN query
+                q_array = q.split(" ") # whitespace delimited
+                logging.info(q_array)
+                q_regex_array = []
+                # Case-insensitive regexs
+                for f in q_array:
+                    q_regex_array.append(re.compile(f, re.IGNORECASE))
+                q_array = q_regex_array
+                # Construct query
+                profiles = Profile.objects(__raw__={
+                    "$or": [
+                        {
+                            "name": {"$in": q_array}
+                        },
+                        {
+                            "domain": {"$in": q_array}
+                        }
+                    ]
+                })
+                '''
+                # Case-insensitive regex
+                q_regex = re.compile(q, re.IGNORECASE)
+                # Construct query
+                profiles = Profile.objects(__raw__={
+                    "$or": [
+                        {
+                            "name": q_regex
+                        },
+                        {
+                            "domain": q_regex
+                        }
+                    ]
+                })
+                results['results_msg'] = 'Results for "%s"' % q
         # Exact ID search
         elif company_id:
             company = Company.objects.get(id=company_id)

@@ -1,16 +1,22 @@
 <script id="reminder-popover-content" type="text/x-handlebars-template">
-  <div class="reminder-popover-content"
-    data-profile-id="{{!profile_id}}"
-    data-company-id="{{!company_id}}">
+  <div class="reminder-popover-content" data-profile-id="{{!profile_id}}">
     <ul>
-      <li data-reminder-recurring-checkbox='true'>
+      <li class="reminder-option" data-reminder-recurring-checkbox='true'>
         Recurring
         <input class="recurring-checkbox" type="checkbox" checked>
       </li>
-      <li data-reminder-days='7' data-reminder-recurring='true'>Weekly</li>
-      <li data-reminder-days='30' data-reminder-recurring='true'>Monthly</li>
-      <li data-reminder-days='90' data-reminder-recurring='true'>Quarterly</li>
-      <li>Custom Date</li>
+      <li class="reminder-option" data-reminder-days='7' data-reminder-recurring='true'>
+        Weekly
+        </li>
+      <li class="reminder-option" data-reminder-days='30' data-reminder-recurring='true'>
+        Monthly
+      </li>
+      <li class="reminder-option" data-reminder-days='90' data-reminder-recurring='true'>
+        Quarterly
+      </li>
+      <!--<li class="reminder-option" data-reminder-days="custom">
+        Custom Date
+      </li>-->
     </ul>
   </div>
 </script>

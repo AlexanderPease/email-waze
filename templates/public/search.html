@@ -227,26 +227,10 @@
               // Set new reminder
               if (data == null || data == "") {
                 // Get context data
-                var type = full['type'];
-                if (type == 'profile') {
-                  var context = { 
-                    profile_id: full['DT_RowId'], 
-                  };
-                } else {
-                  var context = {
-                    company_id: full['DT_RowId'], 
-                  };
-                }
-                // Inject popover
-                var source   = $("#reminder-popover-content").html();
-                var template = Handlebars.compile(source);
-                var options = {
-                  'placement': 'bottom',
-                  'html': true, 
-                  'content': template(context)
-                }
-                $('.reminder-icon').popover(options);
-                return '<a tabindex="0" class="reminder-icon" role="button" data-toggle="popover" data-trigger="focus">Set Reminder</a>';
+                //var type = full['type']; // profile or company
+                var profile_id = full['DT_RowId'];
+                //company_id: full['DT_RowId'] 
+                return '<a tabindex="0" class="reminder-icon" role="button" data-toggle="popover" data-profile-id="' + profile_id + '">Set Reminder</a>';
               } 
               // Modify existing reminder
               else {
@@ -307,6 +291,25 @@
             }, 
             function() {
               $(this).removeClass('hover');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              $(this).child('popover').popover('hide');
             }
           );
           // Copy to clipboard icons for email cells
@@ -330,47 +333,54 @@
             event.stopPropagation();
           });
           // Reminders
+          var source   = $("#reminder-popover-content").html();
+          var template = Handlebars.compile(source);
+          $('.reminder-icon').each(function(){
+            var context = {
+              profile_id: $(this).attr('data-profile-id')
+            };
+            var options = {
+              'trigger': 'click',
+              'placement': 'bottom',
+              'html': true, 
+              'content': template(context)
+            }
+            $(this).popover(options).parent().delegate('.reminder-option', 'click', function() {
+              event.stopPropagation();
+              // Checkbox, no action
+              if ($(this).attr('data-reminder-recurring-checkbox')) {
+                console.log('hit checkbox');
+                var checkbox = $(this).children('.recurring-checkbox').prop("checked");
+                console.log(checkbox);
+              }
+              // Days, AJAX
+              else {
+                var url = "/api/reminder/create?";
+                var profile_id = $(this).parent().parent().attr('data-profile-id'); // not proud
+                url += "reminder_type=profile";
+                url += "&doc_id=" + profile_id;
+                url += "&days=" + $(this).attr('data-reminder-days');
+                url += "&recurring=" + $(this).parent().find('.recurring-checkbox').prop("checked");
+                var options = {
+                  type: 'POST',
+                  url: url,
+                  success: function(response) {
+                    console.log(response);
+                    $('.reminder-icon[data-profile-id="' + profile_id + '"]').text('Reminder Set!');
+                  },
+                  error: function(response) {
+                    console.warn(response);
+                    $('.reminder-icon[data-profile-id="' + profile_id + '"]').text('Error! Try Again');
+                  }
+                };
+                console.log('Requesting: ' + options.url)
+                $.ajax(options);
+              }
+            });
+          });
           $('.reminder-icon').click(function(event) {
             event.stopPropagation();
           });
-          $('.popover li').click(function(event) {
-            event.stopPropagation();
-            console.log('popover-li-event in drawCallback');
-            // Checkbox
-            if ($(this).attr('data-reminder-recurring-checkbox')) {
-              console.log('hit checkbox');
-              var checkbox = $(this).attr('data-reminder-recurring-checkbox');
-              console.log(checkbox);
-              if (checkbox == 'true') {
-                $(this).attr('data-reminder-recurring-checkbox', 'false');
-              } else {
-
-                $(this).attr('data-reminder-recurring-checkbox', 'true');
-              }
-            }
-            // Days
-            else {
-              console.log($(this).attr('data-reminder-days'));
-            }
-          });
-          /*$('.reminder-dropdown').change(function(event) {
-            var days = $(this).find(':selected').attr('data-reminder-days');
-            if (days == 'null') {
-              return;
-            }
-            var url = "/api/reminder?";
-            var profile_id = $(this).attr('data-profile-id');
-            var company_id = $(this).attr('data-company-id');
-            if (profile_id && profile_id != "") {
-              url += "profile_id=" + profile_id;
-            } else{
-              url += "company_id=" + company_id;
-            }
-            url += "&days=" + days;
-            url += "&recurring=" + $(this).find(':selected').attr('data-reminder-recurring');
-            console.log(url);
-            //ajax call
-          });*/
         },
         ajax: {
           url: url,
@@ -566,8 +576,7 @@
             'data': 'reminder', 
             'render': function(data, type, full, meta) {
               if (data == null || data == "") {
-                return '<span class="alert-icon">Set alert</span>';
-                //return '<img class="alert-icon" src="' + '{{ static_url("img/alert.png") }}' + '">';
+                return '<span class="reminder-icon">Coming Soon!</span>';
               } else {
                 return 'foo';
               }
