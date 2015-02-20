@@ -1,6 +1,6 @@
-{% extends "../public/index.html" %}
+{% extends "../public/dashboard.html" %}
 {% block page-title %}Welcome{% end %}
-{% block page-description %}Ansatz is a simple way to find someone's email address while still respecting their privacy.{% end %}
+{% block page-description %}{% end %}
 
 {% block user_welcome_html %}
   {% set g = None %}
@@ -8,7 +8,6 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <!--<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>-->
           <h4 id="modal-title" class="modal-title">Welcome to {{ settings.get('company_name') }}!</h4>
         </div>
 
@@ -17,12 +16,12 @@
         </div><!--finished modal-body-->
 
         <div id="group-invite" class="modal-body" style="display:none">
-          First, you should join a "team." 
-          Teams connect you with colleagues and friends, expanding your 
+          First, you should join a "NTWRK." 
+          NTWRKs connect you with colleagues and friends, expanding your 
           address book and enabling you to see connections.</br></br>
 
           {% if group_invites %}
-            You've already been invited to join these teams:
+            You've already been invited to join these NTWRKs:
             <ul>
               {% for g in group_invites %}
                 <li><div class="group-invite" data-group-id="{{ g.id }}">
@@ -42,17 +41,17 @@
                   {% end %}
                   </br>
                   <button type="button" class="btn btn-primary btn-inline group-accept-invite" data-group-id="{{ g.id }}">
-                    Join team
+                    Join NTWRK
                   </button>
 
                 </div></li>
               {% end %}
             </ul>
-            Or, <a id="create-group-link">create a new team</a> 
+            Or, <a id="create-group-link">create a new NTWRK</a> 
             by inviting your friends!
           {% else %}
-            <a id="create-group-link">Create a new team</a> 
-            by inviting your friends! You do not have any pending team invitations. 
+            <a id="create-group-link">Create a new NTWRK</a> 
+            by inviting your friends! You do not have any pending NTWRK invitations. 
           {% end %}
         </div><!--group-setup modal-body-->
 
@@ -76,7 +75,8 @@
         </div><!--chrome-extension modal-body-->
 
         <div id="finished" class="modal-body" style="display:none">
-          Wasn't that easy? We hope you enjoy using {{ settings.get('company_name') }}!
+          Wasn't that easy? We hope you enjoy using {{ settings.get('company_name') }}!</br>
+          It may take a few more minutes to get all your data pulled in from Gmail. But there's enough here for you to get started. 
           </br></br>
           P.S. Just a reminder that we never store any of your emails on our servers. 
         </div><!--finished modal-body-->
