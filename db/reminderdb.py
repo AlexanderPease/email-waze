@@ -122,7 +122,7 @@ class ProfileReminder(Document):
             else:
                 latest_date = pr.date_set
             # Group into reminders due today or later
-            if latest_date + datetime.timedelta(days=pr.days) <= datetime.datetime.today():
+            if latest_date.date() + datetime.timedelta(days=pr.days) >= datetime.datetime.today().date():
                 today_reminders.append(pr)
             else:
                 later_reminders.append(pr)
