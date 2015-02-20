@@ -234,7 +234,7 @@
               } 
               // Modify existing reminder
               else {
-                return 'foo';
+                return data.alert_type;
               }
             }
           },
@@ -610,13 +610,14 @@
       this.email = dict['email'];
       this.company_name = dict['company_name'];
       //this.burner = dict['burner'];
-      this.connection_strength = dict['connection_strength']
-      this.connections = dict['connections']
-      this.days_since_contact = dict['days_since_contact']
-      this.total_emails_out = dict['total_emails_out']
-      this.latest_email_out_date = dict['latest_email_out_date']
-      this.total_emails_in = dict['total_emails_in']
-      this.latest_email_in_date = dict['latest_email_in_date']
+      this.connection_strength = dict['connection_strength'];
+      this.connections = dict['connections'];
+      this.days_since_contact = dict['days_since_contact'];
+      this.total_emails_out = dict['total_emails_out'];
+      this.latest_email_out_date = dict['latest_email_out_date'];
+      this.total_emails_in = dict['total_emails_in'];
+      this.latest_email_in_date = dict['latest_email_in_date'];
+      this.reminder = dict['reminder'];
     }
 
     Profile.prototype.cleanName = function() {

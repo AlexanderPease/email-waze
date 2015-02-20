@@ -91,6 +91,15 @@ class ProfileReminder(Document):
         else:
             return 'In %s days' % days_left
 
+    def to_json(self):
+        return {
+            'days': self.days,
+            'recurring': self.recurring, 
+            'date_set': self.date_set.strftime('%Y/%m/%d'),
+            'alert_type': self.display_alert_type()
+        }
+
+
     @classmethod
     def today_later_reminders(cls, user):
         """

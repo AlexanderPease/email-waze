@@ -6,6 +6,7 @@ from db.userdb import User
 from db.groupdb import Group
 from db.connectiondb import Connection
 from db.companydb import Company
+from db.reminderdb import ProfileReminder
 
 class BaseSet:
     """
@@ -73,12 +74,19 @@ class BaseProfileConnection(BaseSet):
         self.total_emails_in = 0
         self.latest_email_in_date = None
         self.self_connected = None
+        self.reminder = None
 
         # Get company name
         company = profile.get_company()
         if company:
             self.company_name = company.name
             self.company_domain = company.domain
+
+        # Reminder
+        try:
+            self.reminder = ProfileReminder.objects.get(profile=profile, user=current_user)
+        except: 
+            pass
 
         # Process connections and set other fields
         for c in self.connections:
@@ -115,6 +123,7 @@ class BaseProfileConnection(BaseSet):
         else:
             self.connection_strength = 1
 
+
     def __repr__(self):
         return 'BaseProfileConnection: %s (%s)' % (self.name, self.email)
 
@@ -140,7 +149,7 @@ class BaseProfileConnection(BaseSet):
             'total_emails_in': self.total_emails_in,
             'connection_strength': self.connection_strength,
             'company_name': self.company_name,
-            'company_domain': self.company_domain
+            'company_domain': self.company_domain,
         }
         if self.connections:
             json['connections'] = []
@@ -160,6 +169,10 @@ class BaseProfileConnection(BaseSet):
             json['days_since_contact'] = self.days_since_contact
         else:
             json['days_since_contact'] = None
+        if self.reminder:
+            json['reminder'] = self.reminder.to_json()
+        else:
+            json['reminder'] = None
         return json
 
 class CompanyConnectionSet(BaseSet):
