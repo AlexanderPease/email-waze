@@ -85,7 +85,10 @@ class UserWelcome(app.basic.BaseHandler):
 
         return self.render('user/user_welcome.html', 
             user=user, 
-            group_invites=group_invites, 
+            nav_title=True,
+            nav_select='dashboard',
+            groups=None,
+            group_invites=group_invites,
             today_reminders=None,
             later_reminders=None)
 
