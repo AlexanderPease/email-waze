@@ -169,6 +169,52 @@
         $('#recently-emailed-link').removeClass('unselected');
       });
 
+      // Reminder functionality for recently emailed table
+      // THIS IS 100% REDUNDANT WITH CODE IN SEARCH.HTML
+      $('.reminder-icon').each(function(){
+        var context = {
+          profile_id: $(this).attr('data-profile-id')
+        };
+        var options = {
+          'trigger': 'click',
+          'placement': 'bottom',
+          'html': true, 
+          'content': template(context)
+        }
+        $(this).popover(options).parent().delegate('.reminder-option', 'click', function() {
+          event.stopPropagation();
+          // Checkbox, no action
+          if ($(this).attr('data-reminder-recurring-checkbox')) {
+            console.log('hit checkbox');
+            var checkbox = $(this).children('.recurring-checkbox').prop("checked");
+            console.log(checkbox);
+          }
+          // Days, AJAX
+          else {
+            var url = "/api/reminder/create?";
+            var profile_id = $(this).parent().parent().attr('data-profile-id'); // not proud
+            url += "reminder_type=profile";
+            url += "&doc_id=" + profile_id;
+            url += "&days=" + $(this).attr('data-reminder-days');
+            url += "&recurring=" + $(this).parent().find('.recurring-checkbox').prop("checked");
+            var options = {
+              type: 'POST',
+              url: url,
+              success: function(response) {
+                console.log(response);
+                $('.reminder-icon[data-profile-id="' + profile_id + '"]').text('Reminder Set!');
+              },
+              error: function(response) {
+                console.warn(response);
+                $('.reminder-icon[data-profile-id="' + profile_id + '"]').text('Error! Try Again');
+              }
+            };
+            console.log('Requesting: ' + options.url)
+            $.ajax(options);
+          }
+        });
+      });
+
 
     });
   </script>
