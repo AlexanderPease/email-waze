@@ -5,7 +5,35 @@
 {% block body %}
   <section class="feature">
     <div id="reminders-div" class="container">
-      {% include 'partials/reminders_active_later.html' %}
+
+      <div class="table-header subpage-header">
+        <a id="today-reminders-link">Active Reminders</a>
+        <span class="unselected"> / </span>
+        <a id="later-reminders-link" class="unselected">Upcoming Reminders</a>
+      </div>
+
+      <div id="today-reminders-div">
+        {% if today_reminders %}
+          {% set reminders = today_reminders %}
+          {% set table_id = 'today-reminders-table' %}
+          {% include 'partials/reminders_table.html' %}
+        {% else %}
+          You have no reminders due today! 
+          Check your <a id="later-reminders-link" class="box">Upcoming Reminders</a>.
+        {% end %}
+      </div>
+
+      <div id="later-reminders-div" style="display: none">
+        {% if later_reminders %}
+          {% set reminders = later_reminders %}
+          {% set table_id = 'later-reminders-table' %}
+          {% include 'partials/reminders_table.html' %}
+        {% else %}
+          You have no upcoming reminders! 
+          Make sure you don't have any <a id="today-reminders-link" class="box">Active Reminders</a> 
+          due.
+        {% end %}
+      </div>
     </div> <!--container-->
   </section>
 
@@ -21,6 +49,20 @@
     var dataTable = $('#later-reminders-table').DataTable({
       searching: false,
       dom: '<<t>>',
+    });
+
+    // Toggle reminders
+    $('#today-reminders-link').click(function() {
+      $('#today-reminders-div').show();
+      $('#today-reminders-link').removeClass('unselected');
+      $('#later-reminders-div').hide();
+      $('#later-reminders-link').addClass('unselected');
+    });
+     $('#later-reminders-link').click(function() {
+      $('#today-reminders-div').hide();
+      $('#today-reminders-link').addClass('unselected');
+      $('#later-reminders-div').show();
+      $('#later-reminders-link').removeClass('unselected');
     });
   });
 </script>
