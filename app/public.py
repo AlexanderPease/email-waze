@@ -30,6 +30,14 @@ class Index(app.basic.BaseHandler):
     if self.user:
         gs = self.user.get_groups()
         today_reminders, later_reminders = ProfileReminder.today_later_reminders(user=self.user)
+        today_reminders = None
+        later_reminders = None
+        if not today_reminders and not later_reminders:
+            # Show recently contacted if no reminders
+            recent_contacts = self.user.recent_contacts()
+            logging.info(recent_contacts)
+        else:
+            recent_contacts = None
         return self.render('public/dashboard.html', 
             msg=msg, 
             err=err,
@@ -37,7 +45,8 @@ class Index(app.basic.BaseHandler):
             nav_select='dashboard',
             groups=gs,
             today_reminders=today_reminders,
-            later_reminders=later_reminders)
+            later_reminders=later_reminders,
+            recent_contacts=recent_contacts)
     # Not logged in
     else:
         return self.render('public/index.html', show_nav=False)

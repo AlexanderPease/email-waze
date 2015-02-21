@@ -104,6 +104,29 @@ class User(Document):
         """
         return self.email.split('@')[1]
 
+    def recent_contacts(self, num_contacts=20):
+        """
+        Returns a list of most recently emailed out BaseProfileConnections
+
+        Args:
+            num_contacts is the number of BaseProfileConnections to return
+        """
+        from connectiondb import Connection
+        from app.connectionsets import BaseProfileConnection #b/c circular dependency
+        cs = Connection.objects(user=self).order_by('-latest_email_out_date')
+        if cs:
+            cs = cs[0:num_contacts]
+            bp_array = []
+            for c in cs:
+                bp_cs = Connection.objects(profile=c.profile, user=c.user)
+                bp = BaseProfileConnection(profile=c.profile, 
+                    connections=bp_cs,
+                    current_user=c.user)
+                bp_array.append(bp)
+            return bp_array
+
+
+
     def gmail_job_start_date(self):
         """
         Returns None if this User's Gmail account has never been scraped. 

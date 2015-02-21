@@ -1,0 +1,60 @@
+<!-- Requires jQuery initialization of dataTables-->
+<table 
+  id="recently-emailed-table"
+  class="row-border hover">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Connections</th>
+      <th>Signal</th>
+      <th>Reminder</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for bp in recent_contacts %}
+      <tr>
+        {% if bp.company_name %}
+          <td>
+            <span class="name">{{ bp.name }}</span></br>
+            <span class="company-name">{{ bp.company_name }}</span>
+          </td>
+        {% else %}
+          <td>
+            <span class="name">{{ bp.name }}</span>
+          </td>
+        {% end %}
+        <td>
+          <span class="email">{{ bp.email }}</span></br>
+          <a class="copy-email" data-clipboard-text="{{ bp.email }}">Copy email</a>
+        </td>
+        <td>{{ len(bp.connections) }}</td>
+        <td>
+          <img class="signal-icon" src="
+          {% if bp.connection_strength == 6 %}
+            {{ static_url("img/signal_strength/signal_strength_1.png") }}
+          {% elif bp.connection_strength == 5 %}
+            {{ static_url("img/signal_strength/signal_strength_5.png") }}
+          {% elif bp.connection_strength == 4 %}
+            {{ static_url("img/signal_strength/signal_strength_4.png") }}
+          {% elif bp.connection_strength == 3 %}
+            {{ static_url("img/signal_strength/signal_strength_3.png") }}
+          {% elif bp.connection_strength == 2 %}
+            {{ static_url("img/signal_strength/signal_strength_2.png") }}
+          {% else %}
+            {{ static_url("img/signal_strength/signal_strength_1.png") }}
+          {% end %}
+          ">
+          <span hidden>{{ bp.connection_strength }}</span>
+        </td>
+        <td>
+          {% if bp.reminder %}
+            {{ bp.reminder.display_alert_type() }}
+          {% else %}
+            <a tabindex="0" class="reminder-icon" role="button" data-toggle="popover" data-profile-id="">Set Reminder</a>
+          {% end %}
+        </td>
+      </tr>
+    {% end %}
+  </tbody>
+</table>

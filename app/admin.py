@@ -110,14 +110,18 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
+
+        logging.info(self.user.recent_contacts())
+
+
+
+
         '''
         for pr in ProfileReminder.objects():
             logging.info(pr)
             pr.save()
             logging.info(pr.company)
         '''
-        #logging.info(r)
-
 
         # Counts number of profiles that have an email address
         # that is duplicated (via capitalization) in the database

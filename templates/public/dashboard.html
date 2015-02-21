@@ -43,10 +43,16 @@
         </div>
       {% end %}
 
-      <!-- Show reminders -->
-      <div>
-        {% include 'partials/reminders_active_later.html' %}
-      </div>
+      {% if today_reminders or later_reminders %}
+        <!-- Show reminders -->
+        <div>
+          {% include 'partials/reminders_active_later.html' %}
+        </div>
+      {% end %}
+      {% if recent_contacts %}
+        <!-- Recent contacts -->
+        {% include 'partials/recently_emailed_table.html' %}
+      {% end %}
 
     </div> <!--container-->
   </section>
@@ -67,12 +73,16 @@
       });
       //fixSearchBg();
 
-      // Init reminders datatables
-      var dataTable = $('#today-reminders-table').DataTable({
+      // Init datatables
+      var todayRemindersTable = $('#today-reminders-table').DataTable({
         searching: false,
         dom: '<<t>>',
       });
-      var dataTable = $('#later-reminders-table').DataTable({
+      var laterRemindersTable = $('#later-reminders-table').DataTable({
+        searching: false,
+        dom: '<<t>>',
+      });
+      var recentlyEmailedTable = $('#recently-emailed-table').DataTable({
         searching: false,
         dom: '<<t>>',
       });
