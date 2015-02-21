@@ -43,16 +43,53 @@
         </div>
       {% end %}
 
+      <div id="dashboard-subheader" class="table-header">
+        {% if today_reminders or later_reminders %}
+          <a id="today-reminders-link">Active Reminders</a>
+          <span class="unselected"> / </span>
+          <a id="later-reminders-link" class="unselected">Upcoming Reminders</a>
+          <span class="unselected"> / </span>
+          <a id="recently-emailed-link" class="unselected">Recently Emailed</a>
+        {% else %}
+          Recently Emailed
+          <span class="unselected"> Set Reminders to Stay in Touch!</span>
+        {% end %}
+      </div>
+
+      <div id="today-reminders-div">
+        {% if today_reminders %}
+          {% set reminders = today_reminders %}
+          {% set table_id = 'today-reminders-table' %}
+          {% include 'partials/reminders_table.html' %}
+        {% else %}
+          You have no reminders due today! 
+          Check your <a id="later-reminders-link" class="box">Upcoming Reminders</a> 
+          or see your <a id="recently-emailed-link" class="box">Recently Emailed</a> 
+          contacts.
+        {% end %}
+      </div>
+
+      <div id="later-reminders-div" style="display: none">
+        {% if later_reminders %}
+          {% set reminders = later_reminders %}
+          {% set table_id = 'later-reminders-table' %}
+          {% include 'partials/reminders_table.html' %}
+        {% else %}
+          You have no upcoming reminders! 
+          Make sure you don't have any <a id="today-reminders-link" class="box">Active Reminders</a> 
+          due, or see your <a id="recently-emailed-link" class="box">Recently Emailed</a> 
+          contacts.
+        {% end %}
+      </div>
+
+      <div id="recently-emailed-div"
       {% if today_reminders or later_reminders %}
-        <!-- Show reminders -->
-        <div>
-          {% include 'partials/reminders_active_later.html' %}
-        </div>
+        style="display: none"
       {% end %}
-      {% if recent_contacts %}
+      >
         <!-- Recent contacts -->
         {% include 'partials/recently_emailed_table.html' %}
-      {% end %}
+      </div>
 
     </div> <!--container-->
   </section>
@@ -102,6 +139,25 @@
           '&group_id=' + group_id;
         window.location.href = newUrl; // Load search results
       });
+
+      // Table selection
+      $('#today-reminders-link').click(function() {
+        $('#today-reminders-div').show();
+        $('#later-reminders-div').hide();
+        $('#recently-emailed-div').hide();
+      });
+       $('#later-reminders-link').click(function() {
+        $('#today-reminders-div').hide();
+        $('#later-reminders-div').show();
+        $('#recently-emailed-div').hide();
+      });
+      $('#recently-emailed-link').click(function() {
+        $('#today-reminders-div').hide();
+        $('#later-reminders-div').hide();
+        $('#recently-emailed-div').show();
+      });
+
+
     });
   </script>
   {% block user_welcome_js %}{% end %}
