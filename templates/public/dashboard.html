@@ -52,11 +52,14 @@
           <a id="recently-emailed-link" class="unselected">Recently Emailed</a>
         {% else %}
           Recently Emailed
-          <span class="unselected"> Set Reminders to Stay in Touch!</span>
         {% end %}
       </div>
 
-      <div id="today-reminders-div">
+      <div id="today-reminders-div"
+        {% if not today_reminders and not later_reminders %}
+          style="display: none"
+        {% end %}
+      >
         {% if today_reminders %}
           {% set reminders = today_reminders %}
           {% set table_id = 'today-reminders-table' %}
@@ -83,9 +86,9 @@
       </div>
 
       <div id="recently-emailed-div"
-      {% if today_reminders or later_reminders %}
-        style="display: none"
-      {% end %}
+        {% if today_reminders or later_reminders %}
+          style="display: none"
+        {% end %}
       >
         <!-- Recent contacts -->
         {% include 'partials/recently_emailed_table.html' %}
