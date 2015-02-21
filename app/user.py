@@ -90,7 +90,7 @@ class UserWelcome(app.basic.BaseHandler):
             groups=None,
             group_invites=group_invites,
             today_reminders=None,
-            later_reminders=None)
+            later_reminders=None) # new users never have any reminders
 
 
 

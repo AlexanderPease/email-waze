@@ -47,10 +47,10 @@
                 </div></li>
               {% end %}
             </ul>
-            Or, <a id="create-group-link">create a new NTWRK</a> 
+            Or, <a id="create-group-link" class="box">create a new NTWRK</a> 
             by inviting your friends!
           {% else %}
-            <a id="create-group-link">Create a new NTWRK</a> 
+            <a id="create-group-link" class="box">Create a new NTWRK</a> 
             by inviting your friends! You do not have any pending NTWRK invitations. 
           {% end %}
         </div><!--group-setup modal-body-->
@@ -65,9 +65,9 @@
         </div><!--group-create modal-body-->
 
         <div id="chrome-extension" class="modal-body" style="display:none">
-          Download the {{ settings.get("company_name") }} Chrome extension
-          <a href="https://chrome.google.com/webstore/detail/ansatz/fhmfdjnooicibclghoophehldkeeloje"
-          target="_blank">here</a>!
+          Download the beta
+          <a class="box" href="https://chrome.google.com/webstore/detail/ansatz/fhmfdjnooicibclghoophehldkeeloje"
+          target="_blank">{{ settings.get("company_name") }} Chrome extension</a>!
           </br></br> 
           Our extension gives you a quick way to check your connections to a 
           person or company as you browse the web. It also pulls all your 
