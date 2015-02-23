@@ -214,15 +214,22 @@
           if ($(this).attr('data-reminder-recurring-checkbox')) {
             var checkbox = $(this).children('.recurring-checkbox').prop("checked");
           }
-          // Days, AJAX
+          // AJAX
           else {
-            if (edit) {
+            // Delete reminder
+            if ($(this).attr('data-reminder-delete')) {
+              var url = "/api/reminder/" + $(this).parent().parent().attr('data-reminder-id') + "/delete";
+              url += "?reminder_type=profile";
+            }
+            // Edit reminder
+            else if (edit) {
               var url = "/api/reminder/" + $(this).parent().parent().attr('data-reminder-id') + "/edit?";
               url += "reminder_type=profile";
               url += "&days=" + $(this).attr('data-reminder-days');
               url += "&recurring=" + $(this).parent().find('.recurring-checkbox').prop("checked");
-            } else {
-              // Create new reminder
+            }
+            // Create new reminder
+            else {
               var url = "/api/reminder/create?";
               var profile_id = $(this).parent().parent().attr('data-profile-id'); // not proud
               url += "reminder_type=profile";
@@ -230,7 +237,6 @@
               url += "&days=" + $(this).attr('data-reminder-days');
               url += "&recurring=" + $(this).parent().find('.recurring-checkbox').prop("checked");
             }
-             
             var options = {
               type: 'POST',
               url: url,
