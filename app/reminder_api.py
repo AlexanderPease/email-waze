@@ -97,6 +97,8 @@ class EditReminder(app.basic.BaseHandler):
                 r = CompanyReminder.objects.get(id=reminder_id, user=u)
             except:
                 return self.api_error(400, 'Invalid reminder_id parameter for CompanyReminder')
+        else:
+            return self.api_error(400, "Arg profiletype must be 'profile' or 'company'")
 
         # Update reminder
         if days:

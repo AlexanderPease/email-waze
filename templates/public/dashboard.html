@@ -217,9 +217,9 @@
           // Days, AJAX
           else {
             if (edit) {
-              console.log($(this).parent().parent())
               var url = "/api/reminder/" + $(this).parent().parent().attr('data-reminder-id') + "/edit?";
-              url += "days=" + $(this).attr('data-reminder-days');
+              url += "reminder_type=profile";
+              url += "&days=" + $(this).attr('data-reminder-days');
               url += "&recurring=" + $(this).parent().find('.recurring-checkbox').prop("checked");
             } else {
               // Create new reminder
