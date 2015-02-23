@@ -37,6 +37,9 @@
     </div> <!--container-->
   </section>
 
+   <!-- Reminder dropdown -->
+  {% include 'partials/reminder_popover_content.hbs' %}
+
 {% end %}
 
 {% block javascript %}
@@ -64,6 +67,20 @@
       $('#later-reminders-div').show();
       $('#later-reminders-link').removeClass('unselected');
     });
+
+    // Reminder functionality
+    {% include 'partials/reminder-icons.js' %}
+
+    $('table.dataTable tbody tr').hover(
+      function(){
+        $('#table.dataTable tbody tr').removeClass('hover');
+        $(this).addClass('hover');
+      }, 
+      function() {
+        $(this).removeClass('hover');
+        $(this).find('.popover').popover('hide');
+      }
+    );
   });
 </script>
 {% end %}
