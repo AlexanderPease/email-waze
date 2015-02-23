@@ -89,6 +89,7 @@ class UserWelcome(app.basic.BaseHandler):
             nav_select='dashboard',
             groups=None,
             group_invites=group_invites,
+            recent_contacts=None, # not enough time for this script to execute
             today_reminders=None,
             later_reminders=None) # new users never have any reminders
 

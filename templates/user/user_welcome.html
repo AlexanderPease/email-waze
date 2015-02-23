@@ -171,7 +171,8 @@
         $('#modal-next').text('Close');
         MODAL_STATE = 'finished'
       } else if (MODAL_STATE == 'finished') {
-        $('#user-welcome-modal').modal('hide');
+        //$('#user-welcome-modal').modal('hide');
+        window.location.href="/" // Reload dashboard
       }
      console.log(MODAL_STATE);
     });

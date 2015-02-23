@@ -91,7 +91,12 @@
         {% end %}
       >
         <!-- Recent contacts -->
-        {% include 'partials/recently_emailed_table.html' %}
+        {% if recent_contacts %}
+          {% include 'partials/recently_emailed_table.html' %}
+        {% else %}
+          Loading...
+        {% end %}
+
       </div>
 
     </div> <!--container-->
