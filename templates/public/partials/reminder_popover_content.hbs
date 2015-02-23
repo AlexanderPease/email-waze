@@ -17,6 +17,11 @@
       <!--<li class="reminder-option" data-reminder-days="custom">
         Custom Date
       </li>-->
+      {{!#if edit}}
+      <li class="reminder-option" data-reminder-delete='true'>
+        Delete
+      </li>
+      {{!/if}}
     </ul>
   </div>
 </script>

@@ -107,7 +107,7 @@ class EditReminder(app.basic.BaseHandler):
             r.recurring = True
         try:
             r.save()
-            logging.info(r)
+            logging.info("Saved %s" % r)
         except:
             return self.api_error(500, 'Error editing Reminder of type %s and id %s' %(reminder_type, reminder_id))
 

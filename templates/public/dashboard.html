@@ -190,8 +190,16 @@
       var source   = $("#reminder-popover-content").html();
       var template = Handlebars.compile(source);
       $('.reminder-icon').each(function(){
+        // Create or edit/delete
+        if ($(this).hasClass('reminder-edit')) {
+          var edit = true;
+        } else {
+          var edit = false;
+        }
+        // HTML
         var context = {
-          profile_id: $(this).attr('data-profile-id')
+          profile_id: $(this).attr('data-profile-id'),
+          edit: edit
         };
         var options = {
           'trigger': 'click',
