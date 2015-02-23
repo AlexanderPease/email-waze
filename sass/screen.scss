@@ -530,7 +530,7 @@ $dish-background: url('../img/index/homepage_dish_photo.png');
 #pricing-header {
   border-bottom: 1px solid $dark-grey;
   padding-bottom: 12px;
-  margin-bottom: 12px;
+  margin-bottom: 20px;
 }
 
 .customer-box {
@@ -1013,6 +1013,10 @@ a.advanced-search-link {
   border-bottom: 1px solid #E8EAF1;
   overflow: hidden;
   background-color: #F8F8FA;
+}
+
+.settings-content {
+  padding-bottom: 30px;
 }
 
 .popover-content {

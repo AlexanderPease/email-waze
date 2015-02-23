@@ -13,11 +13,20 @@
         {{ msg }}</br>
       {% end %}
 
-      Name: {{ user.name }}</br>
-      Email: {{ user.email }} - <a href="/auth/logout/" class="box" >Logout</a>
-      </br></br>
+      <div class="table-header">
+        Account
+      </div>
 
-      <div>
+      <div class="settings-content">
+        Name: {{ user.name }}</br>
+        Email: {{ user.email }} - <a href="/auth/logout/" class="box" >Logout</a>
+      </div>
+
+      <div class="table-header">
+        Your NTWRKs
+      </div>
+
+      <div class="settings-content">
         <!--<h4 style="text-decoration: underline">NTWRK Settings</h4>-->
         <a id="group-create-link" class="box">Create A New NTWRK</a></br>
         <!-- Group edit Modal -->
