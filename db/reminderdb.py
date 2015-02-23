@@ -30,7 +30,9 @@ class ProfileReminder(Document):
         '''
         if not self.company:
             try:
-                self.company = Company.objects.get(domain=self.profile.domain)
+                company = Company.objects.get(domain=self.profile.domain)
+                if company.name:
+                    self.company = company
             except:
                 pass
         if not self.connection:
