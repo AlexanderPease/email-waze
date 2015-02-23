@@ -78,7 +78,7 @@ class ProfileReminder(Document):
                 latest_date = self.date_set
         else:
             latest_date = self.date_set
-        days_left = (datetime.datetime.today() - latest_date) - datetime.timedelta(days=self.days)
+        days_left = (latest_date - datetime.datetime.today()) + datetime.timedelta(days=self.days)
         days_left = int(days_left.days)
         if days_left < -1:
             return 'Past (%s days ago)' % int(fabs(days_left))
