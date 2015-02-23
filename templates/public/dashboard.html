@@ -209,6 +209,9 @@
           'content': template(context)
         }
         $(this).popover(options).parent().delegate('.reminder-option', 'click', function() {
+          console.log($(this).attr('data-profile-id'))
+          console.log($(this).attr('data-reminder-id'))
+          console.log($(this))
           event.stopPropagation();
           // Checkbox, no action
           if ($(this).attr('data-reminder-recurring-checkbox')) {
@@ -216,14 +219,16 @@
           }
           // AJAX
           else {
+            var profile_id = $(this).parent().parent().attr('data-profile-id'); // not proud
+            var reminder_id = $(this).parent().parent().attr('data-reminder-id');
             // Delete reminder
             if ($(this).attr('data-reminder-delete')) {
-              var url = "/api/reminder/" + $(this).parent().parent().attr('data-reminder-id') + "/delete";
+              var url = "/api/reminder/" + reminder_id + "/delete";
               url += "?reminder_type=profile";
             }
             // Edit reminder
             else if (edit) {
-              var url = "/api/reminder/" + $(this).parent().parent().attr('data-reminder-id') + "/edit?";
+              var url = "/api/reminder/" + reminder_id + "/edit?";
               url += "reminder_type=profile";
               url += "&days=" + $(this).attr('data-reminder-days');
               url += "&recurring=" + $(this).parent().find('.recurring-checkbox').prop("checked");
@@ -231,7 +236,6 @@
             // Create new reminder
             else {
               var url = "/api/reminder/create?";
-              var profile_id = $(this).parent().parent().attr('data-profile-id'); // not proud
               url += "reminder_type=profile";
               url += "&doc_id=" + profile_id;
               url += "&days=" + $(this).attr('data-reminder-days');
@@ -242,11 +246,14 @@
               url: url,
               success: function(response) {
                 console.log(response);
-                $('.reminder-icon[data-profile-id="' + profile_id + '"]').text('Reminder Set!');
+                var msg = response['data']['msg'];
+                $('.reminder-icon[data-profile-id="' + profile_id + '"]').text(msg);
+                $('.reminder-icon[data-reminder-id="' + reminder_id + '"]').text(msg);
               },
               error: function(response) {
                 console.warn(response);
                 $('.reminder-icon[data-profile-id="' + profile_id + '"]').text('Error! Try Again');
+                $('.reminder-icon[data-reminder-id="' + reminder_id + '"]').text('Error! Try Again');
               }
             };
             console.log('Requesting: ' + options.url)
