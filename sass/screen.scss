@@ -515,13 +515,22 @@ $dish-background: url('../img/index/homepage_dish_photo.png');
 }
 
 .sell {
+  padding-bottom: 20px;
   .sell-box {
     border-bottom: 1px solid $medium-grey;
   }
 }
 
-#we-wont {
-  margin-top: 40px;
+#disclaimer {
+  color: $lightning-yellow;
+  font-size: 12px;
+  margin-top: 20px;
+}
+
+#pricing-header {
+  border-bottom: 1px solid $dark-grey;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
 }
 
 .customer-box {
