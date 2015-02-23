@@ -6,7 +6,7 @@
     <tr>
       <th>Name</th>
       <th>Email</th>
-      <th>Connections</th>
+      <th>Latest Sent</th>
       <th>Signal</th>
       <th>Reminder</th>
     </tr>
@@ -28,7 +28,7 @@
           <span class="email">{{ bp.email }}</span></br>
           <a class="copy-email" data-clipboard-text="{{ bp.email }}">Copy email</a>
         </td>
-        <td>{{ len(bp.connections) }}</td>
+        <td>{{ bp.latest_email_out_date_string() }}</td>
         <td>
           <img class="signal-icon" src="
           {% if bp.connection_strength == 6 %}
