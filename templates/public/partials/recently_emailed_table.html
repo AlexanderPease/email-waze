@@ -16,12 +16,12 @@
       <tr>
         {% if bp.company_name %}
           <td>
-            <span class="name">{{ bp.name }}</span></br>
+            <span class="name">{{ clean_name(bp.name) }}</span></br>
             <span class="company-name">{{ bp.company_name }}</span>
           </td>
         {% else %}
           <td>
-            <span class="name">{{ bp.name }}</span>
+            <span class="name">{{ clean_name(bp.name) }}</span>
           </td>
         {% end %}
         <td>

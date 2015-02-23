@@ -88,3 +88,32 @@ def encode(text):
     For printing unicode characters
     """
     return text.encode('utf-8')
+
+
+def clean_name(name):
+    """
+    Same as JS in search.html. Turns "Ali, Nora [dfgdg]" into "Nora Ali"
+
+    Returns a string
+    """
+    name = name.title()
+    # Change "last, first" to "first last"
+    if ', ' in name:
+        char_index = name.index(', ')
+        name = name[char_index+2:] + ' ' +  name[0:char_index]
+    if '[' in name and ']' in name:
+        if ' [' in name:
+            char_index = name.index(' [')
+        else:
+            char_index = name.index('[')
+        char_index2 = name.index(']')
+        name = name[0:char_index] + name[char_index2+1:]
+    if '<' in name and '>' in name:
+        if ' <' in name:
+            char_index = name.index(' <')
+        else:
+            char_index = name.index('<')
+        char_index2 = name.index('>')
+        name = name[0:char_index] + name[char_index2+1:]
+
+    return name

@@ -41,7 +41,8 @@ class Index(app.basic.BaseHandler):
             groups=gs,
             today_reminders=today_reminders,
             later_reminders=later_reminders,
-            recent_contacts=recent_contacts)
+            recent_contacts=recent_contacts,
+            clean_name=ui_methods.clean_name)
     # Not logged in
     else:
         return self.render('public/index.html', show_nav=False)

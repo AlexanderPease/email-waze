@@ -116,15 +116,18 @@
       // Init datatables
       var todayRemindersTable = $('#today-reminders-table').DataTable({
         searching: false,
-        dom: '<<t>>',
+        pageLength: 20, 
+        dom: '<<t>p>',
       });
       var laterRemindersTable = $('#later-reminders-table').DataTable({
         searching: false,
-        dom: '<<t>>',
+        pageLength: 20, 
+        dom: '<<t>p>',
       });
       var recentlyEmailedTable = $('#recently-emailed-table').DataTable({
         searching: false,
-        dom: '<<t>>',
+        pageLength: 20, 
+        dom: '<<t>p>',
       });
 
       // Advanced search
