@@ -1,5 +1,9 @@
 <script id="reminder-popover-content" type="text/x-handlebars-template">
-  <div class="reminder-popover-content" data-profile-id="{{!profile_id}}">
+  <div 
+    class="reminder-popover-content" 
+    data-profile-id="{{!profile_id}}" 
+    data-reminder-id="{{!reminder_id}}"
+  >
     <ul>
       <li class="reminder-option" data-reminder-recurring-checkbox='true'>
         Recurring
@@ -17,6 +21,14 @@
       <!--<li class="reminder-option" data-reminder-days="custom">
         Custom Date
       </li>-->
+      {{!#if edit}}
+      <li class="reminder-option" data-reminder-delete='true'>
+        Mark Complete
+      </li>
+      <li class="reminder-option" data-reminder-delete='true'>
+        Delete
+      </li>
+      {{!/if}}
     </ul>
   </div>
 </script>

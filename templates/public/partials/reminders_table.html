@@ -26,8 +26,7 @@
         <td>{{ r.display_last_emailed() }}</td>
         <td>
           <span>{{ r.display_alert_type() }}</span></br>
-          <a class="copy-email">Change</a>
-          <a 
+          <a tabindex="0" class="reminder-icon reminder-edit" role="button" data-toggle="popover" data-reminder-id="{{ r.id }}">Edit Reminder</a>
         </td>
       </tr>
     {% end %}

@@ -49,7 +49,9 @@
         </td>
         <td>
           {% if bp.reminder %}
-            {{ bp.reminder.display_alert_type() }}
+            <span>{{ bp.reminder.display_alert_type() }}</span>
+            </br>
+            <a tabindex="0" class="reminder-icon reminder-edit" role="button" data-toggle="popover" data-profile-id="{{ bp.profile_id }}" data-reminder-id="{{ bp.reminder.id }}">Edit Reminder</a>
           {% else %}
             <a tabindex="0" class="reminder-icon" role="button" data-toggle="popover" data-profile-id="{{ bp.profile_id }}">Set Reminder</a>
           {% end %}

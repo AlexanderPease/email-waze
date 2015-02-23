@@ -57,7 +57,7 @@ class CreateReminder(app.basic.BaseHandler):
                 return self.api_error(500, 'Error saving CompanyReminder')
         else:
             return self.api_error(400, 'Invalid reminder_type parameter')
-        return self.api_response(data={})
+        return self.api_response(data={'msg': 'Reminder Set!'})
 
 
 ########################
@@ -97,6 +97,8 @@ class EditReminder(app.basic.BaseHandler):
                 r = CompanyReminder.objects.get(id=reminder_id, user=u)
             except:
                 return self.api_error(400, 'Invalid reminder_id parameter for CompanyReminder')
+        else:
+            return self.api_error(400, "Arg profiletype must be 'profile' or 'company'")
 
         # Update reminder
         if days:
@@ -107,11 +109,11 @@ class EditReminder(app.basic.BaseHandler):
             r.recurring = True
         try:
             r.save()
-            logging.info(r)
+            logging.info("Saved %s" % r)
         except:
             return self.api_error(500, 'Error editing Reminder of type %s and id %s' %(reminder_type, reminder_id))
 
-        return self.api_response(data={})
+        return self.api_response(data={'msg': 'Updated!'})
 
 
 ########################
@@ -149,7 +151,7 @@ class DeleteReminder(app.basic.BaseHandler):
             except:
                 return self.api_error(400, 'Invalid reminder_id parameter for CompanyReminder')
         r.delete()
-        return self.api_response(data={})
+        return self.api_response(data={'msg': 'Deleted!'})
 
 
 
