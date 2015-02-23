@@ -99,6 +99,9 @@
 
   {% block user_welcome_html %}{% end %}
 
+  <!-- Reminder dropdown -->
+  {% include 'partials/reminder_popover_content.hbs' %}
+
 {% end %}
 
 {% block javascript %}
@@ -174,6 +177,18 @@
 
       // Reminder functionality for recently emailed table
       // THIS IS 100% REDUNDANT WITH CODE IN SEARCH.HTML
+      $('table.dataTable tbody tr').hover(
+        function(){
+          $('#table.dataTable tbody tr').removeClass('hover');
+          $(this).addClass('hover');
+        }, 
+        function() {
+          $(this).removeClass('hover');
+          $(this).find('.popover').popover('hide');
+        }
+      );
+      var source   = $("#reminder-popover-content").html();
+      var template = Handlebars.compile(source);
       $('.reminder-icon').each(function(){
         var context = {
           profile_id: $(this).attr('data-profile-id')

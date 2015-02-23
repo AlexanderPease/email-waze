@@ -331,9 +331,7 @@
               event.stopPropagation();
               // Checkbox, no action
               if ($(this).attr('data-reminder-recurring-checkbox')) {
-                console.log('hit checkbox');
                 var checkbox = $(this).children('.recurring-checkbox').prop("checked");
-                console.log(checkbox);
               }
               // Days, AJAX
               else {
