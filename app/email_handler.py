@@ -7,7 +7,9 @@ from db.profiledb import Profile
 ########################
 class Forward(app.basic.BaseHandler):
     """
-    Forwards email that was sent to an obscured address to the real owner
+    Forwards email that was sent to an obscured address ("foo@ntwrk.me") 
+    to the real owner.
+
     Sent to this webhook by Mailgun API
     """
     def post(self):
