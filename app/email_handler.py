@@ -27,7 +27,7 @@ class Forward(app.basic.BaseHandler):
         date = self.get_argument('Date', '')
         
         try:
-            to_address_string = to_address.split('@')[0] # Splits out "@ansatz.me"
+            to_address_string = to_address.split('@')[0] # Splits out "@ntwrk.me"
             p = Profile.objects.get(burner=to_address_string)
             logging.info("Found profile for %s " % p)
         except:
@@ -36,18 +36,18 @@ class Forward(app.basic.BaseHandler):
 
         try:
             # Add intro message
-            intro_msg = '''%s found you on <a href="https://www.ansatz.me">Ansatz</a>. 
+            intro_msg = '''%s found you on <a href="https://www.ntwrk.me">NTWRK</a>. 
                         We never give away your real email address, but instead
                         let people find a "public" email address that you can 
                         delete or change the permissions for 
-                        <a href="https://ansatz.me">here</a>.
+                        <a href="https://ntwrk.me">here</a>.
                         If you'd like to respond to %s directly just hit 
                         Reply.<br/><br/>''' % (from_address, from_address)
             body = intro_msg + body
 
             # Switch from to reply-to address
             reply_to = from_address # User who sent the email is now the reply-to address
-            from_address = 'Ansatz.me <postmaster@ansatz.me>'
+            from_address = 'NTWRK <postmaster@ntwrk.me>'
 
             request = self.send_email(from_address=from_address,
                         to_address=p.email,

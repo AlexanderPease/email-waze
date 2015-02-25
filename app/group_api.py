@@ -67,23 +67,23 @@ class CreateGroup(app.basic.BaseHandler):
 
     def send_invite_email_new_user(self, to_address, current_user):
         """
-        Sends invite email to a new Ansatz user
+        Sends invite email to a new user
         """
-        self.send_email(from_address='Ansatz.me <postmaster@ansatz.me>',
+        self.send_email(from_address='NTWRK <postmaster@ntwrk.me>',
             to_address=to_address,
             subject='Invitation from %s (%s)' % (current_user.name, current_user.email),
             html_text='''%s (%s) has invited you to join 
-            <a href="%s">Ansatz.me</a>! 
-            Ansatz is the anti-CRM: leverage your team's network
+            <a href="%s">NTWRK</a>! 
+            NTWRK is the anti-CRM: leverage your team's network
             and communication without any tedious data entry or 
             tracking. Visit 
-            <a href="https://ansatz.me">https://ansatz.me</a> 
+            <a href="https://ntwrk.me">https://ntwrk.me</a> 
             to learn more!''' % (current_user.name, current_user.email, settings.get('base_url'))
             )
 
     def send_invite_email_existing_user(self, group, to_address, current_user):
         """
-        Sends invite email to an existing Ansatz user
+        Sends invite email to an existing user
         """
         # Print string of existing team members
         group_members = ""
@@ -94,14 +94,15 @@ class CreateGroup(app.basic.BaseHandler):
             group_members = group_members + group_member.name + " (" + group_member.email + ")"
             first = False
         # Send email
-        self.send_email(from_address='Ansatz.me <postmaster@ansatz.me>',
+        self.send_email(from_address='NTWRK <postmaster@ntwrk.me>',
             to_address=to_address,
             subject='Invitation from %s (%s)' % (current_user.name, current_user.email),
             html_text='''%s (%s) has invited you to join team
-            "%s". 
+            "%s". A "NTWRK" allows a group of people to share contacts and connections
+            with one another. 
             <a href="%s/group/%s/acceptinvite">Click here</a> 
             to join!</br></br>
-            Team "%s" has %s members: %s.''' % (current_user.name, current_user.email, group.name, settings.get('base_url'), group.id, group.name, len(group.users), group_members)
+            "%s" has %s members: %s.''' % (current_user.name, current_user.email, group.name, settings.get('base_url'), group.id, group.name, len(group.users), group_members)
             )
 
 ########################
@@ -194,7 +195,7 @@ class AcceptInvite(app.basic.BaseHandler):
 
         if u.email in g.invited_emails or u.get_domain() in g.domain_setting:
             # Send emails to new member and existing members
-            self.send_email(from_address='Ansatz.me <postmaster@ansatz.me>',
+            self.send_email(from_address='NTWRK <postmaster@ntwrk.me>',
                         to_address=u.email,
                         subject="You've joined %s!" % g.name,
                         html_text='''Congrats! You're now the newest member of
@@ -204,15 +205,15 @@ class AcceptInvite(app.basic.BaseHandler):
                         group.''' % (g.name, len(g.users), settings.get('base_url'), g.id)
                         )
             for group_user in g.users:
-                self.send_email(from_address='Ansatz.me <postmaster@ansatz.me>',
+                self.send_email(from_address='NTWRK <postmaster@ntwrk.me>',
                         to_address=group_user.email,
                         subject="%s joined %s!" % (u.name, g.name),
                         html_text='''%s (%s) has joined you as a member of team "%s".
                         This means that you are now sharing contacts and email metadata
-                        with %s. If you want to remove yourself from the team, 
-                        <a href="%s/group/%s/view">click here</a> to view the 
-                        team settings. </br>
-                        Team "%s" now has %s members and is administered by %s 
+                        with %s. Click 
+                        <a href="%s/group/%s/view">here</a> to view the 
+                        your settings. </br>
+                        "%s" now has %s members and is administered by %s 
                         (%s)''' % (u.name, u.email, g.name, u.name, settings.get('base_url'), g.id, g.name, len(g.users) + 1, g.admin.name, g.admin.email)
                         )
                 # Number of members is len(g.users) + 1 b/c I add_user below. 
@@ -228,7 +229,7 @@ class AcceptInvite(app.basic.BaseHandler):
             return self.api_error(401, 'User is not allowed to join that team')
 
 ########################
-### User accepts a group invitation
+### User leaves
 ### /api/group/(?P<group>[A-z-+0-9]+)/leave
 ########################
 class Leave(app.basic.BaseHandler):
@@ -251,14 +252,14 @@ class Leave(app.basic.BaseHandler):
         return self.api_response(data={})
 
 ########################
-### User accepts a group invitation
+### Group admin deletes the entire group
 ### /api/group/(?P<group>[A-z-+0-9]+)/delete
 ########################
 class Delete(app.basic.BaseHandler):
     @tornado.web.authenticated
     def post(self, group_id):
         """
-        User removes him/herself from the group
+        Group admin deletes the group
         """
         if not self.current_user:
             return self.api_error(401, 'User is not logged in')

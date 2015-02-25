@@ -80,11 +80,11 @@ class Application(tornado.web.Application):
       (r"/user/welcome", app.user.UserWelcome),
 
       # Group pages
-      (r"/group/create", app.group.CreateGroup),
-      (r"/group/(?P<group>[A-z-+0-9]+)/view", app.group.ViewGroup),
-      (r"/group/(?P<group>[A-z-+0-9]+)/edit", app.group.EditGroup),
-      (r"/group/(?P<group>[A-z-+0-9]+)/acceptinvite", app.group.AcceptGroupInvite),
-      (r"/group/(?P<group>[A-z-+0-9]+)/delete", app.group.DeleteGroup),
+      #(r"/group/create", app.group.CreateGroup),
+      #(r"/group/(?P<group>[A-z-+0-9]+)/view", app.group.ViewGroup),
+      #(r"/group/(?P<group>[A-z-+0-9]+)/edit", app.group.EditGroup),
+      #(r"/group/(?P<group>[A-z-+0-9]+)/acceptinvite", app.group.AcceptGroupInvite),
+      #(r"/group/(?P<group>[A-z-+0-9]+)/delete", app.group.DeleteGroup),
 
       # Admin
       (r"/admin", app.admin.AdminHome),
