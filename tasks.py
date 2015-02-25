@@ -115,9 +115,9 @@ def onboard_user(u):
                         email = email.address
                         logging.info('Adding: %s <%s>' % (name, email))
                         update_profile_and_connection(email=email, 
-                                                        name=name,
-                                                        user = u,
-                                                        gmail_service=gmail_service)
+                            name=name,
+                            user = u,
+                            gmail_service=gmail_service)
         u.last_updated = datetime.datetime.now()
         u.onboarded = True
         u.save()
