@@ -155,6 +155,17 @@ class BaseHandler(tornado.web.RequestHandler):
                 "message": httplib.responses[status_code],
         })
 
+    def reject_email_local(self):
+        '''
+        Returns of list of local email address parts to ignore
+        '''
+        return ['reply', 'notify', 'notification']
+
+    def reject_email_domain(self):
+        '''
+        Returns of list of email address domains to ignore
+        '''
+        return ['craigslist']
 
     ''' Sends email using PostMark'''
     '''

@@ -3,10 +3,12 @@ from celery.decorators import periodic_task
 from celery.utils.log import get_task_logger
 logger = get_task_logger(__name__)
 
+import json
 from datetime import timedelta
 import settings, logging, datetime
 from email.utils import parseaddr
 from mongoengine import DoesNotExist
+from app.methods import blacklist_email
 
 from db.profiledb import Profile
 from db.userdb import User
@@ -14,17 +16,19 @@ from db.connectiondb import Connection
 from db.groupdb import Group
 from db.statsdb import Stats
 from db.companydb import Company
+from db.gmailmessagejobdb import GmailMessageJob
+from db.gmailjobdb import GmailJob
 
 import gdata.contacts.client
 import app.gmail as gmail
-
-import json
 
 app = Celery('tasks', 
     broker=settings.get('rabbitmq_bigwig_url'),
     backend='amqp')
 
-
+###########################
+### Periodic Tasks
+###########################
 @periodic_task(run_every=timedelta(minutes=5))
 def awake():
     """
@@ -46,6 +50,28 @@ def add_stats():
     stats.companies = len(Company.objects)
     stats.save()
 
+@periodic_task(run_every=timedelta(hours=12))
+def update_users():
+    """
+    Update all users every 24 hours
+    """
+    for u in User.objects.order_by('-last_web_action'):
+        try:
+            update_user(u) # to be recent_gmail(u)
+        except:
+            pass
+
+@periodic_task(run_every=timedelta(hours=12))
+def update_users():
+    """
+    Process GmailMessageJobs for all Users
+    """
+    for u in User.objects.order_by('-last_web_action'):
+        try:
+            process_gmail_message_jobs(u)
+        except:
+            pass
+
 
 #@periodic_task(run_every=timedelta(hours=24))
 def company_list():
@@ -62,14 +88,18 @@ def company_list():
                 "id": str(c.id),
                 "domain": c.domain
                 }
+                '''
                 if 'logo' in c.clearbit.keys():
                     c_json['logo'] = c.clearbit['logo']
                 else:
                     c_json['logo'] = None
+                '''
                 json_list.append(c_json)
         json.dump(json_list, f)
 
-
+###########################
+### Atomic Tasks
+###########################
 @app.task
 def onboard_user(u):
     """
@@ -184,16 +214,84 @@ def update_user(u):
     return
 
 
-@periodic_task(run_every=timedelta(hours=12))
-def update_users():
-    """
-    Update all users every 24 hours
-    """
-    for u in User.objects:
-        try:
-            update_user(u)
-        except:
-            pass
+        
+def recent_gmail(user):
+    '''
+    Checks all recent emails from Gmail of User, and creates GmailMessageJobs
+    to be processed
+    '''
+    logging.info("Updating %s in tasks.recent_gmail()" % u)
+    gmail_service = user.get_service(service_type='gmail')
+    if not gmail_service:
+        logging.info("Could not instantiate authenticated service for %s" % u)
+        return
+    messages = gmail.ListMessagesMatchingQuery(
+        service=gmail_service,
+        user_id='me',
+        query='after:%s' % u.last_updated.strftime('%Y/%m/%d')
+        )
+     # Track list of emails that have been updated by this function
+    updated_emails = []
+    msg_counter = 0
+    total_num = len(messages)
+    for msg in messages:
+        g = GmailMessageJob(
+            user = user,
+            message_id = msg['id'],
+            thread_id = msg['threadId'])
+        g.save()
+    # Save completed job specs to user
+    user.last_updated = datetime.datetime.now()
+    user.save()
+    logging.info("Finished updating %s in tasks.recent_gmail()" % u)
+
+def process_gmail_message_jobs(user):
+    '''
+    Processes all unfinished GmailMessageJobs for this User. 
+    Checks the email of the GmailMessageJob to:
+        1. Create new Profiles
+        2. Create GmailJob for the specific User. 
+    '''
+
+    # Authenticate
+    gmail_service = user.get_service(service_type='gmail')
+    if not gmail_service:
+        logging.info("Could not instantiate authenticated service for %s" % u)
+        return
+
+    # Process jobs
+    for gmail_message_job in GmailMessageJob.objects(
+        user = user, 
+        date_completed__exists = False):
+        #raw_input('Enter to continue: ')
+        gmail_message_job.attempts = gmail_message_job.attempts + 1
+
+        logging.info("Checking message of id: %s" % gmail_message_job.message_id)
+        msg = gmail.GetMessage(gmail_service, 'me', gmail_message_job.message_id)
+        msg_header = gmail.GetMessageHeader(msg)
+        logging.info(msg_header)
+        if msg_header:
+            # TODO: CREATE PROFILE FOR ALL CCED BUT NO CONNECTIONS
+            header_list = ['Delivered-To', 'Return-Path', 'From', 'To'] # Which email addresses to check
+            for header in header_list:
+                if header in msg_header.keys():
+                    field = parseaddr(msg_header[header]) # Allows local emails addresses unfortunately
+                    name = field[0]
+                    email = field[1]
+                    logging.info('%s, %s' % (name, email))
+
+                    if email and email is not "" and not blacklist_email(email):
+                        gmail_job, created_flag = GmailJob.objects.get_or_create(
+                            user = user,
+                            email = email)
+                        # Try to add name if necessary
+                        if name and name is not "":
+                            if (not created_flag and not gmail_job.name) or created_flag:
+                                    gmail_job.name = name
+                        gmail_job.save()
+                        logging.info(gmail_job)
+        gmail_message_job.date_completed = datetime.datetime.now()
+        gmail_message_job.save()
 
 
 def update_profile_and_connection(email, name, user, gmail_service):

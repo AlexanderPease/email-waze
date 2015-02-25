@@ -4,6 +4,8 @@ import mongoengine.errors
 import logging, random
 from db.companydb import Company
 from email.utils import parseaddr
+from app.methods import blacklist_email
+from app.methods import email_domain
 
 mongo_database = settings.get('mongo_database')
 connect('profile', host=mongo_database['host'])
@@ -45,7 +47,7 @@ class Profile(Document):
         Returns just the domain name of self.email
         Ex: reply.craigslist.com from foo@reply.craigslist.com
         """
-        return self.email.split('@')[1]
+        return email_domain(self.email)
 
     def get_domain_title(self):
         """
@@ -91,6 +93,10 @@ class Profile(Document):
         Returns:
             The Profile instance if successfully created
         """
+        # Brief set of rules to ignore certain emails
+        if Profile.blacklist_email(email):
+            return
+        # Add to profile
         try:
             p, created = Profile.objects.get_or_create(email=email) # This automatically saves()
             if p and created:
@@ -98,20 +104,12 @@ class Profile(Document):
                 if Profile.email_exists(email) > 1:
                     p.delete()
                     return
-
-                # Only add attributes here. Don't overwrite attributes if already created
+                # Set attributes
                 p.name = name
                 p.domain = p.get_domain()
                 p.save() 
-                # Brief set of rules to ignore certain emails
-                if 'reply' in p.email or 'notify' in p.email or 'notification' in p.email or 'info' in p.domain or len(p.email) > 40 or 'ansatz.me' in p.domain:
-                    p.delete()
-                    logging.info("%s did not pass tests, not added to database" % email)
-                else:
-                    #p.set_burner_by_algo()
-                    p.save()
-                    logging.info('Added to database: %s %s' % (p.name, p.email))
-                    return p
+                logging.info('Added to database: %s %s' % (p.name, p.email))
+                return p
             # Attempted to add existing email address
             elif p and not created:
                 logging.info('%s already exists, no change to database' % p)

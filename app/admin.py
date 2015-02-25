@@ -11,6 +11,7 @@ from db.connectiondb import Connection
 from db.statsdb import Stats
 from db.companydb import Company
 from db.reminderdb import ProfileReminder, CompanyReminder
+import tasks
 
 
 ###########################
@@ -110,12 +111,6 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
-        '''
-        for pr in ProfileReminder.objects():
-            logging.info(pr)
-            pr.save()
-            logging.info(pr.company)
-        '''
 
         # Counts number of profiles that have an email address
         # that is duplicated (via capitalization) in the database
