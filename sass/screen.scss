@@ -398,6 +398,7 @@ Buttons
 .open>.dropdown-toggle.btn-primary {
   background: $lightning-yellow;
   color: $white;
+  outline: none;
 }
 .btn-primary:disabled {
   background: $light-grey;
