@@ -413,6 +413,11 @@
       $('#people-header').text('People (' + results.profiles.length + ')');
       $('#people-company-header-break').text('/');
       $('#companies-header').text('Companies (' + results.companies.length + ')');
+      if (results.companies.length == 0) {
+        $('#companies-header').addClass('unclickable');
+      } else {
+        $('#companies-header').removeClass('unclickable');
+      }
       $('#filter-link').removeClass('unselected');
       $('#filter-link').unbind('click');
     }
