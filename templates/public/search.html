@@ -330,7 +330,7 @@
               console.log('Server returned status code: ' + json.status_code);
               json = {'results_msg': 'Error loading data, please try again'}
               displayLoaded(results);
-              return []
+              return [];
             }
             // Redirect if no results
             if (results.profiles == null) {
