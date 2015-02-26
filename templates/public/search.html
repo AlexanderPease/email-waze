@@ -409,7 +409,7 @@
 
     /* Displays everything once data is loaded */
     function displayLoaded(results) {
-      $('#results').text(results['results_msg']);
+      $('#results').html(results['results_msg']);
       $('#people-header').text('People (' + results.profiles.length + ')');
       $('#people-company-header-break').text('/');
       $('#companies-header').text('Companies (' + results.companies.length + ')');
@@ -424,7 +424,7 @@
     /* Displays loading messages */
     function displayLoading() {
       $('.search-tt').blur();
-      $('#results').text('Loading...');
+      $('#results').html('Loading...');
       $('#people-header').text('');
       $('#people-company-header-break').text('');
       $('#companies-header').text('');

@@ -87,7 +87,7 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
                         }
                     ]
                 })
-                results['results_msg'] = 'Results for "%s"' % q
+                results['results_msg'] = 'Results for &lsquo;%s&rsquo;' % q
         # Exact ID search
         elif company_id:
             company = Company.objects.get(id=company_id)
@@ -97,7 +97,7 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
         else:
             # Global profile results
             profiles = Profile.objects(name__icontains=name, email__icontains=domain) # case-insensitive contains
-            results['results_msg'] = 'Results for "%s %s"' % (name, domain)
+            results['results_msg'] = 'Results for &lsquo;%s,&rsquo; &lsquo;%s&rsquo;' % (name, domain)
 
         # No results
         if len(profiles) == 0:
