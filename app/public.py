@@ -33,7 +33,8 @@ class Index(app.basic.BaseHandler):
         today_reminders, later_reminders = ProfileReminder.today_later_reminders(user=self.user)
         # Show recently contacted
         recent_contacts = self.user.recent_contacts()
-        return self.render('public/dashboard.html', 
+        return self.render(
+            'public/dashboard.html', 
             msg=msg, 
             err=err,
             nav_title=True,
@@ -56,7 +57,8 @@ class Search(app.basic.BaseHandler):
   def get(self):
     # Groups for advanced search
     gs = User.objects.get(email=self.current_user).get_groups()
-    return self.render('public/search.html', 
+    return self.render(
+        'public/search.html', 
         groups=gs, 
         nav_select='search',
         nav_title=True)
@@ -70,7 +72,8 @@ class Reminders(app.basic.BaseHandler):
   def get(self):
     u = User.objects.get(email=self.current_user)
     today_reminders, later_reminders = ProfileReminder.today_later_reminders(user=u)
-    return self.render('public/reminders.html',
+    return self.render(
+        'public/reminders.html',
         nav_select="reminders",
         nav_title="Reminders",
         today_reminders=today_reminders, 
@@ -82,7 +85,8 @@ class Reminders(app.basic.BaseHandler):
 ########################
 class About(app.basic.BaseHandler):
   def get(self):
-    return self.render('public/about.html',
+    return self.render(
+        'public/about.html',
         nav_select="about",
         nav_title="About")
 
@@ -93,6 +97,9 @@ class About(app.basic.BaseHandler):
 ########################
 class Pricing(app.basic.BaseHandler):
   def get(self):
-    return self.render('public/pricing.html')
+    return self.render(
+        'public/pricing.html',
+        nav_select="pricing",
+        nav_title="Pricing")
 
 
