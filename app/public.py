@@ -82,7 +82,9 @@ class Reminders(app.basic.BaseHandler):
 ########################
 class About(app.basic.BaseHandler):
   def get(self):
-    return self.render('public/about.html')
+    return self.render('public/about.html',
+        nav_select="about",
+        nav_title="About")
 
 
 ########################
