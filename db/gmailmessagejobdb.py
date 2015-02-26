@@ -15,7 +15,7 @@ class GmailMessageJob(Document):
     user = ReferenceField(User, required=True)
 
     # The unique ID identifying the Gmail message and thread for this user
-    message_id = StringField(required=True, unique_with='user')
+    message_id = StringField(required=True)
     thread_id = StringField() # not currently used
 
     # Date this job was created and completed

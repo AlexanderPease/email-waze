@@ -94,7 +94,7 @@ class Profile(Document):
             The Profile instance if successfully created
         """
         # Brief set of rules to ignore certain emails
-        if Profile.blacklist_email(email):
+        if blacklist_email(email) or not name or name is "":
             return
         # Add to profile
         try:

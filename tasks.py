@@ -50,25 +50,36 @@ def add_stats():
     stats.companies = len(Company.objects)
     stats.save()
 
-@periodic_task(run_every=timedelta(hours=12))
-def update_users():
+@periodic_task(run_every=timedelta(hours=6))
+def all_recent_gmail():
     """
     Update all users every 24 hours
     """
     for u in User.objects.order_by('-last_web_action'):
         try:
-            update_user(u) # to be recent_gmail(u)
+            recent_gmail(u)
         except:
             pass
 
-@periodic_task(run_every=timedelta(hours=12))
-def update_users():
+@periodic_task(run_every=timedelta(hours=6))
+def all_gmail_message_jobs():
     """
     Process GmailMessageJobs for all Users
     """
     for u in User.objects.order_by('-last_web_action'):
         try:
             process_gmail_message_jobs(u)
+        except:
+            pass
+
+@periodic_task(run_every=timedelta(hours=6))
+def all_gmail_jobs():
+    """
+    Process GmailMessageJobs for all Users
+    """
+    for u in User.objects.order_by('-last_web_action'):
+        try:
+            process_gmail_jobs(u)
         except:
             pass
 
@@ -213,27 +224,22 @@ def update_user(u):
     logging.info("Finished updating %s in tasks.update_user()" % u)
     return
 
-
-        
 def recent_gmail(user):
     '''
     Checks all recent emails from Gmail of User, and creates GmailMessageJobs
     to be processed
     '''
-    logging.info("Updating %s in tasks.recent_gmail()" % u)
+    logging.info("Updating %s in tasks.recent_gmail()" % user)
     gmail_service = user.get_service(service_type='gmail')
     if not gmail_service:
         logging.info("Could not instantiate authenticated service for %s" % u)
         return
+    now = datetime.datetime.now() # So to not miss emails created during running of this job
     messages = gmail.ListMessagesMatchingQuery(
         service=gmail_service,
         user_id='me',
-        query='after:%s' % u.last_updated.strftime('%Y/%m/%d')
-        )
+        query='after:%s' % user.last_updated.strftime('%Y/%m/%d'))
      # Track list of emails that have been updated by this function
-    updated_emails = []
-    msg_counter = 0
-    total_num = len(messages)
     for msg in messages:
         g = GmailMessageJob(
             user = user,
@@ -241,10 +247,92 @@ def recent_gmail(user):
             thread_id = msg['threadId'])
         g.save()
     # Save completed job specs to user
-    user.last_updated = datetime.datetime.now()
+    user.last_updated = now
     user.save()
-    logging.info("Finished updating %s in tasks.recent_gmail()" % u)
+    logging.info("Finished updating %s in tasks.recent_gmail()" % user)
 
+def process_gmail_message_jobs(user):
+    '''
+    Processes all unfinished GmailMessageJobs for this User. 
+    Checks the email of the GmailMessageJob to create all Profiles, and 
+    create/update Connections between that Profile and User. 
+    '''
+
+    # Authenticate
+    gmail_service = user.get_service(service_type='gmail')
+    if not gmail_service:
+        logging.info("Could not instantiate authenticated service for %s" % u)
+        return
+
+    # Process jobs
+    for gmail_message_job in GmailMessageJob.objects(
+        user = user, 
+        date_completed__exists = False):
+        gmail_message_job.attempts = gmail_message_job.attempts + 1
+        gmail_message_job.save()
+
+        logging.info("Checking message of id: %s" % gmail_message_job.message_id)
+        msg = gmail.GetMessage(gmail_service, 'me', gmail_message_job.message_id)
+        msg_header = gmail.GetMessageHeader(msg)
+        logging.info(msg_header)
+        if msg_header:
+            header_list = ['Delivered-To', 'Return-Path', 'From', 'To', 'Cc'] # Which email addresses to check
+            for header in header_list:
+                if header in msg_header.keys():
+                    field = parseaddr(msg_header[header]) # Allows local emails addresses unfortunately
+                    name = field[0]
+                    email = field[1]
+                    logging.info('%s, %s' % (name, email))
+
+                    if email and email is not "" and not blacklist_email(email):
+                        try:
+                            p = Profile.objects.get(email=email)
+                        except:
+                            p = Profile.add_new(name=name, email=email)
+
+                        # Add/update Connection if not Cc field or to oneself
+                        if p and header != 'Cc' and user.email != p.email:
+                            gmail_job, created_flag = GmailJob.objects.get_or_create(
+                                user = user,
+                                profile = p, 
+                                date_completed__exists = False)
+                            gmail_job.save()
+                            logging.info(gmail_job)
+
+            gmail_message_job.date_completed = datetime.datetime.now()
+            gmail_message_job.save()
+
+def process_gmail_jobs(user):
+    '''
+    Each GmailJob is a Profile that this User needs to check to 
+    create/update Connection
+    '''
+    # Authenticate
+    gmail_service = user.get_service(service_type='gmail')
+    if not gmail_service:
+        logging.info("Could not instantiate authenticated service for %s" % u)
+        return
+
+    # Process jobs
+    for gmail_job in GmailJob.objects(
+        user = user, 
+        date_completed__exists = False):
+        raw_input('Enter to continue: ')
+        gmail_job.attempts = gmail_job.attempts + 1
+        gmail_job.save()
+        
+        c, created_flag = Connection.objects.get_or_create(
+            user = gmail_job.user,
+            profile = gmail_job.profile)
+        # Updates fields of c by searching through users'
+        # entire Gmail inbox 
+        c.populate_from_gmail(service=gmail_service)
+        logging.info(c.last_updated)
+
+        gmail_job.date_completed = datetime.datetime.now()
+        gmail_message_job.save()
+
+"""
 def process_gmail_message_jobs(user):
     '''
     Processes all unfinished GmailMessageJobs for this User. 
@@ -292,7 +380,65 @@ def process_gmail_message_jobs(user):
                         logging.info(gmail_job)
         gmail_message_job.date_completed = datetime.datetime.now()
         gmail_message_job.save()
+"""
+"""
+def process_gmail_message_jobs(user):
+    '''
+    Processes all unfinished GmailMessageJobs for this User. 
+    Checks the email of the GmailMessageJob to create all Profiles, and 
+    create/update Connections between that Profile and User. 
+    '''
 
+    # Authenticate
+    gmail_service = user.get_service(service_type='gmail')
+    if not gmail_service:
+        logging.info("Could not instantiate authenticated service for %s" % u)
+        return
+
+    # Process jobs
+    for gmail_message_job in GmailMessageJob.objects(
+        user = user, 
+        date_completed__exists = False):
+        raw_input('Enter to continue: ')
+        gmail_message_job.attempts = gmail_message_job.attempts + 1
+
+        logging.info("Checking message of id: %s" % gmail_message_job.message_id)
+        msg = gmail.GetMessage(gmail_service, 'me', gmail_message_job.message_id)
+        msg_header = gmail.GetMessageHeader(msg)
+        logging.info(msg_header)
+        if msg_header:
+            header_list = ['Delivered-To', 'Return-Path', 'From', 'To', 'Cc'] # Which email addresses to check
+            for header in header_list:
+                if header in msg_header.keys():
+                    field = parseaddr(msg_header[header]) # Allows local emails addresses unfortunately
+                    name = field[0]
+                    email = field[1]
+                    logging.info('%s, %s' % (name, email))
+
+                    if email and email is not "" and not blacklist_email(email):
+                        try:
+                            p = Profile.objects.get(email=email)
+                        except:
+                            p = Profile.add_new(name=name, email=email)
+                        
+                        # Add/update Connection if not Cc field
+                        if p and header != 'Cc':
+                            # Create connection if not to oneself
+                            if user.email == p.email:
+                                logging.info('Connection not created for email address %s to itself' % user.email)
+                            else:
+                                # Search Connection database to see if this is a new contact
+                                c, created_flag = Connection.objects.get_or_create(
+                                    user=user,
+                                    profile=p)
+                                # Updates fields of c by searching through users'
+                                # entire Gmail inbox 
+                                c.populate_from_gmail(service=gmail_service)
+                                logging.info(c.last_updated)
+
+            gmail_message_job.date_completed = datetime.datetime.now()
+            gmail_message_job.save()
+"""
 
 def update_profile_and_connection(email, name, user, gmail_service):
     """

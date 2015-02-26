@@ -102,7 +102,7 @@ class Connection(Document):
         therefore it is not optimized for speed. Only looks for messages directly
         to: and from: User and Profile.
 
-        Requires service to be from self.user, or else will populate
+        Requires service to be from Connection's self.user, or else will populate
         field incorrectly. 
 
         Args:
