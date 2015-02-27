@@ -126,12 +126,13 @@ class Scratch(app.basic.BaseHandler):
     def get(self):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
-
-
+        '''
         user = User.objects.get(email="me@alexanderpease.com")
         cs = Connection.objects(user=user).order_by('-latest_email_out_date')
         logging.info(cs[0:10])
+        '''
 
+        #tasks.all_gmail_message_jobs()
         #tasks.recent_gmail(self.user)
         #tasks.process_gmail_message_jobs(self.user)
         #tasks.process_gmail_jobs(self.user)
