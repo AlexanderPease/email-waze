@@ -294,18 +294,23 @@
 
     /* Init DataTables*/
     function initSearchTable(url) {
-      console.log("Loading Search Table: " + url);
-      $('#search_table').DataTable().clear().destroy();
+      console.log("Initializing Search Table: " + url);
+      var searchTable = $('#search_table').DataTable();
+      if (searchTable) {
+        console.log('Desotrying search table')
+        //searchTable.clear();
+        searchTable.destroy();
+      }
       var searchTable = $('#search_table').DataTable({
         searching: false,
         pageLength: 20,
         lengthChange: false,
         dom: '<<t>p>',
-        processing: true,
+        //processing: true, // not working, bug
         language: {
           loadingRecords: '<img src="' + '{{ static_url("img/loading/LoadingAnimation2.gif") }}' + '">',
-          processing: '<img src="' + '{{ static_url("img/loading/LoadingAnimation2.gif") }}' + '">',
           emptyTable: 'No Results'
+          //processing: '<img src="' + '{{ static_url("img/loading/LoadingAnimation2.gif") }}' + '">',
         },
         order: [[3, "desc"]],
         columns: [
@@ -495,10 +500,10 @@
             console.warning('Server threw error to #search_table datatable');
           }
         }
+      });
 
       return searchTable;
-      });// initSearchTable()
-    }
+    } // initSearchTable()
 
         /* Called every time new data is loaded from server */
     function initCompaniesTable(results) {
