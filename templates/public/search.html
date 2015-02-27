@@ -84,7 +84,7 @@
     var current_user = '{{ current_user }}';
     $(document).ready(function() {
       // Page inits
-      displayLoading();
+      displayLoading(null);
       // Filter dropdown init
       var source   = $("#filter-popover-content").html();
       var template = Handlebars.compile(source);
@@ -115,8 +115,8 @@
           var q = $(this).val();
           var new_url = 'api/searchbaseprofileconnection?q=' + q;
           console.log(new_url)
-          $("#search_table").DataTable().ajax.url(new_url).load();
-          displayLoading();
+          var search_table = $("#search_table").DataTable().ajax.url(new_url).load();
+          displayLoading(search_table);
         }
       });
       /* Trigger search when a suggestion is selected 
@@ -127,8 +127,8 @@
         // Reload datatable
         var new_url = 'api/searchbaseprofileconnection?' + field + '_id=' + datum['id'];
         console.log(new_url)
-        $("#search_table").DataTable().ajax.url(new_url).load();
-        displayLoading();
+        var search_table = $("#search_table").DataTable().ajax.url(new_url).load();
+        displayLoading(search_table);
       });
 
       $('.search-tt').blur(function(){
@@ -165,9 +165,12 @@
         pageLength: 20,
         lengthChange: false,
         dom: '<<t>p>',
-        //scrollX: true,
-        oLanguage: {
-          sLoadingRecords: '<img src="' + '{{ static_url("img/loading/LoadingAnimation2.gif") }}' + '">'
+        processing: true,
+        language: {
+          loadingRecords: '<img src="' + '{{ static_url("img/loading/LoadingAnimation2.gif") }}' + '">',
+          processing: '<img src="' + '{{ static_url("img/loading/LoadingAnimation2.gif") }}' + '">',
+          emptyTable: 'No Results'
+
         },
         order: [[3, "desc"]],
         columns: [
@@ -366,6 +369,33 @@
         $('#modal-' + p_id).modal();
       });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      $('#search_table').on('processing.dt', function ( e, settings, processing ) {
+        console.log('processing')
+      } ).dataTable();
+
       // Search for a specific company when company row is clicked on
       $('#companies_table tbody').on('click', 'tr', function() {
         if ($('#companies_table').DataTable().data().length == 1) {
@@ -377,8 +407,8 @@
           company_id = $('td', this).parent().attr('id');
           var new_url = 'api/searchbaseprofileconnection?company_id=' + company_id;
           console.log(new_url)
-          $("#search_table").DataTable().ajax.url(new_url).load();
-          displayLoading();
+          var search_table = $("#search_table").DataTable().ajax.url(new_url).load();
+          displayLoading(search_table);
         }
       });
 
@@ -395,8 +425,8 @@
           '&domain=' + domain +
           '&group_id=' + group_id;
         console.log(newUrl);
-        displayLoading();
-        $("#search_table").DataTable().ajax.url(newUrl).load();
+        var search_table = $("#search_table").DataTable().ajax.url(newUrl).load();
+        displayLoading(search_table)
       });
 
       // Switch between profiles and companies tables
@@ -428,7 +458,10 @@
       $('#results').html(results['results_msg']);
     }
     /* Displays loading messages */
-    function displayLoading() {
+    function displayLoading(search_table) {
+      if (search_table) {
+        search_table.clear().draw();
+      }
       $('.search-tt').blur();
       $('#results').html('Loading...');
       $('#people-header').text('');

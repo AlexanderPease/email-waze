@@ -803,6 +803,9 @@ table.dataTable tbody tr {
 table.dataTable tbody tr td.dataTables_empty {
   padding-top: 20px
 }
+.dataTables_wrapper .dataTables_processing { 
+  z-index: 1000; 
+}
 
 // Pagination buttons
 .dataTables_wrapper .dataTables_paginate .paginate_button {
@@ -882,6 +885,7 @@ table.dataTable thead .sorting_asc {
 // Specific styling for each column
 table.dataTable thead .name_column {
   background-position-x: 46px;
+  //min-width: 250px;
 }
 table.dataTable thead .email_column {
   background-position-x: 47px;
