@@ -42,7 +42,8 @@
 <script>
   $(document).ready(function(){
     $('#tasks_table').DataTable({
-      paging: false
+      paging: false,
+      order: [[1, "desc"]],
     });
   });
 </script>
