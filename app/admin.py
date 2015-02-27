@@ -113,8 +113,9 @@ class Scratch(app.basic.BaseHandler):
 
         import tasks
         #tasks.recent_gmail(self.user)
-        tasks.process_gmail_message_jobs(self.user)
+        #tasks.process_gmail_message_jobs(self.user)
         #tasks.process_gmail_jobs(self.user)
+        tasks.all_gmail_jobs()
 
         # Counts number of profiles that have an email address
         # that is duplicated (via capitalization) in the database
