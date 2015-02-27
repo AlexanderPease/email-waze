@@ -127,11 +127,15 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
-        import tasks
+
+        user = User.objects.get(email="me@alexanderpease.com")
+        cs = Connection.objects(user=user).order_by('-latest_email_out_date')
+        logging.info(cs[0:10])
+
         #tasks.recent_gmail(self.user)
         #tasks.process_gmail_message_jobs(self.user)
         #tasks.process_gmail_jobs(self.user)
-        tasks.all_gmail_jobs()
+        #tasks.all_gmail_jobs()
 
         # Counts number of profiles that have an email address
         # that is duplicated (via capitalization) in the database
