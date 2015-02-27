@@ -95,7 +95,6 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
             results['results_msg'] = company.name
         # Advanced search query. Specific fields are searched
         else:
-            # Global profile results
             profiles = Profile.objects(name__icontains=name, email__icontains=domain) # case-insensitive contains
             results['results_msg'] = 'Results for &lsquo;%s,&rsquo; &lsquo;%s&rsquo;' % (name, domain)
 

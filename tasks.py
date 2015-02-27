@@ -58,7 +58,7 @@ def all_recent_gmail():
     """
     task = Task(name='all_recent_gmail')
     task.save()
-    for u in User.objects.order_by('-last_web_action'):
+    for u in User.objects().order_by('-last_web_action'):
         task.num_users = task.num_users + 1
         task.save()
         try:
@@ -77,7 +77,7 @@ def all_gmail_message_jobs():
     """
     task = Task(name='all_gmail_message_jobs', num_users=0)
     task.save()
-    for u in User.objects.order_by('-last_web_action'):
+    for u in User.objects().order_by('-last_web_action'):
         task.num_users = task.num_users + 1
         task.save()
         try:
@@ -96,7 +96,7 @@ def all_gmail_jobs():
     """
     task = Task(name='all_gmail_jobs', num_users=0)
     task.save()
-    for u in User.objects.order_by('-last_web_action'):
+    for u in User.objects().order_by('-last_web_action'):
         task.num_users = task.num_users + 1
         task.save()
         try:

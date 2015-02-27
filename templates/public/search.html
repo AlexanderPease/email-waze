@@ -334,7 +334,8 @@
             }
             // Redirect if no results
             if (results.profiles == null) {
-              window.location.href = "{{ settings.get('base_url') }}" + "?err=no_results";
+              //window.location.href = "{{ settings.get('base_url') }}" + "?err=no_results";
+              return [];
             }
             // Process results
             var profiles = results.profiles;
