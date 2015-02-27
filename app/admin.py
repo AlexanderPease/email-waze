@@ -11,6 +11,7 @@ from db.connectiondb import Connection
 from db.statsdb import Stats
 from db.companydb import Company
 from db.reminderdb import ProfileReminder, CompanyReminder
+from db.taskdb import Task
 import tasks
 
 
@@ -91,6 +92,21 @@ class DB_Companies(app.basic.BaseHandler):
         else:
             c = Company.objects()
             return self.render('admin/db_companies.html', companies=c, encode=ui_methods.encode)
+
+
+###########################
+### ASCII view of database
+### /admin/db_tasks
+###########################
+class DB_Tasks(app.basic.BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        if self.current_user not in settings.get('staff'):
+            self.redirect('/')
+        else:
+            t = Task.objects()
+            return self.render('admin/db_tasks.html', tasks=t)
+
 
 
 ###########################

@@ -1,0 +1,51 @@
+{% extends "../base.html" %}
+{% block body %}
+  <div class="feature">
+    <div class="container">
+      <h2>{{ len(tasks) }} entries</h2>
+
+      <table id="tasks_table" class="row-border">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>User</th>
+            <th># Users</th>
+            <th># Users Completed</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in tasks %}
+            <tr>
+              <td>{{ t.name }}</td>
+              <td>{{ t.start }}</td>
+              <td>{{ t.end }}</td>
+
+              {% if t.user %}
+                <td>{{ t.user }}</td>
+              {% else %}
+                <td>N/A</td>
+              {% end %}
+
+              <td>{{ t.num_users }}</td>
+              <td>{{ t.num_users_completed }}</td>
+            </tr>
+          {% end %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% end %}
+
+{% block javascript %}
+<script>
+  $(document).ready(function(){
+    $('#tasks_table').DataTable({
+      paging: false
+    });
+  });
+</script>
+{% end %}
+
+
