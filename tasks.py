@@ -245,6 +245,9 @@ def process_gmail_message_jobs(user):
 
     # Process jobs
     for gmail_message_job in gmail_message_jobs:
+        if 'localhost' not in settings.get('base_url'):
+            raw_input('Enter to continue: ')
+
         gmail_message_job.attempts = gmail_message_job.attempts + 1
         gmail_message_job.save()
 
@@ -298,7 +301,8 @@ def process_gmail_jobs(user):
 
     # Process jobs
     for gmail_job in gmail_jobs:
-        raw_input('Enter to continue: ')
+        if 'localhost' not in settings.get('base_url'):
+            raw_input('Enter to continue: ')
         gmail_job.attempts = gmail_job.attempts + 1
         gmail_job.save()
         
