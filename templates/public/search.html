@@ -170,7 +170,6 @@
           loadingRecords: '<img src="' + '{{ static_url("img/loading/LoadingAnimation2.gif") }}' + '">',
           processing: '<img src="' + '{{ static_url("img/loading/LoadingAnimation2.gif") }}' + '">',
           emptyTable: 'No Results'
-
         },
         order: [[3, "desc"]],
         columns: [
@@ -390,10 +389,14 @@
 
 
 
-
-
       $('#search_table').on('processing.dt', function ( e, settings, processing ) {
-        console.log('processing')
+        console.log('processing');
+        $('#search_table tbody td.dataTables_empty').each(function(){
+          console.log($(this));
+          $(this).text('');
+          $(this).addClass('dataTables_loading');
+        })
+        console.log('end processing');
       } ).dataTable();
 
       // Search for a specific company when company row is clicked on

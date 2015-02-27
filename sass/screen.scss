@@ -803,9 +803,11 @@ table.dataTable tbody tr {
 table.dataTable tbody tr td.dataTables_empty {
   padding-top: 20px
 }
-.dataTables_wrapper .dataTables_processing { 
-  z-index: 1000; 
+// Manually deal with "processing" of new AJAX calls
+table.dataTable tbody tr td.dataTables_loading {
+  background: url('../img/loading/LoadingAnimation2.gif') no-repeat center center;
 }
+//.dataTables_wrapper .dataTables_processing { z-index: 1000; } // not working
 
 // Pagination buttons
 .dataTables_wrapper .dataTables_paginate .paginate_button {
