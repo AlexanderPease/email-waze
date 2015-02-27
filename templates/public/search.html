@@ -114,8 +114,9 @@
         if (event.which == 13) {
           var q = $(this).val();
           var newUrl = 'api/searchbaseprofileconnection?q=' + q;
-          initSearchTable(newUrl);
-          //$("#search_table").DataTable().ajax.url(newUrl).load();
+          //initSearchTable(newUrl);
+          var searchTable = $("#search_table").DataTable().ajax.url(newUrl)
+          searchTable.ajax.reload();
           displayLoading();
         }
       });
@@ -126,8 +127,9 @@
         var field = name; 
         // Reload datatable
         var newUrl = 'api/searchbaseprofileconnection?' + field + '_id=' + datum['id'];
-        initSearchTable(newUrl);
-        //$("#search_table").DataTable().ajax.url(new_url).load();
+        //initSearchTable(newUrl);
+        var searchTable = $("#search_table").DataTable().ajax.url(newUrl);
+        searchTable.ajax.reload()
         displayLoading();
       });
 
@@ -211,9 +213,10 @@
           /* Reload data for a single company if search table currentnly has
             profiles for multiple companies */
           company_id = $('td', this).parent().attr('id');
-          var new_url = 'api/searchbaseprofileconnection?company_id=' + company_id;
-          initSearchTable(url);
-          //$("#search_table").DataTable().ajax.url(new_url).load();
+          var newUrl = 'api/searchbaseprofileconnection?company_id=' + company_id;
+          //initSearchTable(url);
+          var searchTable = $("#search_table").DataTable().ajax.url(newUrl)
+          searchTable.ajax.reload();
           displayLoading();
         }
       });
@@ -230,8 +233,9 @@
         var newUrl = 'api/searchbaseprofileconnection?name=' + name + 
           '&domain=' + domain +
           '&group_id=' + group_id;
-        initSearchTable(newUrl);
-        //$("#search_table").DataTable().ajax.url(newUrl).load();
+        //initSearchTable(newUrl);
+        var searchTable = $("#search_table").DataTable().ajax.url(newUrl);
+        searchTable.ajax.reload();
         displayLoading()
       });
 
@@ -295,12 +299,6 @@
     /* Init DataTables*/
     function initSearchTable(url) {
       console.log("Initializing Search Table: " + url);
-      var searchTable = $('#search_table').DataTable();
-      if (searchTable) {
-        console.log('Desotrying search table')
-        //searchTable.clear();
-        searchTable.destroy();
-      }
       var searchTable = $('#search_table').DataTable({
         searching: false,
         pageLength: 20,
@@ -501,8 +499,7 @@
           }
         }
       });
-
-      return searchTable;
+      //return searchTable;
     } // initSearchTable()
 
         /* Called every time new data is loaded from server */
