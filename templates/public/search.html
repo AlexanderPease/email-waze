@@ -335,6 +335,7 @@
             // Redirect if no results
             if (results.profiles == null) {
               //window.location.href = "{{ settings.get('base_url') }}" + "?err=no_results";
+              displayNoResults(results)
               return [];
             }
             // Process results
@@ -421,6 +422,10 @@
       }
       $('#filter-link').removeClass('unselected');
       $('#filter-link').unbind('click');
+    }
+    /* Displays if no results from database */
+    function displayNoResults(results) {
+      $('#results').html(results['results_msg']);
     }
     /* Displays loading messages */
     function displayLoading() {

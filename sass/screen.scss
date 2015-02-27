@@ -800,6 +800,9 @@ table.dataTable.display tbody tr.even.hover {
 table.dataTable tbody tr {
   height: 65px;
 }
+table.dataTable tbody tr td.dataTables_empty {
+  padding-top: 20px
+}
 
 // Pagination buttons
 .dataTables_wrapper .dataTables_paginate .paginate_button {
