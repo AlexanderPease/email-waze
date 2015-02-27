@@ -48,10 +48,12 @@
     var dataTable = $('#today-reminders-table').DataTable({
       searching: false,
       dom: '<<t>>',
+      order: [[2, "desc"]],
     });
     var dataTable = $('#later-reminders-table').DataTable({
       searching: false,
       dom: '<<t>>',
+      order: [[2, "desc"]],
     });
 
     // Toggle reminders

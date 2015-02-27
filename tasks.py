@@ -311,6 +311,91 @@ def process_gmail_jobs(user):
 
         gmail_job.date_completed = datetime.datetime.now()
         gmail_job.save()
+
+def update_profile_and_connection(email, name, user, gmail_service):
+    """
+    Logic to update both Profile and Connection databases for the given 
+    User and an email and name
+    """ 
+    # add_new handles duplicates, collisions, etc.
+    # effectively get_or_create 
+    p = Profile.add_new(name=name, email=email)
+
+    # Ensure p was succesfully created before 
+    # adding a Connection. Profile.add_new() sometimes fails (for good reason,
+    # like email address was a reply.craigslist.com one)
+    if not p:
+        logging.warning("Could not find or add Profile of email %s" % email)
+        return
+
+    # Create connection if not to oneself
+    if user.email == p.email:
+        logging.info('Connection not created for email address %s to itself' % user.email)
+    else:
+        # Search Connection database to see if this is a new contact
+        c, created_flag = Connection.objects.get_or_create(user=user,
+                                                        profile=p)
+        # If newly created Connection, fill it in by
+        # searching Gmail API
+        if created_flag:
+            logging.info('Created %s' % c)
+        else:
+            logging.info('%s already exists, not updating' % c)
+
+        # Updates fields of c by searching through users'
+        # entire Gmail inbox 
+        c.populate_from_gmail(service=gmail_service)
+
+### Local 
+logging.getLogger().setLevel(logging.INFO)
+def remove_capitalization_redundant_pc():
+    count = 1;
+    for p in Profile.objects():
+        logging.info('Count: %s' % count)
+        ps = Profile.objects(email__iexact=p.email)
+        if len(ps) > 1:
+            merge_profiles(ps)
+        count += 1
+
+def merge_profiles(ps):
+    if len(ps) != 2:
+        logging.warning('%s profiles given' % len(ps)) 
+    else:
+        p1 = ps[0]
+        p2 = ps[1]
+        # Just iterate through p2 Connections
+        cs2 = Connection.objects(profile=p2)
+        for c2 in cs2:
+            u = c2.user
+            # See if there is a conflicting Connection
+            try:
+                c1 = Connection.objects.get(profile=p1, user=u)
+            except:
+                c1 = None
+            if c1:
+                # Reconcile c and c_dup
+                c1.total_emails_out += c2.total_emails_out
+                c1.total_emails_in += c2.total_emails_in
+                if c1.days_since_emailed_out() > c2.days_since_emailed_out():
+                    c1.latest_email_out_date = c2.latest_email_out_date
+                if c1.days_since_emailed_in() > c2.days_since_emailed_in():
+                    c1.latest_email_in_date = c2.latest_email_in_date
+                c2.delete()
+            else:
+                # No conflict, attach c to p1
+                c2.profile = p1
+                c2.save()
+        p2.delete()
+
+def print_info(email):
+    ps = Profile.objects(email__iexact=email)
+    for p in ps:
+        logging.info('------------')
+        logging.info(p)
+        cs = Connection.objects(profile=p)
+        logging.info(cs)
+        logging.info('------------')
+
 '''
 @app.task
 def update_user(u):
@@ -476,91 +561,6 @@ def process_gmail_message_jobs(user):
             gmail_message_job.date_completed = datetime.datetime.now()
             gmail_message_job.save()
 """
-
-def update_profile_and_connection(email, name, user, gmail_service):
-    """
-    Logic to update both Profile and Connection databases for the given 
-    User and an email and name
-    """ 
-    # add_new handles duplicates, collisions, etc.
-    # effectively get_or_create 
-    p = Profile.add_new(name=name, email=email)
-
-    # Ensure p was succesfully created before 
-    # adding a Connection. Profile.add_new() sometimes fails (for good reason,
-    # like email address was a reply.craigslist.com one)
-    if not p:
-        logging.warning("Could not find or add Profile of email %s" % email)
-        return
-
-    # Create connection if not to oneself
-    if user.email == p.email:
-        logging.info('Connection not created for email address %s to itself' % user.email)
-    else:
-        # Search Connection database to see if this is a new contact
-        c, created_flag = Connection.objects.get_or_create(user=user,
-                                                        profile=p)
-        # If newly created Connection, fill it in by
-        # searching Gmail API
-        if created_flag:
-            logging.info('Created %s' % c)
-        else:
-            logging.info('%s already exists, not updating' % c)
-
-        # Updates fields of c by searching through users'
-        # entire Gmail inbox 
-        c.populate_from_gmail(service=gmail_service)
-
-### Local 
-logging.getLogger().setLevel(logging.INFO)
-def remove_capitalization_redundant_pc():
-    count = 1;
-    for p in Profile.objects():
-        logging.info('Count: %s' % count)
-        ps = Profile.objects(email__iexact=p.email)
-        if len(ps) > 1:
-            merge_profiles(ps)
-        count += 1
-
-def merge_profiles(ps):
-    if len(ps) != 2:
-        logging.warning('%s profiles given' % len(ps)) 
-    else:
-        p1 = ps[0]
-        p2 = ps[1]
-        # Just iterate through p2 Connections
-        cs2 = Connection.objects(profile=p2)
-        for c2 in cs2:
-            u = c2.user
-            # See if there is a conflicting Connection
-            try:
-                c1 = Connection.objects.get(profile=p1, user=u)
-            except:
-                c1 = None
-            if c1:
-                # Reconcile c and c_dup
-                c1.total_emails_out += c2.total_emails_out
-                c1.total_emails_in += c2.total_emails_in
-                if c1.days_since_emailed_out() > c2.days_since_emailed_out():
-                    c1.latest_email_out_date = c2.latest_email_out_date
-                if c1.days_since_emailed_in() > c2.days_since_emailed_in():
-                    c1.latest_email_in_date = c2.latest_email_in_date
-                c2.delete()
-            else:
-                # No conflict, attach c to p1
-                c2.profile = p1
-                c2.save()
-        p2.delete()
-
-def print_info(email):
-    ps = Profile.objects(email__iexact=email)
-    for p in ps:
-        logging.info('------------')
-        logging.info(p)
-        cs = Connection.objects(profile=p)
-        logging.info(cs)
-        logging.info('------------')
-
 
 """
 @periodic_task(run_every=timedelta(hours=24))

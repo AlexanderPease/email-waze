@@ -167,7 +167,7 @@
         dom: '<<t>p>',
         //scrollX: true,
         oLanguage: {
-          sLoadingRecords: '<img src="' + '{{ static_url("img/loading-transparent.png") }}' + '">'
+          sLoadingRecords: '<img src="' + '{{ static_url("img/loading/LoadingAnimation2.gif") }}' + '">'
         },
         order: [[3, "desc"]],
         columns: [
@@ -330,7 +330,7 @@
               console.log('Server returned status code: ' + json.status_code);
               json = {'results_msg': 'Error loading data, please try again'}
               displayLoaded(results);
-              return []
+              return [];
             }
             // Redirect if no results
             if (results.profiles == null) {
@@ -409,17 +409,22 @@
 
     /* Displays everything once data is loaded */
     function displayLoaded(results) {
-      $('#results').text(results['results_msg']);
+      $('#results').html(results['results_msg']);
       $('#people-header').text('People (' + results.profiles.length + ')');
       $('#people-company-header-break').text('/');
       $('#companies-header').text('Companies (' + results.companies.length + ')');
+      if (results.companies.length == 0) {
+        $('#companies-header').addClass('unclickable');
+      } else {
+        $('#companies-header').removeClass('unclickable');
+      }
       $('#filter-link').removeClass('unselected');
       $('#filter-link').unbind('click');
     }
     /* Displays loading messages */
     function displayLoading() {
       $('.search-tt').blur();
-      $('#results').text('Loading...');
+      $('#results').html('Loading...');
       $('#people-header').text('');
       $('#people-company-header-break').text('');
       $('#companies-header').text('');

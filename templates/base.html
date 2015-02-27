@@ -66,8 +66,8 @@
             </li>
             -->
           {% else %}
-            <li><a href="/about">About</a></li>
-            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="/about" {% if nav_select == 'about' %} class="nav-selected" {% end %}>About</a></li>
+            <li><a href="/pricing" {% if nav_select == 'pricing' %} class="nav-selected" {% end %}>Pricing</a></li>
             <li><a href="/auth/google">Log In</a></li>
           {% end %}
         </ul>
