@@ -84,7 +84,7 @@
     var current_user = '{{ current_user }}';
     $(document).ready(function() {
       // Page inits
-      displayLoading(null);
+      displayLoading();
       // Filter dropdown init
       var source   = $("#filter-popover-content").html();
       var template = Handlebars.compile(source);
@@ -113,10 +113,10 @@
       $('.search-tt').keypress(function(event) {
         if (event.which == 13) {
           var q = $(this).val();
-          var new_url = 'api/searchbaseprofileconnection?q=' + q;
-          console.log(new_url)
-          var search_table = $("#search_table").DataTable().ajax.url(new_url).load();
-          displayLoading(search_table);
+          var newUrl = 'api/searchbaseprofileconnection?q=' + q;
+          initSearchTable(newUrl);
+          //$("#search_table").DataTable().ajax.url(newUrl).load();
+          displayLoading();
         }
       });
       /* Trigger search when a suggestion is selected 
@@ -125,10 +125,10 @@
         // obj is event, datum is what I've given typeahead, name is "company"
         var field = name; 
         // Reload datatable
-        var new_url = 'api/searchbaseprofileconnection?' + field + '_id=' + datum['id'];
-        console.log(new_url)
-        var search_table = $("#search_table").DataTable().ajax.url(new_url).load();
-        displayLoading(search_table);
+        var newUrl = 'api/searchbaseprofileconnection?' + field + '_id=' + datum['id'];
+        initSearchTable(newUrl);
+        //$("#search_table").DataTable().ajax.url(new_url).load();
+        displayLoading();
       });
 
       $('.search-tt').blur(function(){
@@ -160,7 +160,143 @@
         }
         return d;
       };
-      var dataTable = $('#search_table').DataTable({
+      var dataTable = initSearchTable(url);
+
+
+      // Display detail modal when profile row is clicked on
+      $('#search_table tbody').on('click', 'tr', function() {
+        //var data = dataTable.fnGetData('tr'); // fnGetData undefined. Hack around
+        p_id = $('td', this).parent().attr('id');
+        $('#modal-' + p_id).modal();
+      });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      /*
+      $('#search_table').on('processing.dt', function ( e, settings, processing ) {
+        console.log('processing');
+        $('dataTables_empty').each(function(){
+          console.log($(this));
+          $(this).text('');
+          $(this).addClass('dataTables_loading');
+        })
+        console.log('end processing');
+      } ).dataTable();
+      */
+
+      // Search for a specific company when company row is clicked on
+      $('#companies_table tbody').on('click', 'tr', function() {
+        if ($('#companies_table').DataTable().data().length == 1) {
+          showSearchTable();
+        }
+        else {
+          /* Reload data for a single company if search table currentnly has
+            profiles for multiple companies */
+          company_id = $('td', this).parent().attr('id');
+          var new_url = 'api/searchbaseprofileconnection?company_id=' + company_id;
+          initSearchTable(url);
+          //$("#search_table").DataTable().ajax.url(new_url).load();
+          displayLoading();
+        }
+      });
+
+      // Advanced search
+      $('#advanced-search-link').click(function() {
+        $('#advanced-search-modal').modal();
+      });
+      $('#advanced-search-submit').click(function() {
+        $('#advanced-search-modal').modal('hide');
+        var name = $('#advanced-search-name').val();
+        var domain = $('#advanced-search-domain').val();
+        var group_id = $('#advanced-search-group').find(':selected').attr('data-group-id');
+        var newUrl = 'api/searchbaseprofileconnection?name=' + name + 
+          '&domain=' + domain +
+          '&group_id=' + group_id;
+        initSearchTable(newUrl);
+        //$("#search_table").DataTable().ajax.url(newUrl).load();
+        displayLoading()
+      });
+
+      // Switch between profiles and companies tables
+      $('#people-header').click(function(){
+        showSearchTable();
+      });
+      $('#companies-header').click(function(){
+        showCompaniesTable();
+      });
+
+    }); // ready
+
+    /* Displays everything once data is loaded */
+    function displayLoaded(results) {
+      $('#results').html(results['results_msg']);
+      $('#people-header').text('People (' + results.profiles.length + ')');
+      $('#people-company-header-break').text('/');
+      $('#companies-header').text('Companies (' + results.companies.length + ')');
+      if (results.companies.length == 0) {
+        $('#companies-header').addClass('unclickable');
+      } else {
+        $('#companies-header').removeClass('unclickable');
+      }
+      $('#filter-link').removeClass('unselected');
+      $('#filter-link').unbind('click');
+    }
+    /* Displays if no results from database */
+    function displayNoResults(results) {
+      $('#results').html(results['results_msg']);
+    }
+    /* Displays loading messages */
+    function displayLoading() {
+      $('.search-tt').blur();
+      $('#results').html('Loading...');
+      $('#people-header').text('');
+      $('#people-company-header-break').text('');
+      $('#companies-header').text('');
+      $('#filter-link').addClass('unselected');
+      $('#filter-link').bind('click', function(e){
+        e.preventDefault(); // stop popover
+      });
+      showSearchTable();
+    }
+
+    /* Function is called when new data is loaded and to 
+      switch to the search table from companies_table */
+    function showSearchTable() {
+      $('#search_table_div').show();
+      $('#companies_table_div').hide();
+      $('#people-header').removeClass('unselected');
+      $('#companies-header').addClass('unselected');
+    }
+    function showCompaniesTable() {
+      $('#search_table_div').hide();
+      $('#companies_table_div').show();
+      $('#people-header').addClass('unselected');
+      $('#companies-header').removeClass('unselected');
+    }
+
+    /* Init DataTables*/
+    function initSearchTable(url) {
+      console.log("Loading Search Table: " + url);
+      $('#search_table').DataTable().clear().destroy();
+      var searchTable = $('#search_table').DataTable({
         searching: false,
         pageLength: 20,
         lengthChange: false,
@@ -358,141 +494,13 @@
           error: function(reason) {
             console.warning('Server threw error to #search_table datatable');
           }
-        } 
-      });// #search-table init
-
-      // Display detail modal when profile row is clicked on
-      $('#search_table tbody').on('click', 'tr', function() {
-        //var data = dataTable.fnGetData('tr'); // fnGetData undefined. Hack around
-        p_id = $('td', this).parent().attr('id');
-        $('#modal-' + p_id).modal();
-      });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      $('#search_table').on('processing.dt', function ( e, settings, processing ) {
-        console.log('processing');
-        $('#search_table tbody td.dataTables_empty').each(function(){
-          console.log($(this));
-          $(this).text('');
-          $(this).addClass('dataTables_loading');
-        })
-        console.log('end processing');
-      } ).dataTable();
-
-      // Search for a specific company when company row is clicked on
-      $('#companies_table tbody').on('click', 'tr', function() {
-        if ($('#companies_table').DataTable().data().length == 1) {
-          showSearchTable();
         }
-        else {
-          /* Reload data for a single company if search table currentnly has
-            profiles for multiple companies */
-          company_id = $('td', this).parent().attr('id');
-          var new_url = 'api/searchbaseprofileconnection?company_id=' + company_id;
-          console.log(new_url)
-          var search_table = $("#search_table").DataTable().ajax.url(new_url).load();
-          displayLoading(search_table);
-        }
-      });
 
-      // Advanced search
-      $('#advanced-search-link').click(function() {
-        $('#advanced-search-modal').modal();
-      });
-      $('#advanced-search-submit').click(function() {
-        $('#advanced-search-modal').modal('hide');
-        var name = $('#advanced-search-name').val();
-        var domain = $('#advanced-search-domain').val();
-        var group_id = $('#advanced-search-group').find(':selected').attr('data-group-id');
-        var newUrl = 'api/searchbaseprofileconnection?name=' + name + 
-          '&domain=' + domain +
-          '&group_id=' + group_id;
-        console.log(newUrl);
-        var search_table = $("#search_table").DataTable().ajax.url(newUrl).load();
-        displayLoading(search_table)
-      });
-
-      // Switch between profiles and companies tables
-      $('#people-header').click(function(){
-        showSearchTable();
-      });
-      $('#companies-header').click(function(){
-        showCompaniesTable();
-      });
-
-    }); // ready
-
-    /* Displays everything once data is loaded */
-    function displayLoaded(results) {
-      $('#results').html(results['results_msg']);
-      $('#people-header').text('People (' + results.profiles.length + ')');
-      $('#people-company-header-break').text('/');
-      $('#companies-header').text('Companies (' + results.companies.length + ')');
-      if (results.companies.length == 0) {
-        $('#companies-header').addClass('unclickable');
-      } else {
-        $('#companies-header').removeClass('unclickable');
-      }
-      $('#filter-link').removeClass('unselected');
-      $('#filter-link').unbind('click');
-    }
-    /* Displays if no results from database */
-    function displayNoResults(results) {
-      $('#results').html(results['results_msg']);
-    }
-    /* Displays loading messages */
-    function displayLoading(search_table) {
-      if (search_table) {
-        search_table.clear().draw();
-      }
-      $('.search-tt').blur();
-      $('#results').html('Loading...');
-      $('#people-header').text('');
-      $('#people-company-header-break').text('');
-      $('#companies-header').text('');
-      $('#filter-link').addClass('unselected');
-      $('#filter-link').bind('click', function(e){
-        e.preventDefault(); // stop popover
-      });
-      showSearchTable();
+      return searchTable;
+      });// initSearchTable()
     }
 
-    /* Function is called when new data is loaded and to 
-      switch to the search table from companies_table */
-    function showSearchTable() {
-      $('#search_table_div').show();
-      $('#companies_table_div').hide();
-      $('#people-header').removeClass('unselected');
-      $('#companies-header').addClass('unselected');
-    }
-    function showCompaniesTable() {
-      $('#search_table_div').hide();
-      $('#companies_table_div').show();
-      $('#people-header').addClass('unselected');
-      $('#companies-header').removeClass('unselected');
-    }
-
-    /* Called every time new data is loaded from server */
+        /* Called every time new data is loaded from server */
     function initCompaniesTable(results) {
       if (!results.companies) { return }
       var companyData = [];
@@ -568,31 +576,8 @@
             }
           }
         ],
-      });// #companies-table init
+      });// initCompanyTable
     }
-
-    /* Updates the results message. If an array of queryParameters is supplied,
-      it will display those values. If not, it pulls from the href parameters 
-    function updateResultsMessage(queryParameters) {
-      if (!queryParameters || queryParameters == "") {
-        queryParameters = getQueryParameters();
-      } 
-      var terms = "";
-      var firstParam = true;
-      for (var k in queryParameters) {
-        if (k != 'page') {
-          if (queryParameters[k]) {
-            if (!firstParam) {
-              terms = terms + ", " // Comma-delimitation after first parameter listed
-            }
-            terms = terms + '"' + queryParameters[k] + '"';
-            firstParam = false;
-          }
-        }
-      }
-      $('#results').text('Results for ' + terms);
-    }
-    */
 
     function getQueryParameters() {
        /* queryParameters -> handles the query string parameters
