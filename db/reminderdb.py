@@ -80,7 +80,7 @@ class ProfileReminder(Document):
                 latest_date = self.date_set
         else:
             latest_date = self.date_set
-        days_left = (latest_date - datetime.datetime.today()) + datetime.timedelta(days=self.days)
+        days_left = (latest_date.date() - datetime.datetime.today().date()) + datetime.timedelta(days=self.days)
         days_left = int(days_left.days)
         if days_left < -1:
             return 'Past (%s days ago)' % int(fabs(days_left))
@@ -124,7 +124,7 @@ class ProfileReminder(Document):
             else:
                 latest_date = pr.date_set
             # Group into reminders due today or later
-            if latest_date.date() + datetime.timedelta(days=pr.days) >= datetime.datetime.today().date():
+            if latest_date.date() + datetime.timedelta(days=pr.days) > datetime.datetime.today().date():
                 later_reminders.append(pr)
             else:
                 today_reminders.append(pr)
