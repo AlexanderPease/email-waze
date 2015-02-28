@@ -117,6 +117,7 @@
           //initSearchTable(newUrl);
           var searchTable = $("#search_table").DataTable().ajax.url(newUrl)
           searchTable.ajax.reload();
+          //searchTable.clear().draw();
           displayLoading();
         }
       });
@@ -129,7 +130,8 @@
         var newUrl = 'api/searchbaseprofileconnection?' + field + '_id=' + datum['id'];
         //initSearchTable(newUrl);
         var searchTable = $("#search_table").DataTable().ajax.url(newUrl);
-        searchTable.ajax.reload()
+        searchTable.ajax.reload();
+        //searchTable.clear().draw();
         displayLoading();
       });
 
@@ -217,6 +219,7 @@
           //initSearchTable(url);
           var searchTable = $("#search_table").DataTable().ajax.url(newUrl)
           searchTable.ajax.reload();
+          //searchTable.clear().draw();
           displayLoading();
         }
       });
@@ -236,6 +239,7 @@
         //initSearchTable(newUrl);
         var searchTable = $("#search_table").DataTable().ajax.url(newUrl);
         searchTable.ajax.reload();
+        //searchTable.clear().draw();
         displayLoading()
       });
 
@@ -303,11 +307,12 @@
         searching: false,
         pageLength: 20,
         lengthChange: false,
-        dom: '<<t>p>',
-        //processing: true, // not working, bug
+        dom: '<<rt>p>',
+        processing: true, // not working, bug
         language: {
-          loadingRecords: '<img src="' + '{{ static_url("img/loading/LoadingAnimation2.gif") }}' + '">',
-          emptyTable: 'No Results'
+          loadingRecords: '',
+          emptyTable: 'No Results',
+          processing: ''
           //processing: '<img src="' + '{{ static_url("img/loading/LoadingAnimation2.gif") }}' + '">',
         },
         order: [[3, "desc"]],
@@ -322,7 +327,6 @@
               } else {
                 return '<span class="name">' + data + '</span>';
               }
-              
             }
           },
           {
@@ -499,7 +503,7 @@
           }
         }
       });
-      //return searchTable;
+      return searchTable;
     } // initSearchTable()
 
         /* Called every time new data is loaded from server */

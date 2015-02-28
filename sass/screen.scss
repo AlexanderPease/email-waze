@@ -804,6 +804,19 @@ table.dataTable tbody tr td.dataTables_empty {
   padding-top: 20px
 }
 
+// Have processing div overlay cover entire datatable
+.dataTables_wrapper .dataTables_processing {
+  width: 100%;
+  height: 100%;
+  top: 0%;
+  left: 0%;
+  background: $light-grey url('../img/loading/LoadingAnimation2.gif') no-repeat center center;
+  opacity: 0.4;
+  margin: 0px 0px;
+  padding: 0px 0px;
+  border: none;
+}
+
 // Pagination buttons
 .dataTables_wrapper .dataTables_paginate .paginate_button {
   color: $light-grey !important;
