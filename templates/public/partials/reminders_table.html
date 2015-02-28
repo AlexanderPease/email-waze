@@ -19,7 +19,7 @@
             <span class="company-name">{{ r.company.name }}</span>
           </td>
         {% else %}
-          <td>{{ r.profile.name }}</td>
+          <td><span class="name">{{ r.profile.name }}</span></td>
         {% end %}
         <td>{{ r.profile.email }}</td>
         <td>{{ r.display_due_date() }}</td>
