@@ -87,7 +87,10 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
                         }
                     ]
                 })
-                results['results_msg'] = 'Results for &lsquo;%s&rsquo;' % q
+                if profiles:
+                    results['results_msg'] = 'Results for &lsquo;%s&rsquo;' % q
+                else:
+                    results['results_msg'] = 'No results for &lsquo;%s&rsquo;' % q
         # Exact ID search
         elif company_id:
             company = Company.objects.get(id=company_id)
@@ -95,13 +98,12 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
             results['results_msg'] = company.name
         # Advanced search query. Specific fields are searched
         else:
-            # Global profile results
             profiles = Profile.objects(name__icontains=name, email__icontains=domain) # case-insensitive contains
             results['results_msg'] = 'Results for &lsquo;%s,&rsquo; &lsquo;%s&rsquo;' % (name, domain)
 
         # No results
         if len(profiles) == 0:
-            return self.api_response(data={})
+            return self.api_response(data=results)
 
         ### BaseProfileConnections
         if group_id == 'self':
@@ -131,7 +133,7 @@ class SearchBaseProfileConnection(app.basic.BaseHandler):
         companies = CompanyConnectionSet.package_connections(cs_all, self.user)
         results['companies'] = list_to_json_list(companies)
 
-        return self.api_response(results)
+        return self.api_response(data=results)
 
 # Returns True if d2 is later than d1
 def later_date(d1, d2):
