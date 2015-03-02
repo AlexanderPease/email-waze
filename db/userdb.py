@@ -153,7 +153,7 @@ class User(Document):
          # Track list of emails that have been updated by this function
         for msg in messages:
             # May have already checked this message, since can only query Gmail
-            # by date, not exact datetime
+            # by date, not exact datetime. 
             g, created_flag = GmailMessageJob.objects.get_or_create(
                 user = self,
                 message_id = msg['id'],

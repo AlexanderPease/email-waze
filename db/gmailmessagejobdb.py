@@ -2,7 +2,7 @@ import settings
 from mongoengine import *
 import logging, base64, datetime, json
 from urllib2 import Request, urlopen, URLError
-from email.utils import parseaddr
+from email.utils import parseaddr, getaddresses
 from app.methods import blacklist_email
 import app.gmail as gmail
 from userdb import User
@@ -36,6 +36,9 @@ class GmailMessageJob(Document):
     # Save headers of this message when processed
     header = DictField()
 
+    # If the message is incoming/outgoing
+    direction = StringField(choices=('in', 'out'))
+
     def __str__(self):
         return 'GmailMessageJob: %s, message id %s' % (self.user, self.message_id)
 
@@ -59,38 +62,71 @@ class GmailMessageJob(Document):
         logging.info("Checking message of id: %s" % self.message_id)
         msg = gmail.GetMessage(gmail_service, 'me', self.message_id)
         msg_header_all = gmail.GetMessageHeader(msg)
-        logging.info(msg_header_all)
+        #logging.info(msg_header_all)
         if msg_header_all:
+            # Save header and calculate if message is incoming or outgoing
             self.header = msg_header_all
+            self.set_direction()
             self.save()
             for header_string in HEADER_LIST:
                 if header_string in msg_header_all.keys():
                     msg_header = msg_header_all[header_string]
-                    msg_header_parts = msg_header.split(', ') # Comma-delimited for multiple emails in same header field
+                    msg_header_parts = getaddresses([msg_header]) # Can return multiple addresses
                     for msg_header_part in msg_header_parts:
                         field = parseaddr(msg_header_part) # Allows local emails addresses unfortunately
                         name = field[0]
                         email = field[1]
-                        logging.info('%s, %s' % (name, email))
+                        #logging.info('%s, %s' % (name, email))
 
                         if email and email is not "" and not blacklist_email(email):
                             try:
-                                p = Profile.objects.get(email=email)
+                                profile = Profile.objects.get(email=email)
                             except:
-                                p = Profile.add_new(name=name, email=email) # Profile must have a name to be created
+                                profile = Profile.add_new(name=name, email=email) # Profile must have a name to be created
 
-                            # Add/update Connection if not Cc field or to oneself
-                            if p and header_string != 'Cc' and self.user.email != p.email:
-                                logging.info('creating for %s' % p)
-                                gmail_job, created_flag = GmailJob.objects.get_or_create(
-                                    user = self.user,
-                                    profile = p, 
-                                    date_completed__exists = False)
-                                if created_flag:
-                                    logging.info(gmail_job)
+                            # Ensure not emailing him/herself
+                            if profile and self.user.email != profile.email:
+                                # Only include CC's if outgoing
+                                if not (self.direction == 'in' and header_string == 'Cc'):
+                                    gmail_job, created_flag = GmailJob.objects.get_or_create(
+                                        user = self.user,
+                                        profile = profile, 
+                                        date_completed__exists = False)
+                                    if created_flag:
+                                        logging.info('Created GmailJob for %s' % profile)
+                                    else:
+                                        logging.info('Existing GmailJob for %s' % profile)
 
             self.date_completed = datetime.datetime.now()
             self.save()
 
+    def set_direction(self):
+        '''
+        Looks at all email headers to calculate if this message is
+        outgoing/sent or incoming/received.
+        Sets but does not save self.direction property. 
+        '''
+        if not self.header:
+            return
+        if 'From' in self.header.keys():
+            from_value = self.header['From']
+            if self.user.email in from_value:
+                self.direction = 'out'
+                return
+        if 'To' in self.header.keys():
+            to_value = self.header['To']
+            if self.user.email in to_value:
+                self.direction = 'in'
+                return
+        if 'Cc' in self.header.keys():
+            cc_value = self.header['Cc']
+            if self.user.email in cc_value:
+                self.direction = 'in'
+                return
+        if 'Delivered-To' in self.header.keys():
+            cc_value = self.header['Delivered-To']
+            if self.user.email in cc_value:
+                self.direction = 'in'
+                return
 
 

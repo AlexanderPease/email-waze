@@ -137,6 +137,18 @@ class Scratch(app.basic.BaseHandler):
         tasks.all_gmail_message_jobs()
         tasks.all_gmail_jobs()
 
+        '''
+        for g in GmailMessageJob.objects(header__exists=True):
+            g.set_direction()
+            if g.direction:
+                logging.info(g.direction)
+            else:
+                logging.info('NOPE:')
+                logging.info(g.header)
+        '''
+
+
+
         #tasks.recent_gmail(user)
         #gmail_message_jobs = GmailMessageJob.objects(
         #   user = user, 

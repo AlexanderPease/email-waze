@@ -5,6 +5,7 @@ from urllib2 import Request, urlopen, URLError
 from app.methods import blacklist_email
 from userdb import User
 from profiledb import Profile
+from connectiondb import Connection
 
 mongo_database = settings.get('mongo_database')
 connect('gmailmessagejob', host=mongo_database['host'])
@@ -45,14 +46,13 @@ class GmailJob(Document):
                 logging.info("Could not instantiate authenticated service for %s" % self.user)
                 return
         # Process
-        self.attempts = gmail_job.attempts + 1
+        self.attempts = self.attempts + 1
         self.save()
         
         c, created_flag = Connection.objects.get_or_create(
-            user = gmail_job.user,
-            profile = gmail_job.profile)
-        # Updates fields of c by searching through users'
-        # entire Gmail inbox 
+            user = self.user,
+            profile = self.profile)
+        # Updates fields of c by searching through users' entire Gmail inbox 
         c.populate_from_gmail(service=gmail_service)
         self.date_completed = datetime.datetime.now()
         self.save()

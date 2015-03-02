@@ -50,14 +50,18 @@ def add_stats():
     stats.save()
 
 @periodic_task(run_every=timedelta(hours=6))
-def all_recent_gmail():
+def all_recent_gmail(users=None):
     """
     Update all users every 24 hours
+
+    Arg: 
+        Optionally specify list of users to run for. Defaults to all. 
     """
     task = Task(name='all_recent_gmail')
     task.save()
-    me = User.objects.get(email="me@alexanderpease.com")
-    for user in [me]: #User.objects().order_by('-last_web_action'):
+    if not users:
+        users = User.objects.order_by('-last_web_action')
+    for user in users:
         task.num_users = task.num_users + 1
         task.save()
         try:
@@ -70,14 +74,18 @@ def all_recent_gmail():
     task.save()
 
 @periodic_task(run_every=timedelta(hours=6))
-def all_gmail_message_jobs():
+def all_gmail_message_jobs(users=None):
     """
     Process GmailMessageJobs for all Users
+
+    Arg: 
+        Optionally specify list of users to run for. Defaults to all. 
     """
     task = Task(name='all_gmail_message_jobs', num_users=0)
     task.save()
-    me = User.objects.get(email="me@alexanderpease.com")
-    for user in [me]:#User.objects().order_by('-last_web_action'):
+    if not users:
+        users = User.objects.order_by('-last_web_action')
+    for user in users:
         gmail_message_jobs = GmailMessageJob.objects(
             user = user, 
             date_completed__exists = False)
@@ -85,25 +93,26 @@ def all_gmail_message_jobs():
             task.num_users = task.num_users + 1
             task.save()
             gmail_service = user.get_service(service_type='gmail')
-            try:
-                for g in gmail_message_jobs:
-                    g.process(gmail_service)
-                task.num_users_completed = task.num_users_completed + 1
-                task.save()
-            except:
-                pass
+            for g in gmail_message_jobs:
+                g.process(gmail_service)
+            task.num_users_completed = task.num_users_completed + 1
+            task.save()
     task.end = datetime.datetime.now()
     task.save()
 
 @periodic_task(run_every=timedelta(hours=6))
-def all_gmail_jobs():
+def all_gmail_jobs(users=None):
     """
     Process GmailJobs for all Users
+
+    Arg: 
+        Optionally specify list of users to run for. Defaults to all. 
     """
     task = Task(name='all_gmail_jobs', num_users=0)
     task.save()
-    me = User.objects.get(email="me@alexanderpease.com")
-    for user in [me]: #User.objects().order_by('-last_web_action'):
+    if not users:
+        users = User.objects.order_by('-last_web_action')
+    for user in users:
         gmail_jobs = GmailJob.objects(
             user = user, 
             date_completed__exists = False)
@@ -111,13 +120,10 @@ def all_gmail_jobs():
             task.num_users = task.num_users + 1
             task.save()
             gmail_service = user.get_service(service_type='gmail')
-            try:
-                for g in gmail_jobs:
-                    g.process(gmail_service)
-                task.num_users_completed = task.num_users_completed + 1
-                task.save()
-            except:
-                pass
+            for g in gmail_jobs:
+                g.process(gmail_service)
+            task.num_users_completed = task.num_users_completed + 1
+            task.save()
     task.end = datetime.datetime.now()
     task.save()
 
@@ -176,7 +182,7 @@ def onboard_user(u):
         try: 
             feed = gd_client.GetContacts(q=query)
         except:
-            logging.warning('User %s does not have Google Contacts API permission' % user)
+            logging.warning('User %s does not have Google Contacts API permission' % u)
             return
 
         # Add all email addresses from feed on best effort basis

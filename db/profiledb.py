@@ -96,14 +96,13 @@ class Profile(Document):
         # Brief set of rules to ignore certain emails
         if blacklist_email(email) or not name or name is "":
             return
+        # Email is the unique key, case-insensitive
+        if Profile.email_exists(email) > 1:
+            return
         # Add to profile
         try:
-            p, created = Profile.objects.get_or_create(email=email) # This automatically saves()
+            p, created = Profile.objects.get_or_create(email=email) # auto-saves()
             if p and created:
-                # Email is the unique key, case-insensitive
-                if Profile.email_exists(email) > 1:
-                    p.delete()
-                    return
                 # Set attributes
                 p.name = name
                 p.domain = p.get_domain()
@@ -113,8 +112,6 @@ class Profile(Document):
             # Attempted to add existing email address
             elif p and not created:
                 logging.info('%s already exists, no change to database' % p)
-        except mongoengine.errors.NotUniqueError:
-            logging.info("Profile of email address %s already exists, no new Profile created" % email)
         except:
             logging.warning("Couldn't add Profile: %s <%s>" % (name, email))
 
