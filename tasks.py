@@ -78,14 +78,18 @@ def all_gmail_message_jobs():
     task = Task(name='all_gmail_message_jobs', num_users=0)
     task.save()
     for u in User.objects().order_by('-last_web_action'):
-        task.num_users = task.num_users + 1
-        task.save()
-        try:
-            process_gmail_message_jobs(u)
-            task.num_users_completed = task.num_users_completed + 1
+        gmail_message_jobs = GmailMessageJob.objects(
+            user = user, 
+            date_completed__exists = False)
+        if gmail_message_jobs:
+            task.num_users = task.num_users + 1
             task.save()
-        except:
-            pass
+            try:
+                process_gmail_message_jobs(u)
+                task.num_users_completed = task.num_users_completed + 1
+                task.save()
+            except:
+                pass
     task.end = datetime.datetime.now()
     task.save()
 
@@ -97,14 +101,18 @@ def all_gmail_jobs():
     task = Task(name='all_gmail_jobs', num_users=0)
     task.save()
     for u in User.objects().order_by('-last_web_action'):
-        task.num_users = task.num_users + 1
-        task.save()
-        try:
-            process_gmail_jobs(u)
-            task.num_users_completed = task.num_users_completed + 1
+        gmail_jobs = GmailJob.objects(
+            user = user, 
+            date_completed__exists = False)
+        if gmail_jobs:
+            task.num_users = task.num_users + 1
             task.save()
-        except:
-            pass
+            try:
+                process_gmail_jobs(u, gmail_jobs)
+                task.num_users_completed = task.num_users_completed + 1
+                task.save()
+            except:
+                pass
     task.end = datetime.datetime.now()
     task.save()
 
@@ -224,19 +232,13 @@ def recent_gmail(user):
     user.save()
     logging.info("Finished updating %s in tasks.recent_gmail()" % user)
 
-def process_gmail_message_jobs(user):
+def process_gmail_message_jobs(user, gmail_message_jobs):
     '''
-    Processes all unfinished GmailMessageJobs for this User. 
+    Processes all GmailMessageJobs for this User. 
+    Arg gmail_message_jobs must be for this User!!
     Checks the email of the GmailMessageJob to create all Profiles, and 
     create/update Connections between that Profile and User. 
     '''
-    # Check if there are any jobs
-    gmail_message_jobs = GmailMessageJob.objects(
-        user = user, 
-        date_completed__exists = False)
-    if not gmail_message_jobs:
-        return
-
     # Authenticate
     gmail_service = user.get_service(service_type='gmail')
     if not gmail_service:
@@ -246,7 +248,7 @@ def process_gmail_message_jobs(user):
     # Process jobs
     for gmail_message_job in gmail_message_jobs:
         if 'localhost' not in settings.get('base_url'):
-            raw_input('Enter to continue: ')
+            #raw_input('Enter to continue: ')
 
         gmail_message_job.attempts = gmail_message_job.attempts + 1
         gmail_message_job.save()
@@ -282,17 +284,11 @@ def process_gmail_message_jobs(user):
             gmail_message_job.date_completed = datetime.datetime.now()
             gmail_message_job.save()
 
-def process_gmail_jobs(user):
+def process_gmail_jobs(user, gmail_jobs):
     '''
     Each GmailJob is a Profile that this User needs to check to 
     create/update Connection
     '''
-    gmail_jobs = GmailJob.objects(
-        user = user, 
-        date_completed__exists = False)
-    if not gmail_jobs:
-        return
-
     # Authenticate
     gmail_service = user.get_service(service_type='gmail')
     if not gmail_service:
@@ -302,7 +298,7 @@ def process_gmail_jobs(user):
     # Process jobs
     for gmail_job in gmail_jobs:
         if 'localhost' not in settings.get('base_url'):
-            raw_input('Enter to continue: ')
+            #raw_input('Enter to continue: ')
         gmail_job.attempts = gmail_job.attempts + 1
         gmail_job.save()
         
