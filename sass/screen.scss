@@ -810,8 +810,8 @@ table.dataTable tbody tr td.dataTables_empty {
   height: 100%;
   top: 0%;
   left: 0%;
-  background: $light-grey url('../img/loading/LoadingAnimation2.gif') no-repeat center center;
-  opacity: 0.4;
+  background: $white; //url('../img/loading/LoadingAnimation2.gif') no-repeat center center;
+  opacity: 0.5;
   margin: 0px 0px;
   padding: 0px 0px;
   border: none;
