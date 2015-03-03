@@ -185,15 +185,11 @@ class AcceptInvite(app.basic.BaseHandler):
         if not self.current_user:
             return self.api_error(401, 'User is not logged in')
         try:
-            u = User.objects.get(email=self.current_user)
-        except:
-            return self.api_error(500, 'Could not find client user in database')
-        try:
             g = Group.objects.get(id=group_id)
         except:
             return self.api_error(500, 'Could not find group in database')
 
-        if u.email in g.invited_emails or u.get_domain() in g.domain_setting:
+        if self.user.email in g.invited_emails or self.user.get_domain() in g.domain_setting:
             # Send emails to new member and existing members
             self.send_email(from_address='NTWRK <postmaster@ntwrk.me>',
                         to_address=u.email,
@@ -241,14 +237,10 @@ class Leave(app.basic.BaseHandler):
         if not self.current_user:
             return self.api_error(401, 'User is not logged in')
         try:
-            u = User.objects.get(email=self.current_user)
-        except:
-            return self.api_error(500, 'Could not find client user in database')
-        try:
             g = Group.objects.get(id=group_id)
         except:
             return self.api_error(500, 'Could not find group in database')
-        g.remove_user(u)
+        g.remove_user(self.user)
         return self.api_response(data={})
 
 ########################
@@ -275,7 +267,4 @@ class Delete(app.basic.BaseHandler):
             return self.api_error(400, 'User is not admin')
         g.delete()
         return self.api_response(data={})
-
-
-
 
