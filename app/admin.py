@@ -11,6 +11,8 @@ from db.connectiondb import Connection
 from db.statsdb import Stats
 from db.companydb import Company
 from db.reminderdb import ProfileReminder, CompanyReminder
+from db.gmailmessagejobdb import GmailMessageJob
+from db.gmailjobdb import GmailJob
 from db.taskdb import Task
 import tasks
 
@@ -126,17 +128,35 @@ class Scratch(app.basic.BaseHandler):
     def get(self):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
-        '''
+
         user = User.objects.get(email="me@alexanderpease.com")
-        cs = Connection.objects(user=user).order_by('-latest_email_out_date')
-        logging.info(cs[0:10])
+        #gmail_message_job = GmailMessageJob.objects.get(message_id="14bdb197a65fd5b3")
+        #gmail_message_job.process()
+
+        #tasks.all_recent_gmail()
+        #tasks.all_gmail_message_jobs()
+        #tasks.all_gmail_jobs()
+
+        '''
+        for g in GmailMessageJob.objects(header__exists=True):
+            g.set_direction()
+            if g.direction:
+                logging.info(g.direction)
+            else:
+                logging.info('NOPE:')
+                logging.info(g.header)
         '''
 
-        #tasks.all_gmail_message_jobs()
-        #tasks.recent_gmail(self.user)
-        #tasks.process_gmail_message_jobs(self.user)
-        #tasks.process_gmail_jobs(self.user)
-        #tasks.all_gmail_jobs()
+
+
+        #tasks.recent_gmail(user)
+        #gmail_message_jobs = GmailMessageJob.objects(
+        #   user = user, 
+        #    date_completed__exists = False)
+        #gmail_jobs = GmailJob.objects(
+        #    user = user, 
+        #   date_completed__exists = False)
+        #tasks.process_gmail_jobs(user, gmail_jobs)
 
         # Counts number of profiles that have an email address
         # that is duplicated (via capitalization) in the database

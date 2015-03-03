@@ -1,13 +1,12 @@
 import settings
 from mongoengine import *
 import httplib2, logging
-
+import datetime
 # Google API OAUTH2 dependencies
 from oauth2client.client import OAuth2Credentials
 from googleapiclient.discovery import build 
 import gdata.gauth 
 import gdata.contacts.client
-
 
 mongo_database = settings.get('mongo_database')
 connect('user', host=mongo_database['host'])
@@ -125,32 +124,44 @@ class User(Document):
                 bp_array.append(bp)
             return bp_array
 
-
-
-    def gmail_job_start_date(self):
-        """
-        Returns None if this User's Gmail account has never been scraped. 
-        Or else returns what date to start the next Gmail. 
-        """
-        if self.gmail_job.success is True:
-            if self.gmail_job.last_job:
-                return self.gmail_job.last_job
-            else:
-                raise Exception
-        elif self.gmail_job.success is False:
-            if self.gmail_job.fail_date:
-                return self.gmail_job.fail_date
-            else:
-                raise Exception
-        # GmailJob() has not been run on this user yet
-        else:
-            return None
-
     def same_user(self, u):
         """ 
         Returns True if the two User objects are the same Document, or False if not.
         """
         return self.id == u.id
+
+
+    def recent_gmail(self):
+        '''
+        Checks all recent emails from Gmail and creates GmailMessageJobs
+        to be processed
+        '''
+        # B/c circular dependency
+        import app.gmail as gmail 
+        from gmailmessagejobdb import GmailMessageJob
+
+        logging.info("Starting recent_gmail() for %s" % self)
+        gmail_service = self.get_service(service_type='gmail')
+        if not gmail_service:
+            logging.info("Could not instantiate authenticated service for %s" % self)
+            return
+        now = datetime.datetime.now() # To not miss emails created during running of this job
+        messages = gmail.ListMessagesMatchingQuery(
+            service=gmail_service,
+            user_id='me',
+            query='after:%s' % self.last_updated.strftime('%Y/%m/%d'))
+         # Track list of emails that have been updated by this function
+        for msg in messages:
+            # May have already checked this message, since can only query Gmail
+            # by date, not exact datetime. 
+            g, created_flag = GmailMessageJob.objects.get_or_create(
+                user = self,
+                message_id = msg['id'],
+                thread_id = msg['threadId'])
+        # Save completed job specs to user
+        self.last_updated = now
+        self.save()
+        logging.info("Finished recent_gmail() for %s" % self)
 
     def get_service(self, service_type='gmail', version='v1'):
         """

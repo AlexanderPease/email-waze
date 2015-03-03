@@ -6,9 +6,7 @@ logger = get_task_logger(__name__)
 import json
 from datetime import timedelta
 import settings, logging, datetime
-from email.utils import parseaddr
 from mongoengine import DoesNotExist
-from app.methods import blacklist_email
 
 from db.profiledb import Profile
 from db.userdb import User
@@ -52,17 +50,22 @@ def add_stats():
     stats.save()
 
 @periodic_task(run_every=timedelta(hours=6))
-def all_recent_gmail():
+def all_recent_gmail(users=None):
     """
     Update all users every 24 hours
+
+    Arg: 
+        Optionally specify list of users to run for. Defaults to all. 
     """
     task = Task(name='all_recent_gmail')
     task.save()
-    for u in User.objects().order_by('-last_web_action'):
+    if not users:
+        users = User.objects.order_by('-last_web_action')
+    for user in users:
         task.num_users = task.num_users + 1
         task.save()
         try:
-            recent_gmail(u)
+            user.recent_gmail()
             task.num_users_completed = task.num_users_completed + 1
             task.save()
         except:
@@ -71,40 +74,56 @@ def all_recent_gmail():
     task.save()
 
 @periodic_task(run_every=timedelta(hours=6))
-def all_gmail_message_jobs():
+def all_gmail_message_jobs(users=None):
     """
     Process GmailMessageJobs for all Users
+
+    Arg: 
+        Optionally specify list of users to run for. Defaults to all. 
     """
     task = Task(name='all_gmail_message_jobs', num_users=0)
     task.save()
-    for u in User.objects().order_by('-last_web_action'):
-        task.num_users = task.num_users + 1
-        task.save()
-        try:
-            process_gmail_message_jobs(u)
+    if not users:
+        users = User.objects.order_by('-last_web_action')
+    for user in users:
+        gmail_message_jobs = GmailMessageJob.objects(
+            user = user, 
+            date_completed__exists = False)
+        if gmail_message_jobs:
+            task.num_users = task.num_users + 1
+            task.save()
+            gmail_service = user.get_service(service_type='gmail')
+            for g in gmail_message_jobs:
+                g.process(gmail_service)
             task.num_users_completed = task.num_users_completed + 1
             task.save()
-        except:
-            pass
     task.end = datetime.datetime.now()
     task.save()
 
 @periodic_task(run_every=timedelta(hours=6))
-def all_gmail_jobs():
+def all_gmail_jobs(users=None):
     """
-    Process GmailMessageJobs for all Users
+    Process GmailJobs for all Users
+
+    Arg: 
+        Optionally specify list of users to run for. Defaults to all. 
     """
     task = Task(name='all_gmail_jobs', num_users=0)
     task.save()
-    for u in User.objects().order_by('-last_web_action'):
-        task.num_users = task.num_users + 1
-        task.save()
-        try:
-            process_gmail_jobs(u)
+    if not users:
+        users = User.objects.order_by('-last_web_action')
+    for user in users:
+        gmail_jobs = GmailJob.objects(
+            user = user, 
+            date_completed__exists = False)
+        if gmail_jobs:
+            task.num_users = task.num_users + 1
+            task.save()
+            gmail_service = user.get_service(service_type='gmail')
+            for g in gmail_jobs:
+                g.process(gmail_service)
             task.num_users_completed = task.num_users_completed + 1
             task.save()
-        except:
-            pass
     task.end = datetime.datetime.now()
     task.save()
 
@@ -163,7 +182,7 @@ def onboard_user(u):
         try: 
             feed = gd_client.GetContacts(q=query)
         except:
-            logging.warning('User %s does not have Google Contacts API permission' % user)
+            logging.warning('User %s does not have Google Contacts API permission' % u)
             return
 
         # Add all email addresses from feed on best effort basis
@@ -196,125 +215,6 @@ def onboard_user(u):
         logging.warning('User %s could not log in to Gmail or Contacts API', u)
         logging.warning(gd_client)
         logging.warning(gmail_service)
-
-def recent_gmail(user):
-    '''
-    Checks all recent emails from Gmail of User, and creates GmailMessageJobs
-    to be processed
-    '''
-    logging.info("Updating %s in tasks.recent_gmail()" % user)
-    gmail_service = user.get_service(service_type='gmail')
-    if not gmail_service:
-        logging.info("Could not instantiate authenticated service for %s" % u)
-        return
-    now = datetime.datetime.now() # So to not miss emails created during running of this job
-    messages = gmail.ListMessagesMatchingQuery(
-        service=gmail_service,
-        user_id='me',
-        query='after:%s' % user.last_updated.strftime('%Y/%m/%d'))
-     # Track list of emails that have been updated by this function
-    for msg in messages:
-        g = GmailMessageJob(
-            user = user,
-            message_id = msg['id'],
-            thread_id = msg['threadId'])
-        g.save()
-    # Save completed job specs to user
-    user.last_updated = now
-    user.save()
-    logging.info("Finished updating %s in tasks.recent_gmail()" % user)
-
-def process_gmail_message_jobs(user):
-    '''
-    Processes all unfinished GmailMessageJobs for this User. 
-    Checks the email of the GmailMessageJob to create all Profiles, and 
-    create/update Connections between that Profile and User. 
-    '''
-    # Check if there are any jobs
-    gmail_message_jobs = GmailMessageJob.objects(
-        user = user, 
-        date_completed__exists = False)
-    if not gmail_message_jobs:
-        return
-
-    # Authenticate
-    gmail_service = user.get_service(service_type='gmail')
-    if not gmail_service:
-        logging.info("Could not instantiate authenticated service for %s" % u)
-        return
-
-    # Process jobs
-    for gmail_message_job in gmail_message_jobs:
-        if 'localhost' not in settings.get('base_url'):
-            raw_input('Enter to continue: ')
-
-        gmail_message_job.attempts = gmail_message_job.attempts + 1
-        gmail_message_job.save()
-
-        logging.info("Checking message of id: %s" % gmail_message_job.message_id)
-        msg = gmail.GetMessage(gmail_service, 'me', gmail_message_job.message_id)
-        msg_header = gmail.GetMessageHeader(msg)
-        logging.info(msg_header)
-        if msg_header:
-            header_list = ['Delivered-To', 'Return-Path', 'From', 'To', 'Cc'] # Which email addresses to check
-            for header in header_list:
-                if header in msg_header.keys():
-                    field = parseaddr(msg_header[header]) # Allows local emails addresses unfortunately
-                    name = field[0]
-                    email = field[1]
-                    logging.info('%s, %s' % (name, email))
-
-                    if email and email is not "" and not blacklist_email(email):
-                        try:
-                            p = Profile.objects.get(email=email)
-                        except:
-                            p = Profile.add_new(name=name, email=email)
-
-                        # Add/update Connection if not Cc field or to oneself
-                        if p and header != 'Cc' and user.email != p.email:
-                            gmail_job, created_flag = GmailJob.objects.get_or_create(
-                                user = user,
-                                profile = p, 
-                                date_completed__exists = False)
-                            gmail_job.save()
-                            logging.info(gmail_job)
-
-            gmail_message_job.date_completed = datetime.datetime.now()
-            gmail_message_job.save()
-
-def process_gmail_jobs(user):
-    '''
-    Each GmailJob is a Profile that this User needs to check to 
-    create/update Connection
-    '''
-    gmail_jobs = GmailJob.objects(
-        user = user, 
-        date_completed__exists = False)
-    if not gmail_jobs:
-        return
-
-    # Authenticate
-    gmail_service = user.get_service(service_type='gmail')
-    if not gmail_service:
-        logging.info("Could not instantiate authenticated service for %s" % u)
-        return
-
-    # Process jobs
-    for gmail_job in gmail_jobs:
-        if 'localhost' not in settings.get('base_url'):
-            raw_input('Enter to continue: ')
-        gmail_job.attempts = gmail_job.attempts + 1
-        gmail_job.save()
-        
-        c, created_flag = Connection.objects.get_or_create(
-            user = gmail_job.user,
-            profile = gmail_job.profile)
-        # Updates fields of c by searching through users'
-        # entire Gmail inbox 
-        c.populate_from_gmail(service=gmail_service)
-
-        gmail_job.date_completed = datetime.datetime.now()
-        gmail_job.save()
 
 def update_profile_and_connection(email, name, user, gmail_service):
     """
