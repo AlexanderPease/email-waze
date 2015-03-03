@@ -19,7 +19,7 @@
           {% include 'partials/reminders_table.html' %}
         {% else %}
           You have no reminders due today! 
-          Check your <a id="later-reminders-link" class="box">Upcoming Reminders</a>.
+          Check your <a id="later-reminders-link-secondary" class="box">Upcoming Reminders</a>.
         {% end %}
       </div>
 
@@ -30,7 +30,7 @@
           {% include 'partials/reminders_table.html' %}
         {% else %}
           You have no upcoming reminders! 
-          Make sure you don't have any <a id="today-reminders-link" class="box">Active Reminders</a> 
+          Make sure you don't have any <a id="today-reminders-link-secondary" class="box">Active Reminders</a> 
           due.
         {% end %}
       </div>
@@ -58,16 +58,16 @@
 
     // Toggle reminders
     $('#today-reminders-link').click(function() {
-      $('#today-reminders-div').show();
-      $('#today-reminders-link').removeClass('unselected');
-      $('#later-reminders-div').hide();
-      $('#later-reminders-link').addClass('unselected');
+      showTodayReminders();
     });
      $('#later-reminders-link').click(function() {
-      $('#today-reminders-div').hide();
-      $('#today-reminders-link').addClass('unselected');
-      $('#later-reminders-div').show();
-      $('#later-reminders-link').removeClass('unselected');
+      showLaterReminders();
+    });
+    $('#today-reminders-link-secondary').click(function() {
+      showTodayReminders();
+    });
+     $('#later-reminders-link-secondary').click(function() {
+      showLaterReminders();
     });
 
     // Reminder functionality
@@ -84,5 +84,18 @@
       }
     );
   });
+
+  function showTodayReminders() {
+    $('#today-reminders-div').show();
+    $('#today-reminders-link').removeClass('unselected');
+    $('#later-reminders-div').hide();
+    $('#later-reminders-link').addClass('unselected');
+  }
+  function showLaterReminders() {
+    $('#today-reminders-div').hide();
+    $('#today-reminders-link').addClass('unselected');
+    $('#later-reminders-div').show();
+    $('#later-reminders-link').removeClass('unselected');
+  }
 </script>
 {% end %}

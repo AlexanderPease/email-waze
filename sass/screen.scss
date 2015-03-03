@@ -767,6 +767,7 @@ table.dataTable tbody td {
 }
 table.dataTable thead th, table.dataTable thead td {
   border-bottom: 1px solid $light-grey;
+  font-weight: normal;
 }
 table.dataTable.no-footer {
   border-bottom: 1px solid $light-grey;
