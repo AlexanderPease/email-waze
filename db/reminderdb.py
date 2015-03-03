@@ -15,14 +15,15 @@ class ProfileReminder(Document):
     company = ReferenceField(Company) 
     connection = ReferenceField(Connection)
 
-    # Number of days until reminder is due, or number of days for recurring time period
+    # Date reminder was set
+    date_set = DateTimeField(required=True, default=datetime.datetime.now())
+
+    # Number of days from date_set until reminder is due, 
+    #or number of days for recurring time period
     days = IntField(required=True)
 
     # Recurring reminder or not
     recurring = BooleanField(required=True, default=False)
-
-    # Date reminder was set
-    date_set = DateTimeField(required=True, default=datetime.datetime.now())
 
     def save(self , *args, **kwargs):
         '''
@@ -58,6 +59,16 @@ class ProfileReminder(Document):
         else:
             return 'One time'
 
+    def days_since_emailed(self):
+        """
+        Returns number of days since self.profile was last emailed. 
+        If never emailed, returns arbitrarily high number of days. 
+        """
+        if not self.connection:
+            return 99999
+        else:
+            return self.connection.days_since_emailed_out()
+
     def display_last_emailed(self):
         if not self.connection:
             return 'N/A (Reminder set %s)' % self.date_set.strftime('%Y/%m/%d')
@@ -68,10 +79,10 @@ class ProfileReminder(Document):
             else:
                 return self.connection.latest_email_out_date_string()
 
-    def display_due_date(self):
+    def days_until_due(self):
         """
-        Calculates due date for display_due
-        Ex: "Wednesday", "Next Thursday"
+        Returns number of days until reminder is due. 
+        Negative numbers if past due. 0 if due today_reminders
         """
         if self.connection:
             if self.connection.latest_email_out_date:
@@ -81,11 +92,18 @@ class ProfileReminder(Document):
         else:
             latest_date = self.date_set
         days_left = (latest_date.date() - datetime.datetime.today().date()) + datetime.timedelta(days=self.days)
-        days_left = int(days_left.days)
+        return int(days_left.days)
+
+    def display_due_date(self):
+        """
+        Calculates due date for display_due
+        Ex: "Wednesday", "Next Thursday"
+        """
+        days_left = self.days_until_due()
         if days_left < -1:
-            return 'Past (%s days ago)' % int(fabs(days_left))
+            return '%s days ago' % int(fabs(days_left))
         elif days_left == -1:
-            return 'Past (Yesterday)'
+            return 'Yesterday'
         elif days_left == 0:
             return 'Today'
         elif days_left == 1:
