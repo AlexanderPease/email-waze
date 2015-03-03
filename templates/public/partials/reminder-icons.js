@@ -57,9 +57,17 @@ $('.reminder-icon').each(function(){
         url: url,
         success: function(response) {
           console.log(response);
-          var msg = response['data']['msg'];
-          $('.reminder-icon[data-profile-id="' + profile_id + '"]').text(msg);
-          $('.reminder-icon[data-reminder-id="' + reminder_id + '"]').text(msg);
+          if (response['status_code'] == 200) {
+            var display_alert_type = response['data']['display_alert_type'];
+            $('.reminder-display[data-profile-id="' + profile_id + '"]').text(display_alert_type);
+            $('.reminder-display[data-reminder-id="' + reminder_id + '"]').text(display_alert_type);
+            var display_action = response['data']['display_action'];
+            $('.reminder-icon[data-profile-id="' + profile_id + '"]').text(display_action);
+            $('.reminder-icon[data-reminder-id="' + reminder_id + '"]').text(display_action);  
+          } else {
+            $('.reminder-icon[data-profile-id="' + profile_id + '"]').text('Error! Try Again');
+            $('.reminder-icon[data-reminder-id="' + reminder_id + '"]').text('Error! Try Again');
+          }
         },
         error: function(response) {
           console.warn(response);

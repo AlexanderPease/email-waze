@@ -57,7 +57,12 @@ class CreateReminder(app.basic.BaseHandler):
                 return self.api_error(500, 'Error saving CompanyReminder')
         else:
             return self.api_error(400, 'Invalid reminder_type parameter')
-        return self.api_response(data={'msg': 'Reminder Set!'})
+        results = {
+            'msg': 'create',
+            'display_action': 'Edit Reminder', 
+            'display_alert_type': r.display_alert_type() 
+        }
+        return self.api_response(results)
 
 
 ########################
@@ -102,18 +107,22 @@ class EditReminder(app.basic.BaseHandler):
 
         # Update reminder
         if days:
-            r.days = days
+            r.days = int(days)
         if recurring == 'false' or recurring == 'False':
             r.recurring = False
         elif recurring and recurring != "":
             r.recurring = True
         try:
             r.save()
-            logging.info("Saved %s" % r)
         except:
             return self.api_error(500, 'Error editing Reminder of type %s and id %s' %(reminder_type, reminder_id))
 
-        return self.api_response(data={'msg': 'Updated!'})
+        results = {
+            'msg': 'edit',
+            'display_action': 'Edit Reminder', 
+            'display_alert_type': r.display_alert_type() 
+        }
+        return self.api_response(results)
 
 
 ########################
@@ -151,7 +160,12 @@ class DeleteReminder(app.basic.BaseHandler):
             except:
                 return self.api_error(400, 'Invalid reminder_id parameter for CompanyReminder')
         r.delete()
-        return self.api_response(data={'msg': 'Deleted!'})
+        results = {
+            'msg': 'delete', 
+            'display_alert_type': 'Deleted!',
+            'display_action': ''
+        }
+        return self.api_response(results)
 
 
 

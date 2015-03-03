@@ -25,7 +25,7 @@
         <td data-order="{{ r.days_until_due() }}">{{ r.display_due_date() }}</td>
         <td data-order="{{ r.days_since_emailed() }}">{{ r.display_last_emailed() }}</td>
         <td data-order="{{ r.days }}">
-          <span>{{ r.display_alert_type() }}</span></br>
+          <span class="reminder-display" data-reminder-id="{{ r.id }}">{{ r.display_alert_type() }}</span></br>
           <a tabindex="0" class="reminder-icon reminder-edit" role="button" data-toggle="popover" data-reminder-id="{{ r.id }}">Edit Reminder</a>
         </td>
       </tr>
