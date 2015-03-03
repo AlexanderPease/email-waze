@@ -20,9 +20,6 @@ $('.reminder-icon').each(function(){
     'content': template(context)
   }
   $(this).popover(options).parent().delegate('.reminder-option', 'click', function() {
-    console.log($(this).attr('data-profile-id'))
-    console.log($(this).attr('data-reminder-id'))
-    console.log($(this))
     event.stopPropagation();
     // Checkbox, no action
     if ($(this).attr('data-reminder-recurring-checkbox')) {
@@ -58,6 +55,16 @@ $('.reminder-icon').each(function(){
         success: function(response) {
           console.log(response);
           if (response['status_code'] == 200) {
+            // Create/delete DOM elements if necessary
+            var msg = response['data']['msg'];
+            if (msg == 'create') {
+              var reminderDisplay = '<span class="reminder-display" data-reminder-id=""></span></br>';
+              // newly created reminders based on profile_id
+              $('.reminder-icon[data-profile-id="' + profile_id + '"]').before(reminderDisplay);
+            } else if (msg == 'delete') {
+
+            }
+            // Set both display
             var display_alert_type = response['data']['display_alert_type'];
             $('.reminder-display[data-profile-id="' + profile_id + '"]').text(display_alert_type);
             $('.reminder-display[data-reminder-id="' + reminder_id + '"]').text(display_alert_type);

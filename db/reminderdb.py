@@ -75,7 +75,10 @@ class ProfileReminder(Document):
         else:
             days_since = self.connection.days_since_emailed_out()
             if days_since < 30:
-                return '%s days ago' % days_since
+                if days_since == 1:
+                    return '1 day ago'
+                else:
+                    return '%s days ago' % days_since
             else:
                 return self.connection.latest_email_out_date_string()
 
