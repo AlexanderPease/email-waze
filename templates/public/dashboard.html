@@ -45,7 +45,7 @@
 
       <div class="table-header subpage-header">
         {% if today_reminders or later_reminders %}
-          <a id="today-reminders-link">Active Reminders</a>
+          <a id="today-reminders-link">Today's Reminders</a>
           <span class="unselected"> / </span>
           <a id="later-reminders-link" class="unselected">Upcoming Reminders</a>
           <span class="unselected"> / </span>
@@ -79,7 +79,7 @@
           {% include 'partials/reminders_table.html' %}
         {% else %}
           You have no upcoming reminders! 
-          Make sure you don't have any <a id="today-reminders-link" class="box">Active Reminders</a> 
+          Make sure you don't have any <a id="today-reminders-link" class="box">Today Reminders</a> 
           due, or see your <a id="recently-emailed-link" class="box">Recently Emailed</a> 
           contacts.
         {% end %}
