@@ -61,6 +61,10 @@ class UserSettings(app.basic.BaseHandler):
 class UserWelcome(app.basic.BaseHandler):
     @tornado.web.authenticated
     def get(self):
+        '''
+        user_welcome.html sends AJAX requests to group_api.py for user to 
+        join groups he/she is invited to
+        '''
         if self.user.welcomed and self.user.email not in settings.get('staff'):
             return self.redirect('/')
         else:
@@ -68,41 +72,8 @@ class UserWelcome(app.basic.BaseHandler):
             self.user.save()
 
         # Invited Groups. Display as joined, but join via AJAX by default
-        group_invites = list(set(Group.objects(Q(invited_emails=self.user.email) | Q(domain_setting__icontains=self.user.get_domain()))))
-        for g in group_invites:
-            ## REDUNDANT W/ GROUP_API ACCEPTINVITE()
-            if self.user.email in g.invited_emails or self.user.get_domain() in g.domain_setting:
-                # Send emails to new member and existing members
-                self.send_email(from_address='NTWRK <postmaster@ntwrk.me>',
-                            to_address=self.user.email,
-                            subject="You've joined %s!" % g.name,
-                            html_text='''Congrats! You're now the newest member of
-                            team "%s", along with %s other members. 
-                            Click 
-                            <a href="%s/group/%s/view">here</a> to see more info about the 
-                            group.''' % (g.name, len(g.users), settings.get('base_url'), g.id)
-                            )
-                for group_user in g.users:
-                    self.send_email(from_address='NTWRK <postmaster@ntwrk.me>',
-                            to_address=group_user.email,
-                            subject="%s joined %s!" % (self.user.name, g.name),
-                            html_text='''%s (%s) has joined you as a member of team "%s".
-                            This means that you are now sharing contacts and email metadata
-                            with %s. Click 
-                            <a href="%s/group/%s/view">here</a> to view the 
-                            your settings. </br>
-                            "%s" now has %s members and is administered by %s 
-                            (%s)''' % (self.user.name, self.user.email, g.name, self.user.name, settings.get('base_url'), g.id, g.name, len(g.users) + 1, g.admin.name, g.admin.email)
-                            )
-                    # Number of members is len(g.users) + 1 b/c I add_user below. 
-                    # This makes it easy to email the right notifications
-
-                # Add user and remove from invited email list
-                g.add_user(self.user)
-                if self.user.email in g.invited_emails:
-                    g.invited_emails.remove(self.user.email)
-                g.save()
-
+        group_invites = self.user.groups_can_join()
+        group_invites = list(set(group_invites))
         return self.render('user/user_welcome.html', # extends dashboard.html
             user = self.user, 
             nav_title = True,

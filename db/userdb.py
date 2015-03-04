@@ -152,6 +152,20 @@ class User(Document):
         """
         return self.id == u.id
 
+    def groups_can_join(self):
+        """
+        Returns a list of Groups this User can join. 
+        Does not include Groups the User is already in
+        """
+        from groupdb import Group
+        groups_can_join = []
+        groups_invited = Group.objects(invited_emails=self.email)
+        groups_domain =  Group.objects(domain_setting__icontains=self.get_domain())
+        for g in list(groups_invited) + list(groups_domain):
+            if self not in g.users:
+                groups_can_join.append(g)
+        return groups_can_join
+
     def get_service(self, service_type='gmail', version='v1'):
         """
         Returns Google service object for calling APIs

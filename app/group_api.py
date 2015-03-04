@@ -189,10 +189,10 @@ class AcceptInvite(app.basic.BaseHandler):
         except:
             return self.api_error(500, 'Could not find group in database')
 
-        if self.user.email in g.invited_emails or self.user.get_domain() in g.domain_setting:
+        if g.user_can_join(self.user):
             # Send emails to new member and existing members
             self.send_email(from_address='NTWRK <postmaster@ntwrk.me>',
-                        to_address=u.email,
+                        to_address=self.user.email,
                         subject="You've joined %s!" % g.name,
                         html_text='''Congrats! You're now the newest member of
                         team "%s", along with %s other members. 
@@ -203,22 +203,19 @@ class AcceptInvite(app.basic.BaseHandler):
             for group_user in g.users:
                 self.send_email(from_address='NTWRK <postmaster@ntwrk.me>',
                         to_address=group_user.email,
-                        subject="%s joined %s!" % (u.name, g.name),
+                        subject="%s joined %s!" % (self.user.name, g.name),
                         html_text='''%s (%s) has joined you as a member of team "%s".
                         This means that you are now sharing contacts and email metadata
                         with %s. Click 
                         <a href="%s/group/%s/view">here</a> to view the 
                         your settings. </br>
                         "%s" now has %s members and is administered by %s 
-                        (%s)''' % (u.name, u.email, g.name, u.name, settings.get('base_url'), g.id, g.name, len(g.users) + 1, g.admin.name, g.admin.email)
+                        (%s)''' % (self.user.name, self.user.email, g.name, self.user.name, settings.get('base_url'), g.id, g.name, len(g.users) + 1, g.admin.name, g.admin.email)
                         )
                 # Number of members is len(g.users) + 1 b/c I add_user below. 
                 # This makes it easy to email the right notifications
 
-            # Add user and remove from invited email list
-            g.add_user(u)
-            if u.email in g.invited_emails:
-                g.invited_emails.remove(u.email)
+            g.add_user(self.user)
             g.save()
             return self.api_response(data={})
         else:
@@ -240,8 +237,11 @@ class Leave(app.basic.BaseHandler):
             g = Group.objects.get(id=group_id)
         except:
             return self.api_error(500, 'Could not find group in database')
-        g.remove_user(self.user)
-        return self.api_response(data={})
+        group = g.remove_user(self.user)
+        if group:
+            return self.api_response(data={})
+        else:
+            return self.api_error(500, "Error leaving group. Possibly wasn't in Group!")
 
 ########################
 ### Group admin deletes the entire group

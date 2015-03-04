@@ -47,7 +47,6 @@
                       {% set first = False %}
                     {% end %}
                   {% end %}
-                  </br>
                   <!--
                   <button type="button" class="btn btn-primary btn-inline group-accept-invite" data-group-id="{{ g.id }}">
                     Join NTWRK
@@ -56,7 +55,7 @@
                 </div></li>
               {% end %}
             </ul>
-            </br></br>
+            </br>
 
             You can also <a id="create-group-link" class="box">create a new NTWRK</a> 
             by inviting your friends!
@@ -113,34 +112,12 @@
       keyboard: false
     });
 
-    // Accept group invites
-    /*
-    $('.group-accept-invite').click(function(){
-      var current_btn = $(this);
-      current_btn.text('Working...');
-      current_btn.attr('disabled', 'disabled');
-      var group_id = $(this).attr('data-group-id');
-      var options = {
-        type: 'POST',
-        url: '/api/group/' + encodeURIComponent(group_id) + '/acceptinvite',
-        dataType: 'json',
-        success: function(response) {
-          console.log(response);
-          current_btn.text('Success!');
-          current_btn.attr('disabled', 'disabled');
-          $('#modal-next').text('Next');
-        },
-        error: function(response) {
-          console.warn(response);
-          current_btn.text('Try again!');
-          current_btn.removeAttr('disabled');
-          console.log(options);
-        }
-    };
-    console.log('Requesting: ' + options.url)
-    $.ajax(options);
-    });
-    */
+    // List of groups to accept invites to
+      var groupIDsToAccept = [];
+      $('.group-invite').each(function() {
+        var group_id = $(this).attr('data-group-id');
+        groupIDsToAccept.push(group_id);
+      });
 
     // Show group create form
       $('#create-group-link').click(function(){
@@ -172,6 +149,7 @@
         // Second step if Chrome
         $('#group-invite').hide();
         $('#group-create').hide();
+        acceptGroupInvites(groupIDsToAccept);
         $('#chrome-extension').show();
         $('#modal-title').text('Install Chrome Extension');
         $('#modal-next').text('Next');
@@ -180,6 +158,7 @@
         // Third step if Chrome, second step otherwise
         $('#group-invite').hide();
         $('#group-create').hide();
+        acceptGroupInvites(groupIDsToAccept);
         $('#chrome-extension').hide();
         $('#finished').show();
         $('#modal-title').text("You're finished!");
@@ -197,6 +176,26 @@
     $('[data-toggle="tooltip"]').tooltip()
 
   }); //ready
+
+  // Sends AJAX message to accept invites for all groups
+  function acceptGroupInvites(groupIDsToAccept) {
+    for (var i=0; i < groupIDsToAccept.length; i++) {
+      var groupID = groupIDsToAccept[i];
+      var options = {
+        type: 'POST',
+        url: '/api/group/' + encodeURIComponent(groupID) + '/acceptinvite',
+        dataType: 'json',
+        success: function(response) {
+          console.log(response);
+        },
+        error: function(response) {
+          console.warn(response);
+        }
+      }
+      console.log('Requesting: ' + options.url)
+      $.ajax(options);
+    }
+  }
 
   /* This is redundant, also in base.html, but confined to separate script */
   /* Returns string with info on users's browser type
