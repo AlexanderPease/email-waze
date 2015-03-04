@@ -36,3 +36,19 @@ def __reject_email_domain():
     Returns of list of email address domains to ignore
     '''
     return ['craigslist', 'amazonses.com', 'googlegroups.com']
+
+def create_object_id_list(objects):
+    '''
+    Returns of list of ObjectIDs. Preserves order of original list.
+    Helpful for stopping database cursor from timing out over long jobs.
+
+    Args:
+        objects is a list of MongoEngine Objects
+    
+    '''
+    id_list = []
+    if not objects:
+        return
+    for o in objects:
+        id_list.append(o.id)
+    return id_list

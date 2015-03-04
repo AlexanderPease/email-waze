@@ -17,6 +17,7 @@ from db.companydb import Company
 from db.gmailmessagejobdb import GmailMessageJob
 from db.gmailjobdb import GmailJob
 from db.taskdb import Task
+from app.methods import create_object_id_list
 
 import gdata.contacts.client
 import app.gmail as gmail
@@ -61,7 +62,12 @@ def all_recent_gmail(users=None):
     task.save()
     if not users:
         users = User.objects.order_by('-last_web_action')
-    for user in users:
+
+    # User_id_list prevents PyMongo cursor from getting stale
+    user_id_list = create_object_id_list(users)
+    for user_id in user_id_list:
+        logging.info(str(user_id))
+        user = User.objects.get(id=str(user_id))
         task.num_users = task.num_users + 1
         task.save()
         try:
@@ -85,7 +91,12 @@ def all_gmail_message_jobs(users=None):
     task.save()
     if not users:
         users = User.objects.order_by('-last_web_action')
-    for user in users:
+
+    # User_id_list prevents PyMongo cursor from getting stale
+    user_id_list = create_object_id_list(users)
+    # Call each user from user_id_list to iterate through
+    for user_id in user_id_list:
+        user = User.objects.get(id=str(user_id))
         gmail_message_jobs = GmailMessageJob.objects(
             user = user, 
             date_completed__exists = False)
@@ -112,7 +123,11 @@ def all_gmail_jobs(users=None):
     task.save()
     if not users:
         users = User.objects.order_by('-last_web_action')
-    for user in users:
+
+    # User_id_list prevents PyMongo cursor from getting stale
+    user_id_list = create_object_id_list(users)
+    for user_id in user_id_list:
+        user = User.objects.get(id=str(user_id))
         gmail_jobs = GmailJob.objects(
             user = user, 
             date_completed__exists = False)
