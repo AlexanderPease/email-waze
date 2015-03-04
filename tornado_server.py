@@ -11,7 +11,7 @@ import settings
 import templates
 
 import app.basic, app.public, app.admin, app.email_handler
-import app.googleauth, app.user, app.group, app.stripe_handler
+import app.googleauth, app.user, app.stripe_handler
 import app.api, app.group_api, app.public_api, app.user_api
 import app.reminder_api
 
