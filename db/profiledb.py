@@ -91,7 +91,7 @@ class Profile(Document):
             Name and email strings
 
         Returns:
-            The Profile instance if successfully created
+            The Profile instance if successfully created or found
         """
         # Brief set of rules to ignore certain emails
         if blacklist_email(email) or not name or name is "":
@@ -102,16 +102,17 @@ class Profile(Document):
         # Add to profile
         try:
             p, created = Profile.objects.get_or_create(email=email) # auto-saves()
-            if p and created:
-                # Set attributes
-                p.name = name
-                p.domain = p.get_domain()
-                p.save() 
-                logging.info('Added to database: %s %s' % (p.name, p.email))
+            if p:
+                if created:
+                    # Set attributes
+                    p.name = name
+                    p.domain = p.get_domain()
+                    p.save() 
+                    logging.info('Added to database: %s %s' % (p.name, p.email))
+                # Attempted to add existing email address
+                else:
+                    logging.info('%s already exists, no change to database' % p)
                 return p
-            # Attempted to add existing email address
-            elif p and not created:
-                logging.info('%s already exists, no change to database' % p)
         except:
             logging.warning("Couldn't add Profile: %s <%s>" % (name, email))
 

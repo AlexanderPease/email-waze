@@ -129,7 +129,8 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
-        user = User.objects.get(email="me@alexanderpease.com")
+        user = User.objects.get(email="jtstanwix@gmail.com")
+        tasks.onboard_user(user)
         #gmail_message_job = GmailMessageJob.objects.get(message_id="14bdb197a65fd5b3")
         #gmail_message_job.process()
 

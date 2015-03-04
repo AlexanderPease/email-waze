@@ -1,10 +1,14 @@
+import logging
+
 def blacklist_email(email):
     '''
     Returns True if email is blacklisted, False if not
     '''
-    for r in __reject_email_domain():
-        if r in email_domain(email):
-            return True
+    domain = email_domain(email)
+    if domain:
+        for r in __reject_email_domain():
+            if r in domain:
+                return True
     for r in __reject_email_local():
         if r in email:
             return True
@@ -12,7 +16,14 @@ def blacklist_email(email):
 
 
 def email_domain(email):
-    return email.split('@')[1]
+    '''
+    Returns domain of an email address, or None
+    '''
+    email_split = email.split('@')
+    if len(email_split) == 2:
+        return email_split[1]
+    else:
+        return None
 
 def __reject_email_local():
     '''
