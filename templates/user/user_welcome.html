@@ -16,43 +16,55 @@
         </div><!--finished modal-body-->
 
         <div id="group-invite" class="modal-body" style="display:none">
-          First, you should join a "NTWRK." 
-          NTWRKs connect you with colleagues and friends, expanding your 
-          address book and enabling you to see connections.</br></br>
+          First, you should join a "NTWRK."
+          Think of it as our word for "team."
+          NTWRKs connect you with colleagues and friends, 
+          sharing your address books and helping you stay in sync. 
+          </br></br>
 
           {% if group_invites %}
-            You've already been invited to join these NTWRKs:
+            We've automatically added you to 
+
+            {% if len(group_invites) == 1 %}
+              a NTWRK
+            {% else %}
+              {{ len(group_invites) }} NTWRKs
+            {% end %}
+
+            you've been invited to:
             <ul>
               {% for g in group_invites %}
                 <li><div class="group-invite" data-group-id="{{ g.id }}">
-                  {{ g }} ({{ len(g.users) }} 
-                  {% if len(g.users) == 1 %}
-                    member): 
-                  {% else %}
-                    members): 
-                  {% end %}
+                  {{ g }}: 
+
                   {% set first = True %}
                   {% for u in g.users %}
-                    {% if not first %}
-                      , 
+                    {% if u.email != current_user %}
+                      {% if not first %}
+                        , 
+                      {% end %}
+                      {{ u.name }} ({{ u.email }})
+                      {% set first = False %}
                     {% end %}
-                    {{ u.name }} ({{ u.email }})
-                    {% set first = False %}
                   {% end %}
-                  </br>
+                  <!--
                   <button type="button" class="btn btn-primary btn-inline group-accept-invite" data-group-id="{{ g.id }}">
                     Join NTWRK
                   </button>
-
+                  -->
                 </div></li>
               {% end %}
             </ul>
-            Or, <a id="create-group-link" class="box">create a new NTWRK</a> 
+            </br>
+
+            You can also <a id="create-group-link" class="box">create a new NTWRK</a> 
             by inviting your friends!
           {% else %}
             <a id="create-group-link" class="box">Create a new NTWRK</a> 
             by inviting your friends! You do not have any pending NTWRK invitations. 
           {% end %}
+          </br></br>
+          You can always manage your settings later by visiting the NTWRK Settings page. 
         </div><!--group-setup modal-body-->
 
         <div id="group-create" class="modal-body" style="display:none">
@@ -100,40 +112,20 @@
       keyboard: false
     });
 
-    // Accept group invites
-    $('.group-accept-invite').click(function(){
-      var current_btn = $(this);
-      current_btn.text('Working...');
-      current_btn.attr('disabled', 'disabled');
-      var group_id = $(this).attr('data-group-id');
-      var options = {
-        type: 'POST',
-        url: '/api/group/' + encodeURIComponent(group_id) + '/acceptinvite',
-        dataType: 'json',
-        success: function(response) {
-          console.log(response);
-          current_btn.text('Success!');
-          current_btn.attr('disabled', 'disabled');
-          $('#modal-next').text('Next');
-        },
-        error: function(response) {
-          console.warn(response);
-          current_btn.text('Try again!');
-          current_btn.removeAttr('disabled');
-          console.log(options);
-        }
-    };
-    console.log('Requesting: ' + options.url)
-    $.ajax(options);
-    });
+    // List of groups to accept invites to
+      var groupIDsToAccept = [];
+      $('.group-invite').each(function() {
+        var group_id = $(this).attr('data-group-id');
+        groupIDsToAccept.push(group_id);
+      });
 
     // Show group create form
       $('#create-group-link').click(function(){
         $('#group-invite').hide();
         $('#group-create').show();
         $('#group-edit-btn').addClass('btn-inline');
-        $('#group-edit-btn').text('Create Team');
-        $('#modal-title').text('Create A Team');
+        $('#group-edit-btn').text('Create NTWRK');
+        $('#modal-title').text('Create A NTWRK');
         $('#modal-next').text('Skip');
         MODAL_STATE = 'group-create';
       });
@@ -150,13 +142,14 @@
       if (MODAL_STATE == 'start') {
         $('#start').hide();
         $('#group-invite').show();
-        $('#modal-title').text('Join a Team');
+        $('#modal-title').text('Join a NTWRK');
         $('#modal-next').text('Skip');
         MODAL_STATE = 'group-invite';
       } else if ((MODAL_STATE == 'group-invite' || MODAL_STATE == 'group-create') && navigator.sayswho.indexOf('Chrome') > -1) {
         // Second step if Chrome
         $('#group-invite').hide();
         $('#group-create').hide();
+        acceptGroupInvites(groupIDsToAccept);
         $('#chrome-extension').show();
         $('#modal-title').text('Install Chrome Extension');
         $('#modal-next').text('Next');
@@ -165,6 +158,7 @@
         // Third step if Chrome, second step otherwise
         $('#group-invite').hide();
         $('#group-create').hide();
+        acceptGroupInvites(groupIDsToAccept);
         $('#chrome-extension').hide();
         $('#finished').show();
         $('#modal-title').text("You're finished!");
@@ -172,11 +166,36 @@
         MODAL_STATE = 'finished'
       } else if (MODAL_STATE == 'finished') {
         //$('#user-welcome-modal').modal('hide');
+        $('#modal-next').text('Loading...');
+        $('#modal-next').attr('disabled', 'disabled');
         window.location.href="/" // Reload dashboard
       }
      console.log(MODAL_STATE);
     });
-  });
+
+    $('[data-toggle="tooltip"]').tooltip()
+
+  }); //ready
+
+  // Sends AJAX message to accept invites for all groups
+  function acceptGroupInvites(groupIDsToAccept) {
+    for (var i=0; i < groupIDsToAccept.length; i++) {
+      var groupID = groupIDsToAccept[i];
+      var options = {
+        type: 'POST',
+        url: '/api/group/' + encodeURIComponent(groupID) + '/acceptinvite',
+        dataType: 'json',
+        success: function(response) {
+          console.log(response);
+        },
+        error: function(response) {
+          console.warn(response);
+        }
+      }
+      console.log('Requesting: ' + options.url)
+      $.ajax(options);
+    }
+  }
 
   /* This is redundant, also in base.html, but confined to separate script */
   /* Returns string with info on users's browser type

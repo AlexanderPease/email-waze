@@ -30,14 +30,24 @@ class Group(Document):
     def add_user(self, user):
         """
         Adds a User to the Group (w/out duplication)
+
+        Returns Group if successfully added, None if rejected
         """
-        if user not in self.users or user.domain() in self.domain_setting:
-            return self.users.append(user)
+        if user not in self.users:
+            if user.email in self.invited_emails or user.get_domain() in self.domain_setting:
+                # Satisfied conditions to be added
+                self.users.append(user)
+                # Remove from invited_emails if applicable
+                if user.email in self.invited_emails:
+                    self.invited_emails.remove(u.email)
+                return self
 
 
     def remove_user(self, user):
         """
         Removes a User in the Group
+
+        Returns the group if successful, None if not
         """
         if user in self.users:
             if len(self.users) == 1:
@@ -46,7 +56,20 @@ class Group(Document):
                 self.users.remove(user)
                 self.admin = self.users[0]
             else:
-                return self.users.remove(user)
+                self.users.remove(user)
+                return self
+
+    def user_can_join(self, user):
+        """
+        Returns True if User is allowed to join. User CANNOT already be in Group. 
+        Either invited or domain_setting is set. 
+        """
+        if user in self.users:
+            return False
+        if user.email in self.invited_emails or user.get_domain() in self.domain_setting:
+            return True
+        else:
+            return False
 
     # TODO: fix users and admin, they are currently worthless entries
     # Just using name and id in user_welcome currently

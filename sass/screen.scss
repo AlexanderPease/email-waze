@@ -167,6 +167,17 @@ button.selectpicker, .bootstrap-select .btn {
   }
 }
 
+// Tooltips
+.tooltip-inner {
+  max-width: 350px;
+  background-color: $dark-grey;
+  color: $white;
+  border-radius: 0px;
+}
+.tooltip.in {
+  opacity: 1;
+}
+
 // Global page styles
 .page-content {
   width: 100%;

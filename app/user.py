@@ -6,6 +6,7 @@ from mongoengine.queryset import Q, DoesNotExist, MultipleObjectsReturned
 from db.userdb import User
 from db.groupdb import Group
 from db.profiledb import Profile
+from group_api import AcceptInvite
 
 
 ########################
@@ -60,38 +61,28 @@ class UserSettings(app.basic.BaseHandler):
 class UserWelcome(app.basic.BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        # Find user by email
-        try:
-            user = User.objects.get(email=self.current_user)
-        except MultipleObjectsReturned:
-            raise tornado.web.HTTPError(500)
-        except DoesNotExist:
-            raise tornado.web.HTTPError(404)
-
-        if user.welcomed and user.email not in settings.get('staff'):
+        '''
+        user_welcome.html sends AJAX requests to group_api.py for user to 
+        join groups he/she is invited to
+        '''
+        if self.user.welcomed and self.user.email not in settings.get('staff'):
             return self.redirect('/')
         else:
-            user.welcomed = True
-            user.save()
+            self.user.welcomed = True
+            self.user.save()
 
-        # Display User's Group invites
-        # This block exists because some preexisting users may be new to onboarding
-        groups = user.get_groups()
-        group_invites_raw = Group.objects(Q(invited_emails=self.current_user) | Q(domain_setting__icontains=user.get_domain()))
-        group_invites = []
-        for g in group_invites_raw:
-            if g not in groups:
-                group_invites.append(g)
-
-        return self.render('user/user_welcome.html', 
-            user=user, 
-            nav_title=True,
-            nav_select='dashboard',
-            groups=None,
-            group_invites=group_invites,
-            recent_contacts=None, # not enough time for this script to execute
-            today_reminders=None,
-            later_reminders=None) # new users never have any reminders
+        # Invited Groups. Display as joined, but join via AJAX by default
+        group_invites = self.user.groups_can_join()
+        group_invites = list(set(group_invites))
+        return self.render('user/user_welcome.html', # extends dashboard.html
+            user = self.user, 
+            nav_title = True,
+            nav_select = 'dashboard',
+            groups = None,
+            group_invites = group_invites,
+            recent_contacts = None, # not enough time for this script to execute
+            today_reminders = None,
+            later_reminders = None) # new users never have any reminders
 
 
 
