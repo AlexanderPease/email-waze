@@ -66,7 +66,6 @@ def all_recent_gmail(users=None):
     # User_id_list prevents PyMongo cursor from getting stale
     user_id_list = create_object_id_list(users)
     for user_id in user_id_list:
-        logging.info(str(user_id))
         user = User.objects.get(id=str(user_id))
         task.num_users = task.num_users + 1
         task.save()
