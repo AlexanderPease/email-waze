@@ -51,7 +51,7 @@
         </div>
 
         {% if groups %}
-          View & Edit Your Teams: 
+          View & Edit Your NTWRKs: 
           <ul>
             {% for g in groups %}
               <li>
@@ -63,14 +63,14 @@
                 {% end %}
 
                 {% if current_user == g.admin.email %}
-                (You are the Team Admin) - 
+                (You are the NTWRK Admin) - 
                   <a group-id="{{ g.id }}" class="group-edit-link box">Edit</a>
                   <!-- Group edit Modal -->
                   <div group-id="{{ g.id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h4 class="modal-title" id="myModalLabel">Edit "{{ g }}" Team</h4>
+                          <h4 class="modal-title" id="myModalLabel">Edit "{{ g }}"</h4>
                         </div>
                         <div class="modal-body">
                           <div class="alert alert-danger err err-modal" role="alert" style="display:none">
@@ -91,7 +91,7 @@
                     <div class="modal-dialog">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h4 class="modal-title" id="myModalLabel">"{{ g }}" Team</h4>
+                          <h4 class="modal-title" id="myModalLabel">"{{ g }}"</h4>
                         </div>
                         <div class="modal-body">
                           {% include ../group/group_view_snippet.html %}
@@ -104,12 +104,12 @@
             {% end %}
           </ul>
         {% else %}
-          You're not yet in any teams! Teams are a great way to collaborate
+          You're not yet in any NTWRKs! NTWRKs are a great way to collaborate
           with friends or coworkers while expanding your address book. </br>
         {% end %}
 
         {% if group_invites %}
-          You have pending invites to these teams:
+          You have pending invites to these NTWRKs:
           <ul>
             {% for g in group_invites %}
               <li>{{ g }} ({{ len(g.users) }} members): 
@@ -134,7 +134,7 @@
             </div>
             <div class="modal-body">
               Are you sure you want to delete your account?</br>
-              All your email metadata will be deleted and you will removed from all teams.</br>
+              All your email metadata will be deleted and you will removed from all NTWRKs.</br>
               This action cannot be undone.</br></br>
               
 
@@ -155,12 +155,12 @@
 
       {% if 0 %}
         Billing info:</br>
-        All teams up to 5 users are free! 
+        All NTWRKs up to 5 users are free! 
 
         {% if paying_groups %}
-          You are the admin of {{ len(paying_groups) }} team ({{ list_to_comma_delimited_string(paying_groups) }}) that qualifies for our Basic tier of $5/month for each user.
+          You are the admin of {{ len(paying_groups) }} NTWRKs ({{ list_to_comma_delimited_string(paying_groups) }}) that qualifies for our Basic tier of $5/month for each user.
         {% else %}
-          None of your teams exceed the free tier, but you can update your billing info if you'd like. 
+          None of your NTWRKs exceed the free tier, but you can update your billing info if you'd like. 
         {% end %}
 
         </br>
@@ -209,13 +209,13 @@
     // Leave group. Must hit button twice to execute
     $('.group-leave-btn').click(function() {
       if (!$(this).hasClass('group-leave-btn-final')) {
-        $(this).text('Are you sure you want to remove yourself from this team?')
+        $(this).text('Are you sure you want to remove yourself from this NTWRK?')
         $(this).addClass('group-leave-btn-final')
       } else {
         var group_id = CURRENT_MODAL.attr('group-id');
         var url = '/api/group/' + group_id + '/leave'
         var this_btn = $(this);
-        $(this).text('Removing you from team...');
+        $(this).text('Removing you from NTWRK...');
         $(this).attr('disabled', 'disabled');
         var options = {
           type: 'POST',
@@ -241,13 +241,13 @@
     // Delete group. Must hit button twice to execute
     $('.group-delete-btn').click(function() {
       if (!$(this).hasClass('group-delete-btn-final')) {
-        $(this).text('Are you sure you want to delete this team? This action cannot be undone.')
+        $(this).text('Are you sure you want to delete this NTWRK? This action cannot be undone.')
         $(this).addClass('group-delete-btn-final')
       } else {
         var group_id = CURRENT_MODAL.attr('group-id');
         var url = '/api/group/' + group_id + '/delete';
         var this_btn = $(this);
-        $(this).text('Deleting team...');
+        $(this).text('Deleting NTWRK...');
         $(this).attr('disabled', 'disabled');
         var options = {
           type: 'POST',
