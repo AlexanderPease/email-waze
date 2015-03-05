@@ -234,11 +234,12 @@ class Leave(app.basic.BaseHandler):
         if not self.current_user:
             return self.api_error(401, 'User is not logged in')
         try:
-            g = Group.objects.get(id=group_id)
+            group = Group.objects.get(id=group_id)
         except:
             return self.api_error(500, 'Could not find group in database')
-        group = g.remove_user(self.user)
+        group = group.remove_user(self.user)
         if group:
+            group.save()
             return self.api_response(data={})
         else:
             return self.api_error(500, "Error leaving group. Possibly wasn't in Group!")

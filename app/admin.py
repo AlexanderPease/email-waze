@@ -129,14 +129,6 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
-        #tasks.onboard_user(user)
-        #gmail_message_job = GmailMessageJob.objects.get(message_id="14bdb197a65fd5b3")
-        #gmail_message_job.process()
-
-        tasks.all_recent_gmail()
-        #tasks.all_gmail_message_jobs()
-        #tasks.all_gmail_jobs()
-
         '''
         for g in GmailMessageJob.objects(header__exists=True):
             g.set_direction()
@@ -146,8 +138,6 @@ class Scratch(app.basic.BaseHandler):
                 logging.info('NOPE:')
                 logging.info(g.header)
         '''
-
-
 
         #tasks.recent_gmail(user)
         #gmail_message_jobs = GmailMessageJob.objects(
