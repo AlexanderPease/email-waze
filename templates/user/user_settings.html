@@ -13,117 +13,43 @@
         {{ msg }}</br>
       {% end %}
 
-      <div class="table-header">
-        Account
-      </div>
-
       <div class="settings-content">
-        Name: {{ user.name }}</br>
-        Email: {{ user.email }} - <a href="/auth/logout/" class="box" >Logout</a>
-      </div>
-
-      <div class="table-header">
-        Your NTWRKs
-      </div>
-
-      <div class="settings-content">
-        <!--<h4 style="text-decoration: underline">NTWRK Settings</h4>-->
-        <a id="group-create-link" class="box">Create A New NTWRK</a></br>
-        <!-- Group edit Modal -->
-        <div id="group-create-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">Create A NTWRK</h4>
-              </div>
-              <div class="modal-body">
-                <div class="alert alert-danger err err-modal" role="alert" style="display:none">
-                  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                  <span class="sr-only">Error:</span>
-                  Error! Please try submitting again.
-                </div>
-                {% set g = None %}
-                {% include ../group/group_edit_snippet.html %}
-              </div><!--group-modal modal-body-->
+        <div class="table-header">
+          Account
+        </div>
+        <div class="float settings-subcontent border-bottom-light">
+          <div>
+            <div class="left">
+              <span class="settings-name">{{ user.name }}</span></br>
+              <span class="settings-email">{{ user.email }}</span>
             </div>
           </div>
-        </div>
+          <div>
+            <div class="right">
+              <form method="GET" action="/auth/logout/">
+                <span class="settings-action">Logout</span>
+                <button class="btn-next">Logout</button>
+              </form>
+            </div>
+          </div>
+        </div><!--float-->
+        <div class="float settings-subcontent">
+          <div>
+            <div class="left">
+              <span class="settings-name">&nbsp;</span></br>
+              <span class="settings-email">&nbsp;</span>
+            </div>
+          </div>
+          <div>
+            <div class="right">
+              <span class="settings-action">Delete My Account</span>
+              <button id="delete-account-link" class="btn-next">Delete</button>
+            </div>
+          </div>
+        </div><!--float-->
+      </div><!--settings-content-->
 
-        {% if groups %}
-          View & Edit Your NTWRKs: 
-          <ul>
-            {% for g in groups %}
-              <li>
-                {{ g }}: {{ len(g.users) }} 
-                {% if len(g.users) == 1 %}
-                  member 
-                {% else %}
-                  members 
-                {% end %}
-
-                {% if current_user == g.admin.email %}
-                (You are the NTWRK Admin) - 
-                  <a group-id="{{ g.id }}" class="group-edit-link box">Edit</a>
-                  <!-- Group edit Modal -->
-                  <div group-id="{{ g.id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h4 class="modal-title" id="myModalLabel">Edit "{{ g }}"</h4>
-                        </div>
-                        <div class="modal-body">
-                          <div class="alert alert-danger err err-modal" role="alert" style="display:none">
-                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                            <span class="sr-only">Error:</span>
-                            Error! Please try submitting again.
-                          </div>
-                          {% include ../group/group_edit_snippet.html %}
-                          <button type="submit" class="btn btn-primary btn-inline group-delete-btn" style="float:right;">Delete</button>
-                        </div><!--group-modal modal-body-->
-                      </div>
-                    </div>
-                  </div>
-                {% else %}
-                  <a group-id="{{ g.id }}" class="group-view-link box">View</a>
-                  <!-- Group view Modal -->
-                  <div group-id="{{ g.id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h4 class="modal-title" id="myModalLabel">"{{ g }}"</h4>
-                        </div>
-                        <div class="modal-body">
-                          {% include ../group/group_view_snippet.html %}
-                        </div><!--group-modal modal-body-->
-                      </div>
-                    </div>
-                  </div>
-                {% end %}
-              </li>
-            {% end %}
-          </ul>
-        {% else %}
-          You're not yet in any NTWRKs! NTWRKs are a great way to collaborate
-          with friends or coworkers while expanding your address book. </br>
-        {% end %}
-
-        {% if group_invites %}
-          You have pending invites to these NTWRKs:
-          <ul>
-            {% for g in group_invites %}
-              <li>{{ g }} ({{ len(g.users) }} members): 
-                {% for u in g.users %}
-                  {{ u.name }} ({{ u.email }}), 
-                {% end %}
-                - <a href="/group/{{ g.id }}/acceptinvite">Accept invitation</a>
-              </li>
-            {% end %}
-          </ul>
-        {% end %}
-      </div><!-- NTWRKs -->
-
-      <!-- For user to delete their account -->
-      <a id="delete-account-link" class="box">Delete My Account</a></br>
+      <!-- Delete account modal-->
       <div id="delete-account-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -150,6 +76,196 @@
           </div>
         </div>
       </div>
+
+
+      <!-- NTWRK Invitations -->
+      {% if group_invites %}
+        <div class="settings-content">
+          <div class="table-header">
+            NTWRK Invitations
+          </div>
+          {% set i = 0 %}
+          {% for g in group_invites %}
+            {% set i = i + 1 %}
+            <div class="float settings-subcontent
+              {% if i != len(group_invites) %}
+                border-bottom-light
+              {% end %}
+            ">
+              <div>
+                <div class="left">
+                  <span class="settings-name">{{ g }}</span></br>
+                  <span class="settings-email">
+                    {{ len(g.users) }}
+                    {% if len(g.users) == 1 %}
+                      member 
+                    {% else %}
+                      members 
+                    {% end %}
+                    : 
+                    {% set first = True %}
+                    {% for u in g.users %}
+                      {% if first %}
+                        {% set first = False %}
+                      {% else %}
+                        , 
+                        {% end %}
+                      {{ u.name }} ({{ u.email }})
+                    {% end %}
+                  </span>
+                </div>
+              </div>
+              <div>
+                <div class="right">
+                  <span class="settings-action">View Invitation</span>
+                  <button group-id="{{ g.id }}" class="group-accept-link btn-invite">View</button>
+
+                  <!-- Group accept Modal -->
+                    <div group-id="{{ g.id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h4 class="modal-title" id="myModalLabel">Invitation to join "{{ g }}"</h4>
+                          </div>
+                          <div class="modal-body">
+                            <div class="alert alert-danger err err-modal" role="alert" style="display:none">
+                              <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                              <span class="sr-only">Error:</span>
+                              Error! Please try submitting again.
+                            </div>
+                            {% include ../group/group_view_snippet.html %}
+                            <div class="float">
+                              <div>
+                                <div class="left">
+                                  <span>&nbsp;</span>
+                                </div>
+                              </div>
+                              <div>
+                                <div class="right">
+                                  <button group-id="{{ g.id }}" class="btn btn-primary btn-inline group-accept-btn">Accept Invitation</button>
+                                </div>
+                              </div>
+                            </div><!--float-->
+                          </div><!--group-modal modal-body-->
+                        </div>
+                      </div>
+                    </div>
+
+                </div><!--right-->
+              </div>
+            </div><!--float-->
+          {% end %}
+        </div>
+      {% end %}
+
+      <div class="settings-content">
+        <div class="table-header">
+          Your NTWRKs
+        </div>
+        {% if groups %} 
+          {% for g in groups %}
+            <div class="float settings-subcontent border-bottom-light">
+              <div>
+                <div class="left">
+                  <span class="settings-name">{{ g }}</span></br>
+                  <span class="settings-email">
+                    {{ len(g.users) }} 
+                    {% if len(g.users) == 1 %}
+                      member 
+                    {% else %}
+                      members 
+                    {% end %}
+                    {% if current_user == g.admin.email %}
+                      - You are the Admin
+                    {% end %}
+                  </span>
+                </div>
+              </div>
+              <div>
+                <div class="right">
+                  {% if current_user == g.admin.email %}
+                    <span class="settings-action">Edit</span>
+                    <button group-id="{{ g.id }}" class="group-edit-link btn-invite">Edit</button>
+                    <!-- Group edit Modal -->
+                    <div group-id="{{ g.id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h4 class="modal-title" id="myModalLabel">Edit "{{ g }}"</h4>
+                          </div>
+                          <div class="modal-body">
+                            <div class="alert alert-danger err err-modal" role="alert" style="display:none">
+                              <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                              <span class="sr-only">Error:</span>
+                              Error! Please try submitting again.
+                            </div>
+                            {% include ../group/group_edit_snippet.html %}
+                            <button type="submit" class="btn btn-primary btn-inline group-delete-btn" style="float:right;">Delete</button>
+                          </div><!--group-modal modal-body-->
+                        </div>
+                      </div>
+                    </div>
+                  {% else %}
+                    <span class="settings-action">View</span>
+                    <button group-id="{{ g.id }}" class="group-view-link btn-invite">View</button>
+                    <!-- Group view Modal -->
+                    <div group-id="{{ g.id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h4 class="modal-title" id="myModalLabel">"{{ g }}"</h4>
+                          </div>
+                          <div class="modal-body">
+                            {% include ../group/group_view_snippet.html %}
+                            <button type="submit" class="btn btn-primary btn-inline group-leave-btn">Leave Group</button>
+                          </div><!--group-modal modal-body-->
+                        </div>
+                      </div>
+                    </div>
+                  {% end %}
+                </div>
+              </div>
+            </div>
+          {% end %}
+        {% end %} <!-- if groups -->
+
+        <!-- Create a new NTWRK -->
+        <div class="float settings-subcontent">
+          <div>
+            <div class="left">
+              <span class="settings-name">&nbsp;</span></br>
+              <span class="settings-email">&nbsp;</span>
+            </div>
+          </div>
+          <div>
+            <div class="right">
+              <span class="settings-action">Create a new NTWRK</span>
+              <button id="group-create-link" class="btn-plus">Create</button>
+            </div>
+          </div>
+        </div><!--float-->
+
+        <!-- Group create Modal -->
+        <div id="group-create-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Create NTWRK</h4>
+              </div>
+              <div class="modal-body">
+                <div class="alert alert-danger err err-modal" role="alert" style="display:none">
+                  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                  <span class="sr-only">Error:</span>
+                  Error! Please try submitting again.
+                </div>
+                {% set g = None %}
+                {% include ../group/group_edit_snippet.html %}
+              </div><!--group-modal modal-body-->
+            </div>
+          </div>
+        </div>
+
+      </div> <!--settings-content-->
 
       {% if 0 %}
         Billing info:</br>
@@ -197,11 +313,41 @@
       CURRENT_MODAL = $("div[group-id='" + group_id + "']");
       $("div[group-id='" + group_id + "']").modal();
     });
-  });
+    $(".group-accept-link").click(function() {
+      var group_id = $(this).attr('group-id');
+      $("div[group-id='" + group_id + "']").modal();
+    });
 
     // Create or edit group
     $('.group-edit-btn').click(function() {
       {% include group_create_edit.js %}
+    });
+
+    // Accept group invitation
+    $('.group-accept-btn').click(function() {
+      var group_id = $(this).attr('group-id');
+      var url = '/api/group/' + group_id + '/acceptinvite';
+      var this_btn = $(this);
+      $(this).text('Joining NTWRK...');
+      $(this).attr('disabled', 'disabled');
+      var options = {
+        type: 'POST',
+        url: url,
+        success: function(response) {
+          console.log(response);
+          if (response.status_code == 200) {
+            this_btn.text('Joined! Reloading page...')
+            location.reload();
+          } else { }
+        },
+        error: function(response) {
+          console.warn(response);
+          this_btn.text('There was an error! Please try again.');
+          this_btn.removeAttr('disabled');
+        }
+      };
+      console.log('Requesting: ' + options.url)
+      $.ajax(options);
     });
 
     // Leave group. Must hit button twice to execute
@@ -297,6 +443,7 @@
       console.log('Requesting: ' + options.url)
       $.ajax(options);
     });
+  }); //ready
 /*
   var ROOT_URL = 'http://localhost:8001/';
 

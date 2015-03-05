@@ -39,7 +39,7 @@ class Group(Document):
                 self.users.append(user)
                 # Remove from invited_emails if applicable
                 if user.email in self.invited_emails:
-                    self.invited_emails.remove(u.email)
+                    self.invited_emails.remove(user.email)
                 return self
 
 

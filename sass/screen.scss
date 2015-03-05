@@ -73,6 +73,7 @@ h4, .h4 {
   font-size: 16pt;
 }
 
+// Links
 a {
   color: $lightning-yellow;
   &:hover {
@@ -82,13 +83,11 @@ a {
     outline: none;
   }
 }
-
 a.box {
   background: $lightning-yellow;
   color: $dark-grey;
   padding: 3px 3px;
 }
-
 a.unclickable {
   pointer-events: none;
 }
@@ -205,10 +204,31 @@ button.selectpicker, .bootstrap-select .btn {
   background: $lightning-yellow;
 }
 
+// For floating elements right
+.float{
+    margin:0 auto;
+    //border:1px solid blue; // helps debug
+    overflow:hidden;
+}
+.float>div{
+    display:inline-block;
+    vertical-align:middle;
+    width:49%;
+}
+.left {
+  float: left;
+}
+.right {
+  float: right;
+}
+
+.border-bottom-light {
+  border-bottom: 1px solid $light-grey;
+}
+
 .padding-top-20 {
   padding-top: 20px;
 }
-
 .padding-top-40 {
   padding-top: 40px;
 }
@@ -454,6 +474,33 @@ $btn-ntwrk-height: 34px;
   width: 70px;
   border-radius: 0px;
   background: $lightning-yellow url('../img/pagination_next_hover.png') no-repeat center left;
+}
+.btn-next {
+  color: transparent !important;
+  border: none;
+  height: 38px; // height of arrow icons
+  width: 65px;
+  background: url('../img/button/arrow.png');
+  box-shadow: none;
+  outline: none;
+}
+.btn-invite {
+  color: transparent !important;
+  border: none;
+  height: 38px; // height of arrow icons
+  width: 65px;
+  background: url('../img/button/invite.png');
+  box-shadow: none;
+  outline: none;
+}
+.btn-plus {
+  color: transparent !important;
+  border: none;
+  height: 38px; // height of arrow icons
+  width: 65px;
+  background: url('../img/button/plus.png');
+  box-shadow: none;
+  outline: none;
 }
 
 
@@ -1047,15 +1094,23 @@ a.advanced-search-link {
 }
 
 // User settings
-.user-settings {
-  padding: 20px 20px;
-  border-bottom: 1px solid #E8EAF1;
-  overflow: hidden;
-  background-color: #F8F8FA;
-}
 
 .settings-content {
-  padding-bottom: 30px;
+  margin-bottom: 30px;
+}
+.settings-subcontent {
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+.settings-name {
+  font-size: 22px;
+}
+.settings-email {
+  font-size: 16px;
+}
+.settings-action {
+  font-size: 16px;
+  margin-right: 10px;
 }
 
 .popover-content {
