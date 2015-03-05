@@ -99,6 +99,9 @@ class Profile(Document):
         # Email is the unique key, case-insensitive
         if Profile.email_exists(email) > 1:
             return
+        # Clean name
+        if ' (via Google Docs)' in name:
+            name = name.split(' (via Google Docs)')[0]
         # Add to profile
         try:
             p, created = Profile.objects.get_or_create(email=email) # auto-saves()
