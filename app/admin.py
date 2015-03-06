@@ -129,6 +129,14 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
+        from methods import send_email
+        send_email(
+            from_address = "postmaster@ntwrk.me",
+            to_address = "me@alexanderpease.com",
+            subject = "Testing",
+            html_text = 'foo'
+            )
+
         '''
         for g in GmailMessageJob.objects(header__exists=True):
             g.set_direction()
