@@ -6,7 +6,7 @@ import os
 import httplib
 import logging
 import datetime
-from methods import send_email
+import methods
 from db.userdb import User
 
 
@@ -84,7 +84,7 @@ class BaseHandler(tornado.web.RequestHandler):
 
 
     def send_email(self, from_address, to_address, subject, html_text, cc=None, bcc=None, reply_to=None):
-        return send_email(
+        return methods.send_email(
             from_address = from_address,
             to_address = to_address,
             cc = cc,
@@ -92,6 +92,16 @@ class BaseHandler(tornado.web.RequestHandler):
             reply_to = reply_to,
             subject = subject,
             html_text = html_text)
+
+    def send_email_template(template_name, merge_vars, to_address, subject, 
+        from_address='postmaster@ntwrk.me', from_name=settings.get('company_name')):
+        return methods.send_email_template(
+            template_name = template_name,
+            merge_vars = merge_vars,
+            to_address = to_address,
+            from_address = from_address, 
+            from_name = from_name, 
+            subject=subject)
 
     def api_response(self, data):
         """

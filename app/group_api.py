@@ -69,10 +69,37 @@ class CreateGroup(app.basic.BaseHandler):
         """
         Sends invite email to a new user
         """
-        self.send_email(from_address='NTWRK <postmaster@ntwrk.me>',
-            to_address=to_address,
-            subject='Invitation from %s (%s)' % (current_user.name, current_user.email),
-            html_text='''%s (%s) has invited you to join 
+        logging.info('sending new email invite')
+        merge_vars = [
+           { 
+                'name': 'subject',
+                'content': 'Invite from %s' % current_user.name
+            }, { 
+                'name': 'inviting_user_name',
+                'content': current_user.name
+            }, {
+                'name': 'inviting_user_email',
+                'content': current_user.email
+            }, {
+                'name': 'invite_href',
+                'content': settings.get('base_url')
+            }, {
+                'name': 'unsub',
+                'content': settings.get('base_url')
+            }, {
+                'name': 'unpdate_profile',
+                'content': settings.get('base_url')
+            }
+        ]
+        logging.info(merge_vars)
+        self.send_email_template(
+            template_name = 'invite-new-user',
+            merge_vars = merge_vars,
+            from_address = 'NTWRK <postmaster@ntwrk.me>',
+            from_name = '%s via NTWRK' % current_user.name,
+            to_address = to_address,
+            subject = 'Invitation from %s (%s)' % (current_user.name, current_user.email),
+            html_text = '''%s (%s) has invited you to join 
             <a href="%s">NTWRK</a>! 
             NTWRK is the anti-CRM: leverage your team's network
             and communication without any tedious data entry or 
