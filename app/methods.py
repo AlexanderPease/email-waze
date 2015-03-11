@@ -128,7 +128,6 @@ def send_email_template(template_name, merge_vars, to_email, subject,
         'to': [{'email': to_email}],
         #'merge_vars': [{'rcpt': 'recipient.email@example.com', 'vars': [{'content': 'merge2 content', 'name': 'merge2'}]}],
     }
-    logging.info(message)
     result = mandrill_client.messages.send_template(
         template_name = template_name, 
         template_content = [{}], # required even though worthless

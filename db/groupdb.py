@@ -131,6 +131,8 @@ class Group(Document):
         '''
         for group_user in self.users:
             subject = "%s joined your NTWRK!" % new_user.name
+            member_list = self.users_string() + ' & ' + new_user.name 
+            member_list = member_list + ' (' + new_user.email + ')'
             merge_vars = [
                { 
                     'name': 'subject',
@@ -152,7 +154,7 @@ class Group(Document):
                     'content': self.num_users_string(plus_one=True)
                 }, {
                     'name': 'member_list',
-                    'content': self.users_string()
+                    'content': member_list
                 }, {
                     'name': 'unsub',
                     'content': settings.get('base_url')
@@ -182,7 +184,7 @@ class Group(Document):
                 'name': 'group_name',
                 'content': self.name
             }, {
-                'name': 'group_href',
+                'name': 'action_href',
                 'content': '%s/user/settings' % settings.get('base_url')
             }, {
                 'name': 'num_members_string',
