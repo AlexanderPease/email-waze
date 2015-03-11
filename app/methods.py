@@ -112,25 +112,23 @@ def send_email(from_address, to_address, subject, html_text, cc=None, bcc=None, 
         message=message)
 
 
-def send_email_template(template_name, merge_vars, to_address, subject,
-    from_address='postmaster@ntwrk.me', from_name=settings.get('company_name')):
+def send_email_template(template_name, merge_vars, to_email, subject,
+    from_email='postmaster@ntwrk.me', from_name=settings.get('company_name')):
     '''
     Sends email via Mandrill API. Uses single transactional email template.
     '''
     mandrill_client = Mandrill(settings.get('mandrill_key'))
     message = {
-        'from_email': from_address,
+        'from_email': from_email,
         'from_name': from_name,
         'global_merge_vars': merge_vars,
         'merge': True,
         'merge_language': 'mailchimp',
-        #'merge_vars': [{'rcpt': 'recipient.email@example.com', 'vars': [{'content': 'merge2 content', 'name': 'merge2'}]}],
         'subject': subject,
-        #'text': 'Example text content',
-        'to': [{'email': to_address}],
+        'to': [{'email': to_email}],
+        #'merge_vars': [{'rcpt': 'recipient.email@example.com', 'vars': [{'content': 'merge2 content', 'name': 'merge2'}]}],
     }
     logging.info(message)
-    logging.info(template_name)
     result = mandrill_client.messages.send_template(
         template_name = template_name, 
         template_content = [{}], # required even though worthless

@@ -93,16 +93,6 @@ class BaseHandler(tornado.web.RequestHandler):
             subject = subject,
             html_text = html_text)
 
-    def send_email_template(template_name, merge_vars, to_address, subject, 
-        from_address='postmaster@ntwrk.me', from_name=settings.get('company_name')):
-        return methods.send_email_template(
-            template_name = template_name,
-            merge_vars = merge_vars,
-            to_address = to_address,
-            from_address = from_address, 
-            from_name = from_name, 
-            subject=subject)
-
     def api_response(self, data):
         """
         Return an api response in the proper output format with status_code == 200

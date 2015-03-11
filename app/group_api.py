@@ -2,6 +2,7 @@ import app.basic, settings, ui_methods, tornado.web
 import logging
 from db.userdb import User
 from db.groupdb import Group
+from methods import send_email_template
 
 ########################
 ### Create a new group
@@ -45,12 +46,14 @@ class CreateGroup(app.basic.BaseHandler):
                     except:
                         existing_user = None
                     if existing_user:
-                        self.send_invite_email_existing_user(group=g, 
-                            to_address=e, 
-                            current_user=current_user)
+                        self.send_invite_email_existing_user(
+                            group = g, 
+                            to_email = e, 
+                            current_user = current_user)
                     else:
-                        self.send_invite_email_new_user(to_address=e,
-                            current_user=current_user)
+                        self.send_invite_email_new_user(
+                            to_email = e,
+                            current_user = current_user)
             # Set new invited_emails
             g.invited_emails = invited_emails
         elif g.invited_emails and invited_emails == "":
@@ -65,15 +68,14 @@ class CreateGroup(app.basic.BaseHandler):
 
         return self.api_response(data={})
 
-    def send_invite_email_new_user(self, to_address, current_user):
+    def send_invite_email_new_user(self, to_email, current_user):
         """
         Sends invite email to a new user
         """
-        logging.info('sending new email invite')
         merge_vars = [
            { 
                 'name': 'subject',
-                'content': 'Invite from %s' % current_user.name
+                'content': 'Invitation from %s' % current_user.name
             }, { 
                 'name': 'inviting_user_name',
                 'content': current_user.name
@@ -91,24 +93,14 @@ class CreateGroup(app.basic.BaseHandler):
                 'content': settings.get('base_url')
             }
         ]
-        logging.info(merge_vars)
-        self.send_email_template(
+        send_email_template(
             template_name = 'invite-new-user',
             merge_vars = merge_vars,
-            from_address = 'NTWRK <postmaster@ntwrk.me>',
             from_name = '%s via NTWRK' % current_user.name,
-            to_address = to_address,
-            subject = 'Invitation from %s (%s)' % (current_user.name, current_user.email),
-            html_text = '''%s (%s) has invited you to join 
-            <a href="%s">NTWRK</a>! 
-            NTWRK is the anti-CRM: leverage your team's network
-            and communication without any tedious data entry or 
-            tracking. Visit 
-            <a href="https://ntwrk.me">https://ntwrk.me</a> 
-            to learn more!''' % (current_user.name, current_user.email, settings.get('base_url'))
-            )
+            to_email = to_email,
+            subject = 'Invitation from %s (%s)' % (current_user.name, current_user.email))
 
-    def send_invite_email_existing_user(self, group, to_address, current_user):
+    def send_invite_email_existing_user(self, group, to_email, current_user):
         """
         Sends invite email to an existing user
         """
@@ -120,7 +112,50 @@ class CreateGroup(app.basic.BaseHandler):
                 group_members = group_members + ", "
             group_members = group_members + group_member.name + " (" + group_member.email + ")"
             first = False
-        # Send email
+        if len(group.users) == 1:
+            num_members_string = '1 member'
+        else:
+            num_members_string = '%s members' % len(group.users)
+        merge_vars = [
+           { 
+                'name': 'subject',
+                'content': 'Invitation from %s' % current_user.name
+            }, { 
+                'name': 'inviting_user_name',
+                'content': current_user.name
+            }, {
+                'name': 'inviting_user_email',
+                'content': current_user.email
+            }, {
+                'name': 'invite_href',
+                'content': '%s/group/%s/acceptinvite' % (settings.get('base_url'), group.id)
+            }, {
+                'name': 'group_name',
+                'content': group.name
+            }, {
+                'name': 'invite_href',
+                'content': '%s/group/%s/acceptinvite' % (settings.get('base_url'), group.id)
+            }, {
+                'name': 'num_members_string',
+                'content': num_members_string
+            }, {
+                'name': 'member_list',
+                'content': group_members
+            }, {
+                'name': 'unsub',
+                'content': settings.get('base_url')
+            }, {
+                'name': 'unpdate_profile',
+                'content': settings.get('base_url')
+            }
+        ]
+        send_email_template(
+            template_name = 'invite-existing-user',
+            merge_vars = merge_vars,
+            from_name = '%s via NTWRK' % current_user.name,
+            to_email = to_email,
+            subject = 'Invitation from %s (%s)' % (current_user.name, current_user.email))
+        """
         self.send_email(from_address='NTWRK <postmaster@ntwrk.me>',
             to_address=to_address,
             subject='Invitation from %s (%s)' % (current_user.name, current_user.email),
@@ -131,6 +166,7 @@ class CreateGroup(app.basic.BaseHandler):
             to join!</br></br>
             "%s" has %s members: %s.''' % (current_user.name, current_user.email, group.name, settings.get('base_url'), group.id, group.name, len(group.users), group_members)
             )
+        """
 
 ########################
 ### Edit a group. Use group document id string as identifier. 
@@ -177,12 +213,14 @@ class EditGroup(CreateGroup):
                     except:
                         existing_user = None
                     if existing_user:
-                        self.send_invite_email_existing_user(group=g, 
-                            to_address=e, 
-                            current_user=current_user)
+                        self.send_invite_email_existing_user(
+                            group = g, 
+                            to_email = e, 
+                            current_user = current_user)
                     else:
-                        self.send_invite_email_new_user(to_address=e,
-                            current_user=current_user)
+                        self.send_invite_email_new_user(
+                            to_email = e,
+                            current_user = current_user)
             # Set new invited_emails
             g.invited_emails = invited_emails
         elif g.invited_emails and invited_emails == "":
