@@ -270,6 +270,15 @@ Navbar & Footer
   }
 }
 
+.navbar-collapse {
+  padding-left: 0px;
+  padding-right: 0px;
+  .navbar-nav {
+    margin-top: 0px;
+    padding-left: 10px;
+  }
+}
+
 @-webkit-keyframes widen {
   to {
     box-shadow: 0px 0px 100px 50px;
@@ -328,12 +337,22 @@ $navbar-grey-box-width: 160px;
   padding-top: 6px;
   padding-bottom: 16px;
   padding-left: 10px;
-  width: $navbar-grey-box-width;
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
+  @media screen and (min-width: 768px) {
+    width: $navbar-grey-box-width;
+  }
   height: 40px; //height of the NTWRK logo
   border: none;
   &:focus, &:hover {
     color: $white;
-    background: $lightning-yellow url('../img/search_arrow_white.png') no-repeat 135px 10px;
+    @media screen and (max-width: 768px) {
+      background: $lightning-yellow url('../img/search_arrow_white.png') no-repeat 90% 10px;
+    }
+    @media screen and (min-width: 768px) {
+      background: $lightning-yellow url('../img/search_arrow_white.png') no-repeat 135px 10px;
+    }
     outline: none;
   }
   // These are just for #navbar-search-input
