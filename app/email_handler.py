@@ -1,6 +1,7 @@
 import app.basic, settings
 import logging
 from db.profiledb import Profile
+from methods import send_email
 
 ########################
 ### email/forward
@@ -51,8 +52,8 @@ class Forward(app.basic.BaseHandler):
             reply_to = from_address # User who sent the email is now the reply-to address
             from_address = 'NTWRK <postmaster@ntwrk.me>'
 
-            request = self.send_email(from_address=from_address,
-                        to_address=p.email,
+            request = send_email(from_email=from_address,
+                        to_email=p.email,
                         reply_to=reply_to,
                         subject=subject,
                         html_text=body)

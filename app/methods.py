@@ -57,59 +57,20 @@ def create_object_id_list(objects):
         id_list.append(o.id)
     return id_list
 
-def send_email(from_address, to_address, subject, html_text, cc=None, bcc=None, reply_to=None):
+def send_email(from_email, to_email, subject, html_text, from_name='NTWRK', 
+    cc=None, bcc=None, reply_to=None):
     '''
-    Sends email via Mandrill API. Uses single transactional email template.
+    Sends email via Mandrill API. Does not use a template.
     '''
     mandrill_client = Mandrill(settings.get('mandrill_key'))
-    template_content = [{'content': 'example content', 'name': 'example name'}]
-    global_merge_vars = [
-       { 
-            'name': 'subject',
-            'content': subject
-        }, { 
-            'name': 'pretitle',
-            'content': "You've been invited to join"
-        }, {
-            'name': 'title',
-            'content': 'NTWRK'
-        }, { 
-            'name': 'paragraph',
-            'content': 'sdrlucghmdsiuctdsiurctlnsdirutclydisruilurycltdiurncltisudrycltiusdrylctiudsrylctiusdylrtciuydrsluitcy'
-        }, {
-            'name': 'button_title',
-            'content': 'Visit NTWRK'
-        }, {
-            'name': 'button_href',
-            'content': settings.get('base_url')
-        }, { 
-            'name': 'current_year',
-            'content': datetime.datetime.now().year
-        }, {
-            'name': 'company',
-            'content': settings.get('company_name')
-        }, {
-            'name': 'address',
-            'content': '505 E. 14th street, Suite 11F</br>NY, NY 10009'
-        }
-    ]
     message = {
-        'from_email': 'postmaster@ntwrk.me',
-        'from_name': 'NTWRK',
-        'global_merge_vars': global_merge_vars,
-        'merge': True,
-        'merge_language': 'mailchimp',
-        #'merge_vars': [{'rcpt': 'recipient.email@example.com', 'vars': [{'content': 'merge2 content', 'name': 'merge2'}]}],
+        'from_email': from_email,
+        'from_name': from_name,
         'subject': subject,
-        'text': 'Example text content',
-        'to': [{'email': 'me@alexanderpease.com',
-             'name': 'Recipient Name',
-             'type': 'to'}],
-        }
-    result = mandrill_client.messages.send_template(
-        template_name='NTWRK transactional', 
-        template_content=template_content, # required even though worthless
-        message=message)
+        'html': html_text,
+        'to': [{'email': to_email}]
+    }
+    result = mandrill_client.messages.send(message=message)
 
 
 def send_email_template(template_name, merge_vars, to_email, subject,

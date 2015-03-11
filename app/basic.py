@@ -82,17 +82,6 @@ class BaseHandler(tornado.web.RequestHandler):
             results[arg[0]] = arg[1][0] 
         return results
 
-
-    def send_email(self, from_address, to_address, subject, html_text, cc=None, bcc=None, reply_to=None):
-        return methods.send_email(
-            from_address = from_address,
-            to_address = to_address,
-            cc = cc,
-            bcc = bcc,
-            reply_to = reply_to,
-            subject = subject,
-            html_text = html_text)
-
     def api_response(self, data):
         """
         Return an api response in the proper output format with status_code == 200
@@ -157,38 +146,3 @@ class BaseHandler(tornado.web.RequestHandler):
         Returns of list of email address domains to ignore
         '''
         return ['craigslist']
-
-    ''' Sends email using PostMark'''
-    '''
-    def send_email(self, to, subject, text_body, sender="postmark@followthevote.org",):
-        message = PMMail(api_key = settings.get('postmark_api_key'),
-                                     sender = sender,
-                                     to = to,
-                                     subject = subject,
-                                     text_body = text_body,
-                                     tag = None)
-        message.send()
-    '''
-            
-    ''' Optional HTML body supercedes plain text body in SendGrid API'''
-    '''
-    def send_email(self, from_user, to_user, subject, text, html=None, from_name=None):
-        if settings.get('environment') != "prod":
-            logging.info("If this were prod, we would have sent email to %s" % to_user)
-            return
-        else:
-                return requests.post(
-                    "https://sendgrid.com/api/mail.send.json",
-                    data={
-                        "api_user":settings.get('sendgrid_user'),
-                        "api_key":settings.get('sendgrid_secret'),
-                        "from": from_user,
-                        "to": to_user,
-                        "subject": subject,
-                        "text": text,
-                        "html": html,
-                        "fromname": from_name
-                    },
-                    verify=False
-                )
-        '''

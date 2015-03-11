@@ -15,6 +15,7 @@ from db.gmailmessagejobdb import GmailMessageJob
 from db.gmailjobdb import GmailJob
 from db.taskdb import Task
 import tasks
+from methods import send_email, send_email_template
 
 
 ###########################
@@ -128,14 +129,6 @@ class Scratch(app.basic.BaseHandler):
     def get(self):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
-
-        from methods import send_email
-        send_email(
-            from_address = "postmaster@ntwrk.me",
-            to_address = "me@alexanderpease.com",
-            subject = "Testing",
-            html_text = 'foo'
-            )
 
         '''
         for g in GmailMessageJob.objects(header__exists=True):
