@@ -89,7 +89,7 @@ class CreateGroup(app.basic.BaseHandler):
                 'name': 'unsub',
                 'content': settings.get('base_url')
             }, {
-                'name': 'unpdate_profile',
+                'name': 'update_profile',
                 'content': settings.get('base_url')
             }
         ]
@@ -104,18 +104,6 @@ class CreateGroup(app.basic.BaseHandler):
         """
         Sends invite email to an existing user
         """
-        # Print string of existing team members
-        group_members = ""
-        first = True
-        for group_member in group.users:
-            if not first:
-                group_members = group_members + ", "
-            group_members = group_members + group_member.name + " (" + group_member.email + ")"
-            first = False
-        if len(group.users) == 1:
-            num_members_string = '1 member'
-        else:
-            num_members_string = '%s members' % len(group.users)
         merge_vars = [
            { 
                 'name': 'subject',
@@ -137,15 +125,15 @@ class CreateGroup(app.basic.BaseHandler):
                 'content': '%s/group/%s/acceptinvite' % (settings.get('base_url'), group.id)
             }, {
                 'name': 'num_members_string',
-                'content': num_members_string
+                'content': group.num_users_string()
             }, {
                 'name': 'member_list',
-                'content': group_members
+                'content': group.users_string()
             }, {
                 'name': 'unsub',
                 'content': settings.get('base_url')
             }, {
-                'name': 'unpdate_profile',
+                'name': 'update_profile',
                 'content': settings.get('base_url')
             }
         ]
@@ -155,18 +143,6 @@ class CreateGroup(app.basic.BaseHandler):
             from_name = '%s via NTWRK' % current_user.name,
             to_email = to_email,
             subject = 'Invitation from %s (%s)' % (current_user.name, current_user.email))
-        """
-        self.send_email(from_address='NTWRK <postmaster@ntwrk.me>',
-            to_address=to_address,
-            subject='Invitation from %s (%s)' % (current_user.name, current_user.email),
-            html_text='''%s (%s) has invited you to join team
-            "%s". A "NTWRK" allows a group of people to share contacts and connections
-            with one another. 
-            <a href="%s/group/%s/acceptinvite">Click here</a> 
-            to join!</br></br>
-            "%s" has %s members: %s.''' % (current_user.name, current_user.email, group.name, settings.get('base_url'), group.id, group.name, len(group.users), group_members)
-            )
-        """
 
 ########################
 ### Edit a group. Use group document id string as identifier. 
@@ -256,16 +232,14 @@ class AcceptInvite(app.basic.BaseHandler):
 
         if g.user_can_join(self.user):
             # Send emails to new member and existing members
-            self.send_email(from_address='NTWRK <postmaster@ntwrk.me>',
-                        to_address=self.user.email,
-                        subject="You've joined %s!" % g.name,
-                        html_text='''Congrats! You're now the newest member of
-                        team "%s", along with %s other members. 
-                        Click 
-                        <a href="%s/group/%s/view">here</a> to see more info about the 
-                        group.''' % (g.name, len(g.users), settings.get('base_url'), g.id)
-                        )
+            self.send_just_accepted_invite_email()
             for group_user in g.users:
+                
+
+
+
+
+
                 self.send_email(from_address='NTWRK <postmaster@ntwrk.me>',
                         to_address=group_user.email,
                         subject="%s joined %s!" % (self.user.name, g.name),
@@ -285,6 +259,43 @@ class AcceptInvite(app.basic.BaseHandler):
             return self.api_response(data={})
         else:
             return self.api_error(401, 'User is not allowed to join that team')
+
+    def send_just_accepted_invite_email(self, to_email, group):
+        '''
+        Email sent to the User (new or old) that just joined a Group
+        '''
+        subject = "You've joined %s!" % group.name
+        merge_vars = [
+           { 
+                'name': 'subject',
+                'content': subject,
+            }, {
+                'name': 'group_name',
+                'content': group.name
+            }, {
+                'name': 'group_href',
+                'content': '%s/user/settings' % settings.get('base_url')
+            }, {
+                'name': 'num_members_string',
+                'content': group.num_users_string()
+            }, {
+                'name': 'member_list',
+                'content': group.users_string()
+            }, {
+                'name': 'unsub',
+                'content': settings.get('base_url')
+            }, {
+                'name': 'update_profile',
+                'content': settings.get('base_url')
+            }
+        ]
+        send_email_template(
+            template_name = 'just-accepted-invite',
+            merge_vars = merge_vars,
+            from_name = 'NTWRK',
+            to_email = to_email,
+            subject = subject)
+
 
 ########################
 ### User leaves

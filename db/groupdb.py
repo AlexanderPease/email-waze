@@ -71,6 +71,33 @@ class Group(Document):
         else:
             return False
 
+    def num_users_string(self):
+        '''
+        Returns string for how many Users this Group has
+        Ex: "1 member" or "343 members"
+        Does not include period
+        '''
+        if len(self.users) == 1:
+            return '1 member'
+        else:
+            return '%s members' % len(self.users)
+
+    def users_string(self, include_emails=True):
+        '''
+        Returns comma-delimited string of all Users
+        Ex: "Alexander Pease (alex@foo.com), Nora Ali (nora@gmail.com)"
+        '''
+        group_members = ""
+        first = True
+        for group_member in self.users:
+            if not first:
+                group_members = group_members + ", "
+            group_members = group_members + group_member.name
+            if include_emails:
+                group_members = group_members + " (" + group_member.email + ")"
+            first = False
+        return group_members
+
     # TODO: fix users and admin, they are currently worthless entries
     # Just using name and id in user_welcome currently
     def to_json(self):
@@ -87,6 +114,8 @@ class Group(Document):
         for u in self.users:
             json['users'].append(u.to_json())
         return json
+
+
 
 
 
