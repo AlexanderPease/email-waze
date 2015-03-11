@@ -226,75 +226,20 @@ class AcceptInvite(app.basic.BaseHandler):
         if not self.current_user:
             return self.api_error(401, 'User is not logged in')
         try:
-            g = Group.objects.get(id=group_id)
+            group = Group.objects.get(id=group_id)
         except:
             return self.api_error(500, 'Could not find group in database')
 
-        if g.user_can_join(self.user):
+        if group.user_can_join(self.user):
             # Send emails to new member and existing members
-            self.send_just_accepted_invite_email()
-            for group_user in g.users:
-                
-
-
-
-
-
-                self.send_email(from_address='NTWRK <postmaster@ntwrk.me>',
-                        to_address=group_user.email,
-                        subject="%s joined %s!" % (self.user.name, g.name),
-                        html_text='''%s (%s) has joined you as a member of team "%s".
-                        This means that you are now sharing contacts and email metadata
-                        with %s. Click 
-                        <a href="%s/group/%s/view">here</a> to view the 
-                        your settings. </br>
-                        "%s" now has %s members and is administered by %s 
-                        (%s)''' % (self.user.name, self.user.email, g.name, self.user.name, settings.get('base_url'), g.id, g.name, len(g.users) + 1, g.admin.name, g.admin.email)
-                        )
-                # Number of members is len(g.users) + 1 b/c I add_user below. 
-                # This makes it easy to email the right notifications
-
-            g.add_user(self.user)
-            g.save()
+            group.send_just_accepted_invite_email(self.user)
+            group.send_new_user_alert_emails(self.user)
+            # Add accepting user to group
+            group.add_user(self.user)
+            group.save()
             return self.api_response(data={})
         else:
             return self.api_error(401, 'User is not allowed to join that team')
-
-    def send_just_accepted_invite_email(self, to_email, group):
-        '''
-        Email sent to the User (new or old) that just joined a Group
-        '''
-        subject = "You've joined %s!" % group.name
-        merge_vars = [
-           { 
-                'name': 'subject',
-                'content': subject,
-            }, {
-                'name': 'group_name',
-                'content': group.name
-            }, {
-                'name': 'group_href',
-                'content': '%s/user/settings' % settings.get('base_url')
-            }, {
-                'name': 'num_members_string',
-                'content': group.num_users_string()
-            }, {
-                'name': 'member_list',
-                'content': group.users_string()
-            }, {
-                'name': 'unsub',
-                'content': settings.get('base_url')
-            }, {
-                'name': 'update_profile',
-                'content': settings.get('base_url')
-            }
-        ]
-        send_email_template(
-            template_name = 'just-accepted-invite',
-            merge_vars = merge_vars,
-            from_name = 'NTWRK',
-            to_email = to_email,
-            subject = subject)
 
 
 ########################
