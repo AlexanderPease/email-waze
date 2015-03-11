@@ -239,7 +239,9 @@ Navbar & Footer
 
 // Navbar
 .navbar-container {
-  padding-bottom: 40px;
+  @media screen and (min-width: 768px) {
+    padding-bottom: 40px;
+  }
 }
 .navbar {
   background: #fff;
@@ -248,7 +250,6 @@ Navbar & Footer
   margin-bottom: 0;
   border-bottom: none;
   padding-top: 10px;
-  padding-bottom: 21px;
   z-index: 1000;
   background-image: $pixel-background;
   background-repeat: repeat;
@@ -256,6 +257,7 @@ Navbar & Footer
     //position: fixed;
     width: 100%;
     display: block;
+    padding-bottom: 21px;
   }
   a {
     color: $medium-grey;
