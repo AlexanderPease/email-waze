@@ -406,7 +406,7 @@ $navbar-grey-box-width: 160px;
   text-shadow: none;
 }
 
-// Hide grey bars in mobile footer
+// Hide grey bars in mobile
 .footer-right {
   @media (max-width: 768px) {
     display: none;
@@ -562,6 +562,9 @@ $mailgun-background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI2NCIgaGVp
 $dish-background: url('../img/index/homepage_dish_photo.png');
 .hero {
   background: $dish-background no-repeat center center scroll;
+  @media screen and (max-width: 768px) {
+    background: $dish-background no-repeat top center scroll;
+  }
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
