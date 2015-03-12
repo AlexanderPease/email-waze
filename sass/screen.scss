@@ -167,8 +167,42 @@ button.selectpicker, .bootstrap-select .btn {
 }
 
 // Modals
-.modal-dialog {
-  width: 700px;
+@media screen and (max-width: 768px) {
+}
+@media screen and (min-width: 768px) {
+  .modal-dialog {
+    width: 700px;
+  }
+  .modal-lg {
+    width: 1100px;
+  }
+}
+
+.modal-content {
+  border: 1px solid $lightning-yellow;
+  border-radius: 0px;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  .modal-header {
+    background: $lightning-yellow;
+    border: none;
+    color: $dark-grey;
+    .email {
+      font-size: 16px;
+    }
+  }
+  .modal-body {
+    .modal-body-header {
+    font-size: 16px;
+    color: $light-grey;
+    }
+    .dataTables_wrapper {
+      padding-bottom: 15px;
+    }
+  }
+}
+.modal-backdrop {
+  background: $white $pixel-background repeat;
 }
 
 // Tooltips
@@ -182,7 +216,9 @@ button.selectpicker, .bootstrap-select .btn {
   opacity: 1;
 }
 
-// Global page styles
+/******************************************************************************
+Global Page Styles
+******************************************************************************/
 .page-content {
   width: 100%;
   @media screen and (min-width: 768px) {
@@ -232,6 +268,22 @@ button.selectpicker, .bootstrap-select .btn {
 .padding-top-40 {
   padding-top: 40px;
 }
+.margin-right-0 {
+  margin-right: 0px;
+}
+/******************************************************************************
+Responsive
+******************************************************************************/
+.xs-hide {
+  @media screen and (max-width: 768px) {
+    display: none !important;
+  }
+}
+.xs-show-only {
+  @media screen and (min-width: 768px) {
+    display: none !important;
+  }
+}
 
 /******************************************************************************
 Navbar & Footer
@@ -239,7 +291,9 @@ Navbar & Footer
 
 // Navbar
 .navbar-container {
-  padding-bottom: 40px;
+  @media screen and (min-width: 768px) {
+    padding-bottom: 40px;
+  }
 }
 .navbar {
   background: #fff;
@@ -248,14 +302,17 @@ Navbar & Footer
   margin-bottom: 0;
   border-bottom: none;
   padding-top: 10px;
-  padding-bottom: 21px;
   z-index: 1000;
   background-image: $pixel-background;
   background-repeat: repeat;
+  @media screen and (max-width: 768px) {
+    padding-bottom: 10px;
+  }
   @media screen and (min-width: 768px) {
     //position: fixed;
     width: 100%;
     display: block;
+    padding-bottom: 21px;
   }
   a {
     color: $medium-grey;
@@ -267,6 +324,15 @@ Navbar & Footer
   }
   .logo {
     height: 40px;
+  }
+}
+
+.navbar-collapse {
+  padding-left: 0px;
+  padding-right: 0px;
+  .navbar-nav {
+    margin-top: 0px;
+    padding-left: 10px;
   }
 }
 
@@ -289,11 +355,16 @@ footer {
   width: 100%;
   height: 200px;
   display: block;
-  padding: 40px 0px;
   text-align: center;
   text-transform: uppercase;
   z-index: 10;
   background: $white $pixel_background repeat;
+  @media (max-width: 768px) {
+    padding: 10px 0px;
+  }
+  @media (min-width: 768px) {
+    padding: 40px 0px;
+  }
   &.fixed {
     @media (min-width: 768px) {
       position: absolute;
@@ -305,7 +376,6 @@ footer {
     padding-top: 3px;
   }
 }
-
 
 // Header and footer grey box links
 .navbar-default .navbar-nav > li > a.nav-selected, 
@@ -321,24 +391,40 @@ $navbar-grey-box-width: 160px;
 .navbar-default .navbar-nav .open .dropdown-menu > li > a,
 .footer-right > li > a,
 #navbar-search-input {
-  color: $white;
-  background-color: $light-grey;
   margin-left: 6px;
   text-align:left;
-  padding-top: 6px;
-  padding-bottom: 16px;
   padding-left: 10px;
-  width: $navbar-grey-box-width;
+  // Mobile menu is different coloring than regular menu
+  @media screen and (max-width: 768px) {
+    color: $dark-grey;
+    background-color: $white;
+    width: 100%;
+    border-bottom: 1px solid $lightning-yellow;
+  }
+  @media screen and (min-width: 768px) {
+    color: $white;
+    background-color: $light-grey;
+    width: $navbar-grey-box-width;
+    padding-top: 6px;
+    padding-bottom: 16px;
+  }
   height: 40px; //height of the NTWRK logo
   border: none;
   &:focus, &:hover {
     color: $white;
-    background: $lightning-yellow url('../img/search_arrow_white.png') no-repeat 135px 10px;
+    @media screen and (max-width: 768px) {
+      background: $lightning-yellow url('../img/search_arrow_white.png') no-repeat 90% 10px;
+    }
+    @media screen and (min-width: 768px) {
+      background: $lightning-yellow url('../img/search_arrow_white.png') no-repeat 135px 10px;
+    }
     outline: none;
   }
   // These are just for #navbar-search-input
   &.tt-input {
-    width: $navbar-grey-box-width !important;
+    @media screen and (min-width: 768px) {
+      width: $navbar-grey-box-width !important;
+    }
     background-color: $light-grey !important;
     &.nav-selected {
       background-color: $lightning-yellow !important;
@@ -364,6 +450,13 @@ $navbar-grey-box-width: 160px;
   text-shadow: none;
 }
 
+// Hide grey bars in mobile
+.footer-right {
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
 // Styling for navbar-search-input specifically
 .navbar-default {
   #navbar-search-input.tt-input, {
@@ -378,6 +471,9 @@ $navbar-grey-box-width: 160px;
   .tt-dropdown-menu {
     width: $navbar-grey-box-width * 2;
     margin-left: 6px;
+  }
+  .navbar-collapse {
+    border-color: $lightning-yellow;
   }
 }
 #navbar-search-input.navbar-search-inactive {
@@ -479,28 +575,44 @@ $btn-ntwrk-height: 34px;
   color: transparent !important;
   border: none;
   height: 38px; // height of arrow icons
-  width: 65px;
   background: url('../img/button/arrow.png');
   box-shadow: none;
   outline: none;
+  @media screen and (max-width: 480px) {
+    width: 40px;
+  }
+  @media screen and (min-width: 480px) {
+    width: 65px;
+  }
 }
 .btn-invite {
   color: transparent !important;
   border: none;
   height: 38px; // height of arrow icons
-  width: 65px;
   background: url('../img/button/invite.png');
   box-shadow: none;
   outline: none;
+  @media screen and (max-width: 480px) {
+    width: 40px;
+  }
+  @media screen and (min-width: 480px) {
+    width: 65px;
+  }
 }
 .btn-plus {
   color: transparent !important;
   border: none;
   height: 38px; // height of arrow icons
-  width: 65px;
   background: url('../img/button/plus.png');
   box-shadow: none;
   outline: none;
+  @media screen and (max-width: 480px) {
+    width: 40px;
+    background: url('../img/button/plus.png') 2px; // hack to center
+  }
+  @media screen and (min-width: 480px) {
+    width: 65px;
+  }
 }
 
 
@@ -513,6 +625,9 @@ $mailgun-background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI2NCIgaGVp
 $dish-background: url('../img/index/homepage_dish_photo.png');
 .hero {
   background: $dish-background no-repeat center center scroll;
+  @media screen and (max-width: 768px) {
+    background: $dish-background no-repeat top center scroll;
+  }
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -528,19 +643,19 @@ $dish-background: url('../img/index/homepage_dish_photo.png');
     background: transparent;
     border: none;
   }
-  .navbar-default .navbar-nav>li>a, 
-  .navbar-default .navbar-nav>.open>a, 
-  .navbar-default .navbar-nav .open .dropdown-menu>li>a {
-    background-color: $white;
-    color: $dark-grey;
-  }
 
   .shadow-grey {
     background-color: rgba(31, 30, 27, 0.8); // $shadow-grey
-    float: right;
-    width: 490px; // from navbar
-    margin: 300px -15px 100px 0px;
-    padding: 20px 20px;
+    @media screen and (max-width: 768px) {
+      margin-bottom: 10px;
+      padding: 10px;
+    }
+    @media screen and (min-width: 768px) {
+      float: right;
+      width: 490px; // from navbar
+      margin: 300px -15px 100px 0px;
+      padding: 20px 20px;
+    }
     .btn-ntwrk {
       margin-bottom: 3px; //center
       margin-left: 5px;
@@ -583,10 +698,21 @@ $dish-background: url('../img/index/homepage_dish_photo.png');
 }
 
 .sell {
-  padding-bottom: 20px;
+  @media screen and (min-width: 992px) {
+    padding-bottom: 20px;
+  }
   .sell-box {
     border-bottom: 1px solid $medium-grey;
+    @media screen and (max-width: 992px) {
+      margin-bottom: 20px;
+    }
   }
+  .last-sell-box {
+    @media screen and (max-width: 992px) {
+      margin-bottom: 0px;
+    }
+  }
+
 }
 
 #disclaimer {
@@ -710,38 +836,6 @@ Search
     color: $light-grey;
   }
 }
-
-.modal-lg {
-  width: 1100px;
-}
-.modal-content {
-  border: 1px solid $lightning-yellow;
-  border-radius: 0px;
-  box-shadow: none;
-  -webkit-box-shadow: none;
-  .modal-header {
-    background: $lightning-yellow;
-    border: none;
-    color: $dark-grey;
-    .email {
-      font-size: 16px;
-    }
-  }
-  .modal-body {
-    .modal-body-header {
-    font-size: 16px;
-    color: $light-grey;
-    }
-    .dataTables_wrapper {
-      padding-bottom: 15px;
-    }
-  }
-}
-.modal-backdrop {
-  background: $white $pixel-background repeat;
-}
-
-
 
 /* CSS for the thin search bar */
 .thin-search {
@@ -1004,7 +1098,13 @@ typeahead.js
 ******************************************************************************/
 $tt-width: 400px;
 .tt-input, .tt-hint {
-    width: $tt-width !important;
+    @media screen and (max-width: 768px) {
+      width: 100%;
+    }
+    @media screen and (min-width: 768px) {
+      width: $tt-width !important;
+    }
+    
     color: $lightning-yellow;
     background-color: transparent !important; //override
     font-size: 18px;
@@ -1017,6 +1117,12 @@ $tt-width: 400px;
     &:disabled {
       background-color: darken(white, 20%) !important;
     }
+}
+// Hide expanding search bar in mobile
+li span.twitter-typeahead {
+  @media screen and (max-width: 768px) {
+    display: none !important;
+  }
 }
 
 .tt-hint {
@@ -1131,6 +1237,12 @@ a.advanced-search-link {
 // Search bar
 $input-height: 48px;
 .input-ntwrk, input.form-control.input-ntwrk {
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
+  @media screen and (min-width: 768px) {
+    width: $tt-width;
+  }
   background: $white !important;
   border: 2px solid $lightning-yellow;
   color: $lightning-yellow;
@@ -1140,7 +1252,6 @@ $input-height: 48px;
   margin-right: 8px;
   font-size: 28px;
   height: $input-height;
-  width: $tt-width;
   border-radius: 0px;
   &:focus {
     //-webkit-animation: anim-shadow 0.3s forwards;

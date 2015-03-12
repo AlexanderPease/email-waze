@@ -18,7 +18,7 @@
   <link href="{{ static_url("css/screen.css") }}" rel="stylesheet" type="text/css" />
 </head>
 <body>
-  {% if show_nav %}
+  {% block nav %}
     <nav class="navbar navbar-default" role="navigation">
       <div class="container navbar-container">
         <div class="navbar-header">
@@ -37,39 +37,47 @@
           </a>
         </div>
 
-        <ul class="nav navbar-nav navbar-right">
-          <!--<li id="nav-chrome-extension" class="hidden"><a href="https://chrome.google.com/webstore/detail/ansatz/fhmfdjnooicibclghoophehldkeeloje">Install the Chrome Extension!</a></li>-->
-          {% if current_user %}
-            <li>
-              <input id="navbar-search-input" class="search-tt {% if nav_select == 'search' %}nav-selected{% end %}" placeholder="SEARCH"></input>
-            </li>
-            <li>
-              <a href="/reminders" {% if nav_select == 'reminders' %} class="nav-selected" {% end %}>
-                Reminders
-              </a>
-            </li>
-            <li>
-              <a href="/user/settings" {% if nav_select == 'settings' %} class="nav-selected" {% end %}>
-                Ntwrk Settings
-              </a>
-            </li>
-            <!--
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <span class="caret"></span></a>
-              <ul class="dropdown-menu" role="menu">
-                <li><a href="/user/settings">Settings</a></li>
-                <li class="divider"></li>
-                {% if current_user_staff() %}<li><a href="/admin">Admin</a></li>{% end %}
-                <li><a href="/auth/logout/">Logout</a></li>
-              </ul>
-            </li>
-            -->
-          {% else %}
-            <li><a href="/about" {% if nav_select == 'about' %} class="nav-selected" {% end %}>About</a></li>
-            <li><a href="/pricing" {% if nav_select == 'pricing' %} class="nav-selected" {% end %}>Pricing</a></li>
-            <li><a href="/auth/google">Log In</a></li>
-          {% end %}
-        </ul>
+        <div class="collapse navbar-collapse" id="main-navbar-collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <!--<li id="nav-chrome-extension" class="hidden"><a href="https://chrome.google.com/webstore/detail/ansatz/fhmfdjnooicibclghoophehldkeeloje">Install the Chrome Extension!</a></li>-->
+            {% if current_user %}
+              <li>
+                <!--Simple menu item in mobile, expanding input otherwise-->
+                <input id="navbar-search-input" class="xs-hide search-tt {% if nav_select == 'search' %}nav-selected{% end %}" placeholder="SEARCH"></input>
+                <a href="/dashboard" class="xs-show-only 
+                  {% if nav_select == 'search' %}nav-selected{% end %}
+                ">
+                  Dashboard
+                </a>
+              </li>
+              <li>
+                <a href="/reminders" {% if nav_select == 'reminders' %} class="nav-selected" {% end %}>
+                  Reminders
+                </a>
+              </li>
+              <li>
+                <a href="/user/settings" {% if nav_select == 'settings' %} class="nav-selected" {% end %}>
+                  Ntwrk Settings
+                </a>
+              </li>
+              <!--
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="/user/settings">Settings</a></li>
+                  <li class="divider"></li>
+                  {% if current_user_staff() %}<li><a href="/admin">Admin</a></li>{% end %}
+                  <li><a href="/auth/logout/">Logout</a></li>
+                </ul>
+              </li>
+              -->
+            {% else %}
+              <li><a href="/about" {% if nav_select == 'about' %} class="nav-selected" {% end %}>About</a></li>
+              <li><a href="/pricing" {% if nav_select == 'pricing' %} class="nav-selected" {% end %}>Pricing</a></li>
+              <li><a href="/auth/google">Log In</a></li>
+            {% end %}
+          </ul>
+        </div><!--collapse-->
       </div><!-- /.container -->
       {% if nav_title %}
       <div class="container">
