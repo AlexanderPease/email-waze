@@ -167,8 +167,42 @@ button.selectpicker, .bootstrap-select .btn {
 }
 
 // Modals
-.modal-dialog {
-  width: 700px;
+@media screen and (max-width: 768px) {
+}
+@media screen and (min-width: 768px) {
+  .modal-dialog {
+    width: 700px;
+  }
+  .modal-lg {
+    width: 1100px;
+  }
+}
+
+.modal-content {
+  border: 1px solid $lightning-yellow;
+  border-radius: 0px;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  .modal-header {
+    background: $lightning-yellow;
+    border: none;
+    color: $dark-grey;
+    .email {
+      font-size: 16px;
+    }
+  }
+  .modal-body {
+    .modal-body-header {
+    font-size: 16px;
+    color: $light-grey;
+    }
+    .dataTables_wrapper {
+      padding-bottom: 15px;
+    }
+  }
+}
+.modal-backdrop {
+  background: $white $pixel-background repeat;
 }
 
 // Tooltips
@@ -269,6 +303,9 @@ Navbar & Footer
   z-index: 1000;
   background-image: $pixel-background;
   background-repeat: repeat;
+  @media screen and (max-width: 768px) {
+    padding-bottom: 10px;
+  }
   @media screen and (min-width: 768px) {
     //position: fixed;
     width: 100%;
@@ -536,28 +573,44 @@ $btn-ntwrk-height: 34px;
   color: transparent !important;
   border: none;
   height: 38px; // height of arrow icons
-  width: 65px;
   background: url('../img/button/arrow.png');
   box-shadow: none;
   outline: none;
+  @media screen and (max-width: 480px) {
+    width: 40px;
+  }
+  @media screen and (min-width: 480px) {
+    width: 65px;
+  }
 }
 .btn-invite {
   color: transparent !important;
   border: none;
   height: 38px; // height of arrow icons
-  width: 65px;
   background: url('../img/button/invite.png');
   box-shadow: none;
   outline: none;
+  @media screen and (max-width: 480px) {
+    width: 40px;
+  }
+  @media screen and (min-width: 480px) {
+    width: 65px;
+  }
 }
 .btn-plus {
   color: transparent !important;
   border: none;
   height: 38px; // height of arrow icons
-  width: 65px;
   background: url('../img/button/plus.png');
   box-shadow: none;
   outline: none;
+  @media screen and (max-width: 480px) {
+    width: 40px;
+    background: url('../img/button/plus.png') 2px; // hack to center
+  }
+  @media screen and (min-width: 480px) {
+    width: 65px;
+  }
 }
 
 
@@ -781,38 +834,6 @@ Search
     color: $light-grey;
   }
 }
-
-.modal-lg {
-  width: 1100px;
-}
-.modal-content {
-  border: 1px solid $lightning-yellow;
-  border-radius: 0px;
-  box-shadow: none;
-  -webkit-box-shadow: none;
-  .modal-header {
-    background: $lightning-yellow;
-    border: none;
-    color: $dark-grey;
-    .email {
-      font-size: 16px;
-    }
-  }
-  .modal-body {
-    .modal-body-header {
-    font-size: 16px;
-    color: $light-grey;
-    }
-    .dataTables_wrapper {
-      padding-bottom: 15px;
-    }
-  }
-}
-.modal-backdrop {
-  background: $white $pixel-background repeat;
-}
-
-
 
 /* CSS for the thin search bar */
 .thin-search {

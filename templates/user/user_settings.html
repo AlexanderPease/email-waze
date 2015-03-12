@@ -42,7 +42,7 @@
           </div>
           <div>
             <div class="right">
-              <span class="settings-action">Delete My Account</span>
+              <span class="settings-action">Delete Account</span>
               <button id="delete-account-link" class="btn-next">Delete</button>
             </div>
           </div>
@@ -102,6 +102,8 @@
                     {% else %}
                       members 
                     {% end %}
+                  </span>
+                  <span class="settings-email xs-hide">
                     : 
                     {% set first = True %}
                     {% for u in g.users %}
@@ -239,7 +241,7 @@
           </div>
           <div>
             <div class="right">
-              <span class="settings-action">Create a new NTWRK</span>
+              <span class="settings-action">Create NTWRK</span>
               <button id="group-create-link" class="btn-plus">Create</button>
             </div>
           </div>
