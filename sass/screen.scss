@@ -336,6 +336,13 @@ Navbar & Footer
   }
 }
 
+@media (min-width: 768px){
+  .navbar-right {
+    margin-right: 0px;
+  }
+}
+
+
 @-webkit-keyframes widen {
   to {
     box-shadow: 0px 0px 100px 50px;
