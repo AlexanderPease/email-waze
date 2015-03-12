@@ -337,7 +337,12 @@ footer {
     padding-top: 3px;
   }
 }
-
+/*  .navbar-default .navbar-nav>li>a, 
+  .navbar-default .navbar-nav>.open>a, 
+  .navbar-default .navbar-nav .open .dropdown-menu>li>a {
+    background-color: $white;
+    color: $dark-grey;
+  }*/
 
 // Header and footer grey box links
 .navbar-default .navbar-nav > li > a.nav-selected, 
@@ -353,18 +358,22 @@ $navbar-grey-box-width: 160px;
 .navbar-default .navbar-nav .open .dropdown-menu > li > a,
 .footer-right > li > a,
 #navbar-search-input {
-  color: $white;
-  background-color: $light-grey;
   margin-left: 6px;
   text-align:left;
-  padding-top: 6px;
-  padding-bottom: 16px;
   padding-left: 10px;
+  // Mobile menu is different coloring than regular menu
   @media screen and (max-width: 768px) {
+    color: $dark-grey;
+    background-color: $white;
     width: 100%;
+    border-bottom: 1px solid $lightning-yellow;
   }
   @media screen and (min-width: 768px) {
+    color: $white;
+    background-color: $light-grey;
     width: $navbar-grey-box-width;
+    padding-top: 6px;
+    padding-bottom: 16px;
   }
   height: 40px; //height of the NTWRK logo
   border: none;
@@ -579,12 +588,6 @@ $dish-background: url('../img/index/homepage_dish_photo.png');
   .navbar {
     background: transparent;
     border: none;
-  }
-  .navbar-default .navbar-nav>li>a, 
-  .navbar-default .navbar-nav>.open>a, 
-  .navbar-default .navbar-nav .open .dropdown-menu>li>a {
-    background-color: $white;
-    color: $dark-grey;
   }
 
   .shadow-grey {
