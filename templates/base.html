@@ -42,7 +42,13 @@
             <!--<li id="nav-chrome-extension" class="hidden"><a href="https://chrome.google.com/webstore/detail/ansatz/fhmfdjnooicibclghoophehldkeeloje">Install the Chrome Extension!</a></li>-->
             {% if current_user %}
               <li>
-                <input id="navbar-search-input" class="search-tt {% if nav_select == 'search' %}nav-selected{% end %}" placeholder="SEARCH"></input>
+                <!--Simple menu item in mobile, expanding input otherwise-->
+                <input id="navbar-search-input" class="xs-hide search-tt {% if nav_select == 'search' %}nav-selected{% end %}" placeholder="SEARCH"></input>
+                <a href="/dashboard" class="xs-show-only 
+                  {% if nav_select == 'reminders' %}nav-selected{% end %}
+                ">
+                  Dashboard
+                </a>
               </li>
               <li>
                 <a href="/reminders" {% if nav_select == 'reminders' %} class="nav-selected" {% end %}>
