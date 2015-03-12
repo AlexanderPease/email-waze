@@ -35,11 +35,17 @@
         <h1>From Your Network</h1>
         <a href="/auth/google">
           Connect With Google
+        </a>
+        <a class="xs-hide" href="/auth/google">
           <button type="submit" class="btn btn-ntwrk"></button>
         </a>
 
-        <div id="disclaimer">
+        <div id="disclaimer" class="xs-hide">
           NTWRK requests read-only access to your inbox,</br>
+          but never reads or stores your email content. 
+        </div>
+        <div id="disclaimer" class="xs-only-show">
+          NTWRK requests read-only access to your inbox, 
           but never reads or stores your email content. 
         </div>
       </div>
@@ -70,7 +76,7 @@
             </div>
           </div>
           <div class="col-sm-4">
-            <div class="sell-box">
+            <div class="sell-box last-sell-box">
               <h3>Global.</h3>
               <p>
                 Find anyone in the world. </br>
