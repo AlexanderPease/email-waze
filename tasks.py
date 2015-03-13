@@ -17,6 +17,7 @@ from db.companydb import Company
 from db.gmailmessagejobdb import GmailMessageJob
 from db.gmailjobdb import GmailJob
 from db.taskdb import Task
+from db.reminderdb import ProfileReminder
 from app.methods import create_object_id_list
 
 import gdata.contacts.client
@@ -165,6 +166,16 @@ def company_list():
                 '''
                 json_list.append(c_json)
         json.dump(json_list, f)
+
+@periodic_task(run_every=timedelta(hours=24))
+def email_reminders_due():
+    """
+    Emails reminders for each Reminder that became due today only
+    """
+    for r in ProfileReminder.objects():
+        if r.days_until_due() == 0:
+            # Email only if due today
+            r.send_reminder_due_email()
 
 ###########################
 ### Atomic Tasks

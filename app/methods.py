@@ -71,6 +71,7 @@ def send_email(from_email, to_email, subject, html_text, from_name='NTWRK',
         'to': [{'email': to_email}]
     }
     result = mandrill_client.messages.send(message=message)
+    logging.info(result)
 
 
 def send_email_template(template_name, merge_vars, to_email, subject,
@@ -93,6 +94,7 @@ def send_email_template(template_name, merge_vars, to_email, subject,
         template_name = template_name, 
         template_content = [{}], # required even though worthless
         message = message)
+    logging.info(result)
 
 
     """

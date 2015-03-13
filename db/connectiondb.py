@@ -52,47 +52,20 @@ class Connection(Document):
             'latest_email_out_date': self.latest_email_out_date_string()}
         return json
 
-    def latest_email_in_date_string(self):
-        if self.latest_email_in_date:
-            return self.latest_email_in_date.strftime('%Y/%m/%d')
-        elif self.total_emails_in:
-            return 'Not found'
-        else:
-            return 'N/A'
-
-    def latest_email_out_date_string(self):
-        if self.latest_email_out_date:
-            return self.latest_email_out_date.strftime('%Y/%m/%d')
-        elif self.total_emails_out:
-            return 'Not found'
-        else:
-            return 'N/A'
-
     def days_since_emailed_out(self):
         ''' 
-        Returns how many days since the User has emailed the Profile,
+        Returns an INT how many days since the User has emailed the Profile,
         i.e. # days since self.latest_email_out_date
+
+        Returns an int 
         '''
         if self.latest_email_out_date:
-            delta = datetime.datetime.today() - self.latest_email_out_date
-            if delta.days > 0:
-                return delta.days
-            else:
-                return 'Today'
+            return (datetime.datetime.today() - self.latest_email_out_date).days
         else:
             return None
-
     def days_since_emailed_in(self):
-        ''' 
-        Returns how many days since the Profile has emailed the User,
-        i.e. # days since self.latest_email_in_date
-        '''
         if self.latest_email_in_date:
-            delta = datetime.datetime.today() - self.latest_email_in_date
-            if delta.days > 0:
-                return delta.days
-            else:
-                return 'Today'
+            return (datetime.datetime.today() - self.latest_email_in_date).days
         else:
             return None
 
@@ -179,6 +152,52 @@ class Connection(Document):
         logging.info("Emails in: %s (%s)" % (self.total_emails_in, self.latest_email_in_date_string()))
         logging.info("Emails out: %s (%s)" % (self.total_emails_out, self.latest_email_out_date_string()))
 
+###########################
+### Methods for displaying
+###########################
 
+    def display_days_since_emailed_out(self):
+        ''' 
+        Returns a string of how many days since the User has emailed the Profile,
+        i.e. # days since self.latest_email_out_date
+        '''
+        days = self.days_since_emailed_out()
+        if days:
+            if days > 0:
+                return days
+            else:
+                return 'Today'
+        else:
+            return None
+
+    def display_days_since_emailed_in(self):
+        ''' 
+        Returns a string of how many days since the Profile has emailed the User,
+        i.e. # days since self.latest_email_in_date
+        '''
+        days = self.days_since_emailed_in()
+        if days:
+            if days > 0:
+                return days
+            else:
+                return 'Today'
+        else:
+            return None
+
+    def latest_email_in_date_string(self):
+        if self.latest_email_in_date:
+            return self.latest_email_in_date.strftime('%Y/%m/%d')
+        elif self.total_emails_in:
+            return 'Not found'
+        else:
+            return 'N/A'
+
+    def latest_email_out_date_string(self):
+        if self.latest_email_out_date:
+            return self.latest_email_out_date.strftime('%Y/%m/%d')
+        elif self.total_emails_out:
+            return 'Not found'
+        else:
+            return 'N/A'
 
 

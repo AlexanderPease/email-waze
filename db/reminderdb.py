@@ -6,6 +6,7 @@ from connectiondb import Connection
 from companydb import Company
 import logging, datetime
 from math import fabs #absolute value
+from app.methods import send_email_template
 
 class ProfileReminder(Document):
     user = ReferenceField(User, required=True)
@@ -24,6 +25,9 @@ class ProfileReminder(Document):
 
     # Recurring reminder or not
     recurring = BooleanField(required=True, default=False)
+
+    # Tracks number of times reminder email was sent
+    emailed_reminder_due = IntField(required=True, default=0)
 
     def save(self , *args, **kwargs):
         '''
@@ -46,60 +50,37 @@ class ProfileReminder(Document):
     def __str__(self):
         return 'ProfileReminder: %s <-> %s' % (self.user, self.profile)
 
-    def display_alert_type(self):
-        if self.recurring == True:
-            if self.days == 7:
-                return 'Weekly'
-            elif self.days == 30:
-                return 'Monthly'
-            elif self.days == 90:
-                return 'Quarterly'
-            else:
-                return 'Every %s days' % self.days
-        else:
-            return 'One time'
-
     def days_since_emailed(self):
         """
         Returns number of days since self.profile was last emailed. 
         If never emailed, returns arbitrarily high number of days. 
         """
         if not self.connection:
-            return 99999
+            return None
         else:
             return self.connection.days_since_emailed_out()
-
-    def display_last_emailed(self):
-        if not self.connection:
-            return 'N/A (Reminder set %s)' % self.date_set.strftime('%Y/%m/%d')
-        else:
-            days_since = self.connection.days_since_emailed_out()
-            if days_since < 30:
-                if days_since == 1:
-                    return '1 day ago'
-                else:
-                    return '%s days ago' % days_since
-            else:
-                return self.connection.latest_email_out_date_string()
 
     def days_until_due(self):
         """
         Returns number of days until reminder is due. 
-        Negative numbers if past due. 0 if due today_reminders
+        Negative numbers if past due. 0 if due today
         """
         if self.connection:
-            if self.connection.latest_email_out_date:
-                latest_date = self.connection.latest_email_out_date
-            else:
-                latest_date = self.date_set
+            days_since = self.connection.days_since_emailed_out()
+            if not days_since:
+                days_since = (datetime.datetime.today() - self.date_set).days
         else:
-            latest_date = self.date_set
-        days_left = (latest_date.date() - datetime.datetime.today().date()) + datetime.timedelta(days=self.days)
-        return int(days_left.days)
+            days_since = (datetime.datetime.today() - self.date_set).days
+        return self.days - days_since
+        #days_left = (latest_date.date() - datetime.datetime.today().date()) + datetime.timedelta(days=self.days)
 
+
+###########################
+### Methods for displaying
+###########################
     def display_due_date(self):
         """
-        Calculates due date for display_due
+        Displays due date for to display
         Ex: "Wednesday", "Next Thursday"
         """
         days_left = self.days_until_due()
@@ -114,6 +95,99 @@ class ProfileReminder(Document):
         else:
             return 'In %s days' % days_left
 
+    def display_alert_type(self):
+        if self.recurring == True:
+            if self.days == 7:
+                return 'Weekly'
+            elif self.days == 30:
+                return 'Monthly'
+            elif self.days == 90:
+                return 'Quarterly'
+            else:
+                return 'Every %s days' % self.days
+        else:
+            return 'One time'
+
+    def display_last_emailed(self, verbose=False):
+        '''
+        Returns a string to display when User last emailed Profile
+        Args:
+            verbose ensures returned string can be part of a sentence.
+            Ex: '2014/01/01' becomes 'on 2014/01/01
+        '''
+        if not self.connection:
+            return 'N/A (Reminder set %s)' % self.date_set.strftime('%Y/%m/%d')
+        else:
+            days_since = self.connection.days_since_emailed_out()
+            if days_since < 30:
+                if days_since == 1:
+                    return '1 day ago'
+                else:
+                    return '%s days ago' % days_since
+            else:
+                if verbose:
+                    return 'on ' + self.connection.latest_email_out_date_string()
+                else:
+                    return self.connection.latest_email_out_date_string()
+
+    def sort_days_since_emailed(self):
+        '''
+        For sorting datatables. Returns arbitrarily high number of days
+        if User has never emailed Profile before
+        '''
+        days = self.days_since_emailed()
+        if not days:
+            return 99999
+        else:
+            return days
+
+
+
+
+###########################
+### Emails
+###########################
+    def send_reminder_due_email(self):
+        '''
+        Email sent when a ProfileReminder is due
+        '''
+        subject = "Reminder for %s!" % self.profile.name
+        merge_vars = [
+            { 
+                'name': 'subject',
+                'content': subject
+            }, { 
+                'name': 'reminder_profile_name',
+                'content': self.profile.name
+            }, { 
+                'name': 'reminder_profile_email',
+                'content': self.profile.email
+            }, { 
+                'name': 'last_emailed',
+                'content': self.display_last_emailed(verbose=True)
+            }, { 
+                'name': 'alert_type',
+                'content': self.display_alert_type()
+            }, { 
+                'name': 'all_reminders_href',
+                'content': settings.get('base_url') + '/reminders'
+            }, {
+                'name': 'unsub',
+                'content': settings.get('base_url')
+            }, {
+                'name': 'update_profile',
+                'content': settings.get('base_url')
+            }
+        ]
+        send_email_template(
+            template_name = 'reminder-due',
+            merge_vars = merge_vars,
+            from_name = 'NTWRK',
+            to_email = self.user.email,
+            subject = subject)
+        self.emailed_reminder_due += 1
+        self.save()
+
     def to_json(self):
         return {
             'days': self.days,
@@ -122,7 +196,9 @@ class ProfileReminder(Document):
             'alert_type': self.display_alert_type()
         }
 
-
+###########################
+### Class methods
+###########################
     @classmethod
     def today_later_reminders(cls, user):
         """
