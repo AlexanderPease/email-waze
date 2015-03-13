@@ -142,7 +142,7 @@ def all_gmail_jobs(users=None):
     task.save()
 
 
-#@periodic_task(run_every=timedelta(hours=24))
+@periodic_task(run_every=timedelta(hours=24))
 def company_list():
     """
     Update company list JSON doc for typeahead service
