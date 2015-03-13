@@ -176,6 +176,7 @@ class Group(Document):
         that just joined a Group
         '''
         subject = "You've joined %s!" % self.name
+        member_list = self.users_string() + ' & You ' + ' (' + new_user.email + ')'
         merge_vars = [
            { 
                 'name': 'subject',
@@ -188,7 +189,7 @@ class Group(Document):
                 'content': '%s/user/settings' % settings.get('base_url')
             }, {
                 'name': 'num_members_string',
-                'content': self.num_users_string()
+                'content': self.num_users_string(plus_one=True)
             }, {
                 'name': 'member_list',
                 'content': self.users_string()
