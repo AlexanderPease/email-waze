@@ -130,15 +130,10 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
-        user = User.objects.get(email="me@alexanderpease.com")
-        for r in ProfileReminder.objects(user=user):
-            logging.info('r.days_until_due: ' + str(r.days_until_due()))
-            logging.info('r.display_due_date: ' + r.display_due_date())
-            logging.info('c.latest_email_out_date: ' + str(r.connection.latest_email_out_date))
-            logging.info('c.days_since_emailed_out: ' + str(r.connection.days_since_emailed_out()))
-            logging.info('-----------------------------------')
-
-        
+        i = 999
+        while i:
+            logging.info(User.generate_api_key)
+            i += -1
 
         '''
         for g in GmailMessageJob.objects(header__exists=True):

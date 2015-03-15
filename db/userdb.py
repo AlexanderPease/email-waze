@@ -2,6 +2,7 @@ import settings
 from mongoengine import *
 import httplib2, logging
 import datetime
+import random
 # Google API OAUTH2 dependencies
 from oauth2client.client import OAuth2Credentials
 from googleapiclient.discovery import build 
@@ -17,6 +18,7 @@ class User(Document):
     name = StringField(required=True)
     given_name = StringField()
     family_name = StringField()
+    api_key = StringField(required=True, default=self.generate_api_key())
 
     # Everything comes from Google OAuth2
     # Saved by OAuth2Credentials.to_json()
@@ -260,4 +262,13 @@ class User(Document):
 
     def get_refresh_token(self):
         return OAuth2Credentials.new_from_json(self.google_credentials).refresh_token
+
+    @classmethod
+    def generate_api_key(cls):
+        while True:
+            api_key = '%030x' % random.randrange(16**30)
+            try:
+                user = User.objects.get(api_key=api_key)
+            except:
+                return api_key
 
