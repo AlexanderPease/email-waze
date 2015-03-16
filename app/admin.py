@@ -130,10 +130,11 @@ class Scratch(app.basic.BaseHandler):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
 
-        i = 999
-        while i:
-            logging.info(User.generate_api_key)
-            i += -1
+        from db.userdb import generate_api_key
+        for u in User.objects:
+            u.api_key = generate_api_key()
+            u.save()
+            logging.info(u.api_key)
 
         '''
         for g in GmailMessageJob.objects(header__exists=True):

@@ -12,13 +12,24 @@ import gdata.contacts.client
 mongo_database = settings.get('mongo_database')
 connect('user', host=mongo_database['host'])
 
+def generate_api_key():
+    """
+    Generates an api key not currently being used by any User object
+    """
+    while True:
+        api_key = '%030x' % random.randrange(16**30)
+        try:
+            user = User.objects.get(api_key=api_key)
+        except:
+            return api_key
+
 class User(Document):
     # Email is the unique key and the username
     email = EmailField(required=True, unique=True) 
     name = StringField(required=True)
     given_name = StringField()
     family_name = StringField()
-    api_key = StringField(required=True, default=self.generate_api_key())
+    api_key = StringField(required=True, default=generate_api_key())
 
     # Everything comes from Google OAuth2
     # Saved by OAuth2Credentials.to_json()
@@ -263,12 +274,4 @@ class User(Document):
     def get_refresh_token(self):
         return OAuth2Credentials.new_from_json(self.google_credentials).refresh_token
 
-    @classmethod
-    def generate_api_key(cls):
-        while True:
-            api_key = '%030x' % random.randrange(16**30)
-            try:
-                user = User.objects.get(api_key=api_key)
-            except:
-                return api_key
 
