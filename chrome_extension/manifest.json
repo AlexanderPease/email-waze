@@ -1,10 +1,10 @@
 {
 "update_url": "https://clients2.google.com/service/update2/crx",
 
-    "name": "Ansatz",
-    "short_name": "Ansatz",
-    "version": "0.0.25",
-    "description": "Stop connecting. Start emailing.",
+    "name": "NTWRK",
+    "short_name": "NTWRK",
+    "version": "0.0.26",
+    "description": "Get your relationship graph right inside Gmail",
     "background": {
         "persistent": false,
         "scripts": [
@@ -13,6 +13,10 @@
             "background.js"
         ]
     },
+    "icons": { 
+        "16": "img/ntwrk16.png",
+        "48": "img/ntwrk48.png",
+      "128": "img/ntwrk128.png" },
     "content_scripts": [
         {
             "matches": [ "https://mail.google.com/*" ],
@@ -37,6 +41,10 @@
     "minimum_chrome_version": "26",
     "permissions": [
         "https://mail.google.com/", 
+        "https://www.ntwrk.me/api/*",
+        "https://ntwrk.me/api/*",
+        "http://www.ntwrk.me/api/*",
+        "http://ntwrk.me/api/*",
         "https://www.ansatz.me/api/*",
         "https://ansatz.me/api/*",
         "http://www.ansatz.me/api/*",
@@ -45,8 +53,8 @@
         "tabs"
         ],
     "browser_action":{
-        "default_title": "Ansatz",
-        "default_icon": "img/Aicon19x19.jpeg",
+        "default_title": "NTWRK",
+        "default_icon": "img/ntwrk38.png",
         "default_popup": "popup/popup.html"
     },
     "manifest_version": 2

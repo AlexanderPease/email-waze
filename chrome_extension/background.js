@@ -1,4 +1,4 @@
-var ROOT_URL = 'https://ansatz.me/';
+var ROOT_URL = 'https://ntwrk.me/';
 //var ROOT_URL = 'http://email-waze-dev.herokuapp.com/';
 var VERSION = chrome.app.getDetails().version;
 var ID = chrome.app.getDetails().id;
