@@ -20,7 +20,9 @@
     "content_scripts": [
         {
             "matches": [ "https://mail.google.com/*" ],
-            "css": ["libs/scoped-twbs.css"],
+            "css": [
+                "css/scoped-twbs.css", 
+                "css/styles.css"],
             "js": [
                 "libs/jquery.js",
                 "libs/lscache.js",

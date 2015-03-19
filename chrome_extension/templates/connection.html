@@ -1,15 +1,15 @@
-<div class="twbs">
-  <div style="padding-left: 8px;">
+<div class="twbs wrapper">
+  <div class="connection-header">
       {{ #profile}}
-        <p style="font-size:18px; font-weight:bold; margin-top:10px; margin-bottom:0px;">
+        <span class="profile-name">
           {{ profile.name }}
-        </p>
-        <p style="font-size:14px;">
-            {{ email_name }}<span style="color:#6d6d6d;">@{{ email_domain }}</span>
-        </p>
+        </span>
+        <span class="email">
+            {{ email_name }}<span class="email-domain">@{{ email_domain }}</span>
+        </span>
       {{ /profile }}
       {{ ^profile }}
-        No Profile Found
+        <span class="profile-name">No Profile Found</span>
       {{ /profile}}
   </div>
 
@@ -41,10 +41,10 @@
         Search again: 
         <form role="form">
             <div class="form-group">
-                <input type="search" name="name" id="search_name" placeholder="Name">
+                <input type="search" name="name" id="search_name" placeholder="Name" autocomplete="off">
             </div>
             <div class="form-group">
-                <input type="search" name="domain" id="search_domain" placeholder="Domain">
+                <input type="search" name="domain" id="search_domain" placeholder="Domain" autocomplete="off">
             </div>
             <button type="button" class="btn btn-primary" id="search_button">Search</button> 
         </form>

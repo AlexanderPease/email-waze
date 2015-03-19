@@ -1,4 +1,4 @@
-<div class="twbs">
+<div class="twbs wrapper">
   <div>
       <p style="font-size:16px; font-weight:bold; margin-top:10px; margin-bottom:0px;">
         {{ email }}
@@ -14,10 +14,10 @@
         Search again: 
         <form role="form">
             <div class="form-group">
-                <input type="search" name="name" id="search_name" placeholder="Name">
+                <input type="search" name="name" id="search_name" placeholder="Name" autocomplete="off">
             </div>
             <div class="form-group">
-                <input type="search" name="domain" id="search_domain" placeholder="Domain">
+                <input type="search" name="domain" id="search_domain" placeholder="Domain" autocomplete="off">
             </div>
             <button type="button" class="btn btn-primary" id="search_button">Search</button> 
         </form>

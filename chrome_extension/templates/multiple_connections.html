@@ -1,14 +1,14 @@
-<div class="twbs">
-  <div style="margin-top:10px;">
+<div class="twbs wrapper">
+  <div class="title">
     Showing {{show_num}} of {{total_num}} connections
   </div>
 
-  <table class="table table-hover">
+  <table class="table table-striped table-hover">
     <tbody>
       {{#connections}}
         <tr profile-email="{{ email }}"><td class="clickable" profile-email="{{ email }}">
           {{name}}</br>
-          {{#email_name}}{{email_name}}<span style="color:#6d6d6d;">@{{email_domain}}</span>{{/email_name}}{{^email_name}}{{email}}{{/email_name}}
+          {{#email_name}}{{email_name}}<span class="email-domain">@{{email_domain}}</span>{{/email_name}}{{^email_name}}{{email}}{{/email_name}}
         </td></tr>
       {{/connections}}
       {{^connections}}
@@ -26,19 +26,18 @@
     <a href="{{url}}">Click here</a> to see all connections
   </div>
 
-  <div style="margin-top:10px;"> 
-      Search again:
-      </br>
-      <form role="form">
-          <div class="form-group">
-              <input type="search" name="name" id="search_name" placeholder="Name">
-          </div>
-          <div class="form-group">
-              <input type="search" name="domain" id="search_domain" placeholder="Domain">
-          </div>
-          <button type="button" class="btn btn-primary" id="search_button">Search</button> 
-      </form>
+  <div class="title">
+    Search NTWRK
   </div>
+    <form role="form">
+        <div class="form-group">
+            <input type="search" name="name" id="search_name" placeholder="Name">
+        </div>
+        <div class="form-group">
+            <input type="search" name="domain" id="search_domain" placeholder="Domain">
+        </div>
+        <button type="button" class="btn btn-primary" id="search_button">Search</button> 
+    </form>
 </div> <!--twbs-3_1_1-->
 
 <script>
