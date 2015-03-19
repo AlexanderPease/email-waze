@@ -1,0 +1,64 @@
+/* CSS for chrome extension */
+/* Buttons */
+.twbs .btn-primary {
+  background: #464546; /* dark grey */
+  color: #FFFFFF;
+  border: none;
+  border-radius: 0px;
+  text-shadow: none;
+  box-shadow: none;
+}
+
+.twbs .btn-primary:hover, .twbs .btn-primary:focus {
+  background: #FDDF49; /* lightning yellow */
+  color: #FFFFFF;
+  outline: none;
+  border: none;
+  border-radius: 0px;
+}
+
+/* Inputs */
+.twbs input {
+  outline-color: #FDDF49; /* lightning yellow */
+  width: 100%;
+}
+
+/* Tables */
+.twbs .table-hover > tbody > tr:hover > td {
+  background-color: #FDDF49; /* lightning yellow */
+}
+
+/* Global styles */
+.wrapper {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 10px 10px;
+  background-image: url('chrome-extension://__MSG_@@extension_id__/img/pixel_grid.png');
+  background-repeat: repeat;
+}
+
+.title {
+  font-size:18px;
+  font-weight:bold;
+  margin-bottom: 10px;
+}
+
+.connection-header {
+  padding-left: 8px; /* aligns text justification with table below */
+  margin-bottom: 4px;
+}
+
+.profile-name {
+  font-size:18px;
+  font-weight:bold;
+  margin-top:10px;
+  margin-bottom:0px;
+}
+
+.email {
+  font-size: 14px;
+}
+
+.email-domain {
+  color:#6d6d6d;
+}

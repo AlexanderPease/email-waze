@@ -1,0 +1,80 @@
+<div class="twbs wrapper">
+  <div class="connection-header">
+      {{ #profile}}
+        <span class="profile-name">
+          {{ profile.name }}
+        </span>
+        <span class="email">
+            {{ email_name }}<span class="email-domain">@{{ email_domain }}</span>
+        </span>
+      {{ /profile }}
+      {{ ^profile }}
+        <span class="profile-name">No Profile Found</span>
+      {{ /profile}}
+  </div>
+
+  <table class="table table-striped">
+    <tbody>
+      <tr>
+        <td> 
+          {{ current_user_msg }}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          {{ group_users_profile_msg }}
+        </td>
+      </tr>
+      {{ #group_users_domain_msg }}
+        <tr>
+          <td>
+            {{ group_users_domain_msg }}
+          </td>
+        </tr>
+      {{ /group_users_domain_msg }}
+      {{ ^group_users_domain_msg }}
+      {{ /group_users_domain_msg }}
+
+      <tr><td><a href="https://ntwrk.me/search?domain={{ profile.email }}">Click here</a> for all info</td></tr>
+
+      <tr><td>
+        Search again: 
+        <form role="form">
+            <div class="form-group">
+                <input type="search" name="name" id="search_name" placeholder="Name" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <input type="search" name="domain" id="search_domain" placeholder="Domain" autocomplete="off">
+            </div>
+            <button type="button" class="btn btn-primary" id="search_button">Search</button> 
+        </form>
+      </td></tr>
+
+    </tbody>
+  </table>
+</div> <!--twbs-3_1_1-->
+
+<script>
+  $('#search_button').click(function(){
+    console.log('Search button clicked');
+    var name = $('#search_name').val();
+    var domain = $('#search_domain').val();
+
+    var event = document.createEvent('Event');
+    event.initEvent('search');
+    document.dispatchEvent(event);
+  });
+
+  $(document).ready(function(){
+    console.log('ready');
+
+    /* Doesn't recognize this function
+    $('body').popover({
+      placement: "top",
+      trigger: "hover",
+      selector: "tr[id=popover-row]",
+      container: "body"
+    });
+  */  
+  });
+</script>

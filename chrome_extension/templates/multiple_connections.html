@@ -1,0 +1,60 @@
+<div class="twbs wrapper">
+  <div class="title">
+    Showing {{show_num}} of {{total_num}} connections
+  </div>
+
+  <table class="table table-striped table-hover">
+    <tbody>
+      {{#connections}}
+        <tr profile-email="{{ email }}"><td class="clickable" profile-email="{{ email }}">
+          {{name}}</br>
+          {{#email_name}}{{email_name}}<span class="email-domain">@{{email_domain}}</span>{{/email_name}}{{^email_name}}{{email}}{{/email_name}}
+        </td></tr>
+      {{/connections}}
+      {{^connections}}
+      <tr><td>
+        No connections found
+      </td></tr>
+      {{/connections}}
+    </tbody>
+  </table>
+
+  <!-- Hidden div holds email address of selected row -->
+  <div id="selected-domain" style="display:none"></div>
+
+  <div>
+    <a href="{{url}}">Click here</a> to see all connections
+  </div>
+
+  <div class="title">
+    Search NTWRK
+  </div>
+    <form role="form">
+        <div class="form-group">
+            <input type="search" name="name" id="search_name" placeholder="Name">
+        </div>
+        <div class="form-group">
+            <input type="search" name="domain" id="search_domain" placeholder="Domain">
+        </div>
+        <button type="button" class="btn btn-primary" id="search_button">Search</button> 
+    </form>
+</div> <!--twbs-3_1_1-->
+
+<script>
+  $('#search_button').click(function(){
+    console.log('Search button clicked');
+    var event = document.createEvent('Event');
+    event.initEvent('search');
+    document.dispatchEvent(event);
+  });
+
+  $('td .clickable').click(function(){
+    console.log('Row selected');
+    var email = $(this).attr('profile-email')
+    console.log(email);
+    $('#selected-domain').attr('profile-email', email);
+    var event = document.createEvent('Event');
+    event.initEvent('rowClicked');
+    document.dispatchEvent(event);
+  });
+</script>
