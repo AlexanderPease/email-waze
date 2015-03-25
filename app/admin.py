@@ -129,7 +129,7 @@ class Scratch(app.basic.BaseHandler):
     def get(self):
         if self.current_user not in settings.get('staff'):
             return self.redirect('/')
-
+        #FOO
         '''
         for g in GmailMessageJob.objects(header__exists=True):
             g.set_direction()
