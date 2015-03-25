@@ -621,6 +621,21 @@ $btn-ntwrk-height: 34px;
     width: 65px;
   }
 }
+.btn-delete {
+  color: transparent !important;
+  border: none;
+  height: 38px; // height of arrow icons
+  background: url('../img/button/delete.png');
+  box-shadow: none;
+  outline: none;
+  @media screen and (max-width: 480px) {
+    width: 40px;
+    background: url('../img/button/delete.png') 2px; // hack to center
+  }
+  @media screen and (min-width: 480px) {
+    width: 65px;
+  }
+}
 
 
 /******************************************************************************
