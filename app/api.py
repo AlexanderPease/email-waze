@@ -267,7 +267,8 @@ class DomainConnections(app.basic.BaseHandler):
         if connections and len(connections) > 0:
             pcs = ProfileConnectionSet.package_connections(connections)
             results = {
-                'profile_connection_sets': connectionsets.list_to_json_list(pcs)
+                'profile_connection_sets': connectionsets.list_to_json_list(pcs),
+                'domain': domain
             }
             return self.api_response(data=results)
 
