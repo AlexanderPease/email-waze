@@ -265,8 +265,8 @@ class DomainConnections(app.basic.BaseHandler):
         group_users = current_user.all_group_users()
         connections = Connection.objects(profile__in=profiles, user__in=group_users)
         if connections and len(connections) > 0:
-            results = ProfileConnectionSet.package_connections(connections)
-            results = connectionsets.list_to_json_list(results)
+            pcs = ProfileConnectionSet.package_connections(connections)
+            results = {'profile_connection_sets'] = connectionsets.list_to_json_list(pcs)
             return self.api_response(data=results)
 
         return self.api_response(data=None)
