@@ -246,7 +246,7 @@ class DomainConnections(app.basic.BaseHandler):
     to display Profiles that a User is connected to. 
 
     Returns:
-        A list of ProfileConnectionSets
+        A dict containing a list of ProfileConnectionSets
     """
     def get(self):
         # Authenticate user
@@ -266,7 +266,9 @@ class DomainConnections(app.basic.BaseHandler):
         connections = Connection.objects(profile__in=profiles, user__in=group_users)
         if connections and len(connections) > 0:
             pcs = ProfileConnectionSet.package_connections(connections)
-            results = {'profile_connection_sets'] = connectionsets.list_to_json_list(pcs)
+            results = {
+                'profile_connection_sets': connectionsets.list_to_json_list(pcs)
+            }
             return self.api_response(data=results)
 
         return self.api_response(data=None)
