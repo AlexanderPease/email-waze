@@ -259,6 +259,7 @@ class DomainConnections(app.basic.BaseHandler):
 
         # Query
         domain = self.get_argument('domain', '')
+        results['domain'] = domain
         if not domain:
             return self.api_error(400, 'No domain query given')
         profiles = Profile.objects(email__icontains=domain)
@@ -266,13 +267,10 @@ class DomainConnections(app.basic.BaseHandler):
         connections = Connection.objects(profile__in=profiles, user__in=group_users)
         if connections and len(connections) > 0:
             pcs = ProfileConnectionSet.package_connections(connections)
-            results = {
-                'profile_connection_sets': connectionsets.list_to_json_list(pcs),
-                'domain': domain
-            }
-            return self.api_response(data=results)
-
-        return self.api_response(data=None)
+            results['profile_connection_sets'] = connectionsets.list_to_json_list(pcs)
+        else:
+            results['profile_connection_sets'] = None
+        return self.api_response(data=results)
 
 
 
