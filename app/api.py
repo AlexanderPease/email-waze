@@ -259,7 +259,7 @@ class DomainConnections(app.basic.BaseHandler):
 
         # Query
         domain = self.get_argument('domain', '')
-        results['domain'] = domain
+        results = { 'domain': domain }
         if not domain:
             return self.api_error(400, 'No domain query given')
         profiles = Profile.objects(email__icontains=domain)
