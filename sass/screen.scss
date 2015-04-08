@@ -721,7 +721,10 @@ $dish-background: url('../img/index/homepage_dish_photo.png');
 .sell {
   padding-bottom: 20px;
   @media screen and (min-width: 992px) {
-    padding-bottom: 40px;
+    padding-bottom: 80px;
+  }
+  &:first-child {
+    margin-top: 40px;
   }
   .sell-box {
     border-bottom: 1px solid $medium-grey;
@@ -761,6 +764,11 @@ $dish-background: url('../img/index/homepage_dish_photo.png');
   border-bottom: 1px solid $dark-grey;
   padding-bottom: 12px;
   margin-bottom: 20px;
+}
+.pricing {
+  @media screen and (min-width: 992px) {
+    margin-bottom: 20px;
+  }
 }
 
 .customer-box {
