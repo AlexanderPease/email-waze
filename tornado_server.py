@@ -12,6 +12,7 @@ import templates
 
 import app.basic, app.public, app.admin, app.email_handler
 import app.googleauth, app.user, app.group, app.stripe_handler
+import app.scratch
 import app.api, app.group_api, app.public_api, app.user_api
 import app.reminder_api
 
@@ -42,6 +43,9 @@ class Application(tornado.web.Application):
       (r"/api/connectionbyemailforextension", app.api.ConnectionByEmailForExtension),
       (r"/api/domainconnections", app.api.DomainConnections),
       #(r"/api/gmailinboxsearch", app.api.GmailInboxSearch),
+      (r"/api/gmail/getmessages", app.api.GmailGetMessages),
+      (r"/api/gmail/listmessages", app.api.GmailListMessages),
+      (r"/api/gmail/getmessage", app.api.GmailGetMessage),
       (r"/api/test", app.api.Test),
 
       # API for web actions
@@ -94,7 +98,7 @@ class Application(tornado.web.Application):
       (r"/admin/db_groups", app.admin.DB_Groups),
       (r"/admin/db_companies", app.admin.DB_Companies),
       (r"/admin/db_tasks", app.admin.DB_Tasks),
-      (r"/admin/scratch", app.admin.Scratch), # for ad hoc testing
+      (r"/admin/scratch", app.scratch.Scratch), # for ad hoc testing
       (r"/google077100c16d33120b.html", app.admin.GoogleWebmaster), # Google Webmaster verification
 
       # Public

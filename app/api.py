@@ -273,4 +273,150 @@ class DomainConnections(app.basic.BaseHandler):
         return self.api_response(data=results)
 
 
+########################
+### GmailGetMessages
+### /api/gmail/getmessages
+########################
+class GmailGetMessages(app.basic.BaseHandler):
+    """
+    Combines Gmail API method Users.messages.list and Users.messages.get so that
+    it returns all the message objects that in a sanitized dictionary
+    Args:
+        email, if not the authenticated User's own email. Must have permission
+        query, the Gmail query
+    """
+    def get(self):
+        # Authenticate user
+        if not self.current_user:
+            return self.api_error(401, 'User is not logged in')
+
+        # Require query
+        try:
+            query = self.get_argument('query')
+        except:
+            return self.api_error(400, 'Query argument is required')
+
+        # Determine gmail inbox to search
+        user = self.get_argument('user', '')
+        if user:
+            # Currently only permissioned for Joel to access Fred's gmail account
+            if self.current_user == 'joel@usv.com' and user == 'fred@usv.com':
+                user = User.objects.get(email='fred@usv.com')
+            elif self.current_user == 'me@alexanderpease.com' and user == 'fred@usv.com':
+                user = User.objects.get(email='fred@usv.com')
+            else:
+                return self.api_error(400, 'Error in user argument')
+        else:
+            try:
+                user = User.objects.get(email=self.current_user)
+            except:
+                return self.api_error(500, 'Could not find client user in database')
+
+        gmail_service = user.get_service(service_type='gmail')
+        if not gmail_service:
+            return self.api_error(500, 'Could not instantiate authenticated service for %s' % user)
+        messages = gmail.ListMessagesMatchingQuery(
+            service = gmail_service,
+            user_id = 'me',
+            query   = query)
+        data = []
+        for message in messages:
+            gmail_message = gmail.GetMessage(gmail_service, 'me', message['id'])
+            gmail_dict = gmail.GetMessageHeader(gmail_message)
+            body = gmail.GetMessageBody(gmail_message)
+            gmail_dict['body'] = body
+            data.append(gmail_dict)
+        return self.api_response(data)
+
+########################
+### GmailListMessages
+### /api/gmail/listmessages
+########################
+class GmailListMessages(app.basic.BaseHandler):
+    """
+    Pass through for Gmail API method Users.messages.list
+    Args:
+        email, if not the authenticated User's own email. Must have permission
+        query, the Gmail query
+    """
+    def get(self):
+        # Authenticate user
+        if not self.current_user:
+            return self.api_error(401, 'User is not logged in')
+
+        # Require query
+        try:
+            query = self.get_argument('query')
+        except:
+            return self.api_error(400, 'Query argument is required')
+
+        # Determine gmail inbox to search
+        user = self.get_argument('user', '')
+        if user:
+            # Currently only permissioned for Joel to access Fred's gmail account
+            if self.current_user == 'joel@usv.com' and user == 'fred@usv.com':
+                user = User.objects.get(email='fred@usv.com')
+            elif self.current_user == 'me@alexanderpease.com' and user == 'fred@usv.com':
+                user = User.objects.get(email='fred@usv.com')
+            else:
+                return self.api_error(400, 'Error in user argument')
+        else:
+            try:
+                user = User.objects.get(email=self.current_user)
+            except:
+                return self.api_error(500, 'Could not find client user in database')
+
+        gmail_service = user.get_service(service_type='gmail')
+        if not gmail_service:
+            return self.api_error(500, 'Could not instantiate authenticated service for %s' % user)
+        messages = gmail.ListMessagesMatchingQuery(
+            service = gmail_service,
+            user_id = 'me',
+            query   = query)
+        return self.api_response(data=messages)
+
+########################
+### GmailGetMessage
+### /api/gmail/getmessage
+########################
+class GmailGetMessage(app.basic.BaseHandler):
+    """
+    Pass through for Gmail API method Users.messages.get
+    Args:
+        email, if not the authenticated User's own email. Must have permission
+        id, the Gmail ID of the message to retrieve
+    """
+    def get(self):
+        # Authenticate user
+        if not self.current_user:
+            return self.api_error(401, 'User is not logged in')
+
+        # Require query
+        try:
+            gmail_id = self.get_argument('id')
+        except:
+            return self.api_error(400, 'Id argument is required')
+
+        # Determine gmail inbox to search
+        user = self.get_argument('user', '')
+        if user:
+            # Currently only permissioned for Joel to access Fred's gmail account
+            if self.current_user == 'joel@usv.com' and user == 'fred@usv.com':
+                user = User.objects.get(email='fred@usv.com')
+            elif self.current_user == 'me@alexanderpease.com' and user == 'fred@usv.com':
+                user = User.objects.get(email='fred@usv.com')
+            else:
+                return self.api_error(400, 'Error in user argument')
+        else:
+            try:
+                user = User.objects.get(email=self.current_user)
+            except:
+                return self.api_error(500, 'Could not find client user in database')
+
+        gmail_service = user.get_service(service_type='gmail')
+        if not gmail_service:
+            return self.api_error(500, 'Could not instantiate authenticated service for %s' % user)
+        message = gmail.GetMessage(gmail_service, 'me', gmail_id)
+        return self.api_response(data=message)
+
 

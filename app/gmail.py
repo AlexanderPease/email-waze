@@ -8,6 +8,7 @@ from oauth2client.file import Storage
 from oauth2client.tools import run
 from googleapiclient import errors
 from email.utils import parsedate
+import base64
 
 import datetime, time, timeout_decorator
 
@@ -87,7 +88,7 @@ def GetMessageHeader(msg):
         logging.warning('Message passed to GetMessageHeader has no headers')
         return None
 
-    header_list = ['Delivered-To', 'Return-Path', 'From', 'To', 'Cc', 'Date']
+    header_list = ['Delivered-To', 'Return-Path', 'From', 'To', 'Cc', 'Date', 'Subject']
     msg_header = {}
 
     for header in headers:
@@ -96,6 +97,25 @@ def GetMessageHeader(msg):
             msg_header[header['name']] = header['value']
 
     return msg_header
+
+def GetMessageBody(msg):
+    """
+    Gets the email body from a Gmail message dict
+
+    Args:
+        msg: A message dict returned by GetMessage(). 
+    """
+    try: 
+        parts = msg['payload']['parts']
+    except:
+        logging.warning('Message passed to GetMessageHeader has no headers')
+        return None
+
+    body_parts = []
+    for part in parts:
+        body_parts.append(base64.urlsafe_b64decode(part['body']['data'].encode('ASCII')))
+
+    return body_parts
 
 def ParseDate(date_string):
     """
