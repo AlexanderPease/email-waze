@@ -18,7 +18,7 @@ google-api-python-client==1.2
 googleapiclient==1.2
 hashlib==20081119
 html5lib==1.0b3
-httplib2==0.9
+httplib2==0.18.0
 kombu==3.0.23
 logging==0.4.9.6
 mandrill==1.0.57
